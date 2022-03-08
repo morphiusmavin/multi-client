@@ -961,43 +961,58 @@ UCHAR WinClWriteTask(int test)
 /*********************************************************************/
 UCHAR ReadTask1(int test)
 {
-	int index = 3;			// 148
+	int index = _151;
 	char tempx[100];
 	int msg_len;
 	int ret;
 	UCHAR cmd;
 	int i;
-	char recip[4];
-
-	//printf("starting read task2\n");
+	int temp;
 
 	while(TRUE)
 	{
+startover:
 		if(client_table[index].socket > 0)
 		{
 			printf("read task 1\n");
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+1,1);
+/*
 			strncpy(recip,&tempx[1],3);
 			printf("recip: %s\n",recip);
+*/
 			printf("ret: %d\n",ret);
 			cmd = tempx[0];
 			//printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
+			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX)
+			{
+				printf("shutdown or reboot\n");
+				close(client_table[index].socket);
+				client_table[index].socket = -1;
+				// the break statement only goes back up to 
+				// "read task 2"
+				goto startover;
+//				break;
+			}
 			if(ret > 200)
 				break;
-			memmove(tempx,tempx+5,ret-5);
-/*
+			//printf("%02x %02x %02x\n",tempx[0],tempx[1],tempx[2]);
 			for(i = 0;i < ret;i++)
 			{
 				printf("%02x ",tempx[i]);
 			}
-*/
-			printf("%s\n",tempx);
+			temp = (int)(tempx[3] << 4);
+			temp |= (int)tempx[2];
+			printf("\n%d\n",temp);
+			memmove(tempx,tempx+5,ret-5);
+			printf("%s\n\n",tempx);
 		}
-		//printf("#");
+		//printf("&");
+
 		if(shutdown_all)
 		{
+			printf("leaving read task\n");
 			return 0;
 		}
 		uSleep(0,TIME_DELAY/16);
@@ -1006,26 +1021,24 @@ UCHAR ReadTask1(int test)
 /*********************************************************************/
 UCHAR SendTask1(int test)
 {
-	int index = 3;		// 148
+	int index = _151;
 	int msg_len;
 	char msg_buf[100];
 	char recip[4];
 	int i;
 	UCHAR cmd = 0;
-	struct msgbuf 
-	{
+	int pass = 0;
+    int msgflg = IPC_CREAT | 0666;
+	struct msgbuf {
 		long mtype;
 		char mtext[50];
 	};
 	struct msgbuf msg;
-	time_t t;
+//	time_t t;
 	int msgtype = 1;
 
-	uSleep(0,TIME_DELAY/16);
-	//printf("starting send task1\n");
-
 	i = 0;
- 	while(TRUE)
+	while(TRUE)
 	{
 		if(client_table[index].socket > 0)
 		{
@@ -1041,33 +1054,30 @@ UCHAR SendTask1(int test)
 				//printf("No message available for msgrcv()\n");
 			} else
 			{
-				printf("message received: %d %s %d\n", msg.mtext[0], msg.mtext+1,errno);
-				cmd = 1;
+				cmd = (UCHAR)msg.mtext[0];
+				memmove(msg.mtext,msg.mtext+1,49);
+				printf("message received: %s %d\n", msg.mtext,errno);
+				//printf("cmd: %d\n",cmd);
+				print_cmd(cmd);
 				perror(msg_buf);
+				pass = 1;
 			}
 
-//			if(errno != ENOMSG)
-			if(cmd)
+			if(pass)
 			{
 				printf("sending msg\n");
-				memset(msg_buf,0,sizeof(msg_buf));
-				sprintf(msg_buf,"148_ABCDEF145JKLM %d\0",i);
-				msg_buf[3] = 0;
-				send_msg(client_table[index].socket, 22,(UCHAR*)msg_buf,SEND_MSG);
-				i++;
-				cmd = 0;
+				send_msg(client_table[index].socket, strlen(msg.mtext), (UCHAR*)msg.mtext,cmd);
+				pass = 0;
 			}
-//			uSleep(0,TIME_DELAY/4);
-//			uSleep(1,0);
-		}
+			uSleep(0,TIME_DELAY/16);
+
+		} else uSleep(0,TIME_DELAY/16);
+
 		if(shutdown_all)
 		{
 			return 0;
 		}
-		//printf("^");
-
 		uSleep(0,TIME_DELAY/16);
-//		to_sock = get_client_sock(recip);
 	}
 }
 /*********************************************************************/
@@ -1102,6 +1112,8 @@ startover:
 				printf("shutdown or reboot\n");
 				close(client_table[index].socket);
 				client_table[index].socket = -1;
+				// the break statement only goes back up to 
+				// "read task 2"
 				goto startover;
 //				break;
 			}
@@ -1126,7 +1138,6 @@ startover:
 			return 0;
 		}
 		uSleep(0,TIME_DELAY/16);
-printf("%d ",client_table[index].socket);
 	}
 }
 /*********************************************************************/
