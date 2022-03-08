@@ -982,7 +982,7 @@ startover:
 			strncpy(recip,&tempx[1],3);
 			printf("recip: %s\n",recip);
 */
-			printf("ret: %d\n",ret);
+//			printf("ret: %d\n",ret);
 			cmd = tempx[0];
 			//printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
@@ -999,10 +999,12 @@ startover:
 			if(ret > 200)
 				break;
 			//printf("%02x %02x %02x\n",tempx[0],tempx[1],tempx[2]);
+/*
 			for(i = 0;i < ret;i++)
 			{
 				printf("%02x ",tempx[i]);
 			}
+*/
 			recip = (int)tempx[1];
 			printf("recip: %s\n",client_table[recip].label);
 			temp = (int)(tempx[3] << 4);
@@ -1108,7 +1110,7 @@ startover:
 			strncpy(recip,&tempx[1],3);
 			printf("recip: %s\n",recip);
 */
-			printf("ret: %d\n",ret);
+//			printf("ret: %d\n",ret);
 			cmd = tempx[0];
 			//printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
@@ -1125,10 +1127,12 @@ startover:
 			if(ret > 200)
 				break;
 			//printf("%02x %02x %02x\n",tempx[0],tempx[1],tempx[2]);
+/*
 			for(i = 0;i < ret;i++)
 			{
 				printf("%02x ",tempx[i]);
 			}
+*/
 			recip = (int)tempx[1];
 			printf("recip: %s\n",client_table[recip].label);
 			temp = (int)(tempx[3] << 4);
@@ -1809,7 +1813,7 @@ UCHAR tcp_monitor_task(int test)
 				if(strncmp(client_table[i].ip,tempx,3) == 0)
 				{
 					client_table[i].socket = new_socket;
-					printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
+					//printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
 
 					if(windows_client_sock < 0)
 					{

@@ -42,8 +42,7 @@ git add thread_client/serial_io.h
 git add thread_client/cs_client/config_file.c
 git add thread_client/cs_client/config_file.h
 
+git add EpServerEngineSampleClient/*
+
 git status
-
-
-
 
