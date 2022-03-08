@@ -726,7 +726,7 @@ UCHAR timer_task(int test)
 	{
 		memset(time_buffer,0,sizeof(time_buffer));
 		sprintf(time_buffer,"____ABCDEF145JM %d\0",i);
-		time_buffer[0] = _145;
+		time_buffer[0] = global_index;
 		time_buffer[1] = (UCHAR)i;
 		time_buffer[2] = (UCHAR)(i >> 4);
 

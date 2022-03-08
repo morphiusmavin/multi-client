@@ -968,6 +968,7 @@ UCHAR ReadTask1(int test)
 	UCHAR cmd;
 	int i;
 	int temp;
+	int recip;
 
 	while(TRUE)
 	{
@@ -1002,11 +1003,14 @@ startover:
 			{
 				printf("%02x ",tempx[i]);
 			}
+			recip = (int)tempx[1];
+			printf("recip: %s\n",client_table[recip].label);
 			temp = (int)(tempx[3] << 4);
 			temp |= (int)tempx[2];
 			printf("\n%d\n",temp);
 			memmove(tempx,tempx+5,ret-5);
 			printf("%s\n\n",tempx);
+			send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 		}
 		//printf("&");
 
@@ -1090,6 +1094,7 @@ UCHAR ReadTask2(int test)
 	UCHAR cmd;
 	int i;
 	int temp;
+	int recip;
 
 	while(TRUE)
 	{
@@ -1124,10 +1129,14 @@ startover:
 			{
 				printf("%02x ",tempx[i]);
 			}
+			recip = (int)tempx[1];
+			printf("recip: %s\n",client_table[recip].label);
 			temp = (int)(tempx[3] << 4);
 			temp |= (int)tempx[2];
 			printf("\n%d\n",temp);
 			memmove(tempx,tempx+5,ret-5);
+			send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+
 			printf("%s\n\n",tempx);
 		}
 		//printf("&");
