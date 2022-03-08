@@ -1083,9 +1083,10 @@ UCHAR ReadTask2(int test)
 
 	while(TRUE)
 	{
+startover:
 		if(client_table[index].socket > 0)
 		{
-//			printf("read task 2\n");
+			printf("read task 2\n");
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+1,1);
 /*
@@ -1101,7 +1102,8 @@ UCHAR ReadTask2(int test)
 				printf("shutdown or reboot\n");
 				close(client_table[index].socket);
 				client_table[index].socket = -1;
-				break;
+				goto startover;
+//				break;
 			}
 			if(ret > 200)
 				break;
@@ -1120,9 +1122,11 @@ UCHAR ReadTask2(int test)
 
 		if(shutdown_all)
 		{
+			printf("leaving read task\n");
 			return 0;
 		}
 		uSleep(0,TIME_DELAY/16);
+printf("%d ",client_table[index].socket);
 	}
 }
 /*********************************************************************/
@@ -1785,7 +1789,7 @@ UCHAR tcp_monitor_task(int test)
 				if(strncmp(client_table[i].ip,tempx,3) == 0)
 				{
 					client_table[i].socket = new_socket;
-					//printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
+					printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
 
 					if(windows_client_sock < 0)
 					{
@@ -1801,7 +1805,8 @@ UCHAR tcp_monitor_task(int test)
 						sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
 						send_msgb(windows_client_sock, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 					}
-					client_table[i].qid = msgget(client_table[i].qkey, IPC_CREAT | 0666);
+					if(client_table[i].qid == 0)
+						client_table[i].qid = msgget(client_table[i].qkey, IPC_CREAT | 0666);
 /*
 					if(client_table[i].type == TS_CLIENT)
 					if(client_table[i].type == OTHER)
@@ -1809,7 +1814,7 @@ UCHAR tcp_monitor_task(int test)
 						usleep(10);
 					}
 */
-					usleep(10000);
+//					usleep(10000);
 				}
 			}
 			//add new socket to array of sockets

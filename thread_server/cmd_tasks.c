@@ -256,12 +256,14 @@ UCHAR get_host_cmd_task(int test)
 	}
 	printf("done testing io\r\n");
 */	
-/*
+
 	while(TRUE)
 	{
 		uSleep(1,0);
+		if(shutdown_all == 1)
+			return 0;
 	}
-*/
+
 	while(TRUE)
 	{
 		cmd = 0;

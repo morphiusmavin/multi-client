@@ -267,7 +267,7 @@ UCHAR get_host_cmd_task(int test)
 
 		if(shutdown_all == 1)
 		{
-			//printf("shutting down cmd host\r\n");
+			printf("shutting down cmd host\r\n");
 			return 0;
 		}
 

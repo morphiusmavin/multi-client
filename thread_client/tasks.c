@@ -732,8 +732,8 @@ UCHAR timer_task(int test)
 
 		send_msg(22,(UCHAR*)time_buffer,SEND_MSG);
 		i++;
-		printf("%d ",i);
-		//uSleep(1,0);
+		//printf("%d ",i);
+		uSleep(5,0);
 		uSleep(0,TIME_DELAY/6);
 		if(shutdown_all)
 		{
