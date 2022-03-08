@@ -443,7 +443,7 @@ UCHAR monitor_input_task(int test)
 //		uSleep(0,TIME_DELAY/2);
 		if(shutdown_all)
 		{
-//				printf("done mon input tasks\r\n"); 
+				//printf("done mon input tasks\r\n"); 
 //				myprintf1("done mon input");
 				//printString2("done mon");
 			return 0;
@@ -561,7 +561,7 @@ UCHAR monitor_fake_input_task(int test)
 		uSleep(0,TIME_DELAY/2);
 		if(shutdown_all)
 		{
-//				printf("done mon fake input tasks\r\n");
+				//printf("done mon fake input tasks\r\n");
 //				myprintf1("done mon input");
 			return 0;
 		}
@@ -641,6 +641,7 @@ UCHAR timer2_task(int test)
 	{
 		if(shutdown_all)
 		{
+			//printf("done timer2\n");
 			return 0;
 		}
 		uSleep(1,0);
@@ -713,7 +714,7 @@ UCHAR timer_task(int test)
 	{
 		if(shutdown_all)
 		{
-//			printf("done timer_task\r\n");
+			//printf("done timer_task\r\n");
 			//printString2("done timer");
 			return 0;
 		}
@@ -772,9 +773,12 @@ UCHAR serial_recv_task(int test)
 	while(TRUE)
 	{
 		uSleep(5,0);
-//		printf("serial: %d\r\n",temp++);
+		//printf("serial: %d\r\n",temp++);
 		if(shutdown_all)
+		{
+			//printf("done serial\n");
 			return 0;
+		}
 	}
 
 	if(fd = init_serial() < 0)
@@ -1190,8 +1194,8 @@ UCHAR tcp_monitor_task(int test)
 	{
 		if(shutdown_all)
 		{
-			close_tcp();
-			printf("done tcp_mon\r\n");
+			//close_tcp();
+			//printf("done tcp_mon\r\n");
 			return 0;
 		}
 		else
@@ -1225,14 +1229,13 @@ void close_tcp(void)
 	if(sock_open)
 	{
 		sock_open = 0;
-//		printf("closing socket...\r\n");
+		//printf("closing socket...\r\n");
 		close(global_socket);
-//		printf("socket closed!\r\n");
+		//printf("socket closed!\r\n");
 		global_socket = -1;
 	}else
 	{
-		myprintf1("socket already closed\0");
-//		printf("socket already closed\r\n");
+		//printf("socket already closed\r\n");
 	}
 }
 
@@ -1627,16 +1630,22 @@ UCHAR basic_controls_task(int test)
 				//send_serialother(SERVER_DOWN,(UCHAR *)tempx);
 				snprintf(tempx, strlen(tempx), "shutdown iobox");
 				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX);
+				uSleep(1,0);
+				//printf("shutdown iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 3;
+				close_tcp();
 				break;
 
 			case REBOOT_IOBOX:
 				//send_serialother(SERVER_DOWN,(UCHAR *)tempx);
 				snprintf(tempx, strlen(tempx), "reboot iobox");
 				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX);
+				uSleep(1,0);
+				//printf("reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;
+				close_tcp();
 				break;
 
 			case UPLOAD_NEW:
@@ -1669,6 +1678,7 @@ UCHAR basic_controls_task(int test)
 
 		if(shutdown_all == 1)
 		{
+			//printf("stopping basic_controls_task\n");
 			return 0;
 		}
 

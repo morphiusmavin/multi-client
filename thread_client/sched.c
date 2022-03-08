@@ -115,6 +115,16 @@ int main(int argc, char **argv)
  PRIOR                   3
  PTIME_SLICE             4
  PFIFO                   5
+ 
+	GET_HOST_CMD,
+	MONITOR_INPUTS,
+	MONITOR_INPUTS2,
+	TIMER,
+	TIMER2,
+	TCP_MONITOR,
+	SERIAL_RECV,
+	BASIC_CONTROLS
+ 
 */
 
 	_threads[GET_HOST_CMD].sched = TIME_SLICE;
@@ -226,7 +236,7 @@ int main(int argc, char **argv)
 			printf("exit\r\n");
 			perror("main() pthread_join failed"),exit(1);
 		}
-
+//printf("closing task: %s\n",_threads[i].label);
 		if(i == 0)
 		{
 			pthread_cancel(_threads[SERIAL_RECV].pthread);

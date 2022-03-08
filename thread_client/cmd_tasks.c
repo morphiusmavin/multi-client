@@ -262,9 +262,9 @@ UCHAR get_host_cmd_task(int test)
 	{
 		cmd = 0;
 
-		if(shutdown_all  == 1)
+		if(shutdown_all == 1)
 		{
-			printf("shutting down cmd host\r\n");
+			//printf("shutting down cmd host\r\n");
 			return 0;
 		}
 
@@ -304,11 +304,6 @@ UCHAR get_host_cmd_task(int test)
 //					myprintf1(cmd_array[cmd].cmd_str);
 				rc = 0;
 
-				if(cmd == REBOOT_IOBOX || cmd == SHUTDOWN_IOBOX)
-				{
-					close_tcp();
-				}
-
 				switch(cmd)
 				{
 					case ALL_LIGHTS_ON:
@@ -337,6 +332,12 @@ UCHAR get_host_cmd_task(int test)
 					default:
 						break;
 				}
+
+				if(cmd == REBOOT_IOBOX || cmd == SHUTDOWN_IOBOX)
+				{
+					return 1;
+				}
+
 
  				switch(cmd)
 				{
@@ -485,7 +486,7 @@ UCHAR get_host_cmd_task(int test)
 						if(test_sock() > 0)
 						{
 							close_tcp();
-							myprintf1("disconnected\0");
+							printf("disconnected\0");
 						}
 						break;
 
@@ -809,6 +810,7 @@ int put_sock(UCHAR *buf,int buflen, int block, char *errmsg)
 			strcat(errmsg,extra_msg);
 			strcat(errmsg," put_sock");
 			close_tcp();
+			printf("closing tcp socket\n");
 		}else strcpy(errmsg,"Success\0");
 	}
 	else

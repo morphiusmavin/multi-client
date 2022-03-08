@@ -877,6 +877,12 @@ UCHAR WinClReadTask(int test)
 
 			for(j = 0;j < msg_len;j++)
 				printf("%02x ",tempx[j]);
+			if(cmd == DISCONNECT)
+			{
+				client_table[1].socket = -1;
+				windows_client_sock = -1;
+				break;
+			}
 			win_client_to_client_sock = tempx[0];
 			// get the socket of the client to send msg to 
 			// the windows client sends as the 1st byte the index into 
@@ -1090,8 +1096,8 @@ UCHAR ReadTask2(int test)
 			{
 				printf("shutdown or reboot\n");
 				client_table[index].socket = -1;
+				break;
 			}
-			
 			if(ret > 200)
 				break;
 			memmove(tempx,tempx+5,ret-5);
@@ -1783,7 +1789,7 @@ typedef struct
 			memset(address_string, 0, sizeof(address_string));
 			strncpy(address_string,inet_ntoa(address.sin_addr),sizeof(address_string));
 			//inform user of socket number - used in send and receive commands
-			printf("New connection , socket: %d\nip: %s\nport: %d\n",
+			printf("New connection , socket: %d ip: %s port: %d\n",
 					new_socket, address_string, ntohs(address.sin_port));
 
 			i = j = 0;
