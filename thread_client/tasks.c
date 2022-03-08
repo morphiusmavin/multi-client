@@ -61,7 +61,7 @@ static UCHAR read_serial_buffer[SERIAL_BUFF_SIZE];
 static UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 static int no_serial_buff;
 char password[PASSWORD_SIZE];
-static CLIENT_TABLE client_table[12];
+CLIENT_TABLE2 client_table[MAX_CLIENTS];
 
 static int serial_rec;
 static void set_output(O_DATA *otp, int onoff);
@@ -644,7 +644,7 @@ UCHAR timer2_task(int test)
 			//printf("done timer2\n");
 			return 0;
 		}
-		uSleep(1,0);
+		uSleep(0,TIME_DELAY/2);
 	}
 
 	while(TRUE)
@@ -718,7 +718,7 @@ UCHAR timer_task(int test)
 			//printString2("done timer");
 			return 0;
 		}
-		uSleep(5,0);
+		uSleep(0,TIME_DELAY/2);
 	}
 	
 	while(TRUE)
@@ -772,7 +772,7 @@ UCHAR serial_recv_task(int test)
 					// to send to STM32 when starting up
 	while(TRUE)
 	{
-		uSleep(5,0);
+		uSleep(0,TIME_DELAY/2);
 		//printf("serial: %d\r\n",temp++);
 		if(shutdown_all)
 		{
@@ -1123,71 +1123,55 @@ UCHAR tcp_monitor_task(int test)
 {
 	int s;
 	s = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
-#if 1
-	memset(client_table,0,sizeof(CLIENT_TABLE)*MAX_CLIENTS);
+	assign_client_table();
+#if 0
+	memset(client_table,0,sizeof(CLIENT_TABLE2)*MAX_CLIENTS);
 
-	strcpy(client_table[0].ip,"146\0");		// this is master_socket
-	strcpy(client_table[0].label,"TS-7800 server\0");
-	client_table[0].socket = -1;
-	client_table[0].type = SERVER;
+	strcpy(client_table[_149].ip,"149\0");
+	strcpy(client_table[_149].label,"Second_Windows7\0");
+	client_table[_149].socket = -1;
+	client_table[_149].type = WINDOWS_CLIENT;
 
-	strcpy(client_table[1].ip,"149\0");
-	strcpy(client_table[1].label,"Second_Windows7\0");
-	client_table[1].socket = -1;
-	client_table[1].type = WINDOWS_CLIENT;
+	strcpy(client_table[_159].ip,"159\0");
+	strcpy(client_table[_159].label,"Win7-x64\0");
+	client_table[_159].socket = -1;
+	client_table[_159].type = WINDOWS_CLIENT;
 
-	strcpy(client_table[2].ip,"159\0");
-	strcpy(client_table[2].label,"Win7-x64\0");
-	client_table[2].socket = -1;
-	client_table[2].type = WINDOWS_CLIENT;
+	strcpy(client_table[_145].ip,"145\0");
+	strcpy(client_table[_145].label,"TS_client1\0");
+	client_table[_145].socket = -1;
+	client_table[_145].type = TS_CLIENT;
 
-	strcpy(client_table[3].ip,"148\0");
-	strcpy(client_table[3].label,"dan-i386.local\0");
-	client_table[3].socket = -1;
-	client_table[3].type = LINUX1;
+	strcpy(client_table[_147].ip,"147\0");
+	strcpy(client_table[_147].label,"TS_client2\0");
+	client_table[_147].socket = -1;
+	client_table[_147].type = TS_CLIENT;
 
-	strcpy(client_table[4].ip,"145\0");
-	strcpy(client_table[4].label,"TS_client1\0");
-	client_table[4].socket = -1;
-	client_table[4].type = TS_CLIENT;
+	strcpy(client_table[_150].ip,"150\0");
+	strcpy(client_table[_150].label,"TS_client3\0");
+	client_table[_150].socket = -1;
+	client_table[_150].type = TS_CLIENT;
 
-	strcpy(client_table[5].ip,"147\0");
-	strcpy(client_table[5].label,"TS_client2\0");
-	client_table[5].socket = -1;
-	client_table[5].type = TS_CLIENT;
+	strcpy(client_table[_151].ip,"151\0");
+	strcpy(client_table[_151].label,"TS_client4\0");
+	client_table[_151].socket = -1;
+	client_table[_151].type = TS_CLIENT;
 
-	strcpy(client_table[6].ip,"150\0");
-	strcpy(client_table[6].label,"TS_client3\0");
-	client_table[6].socket = -1;
-	client_table[6].type = TS_CLIENT;
+	strcpy(client_table[_152].ip,"152\0");
+	strcpy(client_table[_152].label,"TS_client5\0");
+	client_table[_152].socket = -1;
+	client_table[_152].type = TS_CLIENT;
 
-	strcpy(client_table[7].ip,"151\0");
-	strcpy(client_table[7].label,"TS_client4\0");
-	client_table[7].socket = -1;
-	client_table[7].type = TS_CLIENT;
+	strcpy(client_table[_153].ip,"153\0");
+	strcpy(client_table[_153].label,"TS_client6\0");
+	client_table[_153].socket = -1;
+	client_table[_153].type = TS_CLIENT;
 
-	strcpy(client_table[8].ip,"152\0");
-	strcpy(client_table[8].label,"TS_client5\0");
-	client_table[8].socket = -1;
-	client_table[8].type = TS_CLIENT;
+	strcpy(client_table[_154].ip,"154\0");
+	strcpy(client_table[_154].label,"TS_client7\0");
+	client_table[_154].socket = -1;
+	client_table[_154].type = TS_CLIENT;
 
-	strcpy(client_table[9].ip,"153\0");
-	strcpy(client_table[9].label,"TS_client6\0");
-	client_table[9].socket = -1;
-	client_table[9].type = TS_CLIENT;
-
-	strcpy(client_table[10].ip,"154\0");
-	strcpy(client_table[10].label,"TS_client7\0");
-	client_table[10].socket = -1;
-	client_table[10].type = TS_CLIENT;
-/*
-	strcpy(client_table[11].ip,"148\0");
-	strcpy(client_table[11].label,"dan-i386.local\0");
-	client_table[11].socket = -1;
-	client_table[11].type = LINUX2;
-	client_table[11].qkey = 1245;
-	client_table[11].qid = 0;
-*/
 #endif	
 
 	while (TRUE)
@@ -1208,7 +1192,7 @@ UCHAR tcp_monitor_task(int test)
 				}
 			}
 		}
-		uSleep(1,0);
+		uSleep(0,TIME_DELAY/2);
 	}
 	return 1;
 }

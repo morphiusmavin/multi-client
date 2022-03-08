@@ -2,6 +2,7 @@ git add gitadd.sh
 git add .gitignore
 git add mytypes.h
 git add cmd_types.h
+git add assign_client_table.c
 
 git add thread_server/ioports.c
 git add thread_server/Makefile

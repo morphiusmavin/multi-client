@@ -96,7 +96,7 @@ LD_SYS_LIBS = $(SYS_LIBRARIES)
 #use this for TS-7200
 #use sample GPS data
 #CC_FLAGS = -DUSE_SAMPLE_DATA -DMAKE_TARGET -Wstrict-prototypes -mcpu=arm920t
-CC_FLAGS = -DTS_7200 -DMAKE_TARGET -Wstrict-prototypes -mcpu=arm920t
+CC_FLAGS = -DSERVER -DTS_7200 -DMAKE_TARGET -Wstrict-prototypes -mcpu=arm920t
 #use this for TS-7800
 #use sample GPS data
 #CC_FLAGS = -static -g -DUSE_SAMPLE_DATA -DTS_7800 -DMAKE_TARGET -Wstrict-prototypes -mcpu=arm920t
@@ -125,16 +125,19 @@ all : sched
 #llist_test_threads llist_test_threads_rw
 
 sched.o: sched.c tasks.h
-	${CC} -DTS_7200 ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
 
 ioports.o: ioports.c ioports.h
-	${CC} -DTS_7200 ${INCLUDE_PATHS} ${CC_FLAGS} -c ioports.c
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ioports.c
+
+assign_client_table.o: ../assign_client_table.c
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../assign_client_table.c
 
 tasks.o: tasks.c tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c tasks.c
 
 serial_io.o: serial_io.c serial_io.h
-	${CC} -DTS_7200 ${INCLUDE_PATHS} ${CC_FLAGS} -c serial_io.c
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c serial_io.c
 
 ollist_threads_rw.o: queue/ollist_threads_rw.c queue/ollist_threads_rw.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c queue/ollist_threads_rw.c
@@ -146,34 +149,16 @@ config_file.o: cs_client/config_file.c  queue/ollist_threads_rw.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/config_file.c
 
 lcd_func.o: lcd_func.c lcd_func.h
-	${CC} -DTS_7200 ${CC_FLAGS} ${INCLUDE_PATHS} -c lcd_func.c
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c lcd_func.c
 
 cmd_tasks.o: cmd_tasks.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cmd_tasks.c
 
-test_dio1.o: test_dio1.c lcd_func.c lcd_func.h serial_io.c serial_io.h
-	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c test_dio1.c
-
-test_dio1: test_dio1.o lcd_func.o serial_io.o
-
-
-#tolcd.o: tolcd.c
-#	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c tolcd.c
-
 #sched: sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o rdwr.o serial_io.o config_file.o lcd_func.o
-sched: sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o lcd_func.o
+sched: sched.o ioports.o assign_client_table.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o lcd_func.o 
 # if we don't use -static then the target should have: libpthread.so.0 in the /lib directory
-	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o lcd_func.o -o sched -lm
+	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o lcd_func.o assign_client_table.o -o sched -lm
 #	${CC} -static -pthread sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o #rdwr.o serial_io.o  lcd_func.o config_file.o -o sched
-
-#read_sd: read_sd.o
-#	${CC} read_sd.o -o read_sd
-
-#lcd: lcd_func.o
-#	${CC} lcd_func.o -o lcd
-
-#tolcd: tolcd.o
-#	${CC} tolcd.o -o tolcd
 
 clean :
 	rm -f *.o *~ *# core  sched

@@ -10,7 +10,6 @@
 #define PFIFO                   5
 #define INHERIT                 6
 #define NO_CMDS					50
-#define MAX_CLIENTS				12
 
 #define PROTOPORT			5193				  /* default protocol port number */
 #define QLEN				6					  /* size of request queue        */
@@ -56,15 +55,6 @@ enum task_types
 	BASIC_CONTROLS
 } TASK_TYPES;
 
-enum client_types
-{
-	WINDOWS_CLIENT,
-	TS_CLIENT,
-	SERVER,
-	LINUX1,
-	LINUX2,
-}CLIENT_TYPES;
-
 UCHAR get_host_cmd_task(int test);
 UCHAR monitor_input_task(int test);
 UCHAR monitor_fake_input_task(int test);
@@ -109,6 +99,7 @@ void init_ips(void);
 void send_status_msg(char *msg);
 void set_gps_baudrate(int baudrate);
 void print_cmd(UCHAR cmd);
+void assign_client_table(void);
 //double getDistance(double lat1, double lon1, double lat2, double lon2, int units);
 typedef struct
 {
@@ -131,16 +122,6 @@ typedef struct
 	int msg_len;
 	char message[20];
 }CLIENTS;
-
-typedef struct
-{
-	int socket;
-	char ip[4];
-	char label[30];
-	int type;
-	key_t qkey;
-	int qid;
-}CLIENT_TABLE;
 
 // global variables
 static UCHAR trunning_hours, trunning_minutes, trunning_seconds;

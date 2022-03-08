@@ -1,4 +1,7 @@
 #if 1
+#ifdef SERVER
+#warning "server defined"
+#endif
 #include <unistd.h>
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -86,7 +89,7 @@ int avg_raw_data(int prev_data);
 int max_ips;
 IP ip[40];
 static UCHAR msg_queue[MSG_QUEUE_SIZE];
-static CLIENT_TABLE client_table[12];
+CLIENT_TABLE1 client_table[MAX_CLIENTS];
 
 static int msg_queue_ptr;
 static int msg_client_queue_ptr;
@@ -879,7 +882,8 @@ UCHAR WinClReadTask(int test)
 				printf("%02x ",tempx[j]);
 			if(cmd == DISCONNECT)
 			{
-				client_table[1].socket = -1;
+				close(windows_client_sock);
+				client_table[windows_client_sock].socket = -1;
 				windows_client_sock = -1;
 				break;
 			}
@@ -898,7 +902,7 @@ UCHAR WinClReadTask(int test)
 
 			memset(msg.mtext,0,sizeof(msg.mtext));
 			msg.mtext[0] = cmd;
-			strcpy(msg.mtext + 1,"from win client\0");
+			strcpy(msg.mtext + 1,"from win client \0");
 
 			//printf("%s\n",msg.mtext+1);
 
@@ -1000,12 +1004,9 @@ UCHAR ReadTask1(int test)
 /*********************************************************************/
 UCHAR SendTask1(int test)
 {
-	int rc = 0;
-	UCHAR ch = 0x21;
 	int index = 3;		// 148
 	int msg_len;
 	char msg_buf[100];
-	int ret;
 	char recip[4];
 	int i;
 	UCHAR cmd = 0;
@@ -1070,7 +1071,7 @@ UCHAR SendTask1(int test)
 /*********************************************************************/
 UCHAR ReadTask2(int test)
 {
-	int index = 4;		// 145
+	int index = _145;
 	char tempx[100];
 	int msg_len;
 	int ret;
@@ -1095,6 +1096,7 @@ UCHAR ReadTask2(int test)
 			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX)
 			{
 				printf("shutdown or reboot\n");
+				close(client_table[index].socket);
 				client_table[index].socket = -1;
 				break;
 			}
@@ -1121,12 +1123,9 @@ UCHAR ReadTask2(int test)
 /*********************************************************************/
 UCHAR SendTask2(int test)
 {
-	int rc = 0;
-	UCHAR ch = 0x21;
-	int index = 4;		// 145
+	int index = _145;
 	int msg_len;
 	char msg_buf[100];
-	int ret;
 	char recip[4];
 	int i;
 	UCHAR cmd = 0;
@@ -1137,11 +1136,8 @@ UCHAR SendTask2(int test)
 		char mtext[50];
 	};
 	struct msgbuf msg;
-	time_t t;
+//	time_t t;
 	int msgtype = 1;
-
-//	uSleep(1,0);
-	//printf("starting send task2\n");
 
 	i = 0;
 	while(TRUE)
@@ -1566,109 +1562,77 @@ UCHAR tcp_monitor_task(int test)
 	char recip[4];
 	int to_sock;
 	
-#if 1
-/*
-typedef struct
-{
-	int socket;
-	char ip[4];
-	char label[30];
-	int type;
-	key_t qkey;
-	int qid;
+	assign_client_table();
+	
+#if 0
 
-}CLIENT_TABLE;
-*/
+	memset(client_table,0,sizeof(CLIENT_TABLE1)*MAX_CLIENTS);
 
-//printf("starting tcp mon task\n");
+	strcpy(client_table[_149].ip,"149\0");
+	strcpy(client_table[_149].label,"Second_Windows7\0");
+	client_table[_149].socket = -1;
+	client_table[_149].type = WINDOWS_CLIENT;
+	client_table[_149].qkey = 1235;
+	client_table[_149].qid = 0;
 
-	memset(client_table,0,sizeof(CLIENT_TABLE)*MAX_CLIENTS);
+	strcpy(client_table[_159].ip,"159\0");
+	strcpy(client_table[_159].label,"Win7-x64\0");
+	client_table[_159].socket = -1;
+	client_table[_159].type = WINDOWS_CLIENT;
+	client_table[_159].qkey = 1236;
+	client_table[_159].qid = 0;
 
-	strcpy(client_table[0].ip,"146\0");		// this is master_socket
-	strcpy(client_table[0].label,"TS-7800 server\0");
-	client_table[0].socket = -1;
-	client_table[0].type = SERVER;
-	client_table[0].qkey = 1234;
-	client_table[0].qid = 0;
+	strcpy(client_table[_145].ip,"145\0");
+	strcpy(client_table[_145].label,"TS_client1\0");
+	client_table[_145].socket = -1;
+	client_table[_145].type = TS_CLIENT;
+	client_table[_145].qkey = 1238;
+	client_table[_145].qid = 0;
 
-	strcpy(client_table[1].ip,"149\0");
-	strcpy(client_table[1].label,"Second_Windows7\0");
-	client_table[1].socket = -1;
-	client_table[1].type = WINDOWS_CLIENT;
-	client_table[1].qkey = 1235;
-	client_table[1].qid = 0;
+	strcpy(client_table[_147].ip,"147\0");
+	strcpy(client_table[_147].label,"TS_client2\0");
+	client_table[_147].socket = -1;
+	client_table[_147].type = TS_CLIENT;
+	client_table[_147].qkey = 1239;
+	client_table[_147].qid = 0;
 
-	strcpy(client_table[2].ip,"159\0");
-	strcpy(client_table[2].label,"Win7-x64\0");
-	client_table[2].socket = -1;
-	client_table[2].type = WINDOWS_CLIENT;
-	client_table[2].qkey = 1236;
-	client_table[2].qid = 0;
+	strcpy(client_table[_150].ip,"150\0");
+	strcpy(client_table[_150].label,"TS_client3\0");
+	client_table[_150].socket = -1;
+	client_table[_150].type = TS_CLIENT;
+	client_table[_150].qkey = 1240;
+	client_table[_150].qid = 0;
 
-	strcpy(client_table[3].ip,"148\0");
-	strcpy(client_table[3].label,"dan-i386.local\0");
-	client_table[3].socket = -1;
-	client_table[3].type = LINUX1;
-	client_table[3].qkey = 1237;
-	client_table[3].qid = 0;
+	strcpy(client_table[_151].ip,"151\0");
+	strcpy(client_table[_151].label,"TS_client4\0");
+	client_table[_151].socket = -1;
+	client_table[_151].type = TS_CLIENT;
+	client_table[_151].qkey = 1241;
+	client_table[_151].qid = 0;
 
-	strcpy(client_table[4].ip,"145\0");
-	strcpy(client_table[4].label,"TS_client1\0");
-	client_table[4].socket = -1;
-	client_table[4].type = TS_CLIENT;
-	client_table[4].qkey = 1238;
-	client_table[4].qid = 0;
+	strcpy(client_table[_152].ip,"152\0");
+	strcpy(client_table[_152].label,"TS_client5\0");
+	client_table[_152].socket = -1;
+	client_table[_152].type = TS_CLIENT;
+	client_table[_152].qkey = 1242;
+	client_table[_152].qid = 0;
 
-	strcpy(client_table[5].ip,"147\0");
-	strcpy(client_table[5].label,"TS_client2\0");
-	client_table[5].socket = -1;
-	client_table[5].type = TS_CLIENT;
-	client_table[5].qkey = 1239;
-	client_table[5].qid = 0;
+	strcpy(client_table[_153].ip,"153\0");
+	strcpy(client_table[_153].label,"TS_client6\0");
+	client_table[_153].socket = -1;
+	client_table[_153].type = TS_CLIENT;
+	client_table[_153].qkey = 1243;
+	client_table[_153].qid = 0;
 
-	strcpy(client_table[6].ip,"150\0");
-	strcpy(client_table[6].label,"TS_client3\0");
-	client_table[6].socket = -1;
-	client_table[6].type = TS_CLIENT;
-	client_table[6].qkey = 1240;
-	client_table[6].qid = 0;
+	strcpy(client_table[_154].ip,"154\0");
+	strcpy(client_table[_154].label,"TS_client7\0");
+	client_table[_154].socket = -1;
+	client_table[_154].type = TS_CLIENT;
+	client_table[_154].qkey = 1244;
+	client_table[_154].qid = 0;
 
-	strcpy(client_table[7].ip,"151\0");
-	strcpy(client_table[7].label,"TS_client4\0");
-	client_table[7].socket = -1;
-	client_table[7].type = TS_CLIENT;
-	client_table[7].qkey = 1241;
-	client_table[7].qid = 0;
-
-	strcpy(client_table[8].ip,"152\0");
-	strcpy(client_table[8].label,"TS_client5\0");
-	client_table[8].socket = -1;
-	client_table[8].type = TS_CLIENT;
-	client_table[8].qkey = 1242;
-	client_table[8].qid = 0;
-
-	strcpy(client_table[9].ip,"153\0");
-	strcpy(client_table[9].label,"TS_client6\0");
-	client_table[9].socket = -1;
-	client_table[9].type = TS_CLIENT;
-	client_table[9].qkey = 1243;
-	client_table[9].qid = 0;
-
-	strcpy(client_table[10].ip,"154\0");
-	strcpy(client_table[10].label,"TS_client7\0");
-	client_table[10].socket = -1;
-	client_table[10].type = TS_CLIENT;
-	client_table[10].qkey = 1244;
-	client_table[10].qid = 0;
-/*
-	strcpy(client_table[11].ip,"148\0");
-	strcpy(client_table[11].label,"dan-i386.local\0");
-	client_table[11].socket = -1;
-	client_table[11].type = LINUX2;
-	client_table[11].qkey = 1245;
-	client_table[11].qid = 0;
-*/
 #endif
+
 // 156 & 157 are the next 2 avail - 155 is the firstpi.local
 
 	s = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
@@ -1755,7 +1719,8 @@ typedef struct
 		for ( i = 0 ; i < MAX_CLIENTS ; i++)
 		{
 			//socket descriptor
-			sd = client_socket[i];
+//			sd = client_socket[i];
+			sd = client_table[i].socket;
 				
 			//if valid socket descriptor then add to read list
 			if(sd > 0)
@@ -1818,8 +1783,8 @@ typedef struct
 					if(windows_client_sock < 0)
 					{
 						windows_client_sock = get_client_sock("149");
-						if(windows_client_sock > 0)
-							printf("windows client logged in %d\n",windows_client_sock);
+//						if(windows_client_sock > 0)
+//							printf("windows client logged in %d\n",windows_client_sock);
 					}
 					//printf("%d\n",windows_client_sock);
 					
@@ -1841,16 +1806,19 @@ typedef struct
 				}
 			}
 			//add new socket to array of sockets
+/*
 			for (i = 0; i < MAX_CLIENTS; i++)
 			{
 				//if position is empty
 				if( client_socket[i] == 0 )
+				if(client_table[i] < 0)
 				{
 					client_socket[i] = new_socket;
 					//printf("\nAdding to list of sockets as %d\n" , i);
 					break;
 				}
 			}
+*/
 		}
 		//else its some IO operation on some other socket
 		for (i = 0; i < MAX_CLIENTS; i++)
@@ -1860,6 +1828,10 @@ typedef struct
 			if (FD_ISSET( sd , &readfds))
 			{
 				uSleep(0,TIME_DELAY/16);
+				// this never happens when doing a SEND_MSG but when it does a SHUTDOWN 
+				// it's because we were not closing the socket
+				printf("*socket: %d ",sd);
+				client_socket[i] = 0;
 			}
 		}
 		uSleep(0,TIME_DELAY/8);

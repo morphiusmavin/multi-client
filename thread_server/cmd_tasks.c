@@ -254,11 +254,12 @@ UCHAR get_host_cmd_task(int test)
 	}
 	printf("done testing io\r\n");
 */	
+/*
 	while(TRUE)
 	{
 		uSleep(1,0);
 	}
-
+*/
 	while(TRUE)
 	{
 		cmd = 0;
@@ -287,7 +288,7 @@ UCHAR get_host_cmd_task(int test)
 			if(cmd > 0)
 			{
 //				sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
-//				printf("%s\r\n",cmd_array[cmd].cmd_str);
+				printf("msg to svr: %s\r\n",cmd_array[cmd].cmd_str);
 //				if(cmd < LCD_TEST_MODE)
 //					myprintf1(cmd_array[cmd].cmd_str);
 			}

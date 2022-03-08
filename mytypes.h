@@ -19,6 +19,7 @@ typedef unsigned long ULONG;
 #define NUM_ADC_CHANNELS 11
 #define SERIAL_BUFF_SIZE 100
 #define RAW_DATA_ARRAY_SIZE 15
+#define MAX_CLIENTS	9
 
 // tcp command sent to TS-7200 from laptop
 // these have to exactly match what's in cmd_array[] in tasks.c
@@ -28,6 +29,43 @@ typedef struct
 	int cmd;
 	char cmd_str[30];
 } CMD_STRUCT;
+
+typedef struct
+{
+	int socket;
+	char ip[4];
+	char label[30];
+	int type;
+}CLIENT_TABLE2;		// client
+
+typedef struct
+{
+	int socket;
+	char ip[4];
+	char label[30];
+	int type;
+	key_t qkey;
+	int qid;
+}CLIENT_TABLE1;		// server
+
+enum client_types
+{
+	WINDOWS_CLIENT,
+	TS_CLIENT
+}CLIENT_TYPES;
+
+enum client_list
+{
+	_149,
+	_159,
+	_145,
+	_147,
+	_150,
+	_151,
+	_152,
+	_153,
+	_154
+}CLIENT_LIST;
 
 #define OLABELSIZE 30
 
