@@ -699,7 +699,7 @@ UCHAR timer_task(int test)
 	UCHAR cmd = 0x21;
 	UCHAR ucbuff[6];
 	int temp;
-
+/*
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 	temp = 0;
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
@@ -720,16 +720,21 @@ UCHAR timer_task(int test)
 		}
 		uSleep(0,TIME_DELAY/2);
 	}
-	
+*/
+	i = 0;
 	while(TRUE)
 	{
 		memset(time_buffer,0,sizeof(time_buffer));
-		sprintf(time_buffer,"_ABCDEF145JKLM %d\0",i);
-		time_buffer[0] = 0;
+		sprintf(time_buffer,"____ABCDEF145JM %d\0",i);
+		time_buffer[0] = _145;
+		time_buffer[1] = (UCHAR)i;
+		time_buffer[2] = (UCHAR)(i >> 4);
+
 		send_msg(22,(UCHAR*)time_buffer,SEND_MSG);
 		i++;
-		uSleep(2,0);
-		uSleep(0,TIME_DELAY/5);
+		printf("%d ",i);
+		//uSleep(1,0);
+		uSleep(0,TIME_DELAY/6);
 		if(shutdown_all)
 		{
 //			printf("done timer_task\r\n");

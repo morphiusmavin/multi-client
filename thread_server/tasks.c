@@ -1079,18 +1079,19 @@ UCHAR ReadTask2(int test)
 	int ret;
 	UCHAR cmd;
 	int i;
-	char recip[4];
-	//printf("starting read task2\n");
+	int temp;
 
 	while(TRUE)
 	{
 		if(client_table[index].socket > 0)
 		{
-			printf("read task 2\n");
+//			printf("read task 2\n");
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+1,1);
+/*
 			strncpy(recip,&tempx[1],3);
 			printf("recip: %s\n",recip);
+*/
 			printf("ret: %d\n",ret);
 			cmd = tempx[0];
 			//printf("cmd: %d\n",cmd);
@@ -1104,14 +1105,16 @@ UCHAR ReadTask2(int test)
 			}
 			if(ret > 200)
 				break;
-			memmove(tempx,tempx+5,ret-5);
-/*
+			//printf("%02x %02x %02x\n",tempx[0],tempx[1],tempx[2]);
 			for(i = 0;i < ret;i++)
 			{
 				printf("%02x ",tempx[i]);
 			}
-*/
-			//printf("%s\n",tempx);
+			temp = (int)(tempx[3] << 4);
+			temp |= (int)tempx[2];
+			printf("\n%d\n",temp);
+			memmove(tempx,tempx+5,ret-5);
+			printf("%s\n\n",tempx);
 		}
 		//printf("&");
 
