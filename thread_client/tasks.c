@@ -20,7 +20,7 @@
 #include <netdb.h>
 #include <errno.h>
 #include <dirent.h>
-#include "../../cmd_types.h"
+#include "../cmd_types.h"
 #include "../mytypes.h"
 #include "ioports.h"
 #include "serial_io.h"
@@ -724,8 +724,8 @@ UCHAR timer_task(int test)
 	while(TRUE)
 	{
 		memset(time_buffer,0,sizeof(time_buffer));
-		sprintf(time_buffer,"148_ABCDEF145JKLM %d\0",i);
-		time_buffer[3] = 0;
+		sprintf(time_buffer,"_ABCDEF145JKLM %d\0",i);
+		time_buffer[0] = 0;
 		send_msg(22,(UCHAR*)time_buffer,SEND_MSG);
 		i++;
 		uSleep(2,0);
@@ -1124,55 +1124,6 @@ UCHAR tcp_monitor_task(int test)
 	int s;
 	s = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
 	assign_client_table();
-#if 0
-	memset(client_table,0,sizeof(CLIENT_TABLE2)*MAX_CLIENTS);
-
-	strcpy(client_table[_149].ip,"149\0");
-	strcpy(client_table[_149].label,"Second_Windows7\0");
-	client_table[_149].socket = -1;
-	client_table[_149].type = WINDOWS_CLIENT;
-
-	strcpy(client_table[_159].ip,"159\0");
-	strcpy(client_table[_159].label,"Win7-x64\0");
-	client_table[_159].socket = -1;
-	client_table[_159].type = WINDOWS_CLIENT;
-
-	strcpy(client_table[_145].ip,"145\0");
-	strcpy(client_table[_145].label,"TS_client1\0");
-	client_table[_145].socket = -1;
-	client_table[_145].type = TS_CLIENT;
-
-	strcpy(client_table[_147].ip,"147\0");
-	strcpy(client_table[_147].label,"TS_client2\0");
-	client_table[_147].socket = -1;
-	client_table[_147].type = TS_CLIENT;
-
-	strcpy(client_table[_150].ip,"150\0");
-	strcpy(client_table[_150].label,"TS_client3\0");
-	client_table[_150].socket = -1;
-	client_table[_150].type = TS_CLIENT;
-
-	strcpy(client_table[_151].ip,"151\0");
-	strcpy(client_table[_151].label,"TS_client4\0");
-	client_table[_151].socket = -1;
-	client_table[_151].type = TS_CLIENT;
-
-	strcpy(client_table[_152].ip,"152\0");
-	strcpy(client_table[_152].label,"TS_client5\0");
-	client_table[_152].socket = -1;
-	client_table[_152].type = TS_CLIENT;
-
-	strcpy(client_table[_153].ip,"153\0");
-	strcpy(client_table[_153].label,"TS_client6\0");
-	client_table[_153].socket = -1;
-	client_table[_153].type = TS_CLIENT;
-
-	strcpy(client_table[_154].ip,"154\0");
-	strcpy(client_table[_154].label,"TS_client7\0");
-	client_table[_154].socket = -1;
-	client_table[_154].type = TS_CLIENT;
-
-#endif	
 
 	while (TRUE)
 	{

@@ -20,7 +20,7 @@
 #include <netdb.h>
 #include <errno.h>
 #include <dirent.h>
-#include "../../cmd_types.h"
+#include "../cmd_types.h"
 #include "../mytypes.h"
 #include "tasks.h"
 #include "ioports.h"
@@ -47,6 +47,8 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
+extern CMD_STRUCT cmd_array[];
+#if 0
 CMD_STRUCT cmd_array[NO_CMDS] =
 {
 	{	NON_CMD,"NON_CMD\0" },
@@ -100,7 +102,7 @@ CMD_STRUCT cmd_array[NO_CMDS] =
 	{	UPDATE_ALL,"UPDATE_ALL\0" },
 	{	SEND_MSG,"SEND_MSG\0" }
 };
-
+#endif
 void print_cmd(UCHAR cmd)
 {
 	char tempx[30];

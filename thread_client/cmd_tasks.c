@@ -20,7 +20,7 @@
 #include <netdb.h>
 #include <errno.h>
 #include <dirent.h>
-#include "../../cmd_types.h"
+#include "../cmd_types.h"
 #include "../mytypes.h"
 #include "ioports.h"
 #include "serial_io.h"
@@ -36,6 +36,9 @@ extern pthread_mutex_t     tcp_write_lock;
 int config_file_ok = -1;
 static struct  sockaddr_in sad;  /* structure to hold server's address  */
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
+
+extern CMD_STRUCT cmd_array[];
+#if 0
 CMD_STRUCT cmd_array[NO_CMDS] =
 {
 	{	NON_CMD,"NON_CMD\0" },
@@ -89,7 +92,7 @@ CMD_STRUCT cmd_array[NO_CMDS] =
 	{	UPDATE_ALL,"UPDATE_ALL\0" },
 	{	SEND_MSG,"SEND_MSG\0" }
 };
-
+#endif
 //extern illist_t ill;
 extern ollist_t oll;
 
@@ -298,8 +301,8 @@ UCHAR get_host_cmd_task(int test)
 
 			if(cmd > 0)
 			{
-				sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
-				printf("%s\r\n",cmd_array[cmd].cmd_str);
+				printf("cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
+//				printf("%s\r\n",cmd_array[cmd].cmd_str);
 //				if(cmd < LCD_TEST_MODE)
 //					myprintf1(cmd_array[cmd].cmd_str);
 				rc = 0;
@@ -347,17 +350,17 @@ UCHAR get_host_cmd_task(int test)
 						}
 						break;
 					case SEND_STATUS:
-						memset(tempx,0,sizeof(tempx));
-						strcpy(tempx,"hello from client!");
+//						memset(tempx,0,sizeof(tempx));
+//						strcpy(tempx,"hello from client!");
 						//send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SEND_STATUS);
-						printf("%s\n",tempx);						
+//						printf("%s\n",tempx);						
 						break;
 
 					case SEND_MSG:
-						printf("SEND_MSG\n");
-						for(i = 0;i < msg_len;i++)
-							printf("%c",tempx[i]);
-						printf("\n");
+//						printf("SEND_MSG\n");
+//						for(i = 0;i < msg_len;i++)
+//							printf("%c",tempx[i]);
+//						printf("\n");
 						break;
 					
 					case SET_PARAMS:

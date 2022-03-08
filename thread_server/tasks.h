@@ -9,7 +9,6 @@
 #define PTIME_SLICE             4
 #define PFIFO                   5
 #define INHERIT                 6
-#define NO_CMDS					50
 
 #define PROTOPORT			5193				  /* default protocol port number */
 #define QLEN				6					  /* size of request queue        */

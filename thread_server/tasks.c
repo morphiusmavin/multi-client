@@ -26,7 +26,7 @@
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <semaphore.h>
-#include "../../cmd_types.h"
+#include "../cmd_types.h"
 #include "../mytypes.h"
 #include "ioports.h"
 #include "serial_io.h"
@@ -885,6 +885,8 @@ UCHAR WinClReadTask(int test)
 				close(windows_client_sock);
 				client_table[windows_client_sock].socket = -1;
 				windows_client_sock = -1;
+				shutdown_all = 1;
+				exit(1);	// for some reason this locks up if I just do a break
 				break;
 			}
 			win_client_to_client_sock = tempx[0];
@@ -1174,13 +1176,15 @@ UCHAR SendTask2(int test)
 //					client_table[index].socket = -1;
 				pass = 0;
 			}
-		}
+			uSleep(0,TIME_DELAY/16);
+
+		} else uSleep(0,TIME_DELAY/16);
 
 		if(shutdown_all)
 		{
 			return 0;
 		}
-		uSleep(0,TIME_DELAY/16);
+		
 //		to_sock = get_client_sock(recip);
 	}
 }
@@ -1504,7 +1508,7 @@ int get_client_sock(char *recip)
 	int i;
 	int sock = -1;
 
-	for(i = 0;i < 12;i++)
+	for(i = 0;i < MAX_CLIENTS;i++)
 	{
 		if(strncmp(client_table[i].ip,recip,3) == 0)
 		{
@@ -1520,7 +1524,7 @@ char *get_client_recip(int sock)
 {
 	int i;
 
-	for(i = 0;i < 12;i++)
+	for(i = 0;i < MAX_CLIENTS;i++)
 	{
 		if(client_table[i].socket == sock)
 		{
