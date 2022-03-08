@@ -201,7 +201,6 @@ static int mask2int(UCHAR mask)
 	}while(mask);
 	return i - 1;
 }
-#endif
 /*********************************************************************/
 // change the outputs according to the type
 // type 0 is normal, 1 is reverse momentary-contact, 2 is time delayed
@@ -619,7 +618,7 @@ int change_output(int index, int onoff)
 
 	return index;
 }
-
+#endif
 /*********************************************************************/
 // this happens 10x a second
 UCHAR timer2_task(int test)
@@ -1626,16 +1625,16 @@ UCHAR basic_controls_task(int test)
 
 			case SHUTDOWN_IOBOX:
 				//send_serialother(SERVER_DOWN,(UCHAR *)tempx);
-				printf("shutdown iobox\n");
-//				close_tcp();
+				snprintf(tempx, strlen(tempx), "shutdown iobox");
+				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX);
 				shutdown_all = 1;
 				reboot_on_exit = 3;
 				break;
 
 			case REBOOT_IOBOX:
 				//send_serialother(SERVER_DOWN,(UCHAR *)tempx);
-				printf("reboot iobox\n");
-//				close_tcp();
+				snprintf(tempx, strlen(tempx), "reboot iobox");
+				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX);
 				shutdown_all = 1;
 				reboot_on_exit = 2;
 				break;

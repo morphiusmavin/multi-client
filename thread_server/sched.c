@@ -221,7 +221,7 @@ int main(int argc, char **argv)
 
 //		printf("setting priority(%d-%d) of thread %s to %d\n", _threads[i].prio_min, \
 			_threads[i].prio_max, _threads[i].label,priority_param.sched_priority);
-
+//printf("%d ",i);
 		if (pthread_attr_setschedparam(&pthread_custom_attr, &priority_param)!=0)
 			fprintf(stderr,"pthread_attr_setschedparam failed\n");
 

@@ -47,8 +47,6 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
-#endif
-
 CMD_STRUCT cmd_array[NO_CMDS] =
 {
 	{	NON_CMD,"NON_CMD\0" },
@@ -102,6 +100,16 @@ CMD_STRUCT cmd_array[NO_CMDS] =
 	{	UPDATE_ALL,"UPDATE_ALL\0" },
 	{	SEND_MSG,"SEND_MSG\0" }
 };
+
+void print_cmd(UCHAR cmd)
+{
+	char tempx[30];
+
+	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
+	printf("%s\r\n",cmd_array[cmd].cmd_str);
+}
+
+#endif
 
 /*********************************************************************/
 // task to get commands from the host
@@ -678,7 +686,7 @@ int get_msg(int sd)
 	if(memcmp(preamble,pre_preamble,8) != 0)
 	{
 		printf("bad preamble\n");
-		uSleep(10,0);
+		uSleep(5,0);
 		return -1;
 	}
 	ret = recv_tcp(sd, &low,1,1);

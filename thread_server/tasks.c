@@ -216,7 +216,7 @@ static int mask2int(UCHAR mask)
 	}while(mask);
 	return i - 1;
 }
-#endif
+
 /*********************************************************************/
 // change the outputs according to the type
 // type 0 is normal, 1 is reverse momentary-contact, 2 is time delayed
@@ -634,7 +634,7 @@ int change_output(int index, int onoff)
 
 	return index;
 }
-
+#endif
 /*********************************************************************/
 // this happens 10x a second
 UCHAR timer2_task(int test)
@@ -867,10 +867,11 @@ UCHAR WinClReadTask(int test)
 
 			int rc = recv_tcp(windows_client_sock, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			printf("cmd: %d\n",cmd);
+			//printf("cmd: %d\n",cmd);
+			print_cmd(cmd);
 
 			memset(tempx,0,sizeof(tempx));
-
+			k = 0;
 			for(j = 2;j < msg_len+2;j+=2)
 				tempx[k++] = msg_buf[j];
 
@@ -886,7 +887,7 @@ UCHAR WinClReadTask(int test)
 
 			msg.mtype = msgtype;
 
-			time(&t);
+			//time(&t);
 //			snprintf(msg.mtext, sizeof(msg.mtext), "a message at %s", ctime(&t));
 
 			memset(msg.mtext,0,sizeof(msg.mtext));
@@ -969,7 +970,8 @@ UCHAR ReadTask1(int test)
 			printf("recip: %s\n",recip);
 			printf("ret: %d\n",ret);
 			cmd = tempx[0];
-			printf("cmd: %d\n",cmd);
+			//printf("cmd: %d\n",cmd);
+			print_cmd(cmd);
 			if(ret > 200)
 				break;
 			memmove(tempx,tempx+5,ret-5);
@@ -1082,7 +1084,14 @@ UCHAR ReadTask2(int test)
 			printf("recip: %s\n",recip);
 			printf("ret: %d\n",ret);
 			cmd = tempx[0];
-			printf("cmd: %d\n",cmd);
+			//printf("cmd: %d\n",cmd);
+			print_cmd(cmd);
+			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX)
+			{
+				printf("shutdown or reboot\n");
+				client_table[index].socket = -1;
+			}
+			
 			if(ret > 200)
 				break;
 			memmove(tempx,tempx+5,ret-5);
@@ -1148,7 +1157,8 @@ UCHAR SendTask2(int test)
 				cmd = (UCHAR)msg.mtext[0];
 				memmove(msg.mtext,msg.mtext+1,49);
 				printf("message received: %s %d\n", msg.mtext,errno);
-				printf("cmd: %d\n",cmd);
+				//printf("cmd: %d\n",cmd);
+				print_cmd(cmd);
 				perror(msg_buf);
 				pass = 1;
 			}
@@ -1158,7 +1168,8 @@ UCHAR SendTask2(int test)
 			{
 				printf("sending msg\n");
 				send_msg(client_table[index].socket, strlen(msg.mtext), (UCHAR*)msg.mtext,cmd);
-				i++;
+//				if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX)
+//					client_table[index].socket = -1;
 				pass = 0;
 			}
 		}
@@ -1956,41 +1967,6 @@ UCHAR get_msg_queue(void)
 	int msg_len;
 	char message[20];
 */
-void add_client_msg_queue(UCHAR cmd)
-{
-//	while(msg_queue_ptr >= MSG_QUEUE_SIZE);
-	pthread_mutex_lock(&msg_client_queue_lock);
-/*	
-	if(msg_client_queue_ptr < MSG_CLIENT_QUEUE_SIZE)
-	{
-		msg_client_queue_ptr++;
-		clients[msg_client_queue_ptr].ip = ip;
-		clients[msg_client_queue_ptr].socket = socket;
-		clients[msg_client_queue_ptr].msg_type = msg_type;
-		clients[msg_client_queue_ptr].
-		clients[msg_client_queue_ptr].
-		msg_queue2[msg_client_queue_ptr] = cmd;
-	}
-*/
-	pthread_mutex_unlock(&msg_client_queue_lock);
-//	printf("add: %d %x\r\n",msg_queue_ptr,cmd);
-}
-/*********************************************************************/
-UCHAR get_client_msg_queue(void)
-{
-	UCHAR cmd;
-	pthread_mutex_lock(&msg_client_queue_lock);
-	if(msg_client_queue_ptr > 0)
-	{
-//		cmd = msg_queue2[msg_client_queue_ptr];
-		msg_client_queue_ptr--;
-	}else cmd = 0;
-	pthread_mutex_unlock(&msg_client_queue_lock);
-//	if(cmd != 0)
-//		printf("get: %d %x\r\n",msg_queue_ptr,cmd);
-	return cmd;
-}
-
 /*********************************************************************/
 UCHAR basic_controls_task(int test)
 {

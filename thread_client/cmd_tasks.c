@@ -102,6 +102,14 @@ static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
 #endif
 
+static void print_cmd(UCHAR cmd)
+{
+	char tempx[30];
+
+	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
+	printf("%s\r\n",cmd_array[cmd].cmd_str);
+}
+
 /*********************************************************************/
 // task to get commands from the host
 
@@ -738,37 +746,6 @@ void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type)
 //		printf("%d ",msg_len);
 	}
 }
-/*
-void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type)
-{
-	int len;
-	int ret;
-	int i;
-
-	if(test_sock())
-	{
-		ret = send_tcp(&pre_preamble[0],8);
-		msg_len++;
-		send_tcp((UCHAR *)&msg_len,1);
-		ret = 0;
-		send_tcp((UCHAR *)&ret,1);
-
-		for(i = 0;i < 6;i++)
-			send_tcp((UCHAR *)&ret,1);
-
-		send_tcp((UCHAR *)&msg_type,1);
-
-		ret = 0;
-		send_tcp((UCHAR *)&ret,1);
-
-		for(i = 0;i < msg_len;i++)
-		{
-			send_tcp((UCHAR *)&msg[i],1);
-			send_tcp((UCHAR *)&ret,1);
-		}
-	}
-}
-*/
 /*********************************************************************/
 int recv_tcp(UCHAR *str, int strlen,int block)
 {
