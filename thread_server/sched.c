@@ -28,6 +28,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <sys/ipc.h>
 #include "../mytypes.h"
 #include "ioports.h"
 #include "serial_io.h"
@@ -75,6 +76,7 @@ int main(int argc, char **argv)
 	int sd;
 	int rc;
 	reboot_on_exit = 1;
+	key_t cmd_host_key = 1234;
 
 	if(argc < 2)
 	{
@@ -105,6 +107,13 @@ int main(int argc, char **argv)
 		exit(1);
 //	}else printf("card ok\r\n");
 	}
+
+	// get the queue id for the get_host_cmd_task
+	// CMD_HOST_QKEY
+
+	cmd_host_key = CMD_HOST_QKEY;
+	cmd_host_qid = msgget(cmd_host_key, IPC_CREAT | 0666);
+	printf("cmd_host_qid: %d\n",cmd_host_qid);
 
 	for(i = 0;i < NUM_TASKS;i++)
 		id_arg[i] = i;

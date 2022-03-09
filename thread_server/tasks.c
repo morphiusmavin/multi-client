@@ -23,6 +23,7 @@
 #include <netdb.h>
 #include <errno.h>
 #include <dirent.h>
+#include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <semaphore.h>
@@ -722,13 +723,9 @@ UCHAR timer_task(int test)
 	int msg_len;
 	int ret;
     int msgflg = IPC_CREAT | 0666;
-	struct msgbuf {
-		long mtype;
-		char mtext[50];
-	};
-	struct msgbuf msg;
-	time_t t;
+	struct msgqbuf msg;
 	int msgtype = 1;
+	msg.mtype = msgtype;
 
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 	memset(time_buffer,0,sizeof(time_buffer));
@@ -840,20 +837,17 @@ UCHAR WinClReadTask(int test)
 	char msg_buf[200];
 	UCHAR cmd;
 	int win_client_to_client_sock = -1;
-	struct msgbuf 
-	{
-		long mtype;
-		char mtext[50];
-	};
-	struct msgbuf msg;
-	time_t t;
+	struct msgqbuf msg;
 	int msgtype = 1;
+	int msg_err;
+	msg.mtype = msgtype;
 
 	msg_len = -1;
 	k = 0;
 	//printf("win cl read task\n");
 	while(TRUE)
 	{
+startover:
 		if(windows_client_sock > 0)
 		{
 //			either one of these will work 
@@ -865,7 +859,7 @@ UCHAR WinClReadTask(int test)
 //				printf("%02x ",msg_buf[i]);
 //			msg_len = get_msgb(client_table[i].socket);
 			msg_len = get_msgb(windows_client_sock);
-			printf("1: msg_len: %d\n",msg_len);
+			//printf("1: msg_len: %d\n",msg_len);
 //			windows_client_sock = sd;
 
 			int rc = recv_tcp(windows_client_sock, &msg_buf[0], msg_len, 1);
@@ -880,41 +874,62 @@ UCHAR WinClReadTask(int test)
 
 			for(j = 0;j < msg_len;j++)
 				printf("%02x ",tempx[j]);
+			printf("\n");
 			if(cmd == DISCONNECT)
 			{
 				close(windows_client_sock);
 				client_table[windows_client_sock].socket = -1;
 				windows_client_sock = -1;
-				shutdown_all = 1;
-				exit(1);	// for some reason this locks up if I just do a break
-				break;
+				goto startover;
+				// need a cmd that quits the server
 			}
 			win_client_to_client_sock = tempx[0];
-			// get the socket of the client to send msg to 
-			// the windows client sends as the 1st byte the index into 
-			// the client_table[] array 
-			uSleep(0,TIME_DELAY/8);
-			printf("sock: %d %s\n",client_table[win_client_to_client_sock].socket, client_table[win_client_to_client_sock].label);
-//			send_msg(client_table[win_client_to_client_sock].socket,strlen(tempx),(UCHAR*)tempx,cmd);
-
-			msg.mtype = msgtype;
-
-			//time(&t);
-//			snprintf(msg.mtext, sizeof(msg.mtext), "a message at %s", ctime(&t));
-
-			memset(msg.mtext,0,sizeof(msg.mtext));
-			msg.mtext[0] = cmd;
-			strcpy(msg.mtext + 1,"from win client \0");
-
-			//printf("%s\n",msg.mtext+1);
-
-			if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+			// if this is for the server then tempx[0] will be _SERVER (from CLIENT_LIST enum)
+			// so send a queue msg to get_host_cmd_task
+			if(win_client_to_client_sock == _SERVER)
 			{
-				perror("msgsnd error");
-				exit(EXIT_FAILURE);
+				memset(msg.mtext,0,sizeof(msg.mtext));
+				msg.mtext[0] = cmd;
+				strcpy(tempx,"asdfasdf\0");
+				memcpy(msg.mtext + 1,tempx,9);
+				printf("1: msg to cmd_host: %s %d \n",tempx,cmd_host_qid);
+//				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR | IPC_NOWAIT) == -1) 
+//				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+//				if (msg_err = msgsnd(cmd_host_qid, (void *) &msg, 9, IPC_NOWAIT) == -1) 
+				{
+					// keep getting "Invalid Argument"
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+			}else
+			{
+				// get the socket of the client to send msg to 
+				// the windows client sends as the 1st byte the index into 
+				// the client_table[] array 
+				uSleep(0,TIME_DELAY/8);
+				printf("sock: %d %s\n",client_table[win_client_to_client_sock].socket, client_table[win_client_to_client_sock].label);
+	//			send_msg(client_table[win_client_to_client_sock].socket,strlen(tempx),(UCHAR*)tempx,cmd);
+
+				msg.mtype = msgtype;
+
+				//time(&t);
+	//			snprintf(msg.mtext, sizeof(msg.mtext), "a message at %s", ctime(&t));
+
+				memset(msg.mtext,0,sizeof(msg.mtext));
+				msg.mtext[0] = cmd;
+				strcpy(msg.mtext + 1,"from win client \0");
+
+				//printf("%s\n",msg.mtext+1);
+
+				if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+				printf("sent: %s\n", msg.mtext);				
+				printf("\n");
 			}
-			printf("sent: %s\n", msg.mtext);				
-			printf("\n");
 		}
 		//printf("*");
 		uSleep(0,TIME_DELAY/8);
@@ -969,10 +984,13 @@ UCHAR ReadTask1(int test)
 	int i;
 	int temp;
 	int recip;
+	struct msgqbuf msg;
+	int msgtype = 1;
+	msg.mtype = msgtype;
 
 	while(TRUE)
 	{
-startover:
+startover1:
 		if(client_table[index].socket > 0)
 		{
 			printf("read task 1\n");
@@ -993,7 +1011,7 @@ startover:
 				client_table[index].socket = -1;
 				// the break statement only goes back up to 
 				// "read task 2"
-				goto startover;
+				goto startover1;
 //				break;
 			}
 			if(ret > 200)
@@ -1006,13 +1024,29 @@ startover:
 			}
 */
 			recip = (int)tempx[1];
-			printf("recip: %s\n",client_table[recip].label);
-			temp = (int)(tempx[3] << 4);
-			temp |= (int)tempx[2];
-			printf("\n%d\n",temp);
-			memmove(tempx,tempx+5,ret-5);
-			printf("%s\n\n",tempx);
-			send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+			if(recip == _SERVER)
+			{
+				memset(msg.mtext,0,sizeof(msg.mtext));
+				msg.mtext[0] = cmd;
+				memcpy(msg.mtext + 1,tempx,msg_len);
+				printf("msg to cmd_host: %s\n",tempx);
+				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext),
+				IPC_NOWAIT) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+			}else 
+			{
+				printf("recip: %s\n",client_table[recip].label);
+				// this is just because I wanted to send an int
+				temp = (int)(tempx[3] << 4);
+				temp |= (int)tempx[2];
+				printf("\n%d\n",temp);
+				memmove(tempx,tempx+5,ret-5);
+				printf("%s\n\n",tempx);
+				send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+			}
 		}
 		//printf("&");
 
@@ -1035,13 +1069,9 @@ UCHAR SendTask1(int test)
 	UCHAR cmd = 0;
 	int pass = 0;
     int msgflg = IPC_CREAT | 0666;
-	struct msgbuf {
-		long mtype;
-		char mtext[50];
-	};
-	struct msgbuf msg;
-//	time_t t;
+	struct msgqbuf msg;
 	int msgtype = 1;
+	msg.mtype = msgtype;
 
 	i = 0;
 	while(TRUE)
@@ -1100,7 +1130,7 @@ UCHAR ReadTask2(int test)
 
 	while(TRUE)
 	{
-startover:
+startover2:
 		if(client_table[index].socket > 0)
 		{
 			printf("read task 2\n");
@@ -1121,7 +1151,7 @@ startover:
 				client_table[index].socket = -1;
 				// the break statement only goes back up to 
 				// "read task 2"
-				goto startover;
+				goto startover2;
 //				break;
 			}
 			if(ret > 200)
@@ -1164,13 +1194,9 @@ UCHAR SendTask2(int test)
 	UCHAR cmd = 0;
 	int pass = 0;
     int msgflg = IPC_CREAT | 0666;
-	struct msgbuf {
-		long mtype;
-		char mtext[50];
-	};
-	struct msgbuf msg;
-//	time_t t;
+	struct msgqbuf msg;
 	int msgtype = 1;
+	msg.mtype = msgtype;
 
 	i = 0;
 	while(TRUE)
@@ -1598,75 +1624,6 @@ UCHAR tcp_monitor_task(int test)
 	int to_sock;
 	
 	assign_client_table();
-	
-#if 0
-
-	memset(client_table,0,sizeof(CLIENT_TABLE1)*MAX_CLIENTS);
-
-	strcpy(client_table[_149].ip,"149\0");
-	strcpy(client_table[_149].label,"Second_Windows7\0");
-	client_table[_149].socket = -1;
-	client_table[_149].type = WINDOWS_CLIENT;
-	client_table[_149].qkey = 1235;
-	client_table[_149].qid = 0;
-
-	strcpy(client_table[_159].ip,"159\0");
-	strcpy(client_table[_159].label,"Win7-x64\0");
-	client_table[_159].socket = -1;
-	client_table[_159].type = WINDOWS_CLIENT;
-	client_table[_159].qkey = 1236;
-	client_table[_159].qid = 0;
-
-	strcpy(client_table[_145].ip,"145\0");
-	strcpy(client_table[_145].label,"TS_client1\0");
-	client_table[_145].socket = -1;
-	client_table[_145].type = TS_CLIENT;
-	client_table[_145].qkey = 1238;
-	client_table[_145].qid = 0;
-
-	strcpy(client_table[_147].ip,"147\0");
-	strcpy(client_table[_147].label,"TS_client2\0");
-	client_table[_147].socket = -1;
-	client_table[_147].type = TS_CLIENT;
-	client_table[_147].qkey = 1239;
-	client_table[_147].qid = 0;
-
-	strcpy(client_table[_150].ip,"150\0");
-	strcpy(client_table[_150].label,"TS_client3\0");
-	client_table[_150].socket = -1;
-	client_table[_150].type = TS_CLIENT;
-	client_table[_150].qkey = 1240;
-	client_table[_150].qid = 0;
-
-	strcpy(client_table[_151].ip,"151\0");
-	strcpy(client_table[_151].label,"TS_client4\0");
-	client_table[_151].socket = -1;
-	client_table[_151].type = TS_CLIENT;
-	client_table[_151].qkey = 1241;
-	client_table[_151].qid = 0;
-
-	strcpy(client_table[_152].ip,"152\0");
-	strcpy(client_table[_152].label,"TS_client5\0");
-	client_table[_152].socket = -1;
-	client_table[_152].type = TS_CLIENT;
-	client_table[_152].qkey = 1242;
-	client_table[_152].qid = 0;
-
-	strcpy(client_table[_153].ip,"153\0");
-	strcpy(client_table[_153].label,"TS_client6\0");
-	client_table[_153].socket = -1;
-	client_table[_153].type = TS_CLIENT;
-	client_table[_153].qkey = 1243;
-	client_table[_153].qid = 0;
-
-	strcpy(client_table[_154].ip,"154\0");
-	strcpy(client_table[_154].label,"TS_client7\0");
-	client_table[_154].socket = -1;
-	client_table[_154].type = TS_CLIENT;
-	client_table[_154].qkey = 1244;
-	client_table[_154].qid = 0;
-
-#endif
 
 // 156 & 157 are the next 2 avail - 155 is the firstpi.local
 

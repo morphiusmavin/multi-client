@@ -31,6 +31,8 @@
 #define _500MS		500000 	
 #define _50MS		50000 	
 #define _5MS		5000 	
+#define CMD_HOST_QKEY	1234
+
 
 // uSleep(0,100000000L); - roughly 100ms using uSleep();
 
@@ -132,6 +134,7 @@ static char dat_names[NUM_DAT_NAMES][DAT_NAME_STR_LEN];
 float convertF(int raw_data);
 extern char oFileName[20];
 extern char iFileName[20];
+int cmd_host_qid;
 
 extern UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];

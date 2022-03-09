@@ -22,8 +22,11 @@ typedef unsigned long ULONG;
 #define MAX_CLIENTS	9
 #define NO_CMDS 50
 
-// tcp command sent to TS-7200 from laptop
-// these have to exactly match what's in cmd_array[] in tasks.c
+struct msgqbuf 
+{
+	long mtype;
+	char mtext[50];
+};
 
 typedef struct
 {
@@ -65,7 +68,8 @@ enum client_list
 	_151,
 	_152,
 	_153,
-	_154
+	_154,
+	_SERVER
 }CLIENT_LIST;
 
 #define OLABELSIZE 30
