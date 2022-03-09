@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 
 	cmd_host_key = CMD_HOST_QKEY;
 	cmd_host_qid = msgget(cmd_host_key, IPC_CREAT | 0666);
-	printf("cmd_host_qid: %d\n",cmd_host_qid);
+	//printf("cmd_host_qid: %d\n",cmd_host_qid);
 
 	for(i = 0;i < NUM_TASKS;i++)
 		id_arg[i] = i;

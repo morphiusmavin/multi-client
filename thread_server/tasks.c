@@ -867,6 +867,9 @@ startover:
 			for(j = 0;j < msg_len;j++)
 				printf("%02x ",tempx[j]);
 			printf("\n");
+			for(j = 1;j < msg_len-1;j++)
+				printf("%c",tempx[j]);
+			printf("\n");
 			if(cmd == DISCONNECT)
 			{
 				close(windows_client_sock);
@@ -882,9 +885,8 @@ startover:
 			{
 				memset(msg.mtext,0,sizeof(msg.mtext));
 				msg.mtext[0] = cmd;
-				strcpy(tempx,"asdfasdf\0");
-				memcpy(msg.mtext + 1,tempx,9);
-				printf("1: msg to cmd_host: %s %d \n",tempx,cmd_host_qid);
+				memcpy(msg.mtext + 1,tempx,msg_len);
+				printf("1: msg to cmd_host: %s\n",tempx);
 				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					// keep getting "Invalid Argument" - cause I didn't set the mtype
@@ -907,9 +909,9 @@ startover:
 
 				memset(msg.mtext,0,sizeof(msg.mtext));
 				msg.mtext[0] = cmd;
-				strcpy(msg.mtext + 1,"from win client \0");
+				memcpy(msg.mtext + 1,tempx,msg_len);
 
-				//printf("%s\n",msg.mtext+1);
+				printf("msg.mtext: %s\n",msg.mtext+1);
 
 				if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 				{

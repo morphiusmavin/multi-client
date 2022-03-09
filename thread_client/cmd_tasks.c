@@ -277,7 +277,7 @@ UCHAR get_host_cmd_task(int test)
 			memset(msg_buf,0,sizeof(msg_buf));
 			//printf("wait for msg_len\n");
 			msg_len = get_msg();
-			//printf("msg_len: %d\n",msg_len);
+			printf("msg_len: %d\n",msg_len);
 //			printHexByte(msg_len);
 			if(msg_len < 0)
 			{
@@ -287,16 +287,21 @@ UCHAR get_host_cmd_task(int test)
 			}else
 			{
 				rc = recv_tcp(&msg_buf[0],msg_len+1,1);
-				//printf("rc: %d\n",rc);
+				printf("rc: %d\n",rc);
 				cmd = msg_buf[0];
 				//printf("cmd: %d\n",cmd);
 				memset(tempx,0,sizeof(tempx));
 
-				for(i = 1;i < rc;i++)
-					tempx[i-1] = msg_buf[i];
+				for(i = 2;i < rc-1;i++)
+					tempx[i-2] = msg_buf[i];
 
 				for(i = 0;i < rc;i++)
 					printf("%c",tempx[i]);
+				printf("\n");
+
+				for(i = 0;i < rc;i++)
+					printf("%02x ",tempx[i]);
+				printf("\n");
 			}
 
 			if(cmd > 0)
@@ -370,16 +375,17 @@ UCHAR get_host_cmd_task(int test)
 					case SET_TIME:
 						curtime2 = 0L;
 						j = 0;
-						memset(tempx,0,sizeof(tempx));
 
 //						for(i = 2;i < msg_len;i+=2)
 //							memcpy((void*)&tempx[j++],(char*)&msg_buf[i],1);
+/*
 						for(i = 0;i < msg_len/2+2;i++)
 						{
 							tempx[i] = msg_buf2[i];
 //							write_serial2(tempx[i]);
 						}
-						tempx[msg_len/2-2] = 'M';
+*/
+						tempx[msg_len-2] = 'M';
 						memset(temp_time,0,sizeof(temp_time));
 						i = 0;
 						pch = &tempx[0];
@@ -391,7 +397,7 @@ UCHAR get_host_cmd_task(int test)
 						}
 						memcpy(&temp_time[0],&tempx[0],i);
 						i = atoi(temp_time);
-//						printf("mon: %d\r\n",i - 1);
+//						printf("\nmon: %d\n",i - 1);
 						pt->tm_mon = i - 1;
 						i = 0;
 
@@ -463,6 +469,7 @@ UCHAR get_host_cmd_task(int test)
 						curtime2 = mktime(pt);
 						stime(pcurtime2);
 /*
+uSleep(0,TIME_DELAY/3);
 						gettimeofday(&mtv, NULL);
 						curtime2 = mtv.tv_sec;
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
