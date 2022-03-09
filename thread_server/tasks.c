@@ -839,7 +839,6 @@ UCHAR WinClReadTask(int test)
 	int win_client_to_client_sock = -1;
 	struct msgqbuf msg;
 	int msgtype = 1;
-	int msg_err;
 	msg.mtype = msgtype;
 
 	msg_len = -1;
@@ -853,14 +852,7 @@ startover:
 //			either one of these will work 
 //			printf("msg from windows client %d\n",client_table[i].socket);
 			printf("msg from windows client %d\n",windows_client_sock);
-//			rc = recv_tcp(windows_client_sock, msg_buf,16,1);
-//			rc = recv_tcp(windows_client_sock, msg_buf+16,16,1);
-//			for(i = 0;i < 32;i++)
-//				printf("%02x ",msg_buf[i]);
-//			msg_len = get_msgb(client_table[i].socket);
 			msg_len = get_msgb(windows_client_sock);
-			//printf("1: msg_len: %d\n",msg_len);
-//			windows_client_sock = sd;
 
 			int rc = recv_tcp(windows_client_sock, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
@@ -893,12 +885,9 @@ startover:
 				strcpy(tempx,"asdfasdf\0");
 				memcpy(msg.mtext + 1,tempx,9);
 				printf("1: msg to cmd_host: %s %d \n",tempx,cmd_host_qid);
-//				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR | IPC_NOWAIT) == -1) 
-//				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-//				if (msg_err = msgsnd(cmd_host_qid, (void *) &msg, 9, IPC_NOWAIT) == -1) 
 				{
-					// keep getting "Invalid Argument"
+					// keep getting "Invalid Argument" - cause I didn't set the mtype
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
 				}
@@ -1024,19 +1013,19 @@ startover1:
 			}
 */
 			recip = (int)tempx[1];
-			if(recip == _SERVER)
+			printf("recip: %d\n",recip);
+			if(recip == _SERVER)		// from one of the clients to the server
 			{
 				memset(msg.mtext,0,sizeof(msg.mtext));
 				msg.mtext[0] = cmd;
 				memcpy(msg.mtext + 1,tempx,msg_len);
-				printf("msg to cmd_host: %s\n",tempx);
-				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext),
-				IPC_NOWAIT) == -1) 
+				printf("2: msg to cmd_host: %s\n",tempx);
+				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
 				}
-			}else 
+			}else 						// from one of the clients to another client 
 			{
 				printf("recip: %s\n",client_table[recip].label);
 				// this is just because I wanted to send an int
@@ -1127,10 +1116,13 @@ UCHAR ReadTask2(int test)
 	int i;
 	int temp;
 	int recip;
+	struct msgqbuf msg;
+	int msgtype = 1;
+	msg.mtype = msgtype;
 
 	while(TRUE)
 	{
-startover2:
+startover1:
 		if(client_table[index].socket > 0)
 		{
 			printf("read task 2\n");
@@ -1151,7 +1143,7 @@ startover2:
 				client_table[index].socket = -1;
 				// the break statement only goes back up to 
 				// "read task 2"
-				goto startover2;
+				goto startover1;
 //				break;
 			}
 			if(ret > 200)
@@ -1164,14 +1156,29 @@ startover2:
 			}
 */
 			recip = (int)tempx[1];
-			printf("recip: %s\n",client_table[recip].label);
-			temp = (int)(tempx[3] << 4);
-			temp |= (int)tempx[2];
-			printf("\n%d\n",temp);
-			memmove(tempx,tempx+5,ret-5);
-			send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
-
-			printf("%s\n\n",tempx);
+			printf("recip: %d\n",recip);
+			if(recip == _SERVER)		// from one of the clients to the server
+			{
+				memset(msg.mtext,0,sizeof(msg.mtext));
+				msg.mtext[0] = cmd;
+				memcpy(msg.mtext + 1,tempx,msg_len);
+				printf("2: msg to cmd_host: %s\n",tempx);
+				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+			}else 						// from one of the clients to another client 
+			{
+				printf("recip: %s\n",client_table[recip].label);
+				// this is just because I wanted to send an int
+				temp = (int)(tempx[3] << 4);
+				temp |= (int)tempx[2];
+				printf("\n%d\n",temp);
+				memmove(tempx,tempx+5,ret-5);
+				printf("%s\n\n",tempx);
+				send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+			}
 		}
 		//printf("&");
 

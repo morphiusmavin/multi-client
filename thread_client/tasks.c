@@ -709,7 +709,7 @@ UCHAR timer_task(int test)
 			cmd = 0x21;
 	}
 	i = 0;
-	
+*/	
 	while(TRUE)
 	{
 		if(shutdown_all)
@@ -718,9 +718,18 @@ UCHAR timer_task(int test)
 			//printString2("done timer");
 			return 0;
 		}
-		uSleep(0,TIME_DELAY/2);
+		memset(time_buffer,0,sizeof(time_buffer));
+		sprintf(time_buffer,"____ABCDEF145JM %d\0",i);
+		time_buffer[0] = _SERVER;
+		time_buffer[1] = (UCHAR)i;
+		time_buffer[2] = (UCHAR)(i >> 4);
+
+		send_msg(22,(UCHAR*)time_buffer,SEND_MSG);
+		i++;
+		//printf("%d ",i);
+		uSleep(5,0);
 	}
-*/
+
 	i = 0;
 	while(TRUE)
 	{

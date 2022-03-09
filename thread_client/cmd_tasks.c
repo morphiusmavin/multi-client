@@ -346,6 +346,7 @@ UCHAR get_host_cmd_task(int test)
 					case SEND_CLIENT_LIST:
 						for(i = 0;i < 12;i++)
 						{
+							usleep(1000);
 						}
 						break;
 					case SEND_STATUS:
