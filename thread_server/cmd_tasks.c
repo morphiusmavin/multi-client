@@ -108,6 +108,7 @@ UCHAR get_host_cmd_task(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
+	int temp;
 
 	memset(write_serial_buffer, 0, SERIAL_BUFF_SIZE);
 	// since each card only has 20 ports then the 1st 2 port access bytes
@@ -164,14 +165,6 @@ UCHAR get_host_cmd_task(int test)
 //printf("starting...\n");
 	same_msg = 0;
 
-/*
-	while(TRUE)
-	{
-		uSleep(1,0);
-		if(shutdown_all == 1)
-			return 0;
-	}
-*/
 	while(TRUE)
 	{
 		cmd = 0;
@@ -246,20 +239,29 @@ UCHAR get_host_cmd_task(int test)
 			switch(cmd)
 			{
 				case UPTIME_MSG:
-					printf("UPTIME_MSG: %s\n",tempx);
+					printf("UPTIME_MSG: %s\n",tempx-1);
+					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
 					break;
 
 				case SEND_TIMEUP:
-					printf("send timeup: \n");
+					//printf("send timeup: \n");
 					sprintf(tempx,"%dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
 					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
-					printf("%s\n",tempx);
+					//printf("%s\n",tempx);
 					break;
 
 				case SEND_MSG:
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");
+					break;
+
+				case SEND_STATUS:
+					printf("send status\n");
+					temp = 0;
+					temp = (int)(tempx[3] << 4);
+					temp |= (int)tempx[2];
+					printf("temp: %d\n",temp);
 					break;
 
 				case SET_PARAMS:
@@ -498,10 +500,6 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case GET_CONFIG2:
-					break;
-
-				case SEND_STATUS:
-					printf("send status\n");
 					break;
 
 				case GET_VERSION:

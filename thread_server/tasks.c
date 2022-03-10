@@ -1183,11 +1183,11 @@ startover1:
 			{
 				printf("recip: %s\n",client_table[recip].label);
 				// this is just because I wanted to send an int
-				temp = (int)(tempx[3] << 4);
-				temp |= (int)tempx[2];
-				printf("\n%d\n",temp);
-				memmove(tempx,tempx+5,ret-5);
-				printf("%s\n\n",tempx);
+//				temp = (int)(tempx[3] << 4);
+//				temp |= (int)tempx[2];
+				//printf("\n%d\n",temp);
+				//memmove(tempx,tempx+5,ret-5);
+				printf("%s\n",tempx);
 				send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 			}
 		}
@@ -1245,7 +1245,7 @@ UCHAR SendTask2(int test)
 //			if(errno != ENOMSG)
 			if(pass)
 			{
-				printf("sending msg\n");
+				printf("sending msg to: %s\n",client_table[index].label);
 				send_msg(client_table[index].socket, strlen(msg.mtext), (UCHAR*)msg.mtext,cmd);
 //				if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX)
 //					client_table[index].socket = -1;

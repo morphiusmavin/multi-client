@@ -133,9 +133,7 @@ UCHAR get_host_cmd_task(int test)
 		real_banks[i].bank = (i+4)/8;
 		real_banks[i].index = i - (real_banks[i].bank*8)+4;
 	}
-
 	memset(dat_names,0,sizeof(dat_names));
-
 /*
 	i = NUM_PORT_BITS;
 	isize = sizeof(I_DATA);
@@ -204,7 +202,7 @@ UCHAR get_host_cmd_task(int test)
 	}
 	printf("done testing io\r\n");
 */	
-	i = 0;
+	k = i = 0;
 	cmd = 0x21;
 
 	while(TRUE)
@@ -223,7 +221,7 @@ UCHAR get_host_cmd_task(int test)
 			memset(msg_buf,0,sizeof(msg_buf));
 			//printf("wait for msg_len\n");
 			msg_len = get_msg();
-			printf("msg_len: %d\n",msg_len);
+//			printf("msg_len: %d\n",msg_len);
 //			printHexByte(msg_len);
 			if(msg_len < 0)
 			{
@@ -296,9 +294,9 @@ UCHAR get_host_cmd_task(int test)
 				{
 					case SEND_TIMEUP:
 						sprintf(tempx," %dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
-						tempx[0] = 9;
+						tempx[0] = _SERVER;
 						send_msg(strlen((char*)tempx),(UCHAR*)tempx, UPTIME_MSG);
-						printf("%s\n",tempx);
+						printf("%s\n",tempx+1);
 						break;
 
 					case SEND_CLIENT_LIST:
@@ -308,9 +306,12 @@ UCHAR get_host_cmd_task(int test)
 						}
 						break;
 					case SEND_STATUS:
-//						memset(tempx,0,sizeof(tempx));
-//						strcpy(tempx,"hello from client!");
-						//send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SEND_STATUS);
+						k++;
+						memset(tempx,0,sizeof(tempx));
+						tempx[0] = _SERVER;
+						tempx[1] = (UCHAR)k;
+						tempx[2] = (UCHAR)(k >> 4);
+						send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SEND_STATUS);
 //						printf("%s\n",tempx);						
 						break;
 
