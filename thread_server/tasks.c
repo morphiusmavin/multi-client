@@ -95,7 +95,7 @@ CLIENT_TABLE1 client_table[MAX_CLIENTS];
 static int msg_queue_ptr;
 static int msg_client_queue_ptr;
 static CLIENTS clients[MSG_CLIENT_QUEUE_SIZE];
-static int windows_client_sock = -1;
+int windows_client_sock = -1;
 
 #define ON 1
 #define OFF 0
@@ -657,14 +657,14 @@ UCHAR timer2_task(int test)
 
 	time_lapse = 0;
 
-//	printf("timer 2 task\n");
+/*
 	while(TRUE)
 	{
 		if(shutdown_all)
 			return 0;
 		usleep(_500MS);
 	}
-
+*/
 	while(TRUE)
 	{
 		uSleep(1,0);
@@ -672,19 +672,24 @@ UCHAR timer2_task(int test)
 		if(++trunning_seconds > 59)
 		{
 			trunning_seconds = 0;
-			//printf("trunning minutes: %d\r\n",trunning_minutes);
+			printf("running minutes: %d\r\n",trunning_minutes);
 			if(++trunning_minutes > 59)
 			{
+				printf("running hours: %d\r\n",trunning_hours);
 				trunning_minutes = 0;
-				trunning_hours++;
+				if(++trunning_hours > 24)
+				{
+					trunning_hours = 0;
+					trunning_days++;
+				}
 			}
 		}
 		time_lapse = 0;
 
 		if(test_sock())
 		{
+//			sprintf(tempx,"%dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
 //			send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SERVER_UPTIME);
-			sprintf(tempx,"%dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
 		}
 		if(shutdown_all)
 		{
@@ -851,7 +856,7 @@ startover:
 		{
 //			either one of these will work 
 //			printf("msg from windows client %d\n",client_table[i].socket);
-			printf("msg from windows client %d\n",windows_client_sock);
+//			printf("msg from windows client %d\n",windows_client_sock);
 			msg_len = get_msgb(windows_client_sock);
 
 			int rc = recv_tcp(windows_client_sock, &msg_buf[0], msg_len, 1);
@@ -879,6 +884,7 @@ startover:
 				// need a cmd that quits the server
 			}
 			win_client_to_client_sock = tempx[0];
+			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 			// if this is for the server then tempx[0] will be _SERVER (from CLIENT_LIST enum)
 			// so send a queue msg to get_host_cmd_task
 			if(win_client_to_client_sock == _SERVER)
@@ -886,7 +892,7 @@ startover:
 				memset(msg.mtext,0,sizeof(msg.mtext));
 				msg.mtext[0] = cmd;
 				memcpy(msg.mtext + 1,tempx,msg_len);
-				printf("1: msg to cmd_host: %s\n",tempx);
+				printf("1: msg to cmd_host on server: %s\n",tempx);
 				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					// keep getting "Invalid Argument" - cause I didn't set the mtype
@@ -911,7 +917,10 @@ startover:
 				msg.mtext[0] = cmd;
 				memcpy(msg.mtext + 1,tempx,msg_len);
 
-				printf("msg.mtext: %s\n",msg.mtext+1);
+				printf("msg.mtext: ");
+				for(i = 0;i < msg_len;i++)
+					printf("%02x ",msg.mtext[i]);
+				printf("\n");
 
 				if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 				{
@@ -1158,7 +1167,7 @@ startover1:
 			}
 */
 			recip = (int)tempx[1];
-			printf("recip: %d\n",recip);
+			printf("recp: %d\n",recip);
 			if(recip == _SERVER)		// from one of the clients to the server
 			{
 				memset(msg.mtext,0,sizeof(msg.mtext));
@@ -1226,7 +1235,7 @@ UCHAR SendTask2(int test)
 			{
 				cmd = (UCHAR)msg.mtext[0];
 				memmove(msg.mtext,msg.mtext+1,49);
-				printf("message received: %s %d\n", msg.mtext,errno);
+//				printf("message received: %s %d\n", msg.mtext,errno);
 				//printf("cmd: %d\n",cmd);
 				print_cmd(cmd);
 				perror(msg_buf);

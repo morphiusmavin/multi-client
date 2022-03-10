@@ -636,7 +636,7 @@ UCHAR timer2_task(int test)
 	int index = 0;
 
 	time_lapse = 0;
-
+/*
 	while(TRUE)
 	{
 		if(shutdown_all)
@@ -646,7 +646,7 @@ UCHAR timer2_task(int test)
 		}
 		uSleep(0,TIME_DELAY/2);
 	}
-
+*/
 	while(TRUE)
 	{
 		uSleep(1,0);
@@ -654,19 +654,25 @@ UCHAR timer2_task(int test)
 		if(++trunning_seconds > 59)
 		{
 			trunning_seconds = 0;
-			//printf("trunning minutes: %d\r\n",trunning_minutes);
+			printf("running minutes: %d\r\n",trunning_minutes);
 			if(++trunning_minutes > 59)
 			{
 				trunning_minutes = 0;
 				trunning_hours++;
-			}
+				if(++trunning_hours > 24)
+				{
+					trunning_hours = 0;
+					trunning_days++;
+				}
+				}
 		}
+
 		time_lapse = 0;
 
 		if(test_sock())
 		{
-			sprintf(tempx,"%dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
-			send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SERVER_UPTIME);
+//			sprintf(tempx,"%dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
+//			send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SERVER_UPTIME);
 		}
 		if(shutdown_all)
 		{

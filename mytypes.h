@@ -19,7 +19,7 @@ typedef unsigned long ULONG;
 #define NUM_ADC_CHANNELS 11
 #define SERIAL_BUFF_SIZE 100
 #define RAW_DATA_ARRAY_SIZE 15
-#define MAX_CLIENTS	9
+#define MAX_CLIENTS	10
 #define NO_CMDS 50
 
 struct msgqbuf 
@@ -55,7 +55,8 @@ typedef struct
 enum client_types
 {
 	WINDOWS_CLIENT,
-	TS_CLIENT
+	TS_CLIENT,
+	TS_SERVER
 }CLIENT_TYPES;
 
 enum client_list

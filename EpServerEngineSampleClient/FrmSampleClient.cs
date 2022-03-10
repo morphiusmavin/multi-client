@@ -194,7 +194,7 @@ namespace EpServerEngineSampleClient
 
             clients_avail = new List<ClientsAvail>();
             ClientsAvail item2 = null;
-            AddMsg("adding clients avail...");
+            //AddMsg("adding clients avail...");
             DataSet ds2 = new DataSet();
             //XmlReader xmlFile = XmlReader.Create(File.Exists(xml_file2_location_laptop) ? xml_file2_location_laptop : xml_file2_location_desktop);
             xmlFile = XmlReader.Create(xml_clients_avail_location);
@@ -204,19 +204,19 @@ namespace EpServerEngineSampleClient
             {
                 string temp = "";
                 item2 = new ClientsAvail();
-                item2.lbindex = Convert.ToInt16(dr.ItemArray[0]);
+                item2.lbindex = -1;
 //                item2.index = Convert.ToInt16(dr.ItemArray[1]);
                 item2.index = lb_index;
-                item2.ip_addr = dr.ItemArray[2].ToString();
+                item2.ip_addr = dr.ItemArray[0].ToString();
                 temp += item2.ip_addr;
                 temp += "  ";
-                item2.label = dr.ItemArray[3].ToString();
+                item2.label = dr.ItemArray[1].ToString();
                 temp += item2.label;
                 temp += "  ";
-                item2.socket = Convert.ToInt16(dr.ItemArray[4]);
+                item2.socket = Convert.ToInt16(dr.ItemArray[2]);
                 //temp += item2.socket.ToString();
-                item2.type = Convert.ToInt16(dr.ItemArray[5]);
-                AddMsg(item2.label.ToString() + " " + item2.ip_addr.ToString());
+                item2.type = Convert.ToInt16(dr.ItemArray[3]);		// not using this for anything
+				//AddMsg(item2.label.ToString() + " " + item2.ip_addr.ToString());
                 clients_avail.Add(item2);
                 item2 = null;
 				lb_index++;
@@ -233,7 +233,7 @@ namespace EpServerEngineSampleClient
                     m_hostname = cbIPAdress.Text = client_params[i].IPAdress;
                     selected_address = i;
                     m_portno = tbPort.Text = client_params[i].PortNo.ToString();
-                    AddMsg("primary: " + m_hostname + " " + m_portno.ToLower());
+                    //AddMsg("primary: " + m_hostname + " " + m_portno.ToLower());
                     found = true;
                 }
                 cbIPAdress.Items.Add(client_params[i].IPAdress);
@@ -347,6 +347,7 @@ namespace EpServerEngineSampleClient
                     reevaluate_enabled_buttons();
                     AddMsg("server_up_seconds: " + server_up_seconds.ToString());
                     btnShowParams.Enabled = valid_cfg;
+                    clients_avail[9].socket = 1;        // 9 is _SERVER
                 }
             }
             else AddMsg(client.HostName);
@@ -469,6 +470,9 @@ namespace EpServerEngineSampleClient
 
             switch (str)
             {
+                case "UPTIME_MSG":
+                    AddMsg(ret);
+                    break;
                 case "ESP_CLIENT_STATUS":
                     // later have esp client send the ip address
                     AddMsg(ret + " " + bytes.Length);
@@ -558,7 +562,7 @@ namespace EpServerEngineSampleClient
                         tbServerTime.Text = ret;
 
                     if (server_up_seconds == 2)
-                        SetTime();
+                        SetTime(9);
 
                     if (client_params[selected_address].AutoConn == true && server_up_seconds == 4)
                     {
@@ -867,7 +871,7 @@ namespace EpServerEngineSampleClient
                             //                this.txtResult.Text = "Cancelled";
                         }
                         netclients.Enable_Dlg(false);
-            */
+            
 
             var temp = 0;
             int temp2 = 3;
@@ -882,7 +886,7 @@ namespace EpServerEngineSampleClient
             {
                 m_client.Send(packet);
             }
-
+            */
         }
         // Insert logic for processing found files here.
         public static void ProcessFile(string path)
@@ -986,6 +990,7 @@ namespace EpServerEngineSampleClient
         }
         private void DBMgmt(object sender, EventArgs e) // "test2"
         {
+            /*
             int temp = 1;
             int temp2 = 4;
             byte[] atemp = BitConverter.GetBytes(temp);
@@ -999,7 +1004,7 @@ namespace EpServerEngineSampleClient
             {
                 m_client.Send(packet);
             }
-
+            */
             //gpsform.Enable_Dlg(true);
             //gpsform.StartPosition = FormStartPosition.Manual;
             //gpsform.Location = new Point(100, 10);
@@ -1053,6 +1058,7 @@ namespace EpServerEngineSampleClient
         }
         private void btnAVR_Click(object sender, EventArgs e)		// test3
         {
+            /*
             int temp = 2;
             int temp2 = 4;
             byte[] atemp = BitConverter.GetBytes(temp);
@@ -1067,7 +1073,7 @@ namespace EpServerEngineSampleClient
                 m_client.Send(packet);
             }
 
-            /*
+            
             bluetoothform.Enable_Dlg(true);
             bluetoothform.SetClient(m_client);
             bluetoothform.StartPosition = FormStartPosition.Manual;
@@ -1088,17 +1094,7 @@ namespace EpServerEngineSampleClient
         }
         private void Dialog1_Click(object sender, EventArgs e)
         {
-            string cmd = "ENABLE_SERIAL_PORT";
-            //AddMsg("start seq: " + cmd);
-            int offset = svrcmd.GetCmdIndexI(cmd);
-            svrcmd.Send_Cmd(offset);
-            /*
-                        psDlg.Enable_Dlg(true);
-                        psDlg.StartPosition = FormStartPosition.Manual;
-                        psDlg.Location = new Point(100, 10);
-                        psDlg.ShowDialog(this);
-                        psDlg.Enable_Dlg(false);
-            */
+			SetTime(9);
         }
         private void Dialog2_Click(object sender, EventArgs e)
         {
@@ -1519,7 +1515,7 @@ namespace EpServerEngineSampleClient
             }
             playdlg.Enable_Dlg(false);
         }
-        private void SetTime()
+        private void SetTime(int dest)
         {
             if (m_client.IsConnectionAlive)
             {
@@ -1527,13 +1523,15 @@ namespace EpServerEngineSampleClient
                 String cultureName = "en-US";
                 var culture = new CultureInfo(cultureName);
                 AddMsg(localDate.ToString(culture));
-
-                byte[] bytes = BytesFromString(localDate.ToString(culture));
-                byte[] bytes2 = new byte[bytes.Count() + 2];
-                System.Buffer.BlockCopy(bytes, 0, bytes2, 2, bytes.Length - 2);
+				int temp1 = dest;
+				byte[] bytes1 = BitConverter.GetBytes(temp1);
+                byte[] bytes2 = BytesFromString(localDate.ToString(culture));
+                byte[] bytes3 = new byte[bytes1.Count() + bytes2.Length + 2];
+                System.Buffer.BlockCopy(bytes1, 0, bytes3, 2, bytes1.Count());
+                System.Buffer.BlockCopy(bytes2, 0, bytes3, 4, bytes2.Length);
                 string set_time = "SET_TIME";
-                bytes2[0] = svrcmd.GetCmdIndexB(set_time);
-                Packet packet = new Packet(bytes2, 0, bytes2.Count(), false);
+                bytes3[0] = svrcmd.GetCmdIndexB(set_time);
+                Packet packet = new Packet(bytes3, 0, bytes3.Count(), false);
                 m_client.Send(packet);
             }
         }
@@ -1554,7 +1552,6 @@ namespace EpServerEngineSampleClient
                 AddMsg(msg + " " + temp);
             }
         }
-
         private void AvailClientSelIndexChanged(object sender, EventArgs e)
         {
             AvailClientCurrentSection = lbAvailClients.SelectedIndex;
@@ -1570,7 +1567,7 @@ namespace EpServerEngineSampleClient
             SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"),true);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)		// get status
         {
             SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"),false);
         }
@@ -1580,14 +1577,14 @@ namespace EpServerEngineSampleClient
             {
                 if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 {
-                    AddMsg(cl.label);
+                    //AddMsg(cl.label);
                     if(remove)
 					{
                         cl.lbindex = -1;
                         cl.socket = -1;
                     }
                     var temp = cl.index;
-                    int temp2 = 3;
+                    int temp2 = 3;		// this doesn't do anything
                     byte[] atemp = BitConverter.GetBytes(temp);
                     byte[] btemp = BitConverter.GetBytes(temp2);
                     byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
@@ -1596,12 +1593,16 @@ namespace EpServerEngineSampleClient
                     System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
                     System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
                     Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-					AddMsg(ctemp.Count().ToString());
+					//AddMsg(ctemp.Count().ToString());
                     if (m_client.IsConnectionAlive)
                     {
                         m_client.Send(packet);
                     }
                     RedrawClientListBox();
+					if(!remove)
+					{
+                        lbAvailClients.SetSelected(cl.lbindex,true);
+					}
                 }
 
             }
@@ -1610,6 +1611,67 @@ namespace EpServerEngineSampleClient
 		private void btnSendMsg_Click(object sender, EventArgs e)
 		{
             SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), false);
+        }
+
+		private void btnSendSvrMsg_Click(object sender, EventArgs e)
+		{
+            var temp = 9;   // _SERVER
+            int temp2 = 3;
+            byte[] atemp = BitConverter.GetBytes(temp);
+            byte[] btemp = BitConverter.GetBytes(temp2);
+            byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
+            string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("SEND_STATUS"));
+            ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
+            System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
+            Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+            AddMsg(ctemp.Count().ToString());
+            if (m_client.IsConnectionAlive)
+            {
+                m_client.Send(packet);
+            }
+        }
+
+		private void bSetClientTime_Click(object sender, EventArgs e)
+		{
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    AddMsg(cl.label);
+					SetTime(cl.index);
+				}	
+			}
+		}
+
+        private void GetTimeUp(int client)
+        {
+            var temp = client;
+            int temp2 = 3;  // this doesn't do anything
+            byte[] atemp = BitConverter.GetBytes(temp);
+            byte[] btemp = BitConverter.GetBytes(temp2);
+            byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
+            string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("SEND_TIMEUP"));
+            ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
+            System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
+            Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+            AddMsg(ctemp.Count().ToString());
+            if (m_client.IsConnectionAlive)
+            {
+                m_client.Send(packet);
+            }
+        }
+    private void btnReportTimeUp_Click(object sender, EventArgs e)
+		{
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    AddMsg(cl.label);
+                    GetTimeUp(cl.index);
+                }
+            }
         }
 	}
 }

@@ -11,7 +11,7 @@ namespace EpServerEngineSampleClient
 	class ServerCmds
 	{
 		enum Server_cmds
-		{	
+		{
 			NON_CMD,
 			ALL_LIGHTS_ON,
 			ALL_LIGHTS_OFF,
@@ -33,10 +33,10 @@ namespace EpServerEngineSampleClient
 			GET_TIME,
 			DISCONNECT,
 			BAD_MSG,
-			CURRENT_TIME,
+			SEND_TIMEUP,
 			SET_PARAMS,
 			EXIT_PROGRAM,
-			SERVER_UPTIME,
+			UPTIME_MSG,
 			SEND_CONFIG,
 			NAV_UP,
 			NAV_DOWN,

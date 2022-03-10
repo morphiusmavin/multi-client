@@ -38,61 +38,7 @@ static struct  sockaddr_in sad;  /* structure to hold server's address  */
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
 extern CMD_STRUCT cmd_array[];
-#if 0
-CMD_STRUCT cmd_array[NO_CMDS] =
-{
-	{	NON_CMD,"NON_CMD\0" },
-	{	ALL_LIGHTS_ON,"ALL_LIGHTS_ON\0" },
-	{	ALL_LIGHTS_OFF,"ALL_LIGHTS_OFF\0" },
-	{	ALL_NORTH_ON,"ALL_NORTH_ON\0" },
-	{	ALL_SOUTH_ON,"ALL_SOUTH_ON\0" },
-	{	ALL_MIDDLE_ON,"ALL_MIDDLE_ON\0" },
-	{	ALL_NORTH_OFF,"ALL_NORTH_OFF\0" },
-	{	ALL_SOUTH_OFF,"ALL_SOUTH_OFF\0" },
-	{	ALL_MIDDLE_OFF,"ALL_MIDDLE_OFF\0" },
-	{	ALL_EAST_ON,"ALL_EAST_ON\0" },
-	{	ALL_EAST_OFF,"ALL_EAST_OFF\0" },
-	{	ALL_WEST_ON,"ALL_WEST_ON\0" },
-	{	ALL_WEST_OFF,"ALL_WEST_OFF\0" },
-	{	BLANK,"BLANK\0" },
-	{	GET_TEMP4,"GET_TEMP4\0" },
-	{	SHUTDOWN_IOBOX,"SHUTDOWN_IOBOX\0" },
-	{	REBOOT_IOBOX,"REBOOT_IOBOX\0" },
-	{	SET_TIME,"SET_TIME\0" },
-	{	GET_TIME,"GET_TIME\0" },
-	{	DISCONNECT,"DISCONNECT\0" },
-	{	BAD_MSG,"BAD_MSG\0" },
-	{	CURRENT_TIME,"CURRENT_TIME\0" },
-	{	SET_PARAMS,"SET_PARAMS\0" },
-	{	EXIT_PROGRAM,"EXIT_PROGRAM\0" },
-	{	SERVER_UPTIME,"SERVER_UPTIME\0" },
-	{	SEND_CONFIG,"SEND_CONFIG\0" },
-	{	NAV_UP,"NAV_UP\0" },
-	{	NAV_DOWN,"NAV_DOWN\0" },
-	{	NAV_SIDE,"NAV_SIDE\0" },
-	{	NAV_CLICK,"NAV_CLICK\0" },
-	{	NAV_CLOSE,"NAV_CLOSE\0" },
-	{	SEND_STATUS,"SEND_STATUS\0" },
-	{	SERVER_UP,"SERVER_UP\0" },
-	{	SERVER_DOWN,"SERVER_DOWN\0" },
-	{	UPLOAD_NEW,"UPLOAD_NEW\0" },
-	{	UPLOAD_OTHER,"UPLOAD_OTHER\0" },
-	{	UPLOAD_NEW_PARAM,"UPLOAD_NEW_PARAM\0" },
-	{	GET_VERSION,"GET_VERSION\0" },
-	{	UPDATE_CONFIG,"UPDATE_CONFIG\0" },
-	{	SEND_CLIENT_LIST,"SEND_CLIENT_LIST\0" },
-	{	GET_CONFIG2,"GET_CONFIG2\0" },
-	{	CLIENT_CONNECTED,"CLIENT_CONNECTED\0" },
-	{	SERVER_CONNECTED,"SERVER_CONNECTED\0" },
-	{	SET_KEYMODE,"SET_KEYMODE\0" },
-	{	SHELL_AND_RENAME,"SHELL_AND_RENAME\0" },
-	{	TEST_IO_PORT,"TEST_IO_PORT\0" },
-	{	SEND_DEBUG_MSG,"SEND_DEBUG_MSG\0" },
-	{	UPDATE_STATUS,"UPDATE_STATUS\0" },
-	{	UPDATE_ALL,"UPDATE_ALL\0" },
-	{	SEND_MSG,"SEND_MSG\0" }
-};
-#endif
+
 //extern illist_t ill;
 extern ollist_t oll;
 
@@ -201,7 +147,7 @@ UCHAR get_host_cmd_task(int test)
 	osize *= i;
 	//printf("osize: %d\r\n",osize);
 
-	trunning_hours = trunning_minutes = trunning_seconds = 0;
+	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 
 //	program_start_time = curtime();
 
@@ -348,6 +294,13 @@ UCHAR get_host_cmd_task(int test)
 
  				switch(cmd)
 				{
+					case SEND_TIMEUP:
+						sprintf(tempx," %dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
+						tempx[0] = 9;
+						send_msg(strlen((char*)tempx),(UCHAR*)tempx, UPTIME_MSG);
+						printf("%s\n",tempx);
+						break;
+
 					case SEND_CLIENT_LIST:
 						for(i = 0;i < 12;i++)
 						{

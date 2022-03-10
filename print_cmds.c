@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #include "mytypes.h"
 #include "cmd_types.h"
 
@@ -25,10 +28,10 @@ CMD_STRUCT cmd_array[NO_CMDS] =
 	{	GET_TIME,"GET_TIME\0" },
 	{	DISCONNECT,"DISCONNECT\0" },
 	{	BAD_MSG,"BAD_MSG\0" },
-	{	CURRENT_TIME,"CURRENT_TIME\0" },
+	{	SEND_TIMEUP,"SEND_TIMEUP\0" },
 	{	SET_PARAMS,"SET_PARAMS\0" },
 	{	EXIT_PROGRAM,"EXIT_PROGRAM\0" },
-	{	SERVER_UPTIME,"SERVER_UPTIME\0" },
+	{	UPTIME_MSG,"UPTIME_MSG\0" },
 	{	SEND_CONFIG,"SEND_CONFIG\0" },
 	{	NAV_UP,"NAV_UP\0" },
 	{	NAV_DOWN,"NAV_DOWN\0" },
@@ -59,6 +62,6 @@ CMD_STRUCT cmd_array[NO_CMDS] =
 int main(void)
 {
 	int i;
-	for(i = 0;i < NON_CMDS;i++)
+	for(i = 0;i < NO_CMDS;i++)
 		printf("%02d\t\t%02x\t\t%s\n",cmd_array[i].cmd, cmd_array[i].cmd, cmd_array[i].cmd_str);
 }

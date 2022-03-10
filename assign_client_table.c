@@ -74,6 +74,13 @@ void assign_client_table(void)
 	client_table[_154].type = TS_CLIENT;
 	client_table[_154].qkey = 1244;
 	client_table[_154].qid = 0;
+
+	strcpy(client_table[_SERVER].ip,"146\0");
+	strcpy(client_table[_SERVER].label,"TS_Server\0");
+	client_table[_SERVER].socket = -1;
+	client_table[_SERVER].type = TS_SERVER;
+	client_table[_SERVER].qkey = 1245;
+	client_table[_SERVER].qid = 0;
 }
 #else
 #warning "SERVER NOT DEFINED"
@@ -126,5 +133,10 @@ void assign_client_table(void)
 	strcpy(client_table[_154].label,"TS_client7\0");
 	client_table[_154].socket = -1;
 	client_table[_154].type = TS_CLIENT;
+
+	strcpy(client_table[_SERVER].ip,"146\0");
+	strcpy(client_table[_SERVER].label,"TS_Server\0");
+	client_table[_SERVER].socket = -1;
+	client_table[_SERVER].type = TS_SERVER;
 }
 #endif
