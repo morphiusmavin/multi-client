@@ -20,7 +20,7 @@ typedef unsigned long ULONG;
 #define SERIAL_BUFF_SIZE 100
 #define RAW_DATA_ARRAY_SIZE 15
 #define MAX_CLIENTS	10
-#define NO_CMDS 50
+#define NO_CMDS 39
 
 struct msgqbuf 
 {

@@ -701,7 +701,6 @@ UCHAR timer_task(int test)
 	O_DATA **otpp2 = &otp2;
 //	static int test_ctr = 0;
 //	static int test_ctr2 = 0;
-//	static UCHAR nav = NAV_DOWN;
 	UCHAR cmd = 0x21;
 	UCHAR ucbuff[6];
 	int temp;
@@ -930,109 +929,6 @@ UCHAR serial_recv_task(int test)
 		}
 		cmd = read_serial_buffer[0];
 
-/*
-		memset(tempx,0,sizeof(tempx));
-		memccpy(tempx,read_serial_buffer,'+',30);
-		if(test_sock())
-			send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SEND_MSG);
-*/
-/*
-		write_serial(0xFF);
-		for(i = 0;i < 20;i++)
-		{
-			write_serial(tempx[i]);
-			usleep(1000);
-		}
-*/
-		if(cmd >= KP_1 && cmd <= KP_0)
-		{
-			switch(cmd)
-			{
-				case KP_0:
-					scroll_up();
-					break;
-
-				case KP_1:
-					break;
-
-				case KP_2:
-					break;
-
-				case KP_3:
-					break;
-
-				case KP_4:
-					break;
-
-				case KP_5:
-					break;
-
-				case KP_6:
-					break;
-
-				case KP_7:
-					break;
-
-				case KP_8:
-					break;
-
-				case KP_9:
-					break;
-
-				case KP_A:
-					break;
-
-				case KP_B:
-					break;
-
-				case KP_C:
-					break;
-
-				case KP_D:
-					break;
-
-				case KP_POUND:
-					send_serialother(SERVER_UP, (UCHAR *)&tempx[0]);
-					myprintf1("server up sent");
-					break;
-
-				case KP_AST:
-					send_serialother(SERVER_UP, (UCHAR *)&tempx[0]);
-					myprintf1("server up sent");
-					break;
-
-				default:
-					break;
-			}
-		}
-
-		if(cmd >= NAV_UP && cmd <= NAV_CLOSE || cmd == KP_POUND)
-		{
-			sprintf(tempx,"nav cmd: %d",cmd);
-//			printString2(tempx);
-			if(test_sock())
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SEND_MSG);
-			else		// if client not connected then these keys can 
-						// have alt. functions
-			{
-				switch(cmd)
-				{
-					case NAV_UP:	// 'A' key
-						break;
-					case NAV_DOWN:	// 'B' key
-						break;
-					case NAV_SIDE:	// '*' key
-						break;
-					case NAV_CLICK:	// 'C' key
-						break;
-					case NAV_CLOSE:	// 'D' key
-						break;
-					case KP_POUND:
-						break;
-				}
-			}
-		}else 
-
 		if(cmd == GET_CONFIG2)
 		{
 			temp = read_serial_buffer[2];
@@ -1082,7 +978,7 @@ int tcp_connect(void)
 	struct  protoent *ptrp;   /* point to a protocol table entry     */
 	static struct timeval tv;
 	int port;
-	char host[20] = "192.168.88.146";
+	char host[20] = "192.168.88.146";	// TS-SERVER I'm currently using 
 
 	memset((char *)&sad,0,sizeof(sad));  /* clear sockaddr structure */
 	sad.sin_family = AF_INET;            /* set family to Internet   */
@@ -1164,8 +1060,9 @@ UCHAR tcp_monitor_task(int test)
 					printf("can't connect\n");
 				}
 			}
+			uSleep(1,0);
 		}
-		uSleep(0,TIME_DELAY/2);
+		uSleep(2,TIME_DELAY/2);
 	}
 	return 1;
 }
@@ -1584,7 +1481,6 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case SHUTDOWN_IOBOX:
-				//send_serialother(SERVER_DOWN,(UCHAR *)tempx);
 				snprintf(tempx, strlen(tempx), "shutdown iobox");
 				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX);
 				uSleep(1,0);
@@ -1595,7 +1491,6 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case REBOOT_IOBOX:
-				//send_serialother(SERVER_DOWN,(UCHAR *)tempx);
 				snprintf(tempx, strlen(tempx), "reboot iobox");
 				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX);
 				uSleep(1,0);
@@ -1606,19 +1501,16 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case UPLOAD_NEW:
-				//send_serialother(SERVER_DOWN,(UCHAR *)tempx);
 				shutdown_all = 1;
 				reboot_on_exit = 4;
 				break;
 
 			case UPLOAD_NEW_PARAM:
-				//send_serialother(SERVER_DOWN,(UCHAR *)tempx);
 				shutdown_all = 1;
 				reboot_on_exit = 5;
 				break;
 
 			case SHELL_AND_RENAME:
-				//send_serialother(SERVER_DOWN,(UCHAR *)tempx);
 				shutdown_all = 1;
 				reboot_on_exit = 6;
 				break;

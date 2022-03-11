@@ -300,7 +300,7 @@ UCHAR get_host_cmd_task(int test)
 						break;
 
 					case SEND_CLIENT_LIST:
-						for(i = 0;i < 12;i++)
+						for(i = 0;i < MAX_CLIENTS;i++)
 						{
 							usleep(1000);
 						}
@@ -565,12 +565,6 @@ uSleep(0,TIME_DELAY/3);
 
 					case GET_VERSION:
 						send_status_msg(version);
-						break;
-
-
-					case SERVER_UP:
-						memset(tempx,0,sizeof(tempx));
-//						send_serialother(SERVER_UP,(UCHAR *)tempx);
 						break;
 
 					case TEST_IO_PORT:

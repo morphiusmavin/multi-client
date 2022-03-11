@@ -238,6 +238,20 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
+				case SEND_CLIENT_LIST:
+					for(i = 0;i < MAX_CLIENTS;i++)
+					{
+						if(client_table[i].socket > 0)
+						{
+							memset(tempx,0,sizeof(tempx));
+							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+							printf("%s\n",tempx);
+							send_msgb(windows_client_sock, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+							uSleep(0,TIME_DELAY/2);
+						}
+					}
+					break;
+				
 				case UPTIME_MSG:
 					printf("UPTIME_MSG: %s\n",tempx-1);
 					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
@@ -262,6 +276,7 @@ UCHAR get_host_cmd_task(int test)
 					temp = (int)(tempx[3] << 4);
 					temp |= (int)tempx[2];
 					printf("temp: %d\n",temp);
+					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,SEND_STATUS);
 					break;
 
 				case SET_PARAMS:
@@ -504,12 +519,6 @@ UCHAR get_host_cmd_task(int test)
 
 				case GET_VERSION:
 					send_status_msg(version);
-					break;
-
-
-				case SERVER_UP:
-					memset(tempx,0,sizeof(tempx));
-//						send_serialother(SERVER_UP,(UCHAR *)tempx);
 					break;
 
 				case TEST_IO_PORT:
