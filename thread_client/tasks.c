@@ -654,11 +654,10 @@ UCHAR timer2_task(int test)
 		if(++trunning_seconds > 59)
 		{
 			trunning_seconds = 0;
-			printf("running minutes: %d\r\n",trunning_minutes);
+			//printf("running minutes: %d\r\n",trunning_minutes);
 			if(++trunning_minutes > 59)
 			{
 				trunning_minutes = 0;
-				trunning_hours++;
 				if(++trunning_hours > 24)
 				{
 					trunning_hours = 0;
@@ -1494,6 +1493,16 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "reboot iobox");
 				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX);
 				uSleep(1,0);
+				//printf("reboot iobox\n");
+				shutdown_all = 1;
+				reboot_on_exit = 2;
+				close_tcp();
+				break;
+
+			case WAIT_REBOOT_IOBOX:
+				snprintf(tempx, strlen(tempx), "wait reboot iobox");
+				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,WAIT_REBOOT_IOBOX);
+				uSleep(20,0);
 				//printf("reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;

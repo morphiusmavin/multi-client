@@ -272,6 +272,7 @@ UCHAR get_host_cmd_task(int test)
 					case ALL_WEST_OFF:
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
+					case WAIT_REBOOT_IOBOX:
 					case UPLOAD_NEW:
 					case UPLOAD_NEW_PARAM:
 					case SHELL_AND_RENAME:
@@ -285,7 +286,7 @@ UCHAR get_host_cmd_task(int test)
 						break;
 				}
 
-				if(cmd == REBOOT_IOBOX || cmd == SHUTDOWN_IOBOX)
+				if(cmd == WAIT_REBOOT_IOBOX || cmd == REBOOT_IOBOX || cmd == SHUTDOWN_IOBOX)
 				{
 					return 1;
 				}

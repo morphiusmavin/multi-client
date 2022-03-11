@@ -672,10 +672,10 @@ UCHAR timer2_task(int test)
 		if(++trunning_seconds > 59)
 		{
 			trunning_seconds = 0;
-			printf("running minutes: %d\r\n",trunning_minutes);
+			//printf("running minutes: %d\r\n",trunning_minutes);
 			if(++trunning_minutes > 59)
 			{
-				printf("running hours: %d\r\n",trunning_hours);
+				//printf("running hours: %d\r\n",trunning_hours);
 				trunning_minutes = 0;
 				if(++trunning_hours > 24)
 				{
