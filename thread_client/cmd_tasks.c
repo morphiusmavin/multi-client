@@ -231,14 +231,19 @@ UCHAR get_host_cmd_task(int test)
 			}else
 			{
 				rc = recv_tcp(&msg_buf[0],msg_len+1,1);
-				printf("rc: %d\n",rc);
+				//printf("rc: %d\n",rc);
 				cmd = msg_buf[0];
 				//printf("cmd: %d\n",cmd);
 				memset(tempx,0,sizeof(tempx));
-
-				for(i = 2;i < rc-1;i++)
-					tempx[i-2] = msg_buf[i];
-
+/*
+				printf("\n");
+				for(i = 0;i < rc;i++)
+					printf("%02x ",msg_buf[i]);
+				printf("\n");
+*/
+				for(i = 1;i < rc;i++)
+					tempx[i-1] = msg_buf[i];
+/*
 				for(i = 0;i < rc;i++)
 					printf("%c",tempx[i]);
 				printf("\n");
@@ -246,6 +251,7 @@ UCHAR get_host_cmd_task(int test)
 				for(i = 0;i < rc;i++)
 					printf("%02x ",tempx[i]);
 				printf("\n");
+*/
 			}
 
 			if(cmd > 0)
@@ -317,10 +323,11 @@ UCHAR get_host_cmd_task(int test)
 						break;
 
 					case SEND_MSG:
-						printf("SEND_MSG\n");
-						for(i = 0;i < msg_len;i++)
-							printf("%02x ",tempx[i]);
-						printf("\n");
+						//printf("SEND_MSG\n");
+//						for(i = 0;i < msg_len;i++)
+//							printf("%02x ",tempx[i]);
+//						printf("\n");
+						printf("%s\n",tempx);
 						break;
 					
 					case SET_PARAMS:

@@ -867,6 +867,13 @@ startover:
 				printf("%02x ",msg_buf[j]);
 			printf("\n");
 */
+			win_client_to_client_sock = msg_buf[2];
+			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+
+			printf("\n");
+			for(i = 0;i < rc;i++)
+				printf("%02x ",msg_buf[i]);
+			printf("\n");
 			memset(tempx,0,sizeof(tempx));
 			k = 0;
 			for(j = 4;j < msg_len+4;j+=2)
@@ -891,8 +898,6 @@ startover:
 				goto startover;
 				// need a cmd that quits the server
 			}
-			win_client_to_client_sock = tempx[0];
-			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 			// if this is for the server then tempx[0] will be _SERVER (from CLIENT_LIST enum)
 			// so send a queue msg to get_host_cmd_task
 
@@ -918,12 +923,12 @@ startover:
 				// the windows client sends as the 1st byte the index into 
 				// the client_table[] array 
 				uSleep(0,TIME_DELAY/16);
-				//printf("sock: %d %s\n",client_table[win_client_to_client_sock].socket, 
-				//	client_table[win_client_to_client_sock].label);
+				printf("sock: %d %s\n",client_table[win_client_to_client_sock].socket, 
+					client_table[win_client_to_client_sock].label);
 	//			send_msg(client_table[win_client_to_client_sock].socket,strlen(tempx),(UCHAR*)tempx,cmd);
 
 				printf("msg.mtext: ");
-				for(i = 0;i < msg_len;i++)
+				for(i = 0;i < msg_len+4;i++)
 					printf("%02x ",msg.mtext[i]);
 				printf("\n");
 
@@ -1121,14 +1126,15 @@ UCHAR SendTask(int test)
 				//printf("No message available for msgrcv()\n");
 			} else
 			{
-				cmd = (UCHAR)msg.mtext[0];
-				msg_len = (int)msg.mtext[2];
-				msg_len |= (int)(msg.mtext[1] >> 4);
-				
-				printf("msg_len: %d\n",msg_len);
-				memcpy(tempx,msg.mtext+3,msg_len);
 
-				printf("message received: %s %d\n", msg.mtext,errno);
+				cmd = msg.mtext[0];
+				msg_len |= (int)(msg.mtext[2] << 4);
+				msg_len = (int)msg.mtext[1];
+				
+				printf("sendtask msg_len: %d\n",msg_len);
+				memcpy(tempx,msg.mtext+4,msg_len);
+
+				printf("message received: %s %d\n", tempx,errno);
 				//printf("cmd: %d\n",cmd);
 				print_cmd(cmd);
 				perror(errmsg);
@@ -1137,7 +1143,7 @@ UCHAR SendTask(int test)
 
 			if(pass)
 			{
-				printf("sending msg\n");
+				printf("sending msg %s\n",tempx);
 				send_msg(client_table[index].socket, msg_len, (UCHAR*)tempx,cmd);
 				pass = 0;
 			}

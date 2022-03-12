@@ -1390,10 +1390,48 @@ namespace EpServerEngineSampleClient
 
             }
         }
+        private void SendClientMsg(int msg, string param, bool remove)
+        {
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    //AddMsg(cl.label);
+                    if(remove)
+					{
+                        cl.lbindex = -1;
+                        cl.socket = -1;
+                    }
+                    var temp = cl.index;
+					AddMsg(param);
+                    byte[] atemp = BitConverter.GetBytes(temp);
+                    byte[] btemp = BytesFromString(param);
+                    byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
+                    string cmsg = svrcmd.GetName(msg);
+                    ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
+                    System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+                    System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
+                    Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+					//AddMsg(ctemp.Count().ToString() + " " + temp.ToString());
+                    if (m_client.IsConnectionAlive)
+                    {
+                        m_client.Send(packet);
+                    }
+                    RedrawClientListBox();
+					if(!remove)
+					{
+                        lbAvailClients.SetSelected(cl.lbindex,true);
+					}
+                }
+
+            }
+        }
 
 		private void btnSendMsg_Click(object sender, EventArgs e)
 		{
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), 0, false);
+            //            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), 0, false);
+            //AddMsg(tbSendMsg.Text);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), tbSendMsg.Text, false);
         }
 
 		private void btnSendSvrMsg_Click(object sender, EventArgs e)
