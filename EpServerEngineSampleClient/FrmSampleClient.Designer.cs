@@ -45,7 +45,7 @@
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.cbIPAdress = new System.Windows.Forms.ComboBox();
 			this.btnShutdown = new System.Windows.Forms.Button();
-			this.btnReboot = new System.Windows.Forms.Button();
+			this.btnRescan = new System.Windows.Forms.Button();
 			this.btnShowParams = new System.Windows.Forms.Button();
 			this.btnDBMgmt = new System.Windows.Forms.Button();
 			this.btnClear = new System.Windows.Forms.Button();
@@ -65,6 +65,7 @@
 			this.btnSendSvrMsg = new System.Windows.Forms.Button();
 			this.bSetClientTime = new System.Windows.Forms.Button();
 			this.btnReportTimeUp = new System.Windows.Forms.Button();
+			this.btnWaitReboot = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -244,17 +245,17 @@
 			this.btnShutdown.UseVisualStyleBackColor = false;
 			this.btnShutdown.Click += new System.EventHandler(this.ShutdownServer);
 			// 
-			// btnReboot
+			// btnRescan
 			// 
-			this.btnReboot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnReboot.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnReboot.Location = new System.Drawing.Point(15, 112);
-			this.btnReboot.Name = "btnReboot";
-			this.btnReboot.Size = new System.Drawing.Size(235, 61);
-			this.btnReboot.TabIndex = 0;
-			this.btnReboot.Text = "test";
-			this.btnReboot.UseVisualStyleBackColor = false;
-			this.btnReboot.Click += new System.EventHandler(this.RebootServer);
+			this.btnRescan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnRescan.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnRescan.Location = new System.Drawing.Point(15, 112);
+			this.btnRescan.Name = "btnRescan";
+			this.btnRescan.Size = new System.Drawing.Size(235, 61);
+			this.btnRescan.TabIndex = 0;
+			this.btnRescan.Text = "Re-scan Clients";
+			this.btnRescan.UseVisualStyleBackColor = false;
+			this.btnRescan.Click += new System.EventHandler(this.RebootServer);
 			// 
 			// btnShowParams
 			// 
@@ -397,7 +398,7 @@
 			// 
 			this.btnRebootClient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnRebootClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnRebootClient.Location = new System.Drawing.Point(847, 262);
+			this.btnRebootClient.Location = new System.Drawing.Point(847, 284);
 			this.btnRebootClient.Name = "btnRebootClient";
 			this.btnRebootClient.Size = new System.Drawing.Size(219, 35);
 			this.btnRebootClient.TabIndex = 36;
@@ -408,7 +409,7 @@
 			// btnShutdownClient
 			// 
 			this.btnShutdownClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnShutdownClient.Location = new System.Drawing.Point(847, 306);
+			this.btnShutdownClient.Location = new System.Drawing.Point(847, 376);
 			this.btnShutdownClient.Name = "btnShutdownClient";
 			this.btnShutdownClient.Size = new System.Drawing.Size(219, 37);
 			this.btnShutdownClient.TabIndex = 37;
@@ -419,7 +420,7 @@
 			// btnSendStatus
 			// 
 			this.btnSendStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendStatus.Location = new System.Drawing.Point(847, 352);
+			this.btnSendStatus.Location = new System.Drawing.Point(847, 424);
 			this.btnSendStatus.Name = "btnSendStatus";
 			this.btnSendStatus.Size = new System.Drawing.Size(219, 37);
 			this.btnSendStatus.TabIndex = 38;
@@ -430,7 +431,7 @@
 			// btnSendMsg
 			// 
 			this.btnSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendMsg.Location = new System.Drawing.Point(847, 398);
+			this.btnSendMsg.Location = new System.Drawing.Point(847, 472);
 			this.btnSendMsg.Name = "btnSendMsg";
 			this.btnSendMsg.Size = new System.Drawing.Size(219, 37);
 			this.btnSendMsg.TabIndex = 39;
@@ -441,7 +442,7 @@
 			// btnSendSvrMsg
 			// 
 			this.btnSendSvrMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendSvrMsg.Location = new System.Drawing.Point(847, 450);
+			this.btnSendSvrMsg.Location = new System.Drawing.Point(847, 520);
 			this.btnSendSvrMsg.Name = "btnSendSvrMsg";
 			this.btnSendSvrMsg.Size = new System.Drawing.Size(219, 37);
 			this.btnSendSvrMsg.TabIndex = 40;
@@ -452,7 +453,7 @@
 			// bSetClientTime
 			// 
 			this.bSetClientTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.bSetClientTime.Location = new System.Drawing.Point(847, 503);
+			this.bSetClientTime.Location = new System.Drawing.Point(847, 568);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(219, 37);
 			this.bSetClientTime.TabIndex = 41;
@@ -463,7 +464,7 @@
 			// btnReportTimeUp
 			// 
 			this.btnReportTimeUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnReportTimeUp.Location = new System.Drawing.Point(847, 556);
+			this.btnReportTimeUp.Location = new System.Drawing.Point(847, 616);
 			this.btnReportTimeUp.Name = "btnReportTimeUp";
 			this.btnReportTimeUp.Size = new System.Drawing.Size(219, 37);
 			this.btnReportTimeUp.TabIndex = 42;
@@ -471,12 +472,25 @@
 			this.btnReportTimeUp.UseVisualStyleBackColor = true;
 			this.btnReportTimeUp.Click += new System.EventHandler(this.btnReportTimeUp_Click);
 			// 
+			// btnWaitReboot
+			// 
+			this.btnWaitReboot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnWaitReboot.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.btnWaitReboot.Location = new System.Drawing.Point(847, 330);
+			this.btnWaitReboot.Name = "btnWaitReboot";
+			this.btnWaitReboot.Size = new System.Drawing.Size(219, 35);
+			this.btnWaitReboot.TabIndex = 43;
+			this.btnWaitReboot.Text = "Wait Reboot ";
+			this.btnWaitReboot.UseVisualStyleBackColor = false;
+			this.btnWaitReboot.Click += new System.EventHandler(this.btnWaitReboot_Click);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1084, 688);
+			this.Controls.Add(this.btnWaitReboot);
 			this.Controls.Add(this.btnReportTimeUp);
 			this.Controls.Add(this.bSetClientTime);
 			this.Controls.Add(this.btnSendSvrMsg);
@@ -495,7 +509,7 @@
 			this.Controls.Add(this.btnClear);
 			this.Controls.Add(this.btnDBMgmt);
 			this.Controls.Add(this.btnShowParams);
-			this.Controls.Add(this.btnReboot);
+			this.Controls.Add(this.btnRescan);
 			this.Controls.Add(this.btnShutdown);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.btn_PlayList);
@@ -542,7 +556,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnShutdown;
-        private System.Windows.Forms.Button btnReboot;
+        private System.Windows.Forms.Button btnRescan;
         private System.Windows.Forms.Button btnShowParams;
         private System.Windows.Forms.Button btnDBMgmt;
         private System.Windows.Forms.Button btnClear;
@@ -563,6 +577,7 @@
 		private System.Windows.Forms.Button btnSendSvrMsg;
 		private System.Windows.Forms.Button bSetClientTime;
 		private System.Windows.Forms.Button btnReportTimeUp;
+		private System.Windows.Forms.Button btnWaitReboot;
 	}
 }
 

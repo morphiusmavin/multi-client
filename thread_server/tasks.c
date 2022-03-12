@@ -57,8 +57,8 @@ int total_count;
 
 UCHAR (*fptr[NUM_TASKS])(int) = { get_host_cmd_task, monitor_input_task, 
 monitor_fake_input_task, timer_task, timer2_task, WinClReadTask, WinClWriteTask,
-ReadTask1, SendTask1, ReadTask2, SendTask2, serial_recv_task, 
-tcp_monitor_task, basic_controls_task};
+serial_recv_task, tcp_monitor_task, basic_controls_task, ReadTask, SendTask, 
+ReadTask, SendTask, ReadTask, SendTask};
 
 int threads_ready_count=0;
 pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
@@ -94,7 +94,7 @@ CLIENT_TABLE1 client_table[MAX_CLIENTS];
 
 static int msg_queue_ptr;
 static int msg_client_queue_ptr;
-static CLIENTS clients[MSG_CLIENT_QUEUE_SIZE];
+//static CLIENTS clients[MSG_CLIENT_QUEUE_SIZE];
 int windows_client_sock = -1;
 
 #define ON 1
@@ -836,6 +836,7 @@ UCHAR timer_task(int test)
 /*********************************************************************/
 UCHAR WinClReadTask(int test)
 {
+//	printf("winclread: %d\n",test);
 	int i,j,k,rc,msg_len;
 	char tempx[200];
 	char msg_buf[200];
@@ -972,10 +973,29 @@ UCHAR WinClWriteTask(int test)
 		}
 	}
 }
-/*********************************************************************/
-UCHAR ReadTask1(int test)
+
+int lookup_taskid(int index)
 {
-	int index = _151;
+	int i;
+
+	for(i = 0;i < MAX_CLIENTS;i++)
+	{
+		//printf("task_id: %d\n",client_table[i].task_id);
+		if(client_table[i].task_id > 0 && client_table[i].task_id == index)
+		{
+			//printf("found %d %s\n",i,client_table[i].label);
+			return i;
+		}
+	}
+	return -1;
+}
+
+/*********************************************************************/
+UCHAR ReadTask(int test)
+{
+	printf("readtask: %d\n",test);
+	int index = lookup_taskid(test);
+
 	char tempx[100];
 	int msg_len;
 	int ret;
@@ -986,6 +1006,7 @@ UCHAR ReadTask1(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
+	printf("sendtask: %s\n",client_table[index].label);
 
 	while(TRUE)
 	{
@@ -1058,9 +1079,11 @@ startover1:
 	}
 }
 /*********************************************************************/
-UCHAR SendTask1(int test)
+UCHAR SendTask(int test)
 {
-	int index = _151;
+	printf("sendtask: %d\n",test);
+	int index = lookup_taskid(test-1);
+
 	int msg_len;
 	char msg_buf[100];
 	char recip[4];
@@ -1071,6 +1094,7 @@ UCHAR SendTask1(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
+	printf("sendtask: %s\n",client_table[index].label);
 
 	i = 0;
 	while(TRUE)
@@ -1113,153 +1137,6 @@ UCHAR SendTask1(int test)
 			return 0;
 		}
 		uSleep(0,TIME_DELAY/16);
-	}
-}
-/*********************************************************************/
-UCHAR ReadTask2(int test)
-{
-	int index = _145;
-	char tempx[100];
-	int msg_len;
-	int ret;
-	UCHAR cmd;
-	int i;
-	int temp;
-	int recip;
-	struct msgqbuf msg;
-	int msgtype = 1;
-	msg.mtype = msgtype;
-
-	while(TRUE)
-	{
-startover1:
-		if(client_table[index].socket > 0)
-		{
-			printf("read task 2\n");
-			msg_len = get_msg(client_table[index].socket);
-			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+1,1);
-/*
-			strncpy(recip,&tempx[1],3);
-			printf("recip: %s\n",recip);
-*/
-//			printf("ret: %d\n",ret);
-			cmd = tempx[0];
-			//printf("cmd: %d\n",cmd);
-			print_cmd(cmd);
-			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX)
-			{
-				printf("shutdown or reboot\n");
-				close(client_table[index].socket);
-				client_table[index].socket = -1;
-				// the break statement only goes back up to 
-				// "read task 2"
-				goto startover1;
-//				break;
-			}
-			if(ret > 200)
-				break;
-			//printf("%02x %02x %02x\n",tempx[0],tempx[1],tempx[2]);
-/*
-			for(i = 0;i < ret;i++)
-			{
-				printf("%02x ",tempx[i]);
-			}
-*/
-			recip = (int)tempx[1];
-			printf("recp: %d\n",recip);
-			if(recip == _SERVER)		// from one of the clients to the server
-			{
-				memset(msg.mtext,0,sizeof(msg.mtext));
-				msg.mtext[0] = cmd;
-				memcpy(msg.mtext + 1,tempx,msg_len);
-				printf("2: msg to cmd_host: %s\n",tempx);
-				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-				{
-					perror("msgsnd error");
-					exit(EXIT_FAILURE);
-				}
-			}else 						// from one of the clients to another client 
-			{
-				printf("recip: %s\n",client_table[recip].label);
-				// this is just because I wanted to send an int
-//				temp = (int)(tempx[3] << 4);
-//				temp |= (int)tempx[2];
-				//printf("\n%d\n",temp);
-				//memmove(tempx,tempx+5,ret-5);
-				printf("%s\n",tempx);
-				send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
-			}
-		}
-		//printf("&");
-
-		if(shutdown_all)
-		{
-			printf("leaving read task\n");
-			return 0;
-		}
-		uSleep(0,TIME_DELAY/16);
-	}
-}
-/*********************************************************************/
-UCHAR SendTask2(int test)
-{
-	int index = _145;
-	int msg_len;
-	char msg_buf[100];
-	char recip[4];
-	int i;
-	UCHAR cmd = 0;
-	int pass = 0;
-    int msgflg = IPC_CREAT | 0666;
-	struct msgqbuf msg;
-	int msgtype = 1;
-	msg.mtype = msgtype;
-
-	i = 0;
-	while(TRUE)
-	{
-		if(client_table[index].socket > 0)
-		{
-//			client_table[i].qid = msgget(client_table[i].qkey, IPC_CREAT | 0666);
-			if (msgrcv(client_table[index].qid, (void *) &msg, sizeof(msg.mtext), msgtype,
-			MSG_NOERROR | IPC_NOWAIT) == -1) 
-			{
-				if (errno != ENOMSG) 
-				{
-					perror("msgrcv");
-					exit(EXIT_FAILURE);
-				}
-				//printf("No message available for msgrcv()\n");
-			} else
-			{
-				cmd = (UCHAR)msg.mtext[0];
-				memmove(msg.mtext,msg.mtext+1,49);
-//				printf("message received: %s %d\n", msg.mtext,errno);
-				//printf("cmd: %d\n",cmd);
-				print_cmd(cmd);
-				perror(msg_buf);
-				pass = 1;
-			}
-
-//			if(errno != ENOMSG)
-			if(pass)
-			{
-				printf("sending msg to: %s\n",client_table[index].label);
-				send_msg(client_table[index].socket, strlen(msg.mtext), (UCHAR*)msg.mtext,cmd);
-//				if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX)
-//					client_table[index].socket = -1;
-				pass = 0;
-			}
-			uSleep(0,TIME_DELAY/16);
-
-		} else uSleep(0,TIME_DELAY/16);
-
-		if(shutdown_all)
-		{
-			return 0;
-		}
-		
-//		to_sock = get_client_sock(recip);
 	}
 }
 /*********************************************************************/
@@ -1536,8 +1413,6 @@ UCHAR tcp_monitor_task(int test)
 	char recip[4];
 	int to_sock;
 	
-	assign_client_table();
-
 // 156 & 157 are the next 2 avail - 155 is the firstpi.local
 
 	s = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
@@ -1790,6 +1665,8 @@ void *work_routine(void *arg)
 	i = not_done;
 	shutdown_all = 0;
 
+//printf("arg: %d\n",*my_id);
+
 	pthread_mutex_lock(&threads_ready_lock);
 	threads_ready_count++;
 	if (threads_ready_count == NUM_TASKS)
@@ -1809,7 +1686,7 @@ void *work_routine(void *arg)
 
 	while(not_done)
 	{
-		(*fptr[*my_id])(i);
+		(*fptr[*my_id])(*my_id);
 		i--;
 		not_done--;
 	}

@@ -687,7 +687,7 @@ UCHAR timer2_task(int test)
 UCHAR timer_task(int test)
 {
 	int i;
-	UCHAR time_buffer[20];
+	UCHAR time_buffer[30];
 	int index = 0;
 	int bank = 0;
 	int fp;
@@ -713,7 +713,7 @@ UCHAR timer_task(int test)
 			cmd = 0x21;
 	}
 	i = 0;
-*/	
+*/
 	while(TRUE)
 	{
 		if(shutdown_all)
@@ -731,17 +731,17 @@ UCHAR timer_task(int test)
 
 		send_msg(22,(UCHAR*)time_buffer,SEND_MSG);
 		i++;
-		//printf("%d ",i);
 */
-		uSleep(5,0);
-	}
+		//printf("%d ",i);
+		uSleep(1,0);
 
+/*
 	i = 0;
 	while(TRUE)
 	{
 		memset(time_buffer,0,sizeof(time_buffer));
 		sprintf(time_buffer,"____ABCDEF145JM %d\0",i);
-		time_buffer[0] = global_index;
+		time_buffer[0] = global_index;		// this is passed in as a cmd line param on startup
 		time_buffer[1] = (UCHAR)i;
 		time_buffer[2] = (UCHAR)(i >> 4);
 
@@ -756,6 +756,7 @@ UCHAR timer_task(int test)
 			//printString2("done timer");
 			return 0;
 		}
+*/
 	}
 	return 1;
 }

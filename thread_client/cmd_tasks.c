@@ -317,14 +317,14 @@ UCHAR get_host_cmd_task(int test)
 						break;
 
 					case SEND_MSG:
-//						printf("SEND_MSG\n");
-//						for(i = 0;i < msg_len;i++)
-//							printf("%c",tempx[i]);
-//						printf("\n");
+						printf("SEND_MSG\n");
+						for(i = 0;i < msg_len;i++)
+							printf("%02x ",tempx[i]);
+						printf("\n");
 						break;
 					
 					case SET_PARAMS:
-						send_param_msg();
+//						send_param_msg();
 						break;
 
 					case SET_TIME:
@@ -823,7 +823,7 @@ void send_param_msg(void)
 														ps.password_retries,
 														ps.baudrate3,
 														password);
-	send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SEND_CONFIG);
+//	send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SEND_CONFIG);
 }
 /*********************************************************************/
 void send_status_msg(char *msg)

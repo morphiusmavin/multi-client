@@ -50,6 +50,7 @@ typedef struct
 	int type;
 	key_t qkey;
 	int qid;
+	int task_id;
 }CLIENT_TABLE1;		// server
 
 enum client_types

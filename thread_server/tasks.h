@@ -1,7 +1,7 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_TASKS           	14
+#define NUM_TASKS           	16
 #define DEFAULT                 0
 #define TIME_SLICE              1
 #define FIFO                    2
@@ -47,13 +47,15 @@ enum task_types
 	TIMER2,
 	WINCL_READ_TASK,
 	WINCL_WRITE_TASK,
+	TCP_MONITOR,
+	SERIAL_RECV,
+	BASIC_CONTROLS,
 	READ_TASK1,
 	SEND_TASK1,
 	READ_TASK2,
 	SEND_TASK2,
-	TCP_MONITOR,
-	SERIAL_RECV,
-	BASIC_CONTROLS
+	READ_TASK3,
+	SEND_TASK3
 } TASK_TYPES;
 
 UCHAR get_host_cmd_task(int test);
@@ -63,10 +65,8 @@ UCHAR timer_task(int test);
 UCHAR timer2_task(int test);
 UCHAR WinClReadTask(int test);
 UCHAR WinClWriteTask(int test);
-UCHAR ReadTask1(int test);
-UCHAR SendTask1(int test);
-UCHAR ReadTask2(int test);
-UCHAR SendTask2(int test);
+UCHAR ReadTask(int test);
+UCHAR SendTask(int test);
 UCHAR serial_recv_task(int test);
 UCHAR serial_recv_task2(int test);
 UCHAR tcp_monitor_task(int test);
@@ -115,6 +115,7 @@ typedef struct
 	int onoff;
 }SPECIAL_CMD_ARR;
 
+/*
 typedef struct
 {
 	char ip[4];
@@ -123,7 +124,7 @@ typedef struct
 	int msg_len;
 	char message[20];
 }CLIENTS;
-
+*/
 // global variables
 UCHAR trunning_days, trunning_hours, trunning_minutes, trunning_seconds;
 

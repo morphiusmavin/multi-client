@@ -62,8 +62,6 @@ namespace EpServerEngineSampleClient
         INetworkClient m_client = new IocpTcpClient();
         private string password = "";
 
-        public System.Collections.Generic.List<ButtonList> button_list;
-        private List<int> Exclude_From_buttons = new List<int>();
         private PortSet2 psDlg = null;
         private PortSet2 psDlg2 = null;
         private PortSet2 psDlg3 = null;
@@ -80,9 +78,6 @@ namespace EpServerEngineSampleClient
 
         private List<ClientParams> client_params;
         private List<ClientsAvail> clients_avail;
-        private int current_button = 0;
-        private int previous_button = 0;
-        private int no_buttons = 0;
         private int i = 0;
         private int selected_address = 0;
         private int selected_wifi_address = 0;
@@ -115,10 +110,6 @@ namespace EpServerEngineSampleClient
         public FrmSampleClient()
         {
             InitializeComponent();
-            button_list = new List<ButtonList>();
-            //            use_main_odata = true;
-            //this.conn = new System.Data.SqlClient.SqlConnection(connectionString);
-            //            this.cmd = new System.Data.SqlClient.SqlCommand("UPDATE O_DATA SET label=@label WHERE port=@recno", conn);
             svrcmd.SetClient(m_client);
             dlgsetparams = new DlgSetParams(cfg_params);
             dlgsetparams.SetClient(m_client);
@@ -246,56 +237,6 @@ namespace EpServerEngineSampleClient
                 AddMsg("no primary address found in xml file");
             }
 
-            Control sCtl = this.btnReboot;
-            for (int i = 0; i < this.Controls.Count; i++)
-            {
-                if (sCtl.GetType() == typeof(Button))
-                {
-                    button_list.Add(new ButtonList()
-                    {
-                        TabOrder = sCtl.TabIndex,
-                        Ctl = (Button)sCtl,
-                        Enabled = sCtl.Enabled,
-                        Name = sCtl.Name
-                    });
-                    sCtl = GetNextControl(sCtl, true);
-                }
-            }
-            /*
-			foreach (ButtonList btn in button_list)
-			{
-				AddMsg(btn.Name + " " + btn.TabOrder.ToString());
-			}
-			*/
-            // Set the list of buttons to skip
-            // over if in NAV mode (remote keypad)
-            // some for obvious reasons, you don't want to 
-            // execute the disconnect from server while
-            // on the keypad or you have to open up the
-            // laptop again and fix it
-
-            Exclude_From_buttons.Add(10);
-            Exclude_From_buttons.Add(11);
-            Exclude_From_buttons.Add(12);
-            Exclude_From_buttons.Add(13);
-            Exclude_From_buttons.Add(14);
-            Exclude_From_buttons.Add(15);
-
-            no_buttons = 0;
-            for (int j = 0; j < Exclude_From_buttons.Count(); j++)
-            {
-                for (i = 0; i < button_list.Count(); i++)
-                {
-                    if (button_list[i].TabOrder == Exclude_From_buttons[j])
-                        button_list.RemoveAt(i);
-
-                }
-            }
-            foreach (ButtonList btn in button_list)
-            {
-                no_buttons++;
-                //AddMsg(btn.Name + " en: " + btn.Enabled.ToString());
-            }
             timer1.Enabled = true;
             //ListMsg("Hello!",true);
         }
@@ -319,7 +260,6 @@ namespace EpServerEngineSampleClient
                 please_lets_disconnect = 1; // let's disconnect here!
                 disconnect_attempts = 0;
             }
-            reevaluate_enabled_buttons();
         }
         public void OnConnected(INetworkClient client, ConnectStatus status)
         {
@@ -339,12 +279,11 @@ namespace EpServerEngineSampleClient
 					tbPort.Enabled = false;
 
                     btnShutdown.Enabled = true;
-                    btnReboot.Enabled = true;
+                    btnRescan.Enabled = true;
                     tbServerTime.Text = "";
 
                     btn_PlayList.Enabled = true;
                     btnGetTime.Enabled = true;
-                    reevaluate_enabled_buttons();
                     AddMsg("server_up_seconds: " + server_up_seconds.ToString());
                     btnShowParams.Enabled = valid_cfg;
                     clients_avail[9].socket = 1;        // 9 is _SERVER
@@ -361,7 +300,6 @@ namespace EpServerEngineSampleClient
                 btnConnect.Text = "Connect";
                 tbConnected.Text = "not connected";
                 btnShutdown.Enabled = false;
-                reevaluate_enabled_buttons();
             }
         }
         protected override void OnClosed(EventArgs e)
@@ -471,6 +409,7 @@ namespace EpServerEngineSampleClient
             switch (str)
             {
                 case "UPTIME_MSG":
+                    ret = ret.Substring(1);
                     AddMsg(ret);
                     break;
                 case "ESP_CLIENT_STATUS":
@@ -483,46 +422,7 @@ namespace EpServerEngineSampleClient
                     }
                     AddMsg("esp cmd: " + ret.ToString());
                     break;
-                // this is sent by home server (not used)
-                /*
-                case "SEND_CONFIG2":
-                    AddMsg("send config2");
-                    cfg_params.rpm_mph_update_rate = BitConverter.ToInt16(bytes, 2);
-                    cfg_params.FPGAXmitRate = BitConverter.ToInt16(bytes, 4);
-                    cfg_params.high_rev_limit = BitConverter.ToInt16(bytes, 6);
-                    cfg_params.low_rev_limit = BitConverter.ToInt16(bytes, 8);
-                    cfg_params.fan_on = BitConverter.ToInt16(bytes, 10);
-                    cfg_params.fan_off = BitConverter.ToInt16(bytes, 12);
-                    cfg_params.lights_on_value = BitConverter.ToInt16(bytes, 14);
-                    cfg_params.lights_off_value = BitConverter.ToInt16(bytes, 16);
-                    cfg_params.adc_rate = BitConverter.ToInt16(bytes, 18);
-                    cfg_params.rt_value_select = BitConverter.ToInt16(bytes, 20);
-                    cfg_params.lights_on_delay = BitConverter.ToInt16(bytes, 22);
-                    cfg_params.engine_temp_limit = BitConverter.ToInt16(bytes, 24);
-                    cfg_params.battery_box_temp = BitConverter.ToInt16(bytes, 26);
-                    cfg_params.test_bank = BitConverter.ToInt16(bytes, 28);
-                    cfg_params.password_timeout = BitConverter.ToInt16(bytes, 30);
-                    cfg_params.password_retries = BitConverter.ToInt16(bytes, 32);
-                    // pass the same msg along to the linux server but just
-                    // change the cmd to "UPLOAD_CONFIG"
-                    bytes[0] = svrcmd.GetCmdIndexB("UPDATE_CONFIG");
-                    Packet packet = new Packet(bytes, 0, bytes.Count(), false);
-                    if (m_client.IsConnectionAlive)
-                    {
-                        m_client.Send(packet);
-                    }
-                    //AddMsg("hi rev: " + cfg_params.high_rev_limit.ToString());
-                    substr = dlgsetparams.get_temp_str(cfg_params.engine_temp_limit).ToString();
-                    AddMsg("temp limit: " + substr);
-                    AddMsg("");
-                    substr = dlgsetparams.get_temp_str(cfg_params.fan_on).ToString();
-                    AddMsg("fan on: " + substr);
-                    AddMsg("");
-                    substr = dlgsetparams.get_temp_str(cfg_params.fan_off).ToString();
-                    AddMsg("fan off: " + substr);
-                    AddMsg("");
-                    break;
-					*/
+              
                 case "SVR_CMD":
                     //AddMsg("str: " + str.Length.ToString());
                     //AddMsg(str);
@@ -733,26 +633,6 @@ namespace EpServerEngineSampleClient
                     ListMsg(ret, true);
                     break;
 
-                case "SYSTEM_UP":
-                    ListMsg(ret, true);
-                    break;
-
-                case "SYSTEM_DOWN":
-                    ListMsg(ret, true);
-                    break;
-
-                case "NAV_UP":
-                case "NAV_DOWN":
-                case "NAV_SIDE":
-                case "NAV_CLICK":
-                case "NAV_CLOSE":
-                    navigate_buttons(str);
-                    break;
-
-                case "ESTOP_SIGNAL":
-                    AddMsg("ESTOP: " + ret);
-                    break;
-
                 case "SEND_STATUS":
                     AddMsg(ret);
                     break;
@@ -857,36 +737,9 @@ namespace EpServerEngineSampleClient
         }
         private void RebootServer(object sender, EventArgs e)       // "test"
         {
-            /*
-                        netclients.Enable_Dlg(true);
-
-                        netclients.StartPosition = FormStartPosition.Manual;
-                        netclients.Location = new Point(100, 10);
-
-                        if (netclients.ShowDialog(this) == DialogResult.OK)
-                        {
-                        }
-                        else
-                        {
-                            //                this.txtResult.Text = "Cancelled";
-                        }
-                        netclients.Enable_Dlg(false);
-            
-
-            var temp = 0;
-            int temp2 = 3;
-            byte[] atemp = BitConverter.GetBytes(temp);
-            byte[] btemp = BitConverter.GetBytes(temp2);
-            byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
-            ctemp[0] = svrcmd.GetCmdIndexB("REBOOT_IOBOX");
-            System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
-            Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-            if (m_client.IsConnectionAlive)
-            {
-                m_client.Send(packet);
-            }
-            */
+            string cmd = "SEND_CLIENT_LIST";
+            int offset = svrcmd.GetCmdIndexI(cmd);
+            svrcmd.Send_Cmd(offset);
         }
         // Insert logic for processing found files here.
         public static void ProcessFile(string path)
@@ -1150,77 +1003,6 @@ namespace EpServerEngineSampleClient
             psDlg6.ShowDialog(this);
             psDlg6.Enable_Dlg(false);
         }
-        private void reevaluate_enabled_buttons()
-        {
-            foreach (ButtonList btn in button_list)
-            {
-                btn.Enabled = btn.Ctl.Enabled;
-            }
-        }
-        private void navigate_buttons(string str)
-        {
-            switch (str)
-            {
-                case "NAV_UP":
-                    previous_button = current_button;
-                    current_button--;
-                    if (current_button < 0)
-                        current_button = no_buttons - 1;
-                    button_list[current_button].Ctl.BackColor = Color.Aqua;
-                    button_list[previous_button].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-
-                    //AddMsg("up  " + button_list[current_button].Name + " " + button_list[current_button].TabOrder.ToString());
-
-                    //AddMsg("up  " + button_list[current_button].Name + " " 
-                    //+ current_button.ToString() + " " + previous_button.ToString()+ " " + button_list[current_button].TabOrder.ToString());
-                    break;
-
-                case "NAV_DOWN":
-                    previous_button = current_button;
-                    current_button++;
-                    if (current_button > no_buttons - 1)
-                        current_button = 0;
-                    button_list[current_button].Ctl.BackColor = Color.Aqua;
-                    button_list[previous_button].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-                    //AddMsg("down  " + button_list[current_button].Name + " " 
-                    //+ current_button.ToString() + " " + previous_button.ToString() + " " + button_list[current_button].TabOrder.ToString());
-                    break;
-
-                case "NAV_SIDE":
-                    previous_button = current_button;
-                    if (current_button > 4)
-                        current_button -= 5;
-                    else if (current_button < 5)
-                        current_button += 5;
-                    button_list[current_button].Ctl.BackColor = Color.Aqua;
-                    button_list[previous_button].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-                    //AddMsg("up  " + button_list[current_button].Name + " " + button_list[current_button].TabOrder.ToString());
-                    //AddMsg("side  " + button_list[current_button].Name + " "
-                    //+ current_button.ToString() + " " + previous_button.ToString() + " " + button_list[current_button].TabOrder.ToString());
-                    //AddMsg("NAV_SIDE not working yet");
-                    break;
-                case "NAV_CLICK":
-                    //if (button_list[current_button].Enabled && button_list[current_button].Name != "Stop Mbox Xmit" && 
-                    //button_list[current_button].Name != "Connect Server")
-                    if (button_list[current_button].Enabled)
-                    {
-                        int tab_order = button_list[current_button].TabOrder;
-                        // don't do a shutdown, reboot, disconnect or stop mbox xmit while using keypad!
-                        // it's like sawing off the branch your sitting on
-                        // this should be taken care of by the exclude list
-                        //if (tab_order != 0 && tab_order != 9 && tab_order != 7 && tab_order != 8)
-                        {
-                            button_list[current_button].Ctl.PerformClick();
-                            //AddMsg("click  " + button_list[current_button].Name + " "
-                            //+ button_list[current_button].TabOrder.ToString());
-
-                        }
-                        //else AddMsg("don't do this!");
-                    }
-                    else AddMsg("Not Enabled");
-                    break;
-            }
-        }
         private void myTimerTick(object sender, EventArgs e)
         {
             if (wait_before_starting != 0)
@@ -1238,7 +1020,7 @@ namespace EpServerEngineSampleClient
                             tbPort.Enabled = false;
                             btnConnect.Text = "Disconnect";
                             btnShutdown.Enabled = true;
-                            btnReboot.Enabled = true;
+                            btnRescan.Enabled = true;
                             btnShowParams.Enabled = valid_cfg;
                             tbServerTime.Text = "";
                             btn_PlayList.Enabled = true;
@@ -1265,7 +1047,7 @@ namespace EpServerEngineSampleClient
                             tbPort.Enabled = true;
                             btnConnect.Text = "Connect";
                             btnShutdown.Enabled = false;
-                            btnReboot.Enabled = false;
+                            btnRescan.Enabled = false;
                             btnShowParams.Enabled = valid_cfg;
                             btn_PlayList.Enabled = false;
                             btnGetTime.Enabled = false;
@@ -1296,7 +1078,7 @@ namespace EpServerEngineSampleClient
                                     cbIPAdress.Enabled = true;
                                     tbPort.Enabled = true;
                                     btnShutdown.Enabled = false;
-                                    btnReboot.Enabled = false;
+                                    btnRescan.Enabled = false;
                                     btnShowParams.Enabled = valid_cfg;
                                     btn_PlayList.Enabled = false;
                                     btnGetTime.Enabled = false;
@@ -1662,16 +1444,21 @@ namespace EpServerEngineSampleClient
                 m_client.Send(packet);
             }
         }
-    private void btnReportTimeUp_Click(object sender, EventArgs e)
-		{
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+        private void btnReportTimeUp_Click(object sender, EventArgs e)
+		    {
+                foreach (ClientsAvail cl in clients_avail)
                 {
-                    AddMsg(cl.label);
-                    GetTimeUp(cl.index);
+                    if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                    {
+                        AddMsg(cl.label);
+                        GetTimeUp(cl.index);
+                    }
                 }
             }
+
+		private void btnWaitReboot_Click(object sender, EventArgs e)
+		{
+            SendClientMsg(svrcmd.GetCmdIndexI("WAIT_REBOOT_IOBOX"), true);
         }
 	}
 }

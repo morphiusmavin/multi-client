@@ -134,16 +134,19 @@ int main(int argc, char **argv)
 	_threads[WINCL_READ_TASK].sched = TIME_SLICE;
 	_threads[WINCL_WRITE_TASK].sched = TIME_SLICE;
 
+	_threads[SERIAL_RECV].sched = TIME_SLICE;
+//	_threads[SERIAL_RECV2].sched = TIME_SLICE;
+	_threads[TCP_MONITOR].sched = TIME_SLICE;
+	_threads[BASIC_CONTROLS].sched = TIME_SLICE;
+
 	_threads[READ_TASK1].sched = TIME_SLICE;
 	_threads[SEND_TASK1].sched = TIME_SLICE;
 
 	_threads[READ_TASK2].sched = TIME_SLICE;
 	_threads[SEND_TASK2].sched = TIME_SLICE;
 
-	_threads[SERIAL_RECV].sched = TIME_SLICE;
-//	_threads[SERIAL_RECV2].sched = TIME_SLICE;
-	_threads[TCP_MONITOR].sched = TIME_SLICE;
-	_threads[BASIC_CONTROLS].sched = TIME_SLICE;
+	_threads[READ_TASK3].sched = TIME_SLICE;
+	_threads[SEND_TASK3].sched = TIME_SLICE;
 
 	strcpy(_threads[GET_HOST_CMD].label,"GET_HOST_CMD\0");
 	strcpy(_threads[MONITOR_INPUTS].label,"MONITOR_INPUTS\0");
@@ -154,18 +157,24 @@ int main(int argc, char **argv)
 	strcpy(_threads[WINCL_READ_TASK].label,"WINCL_READ_TASK\0");
 	strcpy(_threads[WINCL_WRITE_TASK].label,"WINCL_WRITE_TASK\0");
 
+	strcpy(_threads[SERIAL_RECV].label,"SERIAL_RECV\0");
+//	strcpy(_threads[SERIAL_RECV2].label,"SERIAL_RECV2\0");
+	strcpy(_threads[TCP_MONITOR].label,"TCP_MONITOR\0");
+	strcpy(_threads[BASIC_CONTROLS].label,"MSG_QUEUE\0");
+
 	strcpy(_threads[READ_TASK1].label,"READ_TASK1\0");
 	strcpy(_threads[SEND_TASK1].label,"SEND_TASK1\0");
 
 	strcpy(_threads[READ_TASK2].label,"READ_TASK2\0");
 	strcpy(_threads[SEND_TASK2].label,"SEND_TASK2\0");
 
-	strcpy(_threads[SERIAL_RECV].label,"SERIAL_RECV\0");
-//	strcpy(_threads[SERIAL_RECV2].label,"SERIAL_RECV2\0");
-	strcpy(_threads[TCP_MONITOR].label,"TCP_MONITOR\0");
-	strcpy(_threads[BASIC_CONTROLS].label,"MSG_QUEUE\0");
+	strcpy(_threads[READ_TASK3].label,"READ_TASK3\0");
+	strcpy(_threads[SEND_TASK3].label,"SEND_TASK3\0");
 
 /* spawn the threads */
+
+	assign_client_table();
+
 	for (i = 0; i < NUM_TASKS; i++)
 	{
 /*
@@ -239,6 +248,7 @@ int main(int argc, char **argv)
 			work_routine,
 			(void *) &(id_arg[i])) !=0)
 			perror("main() pthread create with attr obj failed"),exit(1);
+//			printf("id_arg: %d\n",&id_arg[i]);
 	}
 
 //	printf("\nmain()\t\t\t\t%d threads created. Main running fifo at max\n", NUM_TASKS);

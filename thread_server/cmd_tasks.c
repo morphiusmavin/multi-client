@@ -280,7 +280,7 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SET_PARAMS:
-					send_param_msg();
+//					send_param_msg();
 					break;
 
 				case SET_TIME:
