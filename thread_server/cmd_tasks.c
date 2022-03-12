@@ -145,15 +145,13 @@ UCHAR get_host_cmd_task(int test)
 	osize *= i;
 	//printf("osize: %d\r\n",osize);
 
-//	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
+	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
+/*
 	trunning_days = 1;
 	trunning_hours = 5;
 	trunning_minutes = 14;
 	trunning_seconds = 0;
-
-
-//	program_start_time = curtime();
-
+*/
 	ollist_init(&oll);
 	if(access(oFileName,F_OK) != -1)
 	{
