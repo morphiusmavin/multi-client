@@ -97,6 +97,7 @@ namespace EpServerEngineSampleClient
         // initially try for 20 seconds to connect, then 
         // give up until user hits 'Call Home' button
         private int timer_offset;
+        private string sendmsgtext;
 
         private string xml_dialog1_location = "c:\\Users\\daniel\\dev\\uiformat1.xml";
         private string xml_dialog2_location = "c:\\Users\\daniel\\dev\\uiformat2.xml";
@@ -409,7 +410,7 @@ namespace EpServerEngineSampleClient
             switch (str)
             {
                 case "UPTIME_MSG":
-                    ret = ret.Substring(1);
+//                    ret = ret.Substring(1);
                     AddMsg(ret);
                     break;
                 case "ESP_CLIENT_STATUS":
@@ -1341,19 +1342,19 @@ namespace EpServerEngineSampleClient
 
         private void btnRebootClient_Click(object sender, EventArgs e)
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("REBOOT_IOBOX"),true);
+            SendClientMsg(svrcmd.GetCmdIndexI("REBOOT_IOBOX"),0,true);
         }
 
         private void btnShutdownClient_Click(object sender, EventArgs e)
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"),true);
+            SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"),0,true);
         }
 
         private void button1_Click(object sender, EventArgs e)		// get status
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"),false);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"),0,false);
         }
-        private void SendClientMsg(int msg, bool remove)
+        private void SendClientMsg(int msg, int param, bool remove)
         {
             foreach (ClientsAvail cl in clients_avail)
             {
@@ -1366,7 +1367,7 @@ namespace EpServerEngineSampleClient
                         cl.socket = -1;
                     }
                     var temp = cl.index;
-                    int temp2 = 3;		// this doesn't do anything
+                    int temp2 = param;
                     byte[] atemp = BitConverter.GetBytes(temp);
                     byte[] btemp = BitConverter.GetBytes(temp2);
                     byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
@@ -1392,20 +1393,19 @@ namespace EpServerEngineSampleClient
 
 		private void btnSendMsg_Click(object sender, EventArgs e)
 		{
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), false);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), 0, false);
         }
 
 		private void btnSendSvrMsg_Click(object sender, EventArgs e)
 		{
             var temp = 9;   // _SERVER
-            int temp2 = 3;
             byte[] atemp = BitConverter.GetBytes(temp);
-            byte[] btemp = BitConverter.GetBytes(temp2);
-            byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
-            string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("SEND_STATUS"));
+            byte[] btemp = BytesFromString(tbSendMsg.Text);
+            byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
+            string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("SEND_MSG"));
             ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
             System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
+            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
             Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
             AddMsg(ctemp.Count().ToString());
             if (m_client.IsConnectionAlive)
@@ -1458,7 +1458,12 @@ namespace EpServerEngineSampleClient
 
 		private void btnWaitReboot_Click(object sender, EventArgs e)
 		{
-            SendClientMsg(svrcmd.GetCmdIndexI("WAIT_REBOOT_IOBOX"), true);
+            SendClientMsg(svrcmd.GetCmdIndexI("WAIT_REBOOT_IOBOX"), 0, true);
         }
+
+		private void tbSendMsg_TextChanged(object sender, EventArgs e)
+		{
+            sendmsgtext = tbSendMsg.Text;
+		}
 	}
 }

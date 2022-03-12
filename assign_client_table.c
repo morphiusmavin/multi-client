@@ -93,8 +93,8 @@ void assign_client_table(void)
 	client_table[_SERVER].qid = 0;
 	client_table[_SERVER].task_id = -1;
 	
-	for(i = 0;i < MAX_CLIENTS;i++)
-		printf("%d %d %s\n",i, client_table[i].task_id,client_table[i].label);
+//	for(i = 0;i < MAX_CLIENTS;i++)
+//		printf("%d %d %s\n",i, client_table[i].task_id,client_table[i].label);
 	
 }
 #else

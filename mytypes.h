@@ -22,10 +22,11 @@ typedef unsigned long ULONG;
 #define MAX_CLIENTS	10
 #define NO_CMDS 40
 
+// format of message queue (msgsnd & msgrcv)
 struct msgqbuf 
 {
 	long mtype;
-	char mtext[50];
+	UCHAR mtext[100];
 };
 
 typedef struct
@@ -85,6 +86,7 @@ typedef struct _ip
 	char label[OLABELSIZE];
 }IP;
 
+/*
 enum key_types
 {
  	KP_1 = 0xE0, //		- E0
@@ -104,7 +106,7 @@ enum key_types
 	KP_AST, // '*'		- EE
 	KP_0 	// '0'		- EF
 } KEY_TYPES;
-
+*/
 // 25 total output_types
 // until now the input labels match the outputs
 // this is not always the case

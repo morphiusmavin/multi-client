@@ -66,6 +66,7 @@
 			this.bSetClientTime = new System.Windows.Forms.Button();
 			this.btnReportTimeUp = new System.Windows.Forms.Button();
 			this.btnWaitReboot = new System.Windows.Forms.Button();
+			this.tbSendMsg = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -81,7 +82,7 @@
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(273, 399);
+			this.tbReceived.Size = new System.Drawing.Size(273, 335);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
 			// 
@@ -484,12 +485,22 @@
 			this.btnWaitReboot.UseVisualStyleBackColor = false;
 			this.btnWaitReboot.Click += new System.EventHandler(this.btnWaitReboot_Click);
 			// 
+			// tbSendMsg
+			// 
+			this.tbSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbSendMsg.Location = new System.Drawing.Point(535, 617);
+			this.tbSendMsg.Name = "tbSendMsg";
+			this.tbSendMsg.Size = new System.Drawing.Size(261, 26);
+			this.tbSendMsg.TabIndex = 44;
+			this.tbSendMsg.TextChanged += new System.EventHandler(this.tbSendMsg_TextChanged);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1084, 688);
+			this.Controls.Add(this.tbSendMsg);
 			this.Controls.Add(this.btnWaitReboot);
 			this.Controls.Add(this.btnReportTimeUp);
 			this.Controls.Add(this.bSetClientTime);
@@ -578,6 +589,7 @@
 		private System.Windows.Forms.Button bSetClientTime;
 		private System.Windows.Forms.Button btnReportTimeUp;
 		private System.Windows.Forms.Button btnWaitReboot;
+		private System.Windows.Forms.TextBox tbSendMsg;
 	}
 }
 

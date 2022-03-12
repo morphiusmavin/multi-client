@@ -726,7 +726,6 @@ UCHAR timer_task(int test)
 	int temp;
 	int msg_len;
 	int ret;
-    int msgflg = IPC_CREAT | 0666;
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
@@ -838,8 +837,8 @@ UCHAR WinClReadTask(int test)
 {
 //	printf("winclread: %d\n",test);
 	int i,j,k,rc,msg_len;
-	char tempx[200];
-	char msg_buf[200];
+	char tempx[105];
+	char msg_buf[105];
 	UCHAR cmd;
 	int win_client_to_client_sock = -1;
 	struct msgqbuf msg;
@@ -863,18 +862,27 @@ startover:
 			cmd = msg_buf[0];
 			//printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
-
+/*
+			for(j = 0;j < rc;j++)
+				printf("%02x ",msg_buf[j]);
+			printf("\n");
+*/
 			memset(tempx,0,sizeof(tempx));
 			k = 0;
-			for(j = 2;j < msg_len+2;j+=2)
+			for(j = 4;j < msg_len+4;j+=2)
 				tempx[k++] = msg_buf[j];
-
+			msg_len /= 2;
+			msg_len -= 3;
+			printf("msg_len from win client: %d\n",msg_len);
+/*
 			for(j = 0;j < msg_len;j++)
 				printf("%02x ",tempx[j]);
 			printf("\n");
-			for(j = 1;j < msg_len-1;j++)
+			
+			for(j = 0;j < msg_len;j++)
 				printf("%c",tempx[j]);
 			printf("\n");
+*/
 			if(cmd == DISCONNECT)
 			{
 				close(windows_client_sock);
@@ -884,14 +892,19 @@ startover:
 				// need a cmd that quits the server
 			}
 			win_client_to_client_sock = tempx[0];
-			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 			// if this is for the server then tempx[0] will be _SERVER (from CLIENT_LIST enum)
 			// so send a queue msg to get_host_cmd_task
+
+			msg.mtype = msgtype;
+			memset(msg.mtext,0,sizeof(msg.mtext));
+			msg.mtext[0] = cmd;
+			msg.mtext[1] = (UCHAR)msg_len;
+			msg.mtext[2] = (UCHAR)(msg_len >> 4);
+			memcpy(msg.mtext + 4,tempx,msg_len);
+
 			if(win_client_to_client_sock == _SERVER)
 			{
-				memset(msg.mtext,0,sizeof(msg.mtext));
-				msg.mtext[0] = cmd;
-				memcpy(msg.mtext + 1,tempx,msg_len);
 				printf("1: msg to cmd_host on server: %s\n",tempx);
 				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
@@ -904,35 +917,29 @@ startover:
 				// get the socket of the client to send msg to 
 				// the windows client sends as the 1st byte the index into 
 				// the client_table[] array 
-				uSleep(0,TIME_DELAY/8);
-				printf("sock: %d %s\n",client_table[win_client_to_client_sock].socket, client_table[win_client_to_client_sock].label);
+				uSleep(0,TIME_DELAY/16);
+				//printf("sock: %d %s\n",client_table[win_client_to_client_sock].socket, 
+				//	client_table[win_client_to_client_sock].label);
 	//			send_msg(client_table[win_client_to_client_sock].socket,strlen(tempx),(UCHAR*)tempx,cmd);
-
-				msg.mtype = msgtype;
-
-				//time(&t);
-	//			snprintf(msg.mtext, sizeof(msg.mtext), "a message at %s", ctime(&t));
-
-				memset(msg.mtext,0,sizeof(msg.mtext));
-				msg.mtext[0] = cmd;
-				memcpy(msg.mtext + 1,tempx,msg_len);
 
 				printf("msg.mtext: ");
 				for(i = 0;i < msg_len;i++)
 					printf("%02x ",msg.mtext[i]);
 				printf("\n");
 
-				if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				// this sends a msg to the appropriate client's SendTask
+				if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) 
+						&msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 				{
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
 				}
-				printf("sent: %s\n", msg.mtext);				
-				printf("\n");
+				//printf("sent: %s\n", msg.mtext);				
+				//printf("\n");
 			}
 		}
 		//printf("*");
-		uSleep(0,TIME_DELAY/8);
+		uSleep(0,TIME_DELAY/16);
 
 		if(shutdown_all)
 		{
@@ -993,10 +1000,10 @@ int lookup_taskid(int index)
 /*********************************************************************/
 UCHAR ReadTask(int test)
 {
-	printf("readtask: %d\n",test);
+	//printf("readtask: %d\n",test);
 	int index = lookup_taskid(test);
 
-	char tempx[100];
+	char tempx[105];
 	int msg_len;
 	int ret;
 	UCHAR cmd;
@@ -1006,7 +1013,7 @@ UCHAR ReadTask(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	printf("sendtask: %s\n",client_table[index].label);
+	//printf("sendtask: %s\n",client_table[index].label);
 
 	while(TRUE)
 	{
@@ -1020,11 +1027,12 @@ startover1:
 			strncpy(recip,&tempx[1],3);
 			printf("recip: %s\n",recip);
 */
-//			printf("ret: %d\n",ret);
+			printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
+
 			//printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
-			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX)
+			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == WAIT_REBOOT_IOBOX)
 			{
 				printf("shutdown or reboot\n");
 				close(client_table[index].socket);
@@ -1044,7 +1052,7 @@ startover1:
 			}
 */
 			recip = (int)tempx[1];
-			printf("recip: %d\n",recip);
+			printf("recip: %s\n",client_table[recip].label);
 			if(recip == _SERVER)		// from one of the clients to the server
 			{
 				memset(msg.mtext,0,sizeof(msg.mtext));
@@ -1060,10 +1068,12 @@ startover1:
 			{
 				printf("recip: %s\n",client_table[recip].label);
 				// this is just because I wanted to send an int
+/*
 				temp = (int)(tempx[3] << 4);
 				temp |= (int)tempx[2];
 				printf("\n%d\n",temp);
-				memmove(tempx,tempx+5,ret-5);
+*/
+				memmove(tempx,tempx+2,ret-2);
 				printf("%s\n\n",tempx);
 				send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 			}
@@ -1081,27 +1091,25 @@ startover1:
 /*********************************************************************/
 UCHAR SendTask(int test)
 {
-	printf("sendtask: %d\n",test);
+	//printf("sendtask: %d\n",test);
 	int index = lookup_taskid(test-1);
 
 	int msg_len;
-	char msg_buf[100];
-	char recip[4];
+	char errmsg[30];
+	char tempx[105];
 	int i;
 	UCHAR cmd = 0;
 	int pass = 0;
-    int msgflg = IPC_CREAT | 0666;
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	printf("sendtask: %s\n",client_table[index].label);
+	//printf("sendtask: %s\n",client_table[index].label);
 
 	i = 0;
 	while(TRUE)
 	{
 		if(client_table[index].socket > 0)
 		{
-//			client_table[i].qid = msgget(client_table[i].qkey, IPC_CREAT | 0666);
 			if (msgrcv(client_table[index].qid, (void *) &msg, sizeof(msg.mtext), msgtype,
 			MSG_NOERROR | IPC_NOWAIT) == -1) 
 			{
@@ -1114,18 +1122,23 @@ UCHAR SendTask(int test)
 			} else
 			{
 				cmd = (UCHAR)msg.mtext[0];
-				memmove(msg.mtext,msg.mtext+1,49);
+				msg_len = (int)msg.mtext[2];
+				msg_len |= (int)(msg.mtext[1] >> 4);
+				
+				printf("msg_len: %d\n",msg_len);
+				memcpy(tempx,msg.mtext+3,msg_len);
+
 				printf("message received: %s %d\n", msg.mtext,errno);
 				//printf("cmd: %d\n",cmd);
 				print_cmd(cmd);
-				perror(msg_buf);
+				perror(errmsg);
 				pass = 1;
 			}
 
 			if(pass)
 			{
 				printf("sending msg\n");
-				send_msg(client_table[index].socket, strlen(msg.mtext), (UCHAR*)msg.mtext,cmd);
+				send_msg(client_table[index].socket, msg_len, (UCHAR*)tempx,cmd);
 				pass = 0;
 			}
 			uSleep(0,TIME_DELAY/16);

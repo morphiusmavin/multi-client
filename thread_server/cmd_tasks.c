@@ -42,8 +42,6 @@ extern CLIENT_TABLE1 client_table[];
 //extern illist_t ill;
 extern ollist_t oll;
 
-UCHAR msg_buf[UPLOAD_BUFF_SIZE];
-UCHAR msg_buf2[UPLOAD_BUFF_SIZE/2];
 extern PARAM_STRUCT ps;
 extern char password[PASSWORD_SIZE];
 int shutdown_all;
@@ -85,7 +83,7 @@ UCHAR get_host_cmd_task(int test)
 	int k;
 	size_t isize;
 	size_t osize;
-	UCHAR tempx[SERIAL_BUFF_SIZE];
+	UCHAR tempx[UPLOAD_BUFF_SIZE];
 	char temp_time[5];
 	char *pch;
 	int fname_index;
@@ -179,26 +177,22 @@ UCHAR get_host_cmd_task(int test)
 				exit(EXIT_FAILURE);
 			}
 		}
-		memset(msg_buf,0,sizeof(msg_buf));	// msg_buf is 200 (UPLOAD_BUFF_SIZE)
-		msg_len = strlen(msg.mtext) * 2;
-		printf("msg_len: %d\n",msg_len);
-		memcpy(msg_buf,msg.mtext,msg_len);
+		cmd = msg.mtext[0];
+		msg_len |= (int)(msg.mtext[2] << 4);
+		msg_len = (int)msg.mtext[1];
 		
-		cmd = msg_buf[0];
-		for(i = 1;i < msg_len;i++)
-			tempx[i-1] = msg_buf[i];
+		printf("msg_len: %d\n",msg_len);
+		memcpy(tempx,msg.mtext+4,msg_len);
+		
+		for(i = 0;i < msg_len;i++)
+			printf("%02x ",tempx[i]);
 
-		printf("\n");
-
-		for(i = 0;i < msg_len-1;i++)
-			printf("%c",tempx[i]);
-
-		printf("\n");
+//		printf("\n");
 
 		if(cmd > 0)
 		{
 //				sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
-			printf("msg to svr: %s\r\n",cmd_array[cmd].cmd_str);
+			printf("msg to svr: %s: ",cmd_array[cmd].cmd_str);
 //				if(cmd < LCD_TEST_MODE)
 //					myprintf1(cmd_array[cmd].cmd_str);
 		}
@@ -253,15 +247,15 @@ UCHAR get_host_cmd_task(int test)
 					break;
 				
 				case UPTIME_MSG:
-					printf("UPTIME_MSG: %s\n",tempx-1);
-					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
+					printf("UPTIME_MSG: %d\n",msg_len);
+					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
 					break;
 
 				case SEND_TIMEUP:
-					//printf("send timeup: \n");
-					sprintf(tempx,"%dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
-					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
-					//printf("%s\n",tempx);
+					printf("SEND_TIMEUP: %d\n",msg_len);
+					sprintf(tempx,"%dh %dm %ds",trunning_hours, trunning_minutes, trunning_seconds);
+					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
+					printf("%s\n",tempx);
 					break;
 
 				case SEND_MSG:
@@ -273,10 +267,10 @@ UCHAR get_host_cmd_task(int test)
 				case SEND_STATUS:
 					printf("send status\n");
 					temp = 0;
-					temp = (int)(tempx[3] << 4);
-					temp |= (int)tempx[2];
-					printf("temp: %d\n",temp);
-					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,SEND_STATUS);
+					//temp = (int)(tempx[3] << 4);
+					//temp |= (int)tempx[2];
+					//printf("temp: %d\n",temp);
+					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,SEND_STATUS);
 					break;
 
 				case SET_PARAMS:
@@ -409,92 +403,92 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case UPDATE_CONFIG:
-					utemp = (UINT)msg_buf[3];
+					utemp = (UINT)tempx[3];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[2];
+					utemp |= (UINT)tempx[2];
 					ps.rpm_mph_update_rate = utemp;
 
-					utemp = (UINT)msg_buf[5];
+					utemp = (UINT)tempx[5];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[4];
+					utemp |= (UINT)tempx[4];
 					ps.fpga_xmit_rate = utemp;
 
-					utemp = (UINT)msg_buf[7];
+					utemp = (UINT)tempx[7];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[6];
+					utemp |= (UINT)tempx[6];
 					ps.high_rev_limit = utemp;
 
-					utemp = (UINT)msg_buf[9];
+					utemp = (UINT)tempx[9];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[8];
+					utemp |= (UINT)tempx[8];
 					ps.low_rev_limit = utemp;
 
-					utemp = (UINT)msg_buf[11];
+					utemp = (UINT)tempx[11];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[10];
+					utemp |= (UINT)tempx[10];
 					ps.cooling_fan_on = utemp;
 					// start loading serial buffer to send to STM32
 					// as a SEND_CONFIG2 msg
 					// only need to send temp data - low byte 1st
 
-					utemp = (UINT)msg_buf[13];
+					utemp = (UINT)tempx[13];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[12];
+					utemp |= (UINT)tempx[12];
 					ps.cooling_fan_off = utemp;
 
-					utemp = (UINT)msg_buf[15];
+					utemp = (UINT)tempx[15];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[14];
+					utemp |= (UINT)tempx[14];
 					ps.lights_on_value = utemp;
 
-					utemp = (UINT)msg_buf[17];
+					utemp = (UINT)tempx[17];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[16];
+					utemp |= (UINT)tempx[16];
 					ps.lights_off_value = utemp;
 
-					utemp = (UINT)msg_buf[19];
+					utemp = (UINT)tempx[19];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[18];
+					utemp |= (UINT)tempx[18];
 					ps.adc_rate = utemp;
 
-					utemp = (UINT)msg_buf[21];
+					utemp = (UINT)tempx[21];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[20];
+					utemp |= (UINT)tempx[20];
 					ps.rt_value_select = utemp;
 
-					utemp = (UINT)msg_buf[23];
+					utemp = (UINT)tempx[23];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[22];
+					utemp |= (UINT)tempx[22];
 					ps.lights_on_delay = utemp;
 				
-					utemp = (UINT)msg_buf[25];
+					utemp = (UINT)tempx[25];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[24];
+					utemp |= (UINT)tempx[24];
 					ps.engine_temp_limit = utemp;
 
-					utemp = (UINT)msg_buf[27];
+					utemp = (UINT)tempx[27];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[26];
+					utemp |= (UINT)tempx[26];
 					ps.batt_box_temp = utemp;
 
-					utemp = (UINT)msg_buf[29];
+					utemp = (UINT)tempx[29];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[28];
+					utemp |= (UINT)tempx[28];
 					ps.test_bank = utemp;
 
-					utemp = (UINT)msg_buf[31];
+					utemp = (UINT)tempx[31];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[30];
+					utemp |= (UINT)tempx[30];
 					ps.password_timeout = utemp;
 
-					utemp = (UINT)msg_buf[33];
+					utemp = (UINT)tempx[33];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[32];
+					utemp |= (UINT)tempx[32];
 					ps.password_retries = utemp;
 
-					utemp = (UINT)msg_buf[35];
+					utemp = (UINT)tempx[35];
 					utemp <<= 8;
-					utemp |= (UINT)msg_buf[34];
+					utemp |= (UINT)tempx[34];
 					ps.baudrate3 = utemp;
 
 					j = 0;
@@ -522,9 +516,9 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case TEST_IO_PORT:
-					i = (UINT)msg_buf[2];	// bank 
-					j = (UINT)msg_buf[4];	// port 
-					k = (UINT)msg_buf[6];	// onoff
+					i = (UINT)tempx[2];	// bank 
+					j = (UINT)tempx[4];	// port 
+					k = (UINT)tempx[6];	// onoff
 //						sprintf(tempx,"bank: %d port: %d %d",(int)msg_buf[2],
 //								(int)msg_buf[4],(int)msg_buf[6]);
 //						myprintf1(tempx);

@@ -310,9 +310,9 @@ UCHAR get_host_cmd_task(int test)
 						k++;
 						memset(tempx,0,sizeof(tempx));
 						tempx[0] = _SERVER;
-						tempx[1] = (UCHAR)k;
-						tempx[2] = (UCHAR)(k >> 4);
-						send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SEND_STATUS);
+//						tempx[1] = (UCHAR)k;
+//						tempx[2] = (UCHAR)(k >> 4);
+						send_msg(strlen((char*)tempx),(UCHAR*)tempx, SEND_STATUS);
 //						printf("%s\n",tempx);						
 						break;
 
@@ -439,7 +439,7 @@ uSleep(0,TIME_DELAY/3);
 						curtime2 = mtv.tv_sec;
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 						myprintf1(tempx);
-						send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,GET_TIME);
+						send_msg(strlen((char*)tempx),(UCHAR*)tempx,GET_TIME);
 						break;
 
 					case BAD_MSG:
