@@ -35,7 +35,7 @@ void assign_client_table(void)
 	client_table[_145].type = TS_CLIENT;
 	client_table[_145].qkey = 1238;
 	client_table[_145].qid = 0;
-	client_table[_145].task_id = 10;
+	client_table[_145].task_id = 9;
 
 	strcpy(client_table[_147].ip,"147\0");
 	strcpy(client_table[_147].label,"TS_client2\0");
@@ -59,7 +59,7 @@ void assign_client_table(void)
 	client_table[_151].type = TS_CLIENT;
 	client_table[_151].qkey = 1241;
 	client_table[_151].qid = 0;
-	client_table[_151].task_id = 12;
+	client_table[_151].task_id = 11;
 
 	strcpy(client_table[_152].ip,"152\0");
 	strcpy(client_table[_152].label,"TS_client5\0");
@@ -67,7 +67,7 @@ void assign_client_table(void)
 	client_table[_152].type = TS_CLIENT;
 	client_table[_152].qkey = 1242;
 	client_table[_152].qid = 0;
-	client_table[_152].task_id = 14;
+	client_table[_152].task_id = 13;
 
 	strcpy(client_table[_153].ip,"153\0");
 	strcpy(client_table[_153].label,"TS_client6\0");

@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 	_threads[TIMER2].sched = PTIME_SLICE;
 
 	_threads[WINCL_READ_TASK].sched = TIME_SLICE;
-	_threads[WINCL_WRITE_TASK].sched = TIME_SLICE;
+//	_threads[WINCL_WRITE_TASK].sched = TIME_SLICE;
 
 	_threads[SERIAL_RECV].sched = TIME_SLICE;
 //	_threads[SERIAL_RECV2].sched = TIME_SLICE;
@@ -155,7 +155,7 @@ int main(int argc, char **argv)
 	strcpy(_threads[TIMER2].label,"TIMER2\0");
 
 	strcpy(_threads[WINCL_READ_TASK].label,"WINCL_READ_TASK\0");
-	strcpy(_threads[WINCL_WRITE_TASK].label,"WINCL_WRITE_TASK\0");
+//	strcpy(_threads[WINCL_WRITE_TASK].label,"WINCL_WRITE_TASK\0");
 
 	strcpy(_threads[SERIAL_RECV].label,"SERIAL_RECV\0");
 //	strcpy(_threads[SERIAL_RECV2].label,"SERIAL_RECV2\0");

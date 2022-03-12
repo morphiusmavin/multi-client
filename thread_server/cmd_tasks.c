@@ -145,7 +145,12 @@ UCHAR get_host_cmd_task(int test)
 	osize *= i;
 	//printf("osize: %d\r\n",osize);
 
-	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
+//	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
+	trunning_days = 1;
+	trunning_hours = 5;
+	trunning_minutes = 14;
+	trunning_seconds = 0;
+
 
 //	program_start_time = curtime();
 
@@ -246,15 +251,15 @@ UCHAR get_host_cmd_task(int test)
 					}
 					break;
 				
-				case UPTIME_MSG:
-					printf("UPTIME_MSG: %d\n",msg_len);
-					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
+				case UPTIME_MSG:	// sent from client
+					printf("%d msg_len: %d\n %s\n",windows_client_sock, msg_len,tempx);
+					// this just displays the time on the msg box in win client
+					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
 					break;
 
 				case SEND_TIMEUP:
-					printf("SEND_TIMEUP: %d\n",msg_len);
-					sprintf(tempx,"%dh %dm %ds",trunning_hours, trunning_minutes, trunning_seconds);
-					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
+					sprintf(tempx,"%d days %dh %dm %ds",trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
+					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
 					printf("%s\n",tempx);
 					break;
 

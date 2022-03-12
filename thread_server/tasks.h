@@ -1,7 +1,7 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_TASKS           	16
+#define NUM_TASKS           	15
 #define DEFAULT                 0
 #define TIME_SLICE              1
 #define FIFO                    2
@@ -46,7 +46,7 @@ enum task_types
 	TIMER,
 	TIMER2,
 	WINCL_READ_TASK,
-	WINCL_WRITE_TASK,
+//	WINCL_WRITE_TASK,
 	TCP_MONITOR,
 	SERIAL_RECV,
 	BASIC_CONTROLS,
@@ -64,7 +64,7 @@ UCHAR monitor_fake_input_task(int test);
 UCHAR timer_task(int test);
 UCHAR timer2_task(int test);
 UCHAR WinClReadTask(int test);
-UCHAR WinClWriteTask(int test);
+//UCHAR WinClWriteTask(int test);
 UCHAR ReadTask(int test);
 UCHAR SendTask(int test);
 UCHAR serial_recv_task(int test);

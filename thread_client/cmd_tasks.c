@@ -145,7 +145,11 @@ UCHAR get_host_cmd_task(int test)
 	osize *= i;
 	//printf("osize: %d\r\n",osize);
 
-	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
+//	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
+	trunning_days = 1;
+	trunning_hours = 5;
+	trunning_minutes = 14;
+	trunning_seconds = 0;
 
 //	program_start_time = curtime();
 
@@ -300,10 +304,15 @@ UCHAR get_host_cmd_task(int test)
  				switch(cmd)
 				{
 					case SEND_TIMEUP:
-						sprintf(tempx," %dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
-						tempx[0] = _SERVER;
+						memset(tempx,0,sizeof(tempx));
+						sprintf(tempx,"%d days %dh %dm %ds",trunning_days, trunning_hours, 
+							trunning_minutes, trunning_seconds);
 						send_msg(strlen((char*)tempx),(UCHAR*)tempx, UPTIME_MSG);
-						printf("%s\n",tempx+1);
+						printf("%s\n",tempx);
+						break;
+
+					case UPTIME_MSG:
+						printf("%s\n",tempx);
 						break;
 
 					case SEND_CLIENT_LIST:

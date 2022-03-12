@@ -433,10 +433,11 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "SEND_MSG":
-                    //                    AddMsg("str: " + str + " " + str.Length.ToString());
-                    //                    AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
+                    AddMsg("str: " + str + " " + str.Length.ToString());
+                    AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
                     AddMsg(ret);
-                    //                    ListMsg(ret, false);
+                    ListMsg(ret, false);
+/*
                     switch (ret)
                     {
                         case "START_SEQ":
@@ -445,6 +446,7 @@ namespace EpServerEngineSampleClient
                             //AddMsg(str);
                             break;
                     }
+*/
                     break;
 
                 case "CURRENT_TIME":
@@ -1463,7 +1465,6 @@ namespace EpServerEngineSampleClient
 				}	
 			}
 		}
-
         private void GetTimeUp(int client)
         {
             var temp = client;
@@ -1483,16 +1484,16 @@ namespace EpServerEngineSampleClient
             }
         }
         private void btnReportTimeUp_Click(object sender, EventArgs e)
-		    {
-                foreach (ClientsAvail cl in clients_avail)
-                {
-                    if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                    {
-                        AddMsg(cl.label);
-                        GetTimeUp(cl.index);
-                    }
-                }
-            }
+		{
+			foreach (ClientsAvail cl in clients_avail)
+			{
+				if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+				{
+					AddMsg(cl.label);
+					GetTimeUp(cl.index);
+				}
+			}
+		}
 
 		private void btnWaitReboot_Click(object sender, EventArgs e)
 		{

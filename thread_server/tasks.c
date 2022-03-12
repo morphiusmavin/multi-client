@@ -56,9 +56,9 @@ pthread_mutex_t     msg_client_queue_lock=PTHREAD_MUTEX_INITIALIZER;
 int total_count;
 
 UCHAR (*fptr[NUM_TASKS])(int) = { get_host_cmd_task, monitor_input_task, 
-monitor_fake_input_task, timer_task, timer2_task, WinClReadTask, WinClWriteTask,
-serial_recv_task, tcp_monitor_task, basic_controls_task, ReadTask, SendTask, 
-ReadTask, SendTask, ReadTask, SendTask};
+monitor_fake_input_task, timer_task, timer2_task, WinClReadTask, 
+serial_recv_task, tcp_monitor_task, basic_controls_task, 
+ReadTask, SendTask, ReadTask, SendTask, ReadTask, SendTask};
 
 int threads_ready_count=0;
 pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
@@ -910,7 +910,7 @@ startover:
 
 			if(win_client_to_client_sock == _SERVER)
 			{
-				printf("1: msg to cmd_host on server: %s\n",tempx);
+				printf("1: msg to cmd_host on server: %s\n",msg.mtext);
 				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					// keep getting "Invalid Argument" - cause I didn't set the mtype
@@ -954,38 +954,6 @@ startover:
 	}
 }
 /*********************************************************************/
-UCHAR WinClWriteTask(int test)
-{
-	int i,j,k,rc;
-	char tempx[200];
-	char msg_buf[200];
-
-	//printf("win cl write task\n");
-	while(TRUE)
-	{
-/*
-		if(windows_client_sock > 0)
-		{
-			printf("msg from windows client %s\n",client_table[i].label);
-			if(client_table[i].socket > 0)
-			{
-				memset(tempx,0,sizeof(tempx));
-				sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-				send_msgb(windows_client_sock, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-				printf("%s %s\n",client_table[i].label, tempx);
-			}
-		}
-*/
-		uSleep(1,TIME_DELAY/16);
-		//printf("#");
-
-		if(shutdown_all)
-		{
-			return 0;
-		}
-	}
-}
-
 int lookup_taskid(int index)
 {
 	int i;
@@ -1001,11 +969,10 @@ int lookup_taskid(int index)
 	}
 	return -1;
 }
-
 /*********************************************************************/
 UCHAR ReadTask(int test)
 {
-	//printf("readtask: %d\n",test);
+	printf("readtask: %d\n",test);
 	int index = lookup_taskid(test);
 
 	char tempx[105];
@@ -1014,24 +981,19 @@ UCHAR ReadTask(int test)
 	UCHAR cmd;
 	int i;
 	int temp;
-	int recip;
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	//printf("sendtask: %s\n",client_table[index].label);
+	printf("sendtask: %s\n",client_table[index].label);
 
 	while(TRUE)
 	{
 startover1:
 		if(client_table[index].socket > 0)
 		{
-			printf("read task 1\n");
+			printf("read task %d\n",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+1,1);
-/*
-			strncpy(recip,&tempx[1],3);
-			printf("recip: %s\n",recip);
-*/
 			printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 
@@ -1056,9 +1018,9 @@ startover1:
 				printf("%02x ",tempx[i]);
 			}
 */
-			recip = (int)tempx[1];
-			printf("recip: %s\n",client_table[recip].label);
-			if(recip == _SERVER)		// from one of the clients to the server
+			printf("recip: %s\n", client_table[index].label);
+/*
+			if(index == _SERVER)		// from one of the clients to the server
 			{
 				memset(msg.mtext,0,sizeof(msg.mtext));
 				msg.mtext[0] = cmd;
@@ -1071,17 +1033,15 @@ startover1:
 				}
 			}else 						// from one of the clients to another client 
 			{
-				printf("recip: %s\n",client_table[recip].label);
-				// this is just because I wanted to send an int
-/*
-				temp = (int)(tempx[3] << 4);
-				temp |= (int)tempx[2];
-				printf("\n%d\n",temp);
-*/
 				memmove(tempx,tempx+2,ret-2);
 				printf("%s\n\n",tempx);
-				send_msg(client_table[recip].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+				send_msg(client_table[index].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 			}
+*/
+			memmove(tempx,tempx+1,msg_len);
+			printf("%s\n\n",tempx);
+			send_msg(client_table[index].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+
 		}
 		//printf("&");
 
@@ -1096,7 +1056,7 @@ startover1:
 /*********************************************************************/
 UCHAR SendTask(int test)
 {
-	//printf("sendtask: %d\n",test);
+	printf("sendtask: %d\n",test);
 	int index = lookup_taskid(test-1);
 
 	int msg_len;
@@ -1108,7 +1068,7 @@ UCHAR SendTask(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	//printf("sendtask: %s\n",client_table[index].label);
+	printf("sendtask: %s\n",client_table[index].label);
 
 	i = 0;
 	while(TRUE)
@@ -1134,7 +1094,7 @@ UCHAR SendTask(int test)
 				printf("sendtask msg_len: %d\n",msg_len);
 				memcpy(tempx,msg.mtext+4,msg_len);
 
-				printf("message received: %s %d\n", tempx,errno);
+				printf("message received: %s\n", tempx);
 				//printf("cmd: %d\n",cmd);
 				print_cmd(cmd);
 				perror(errmsg);
@@ -1360,7 +1320,6 @@ UCHAR serial_recv_task(int test)
 	}
 	return 1;
 }
-
 // client calls 'connect' to get accept call below to stop
 // blocking and return sd2 socket descriptor
 
