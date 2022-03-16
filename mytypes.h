@@ -21,6 +21,7 @@ typedef unsigned long ULONG;
 #define RAW_DATA_ARRAY_SIZE 15
 #define MAX_CLIENTS	10
 #define NO_CMDS 40
+#define NO_CLLIST_RECS 20
 
 // format of message queue (msgsnd & msgrcv)
 struct msgqbuf 
