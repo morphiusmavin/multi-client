@@ -33,7 +33,7 @@ int cllist_init (cllist_t *llistp)
 }
 
 /******************************************************************************/
-int cllist_insert_data (int index, cllist_t *llistp,C_DATA *datap2)
+int cllist_insert_data(int index, cllist_t *llistp,C_DATA *datap2)
 {
 	cllist_node_t *cur, *prev, *new;
 	int found = FALSE;
@@ -258,8 +258,6 @@ return 0;
 #endif
 	return onoff;
 }
-
-
 /******************************************************************************/
 // I think this is crashing the program on exit
 int cllist_change_output(int index, cllist_t *llistp, int onoff)
@@ -320,7 +318,6 @@ int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp)
 	pthread_rdwr_wunlock_np(&(llistp->rwlock));
 	return status;
 }
-
 /******************************************************************************/
 int cllist_show(cllist_t *llistp)
 {
@@ -331,19 +328,20 @@ int cllist_show(cllist_t *llistp)
 	char list_buf[100];
 	int i = 0;
 
-//	printf("showing O_DATA\r\n");
-#if 0
-	pthread_rdwr_rlock_np(&(llistp->rwlock));
+	printf("showing C_DATA\r\n");
 
-	printf("port\tonoff\tinput_port\ttype\ttime_delay\tlabel\r\n");
+	pthread_rdwr_rlock_np(&(llistp->rwlock));
+	cur=llistp->first;
+
+//	printf("port\tonoff\tinput_port\ttype\ttime_delay\tlabel\r\n");
 
 	for (cur=llistp->first; cur != NULL; cur=cur->nextp)
 	{
 		if(cur->datap->label[0] != 0)
 		{
 			printf("%2d\t%2d\t%2d\t\t%2d\t%2d\t%s\r\n",
-				(int)cur->datap->port, (int)cur->datap->onoff, (int)cur->datap->input_port, 
-				 cur->datap->type, cur->datap->time_delay, cur->datap->label);
+				(int)cur->datap->index, cur->datap->client_no, (int)cur->datap->cmd, 
+				 cur->datap->dest, cur->datap->msg_len, cur->datap->label);
 /*
 			memset(list_buf,0,100);
 			sprintf(list_buf,"%2d  %2d  %2d  %2d  %2d  %2d  %2d  %2d   %s",(int)cur->datap->port,\
@@ -367,7 +365,6 @@ int cllist_show(cllist_t *llistp)
 		}
 	}
 	pthread_rdwr_runlock_np(&(llistp->rwlock));
-#endif
 	return 0;
 }
 

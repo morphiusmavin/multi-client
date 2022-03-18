@@ -235,6 +235,9 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
+				case WRITE_CLIST_FILE_DISK:
+					break;
+
 				case SEND_CLIENT_LIST:
 					for(i = 0;i < MAX_CLIENTS;i++)
 					{

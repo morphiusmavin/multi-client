@@ -24,16 +24,14 @@
 #include "../mytypes.h"
 #include "ioports.h"
 #include "serial_io.h"
-//#include "queue/illist_threads_rw.h"
 #include "queue/ollist_threads_rw.h"
-//#include "queue/rt_llist_threads_rw.h"
+#include "queue/cllist_threads_rw.h"
 #include "tasks.h"
 #include "cs_client/config_file.h"
 #include "lcd_func.h"
 
 extern pthread_mutex_t     tcp_read_lock;
 extern pthread_mutex_t     tcp_write_lock;
-int config_file_ok = -1;
 static struct  sockaddr_in sad;  /* structure to hold server's address  */
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
@@ -41,6 +39,7 @@ extern CMD_STRUCT cmd_array[];
 
 //extern illist_t ill;
 extern ollist_t oll;
+extern cllist_t cll;
 
 UCHAR msg_buf[UPLOAD_BUFF_SIZE];
 UCHAR msg_buf2[UPLOAD_BUFF_SIZE];
@@ -70,6 +69,8 @@ UCHAR get_host_cmd_task(int test)
 //	I_DATA *itp;
 	O_DATA *otp;
 	O_DATA **otpp = &otp;
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
 	int rc = 0; 
 	int rc1 = 0;
 	UCHAR cmd = 0x21;
@@ -81,7 +82,7 @@ UCHAR get_host_cmd_task(int test)
 	int i;
 	int j;
 	int k;
-	size_t isize;
+	size_t csize;
 	size_t osize;
 	struct dirent **namelist;
 	DIR *d;
@@ -144,6 +145,10 @@ UCHAR get_host_cmd_task(int test)
 	osize = sizeof(O_DATA);
 	osize *= i;
 	//printf("osize: %d\r\n",osize);
+	i = NO_CLLIST_RECS;
+	//printf("no. port bits: %d\r\n",i);
+	csize = sizeof(C_DATA);
+	csize *= i;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 /*
@@ -157,7 +162,7 @@ UCHAR get_host_cmd_task(int test)
 	ollist_init(&oll);
 	if(access(oFileName,F_OK) != -1)
 	{
-		config_file_ok = olLoadConfig(oFileName,&oll,osize,errmsg);
+		olLoadConfig(oFileName,&oll,osize,errmsg);
 		if(rc > 0)
 		{
 //			myprintf1(errmsg);
@@ -166,6 +171,28 @@ UCHAR get_host_cmd_task(int test)
 	}
 	init_ips();
 
+	printf("%s\n",cFileName);
+
+	cllist_init(&cll);
+	if(access(cFileName,F_OK) != -1)
+	{
+		clLoadConfig(cFileName,&cll,csize,errmsg);
+		if(rc > 0)
+		{
+//			myprintf1(errmsg);
+			printf("%s\r\n",errmsg);
+		}
+	}else printf("can't access %s\n",cFileName);
+/*	
+	cllist_show(&cll);
+	rc = cllist_find_data(4,ctpp,&cll);
+	printf("%d %d %d %s\n",ctp->index,ctp->client_no,ctp->cmd, ctp->label);
+	ctp->cmd = 2;
+	rc = cllist_find_data(4,ctpp,&cll);
+	cllist_insert_data(4,&cll,ctp);
+	printf("%d %d %d %s\n",ctp->index,ctp->client_no,ctp->cmd, ctp->label);
+	cllist_show(&cll);
+*/
 	same_msg = 0;
 //	lcd_init();
 
@@ -304,6 +331,10 @@ UCHAR get_host_cmd_task(int test)
 
  				switch(cmd)
 				{
+					case WRITE_CLIST_FILE_DISK:
+						clWriteConfig(cFileName,&cll,csize,errmsg);
+						break;
+					
 					case SEND_TIMEUP:
 						memset(tempx,0,sizeof(tempx));
 						sprintf(tempx,"%d days %dh %dm %ds",trunning_days, trunning_hours, 

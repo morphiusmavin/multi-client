@@ -108,8 +108,7 @@ static int serial_recv_on;
 static char dat_names[NUM_DAT_NAMES][DAT_NAME_STR_LEN];
 float convertF(int raw_data);
 extern char oFileName[20];
-extern char iFileName[20];
-int global_index;
+extern char cFileName[20];
 
 extern UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];

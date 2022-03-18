@@ -45,6 +45,7 @@ extern void close_mem(void);
 extern void *work_routine(void *arg);
 
 char oFileName[20];
+char cFileName[20];
 
 UCHAR reboot_on_exit;
 
@@ -79,39 +80,19 @@ int main(int argc, char **argv)
 	if(argc < 2)
 	{
 		strcpy(oFileName,"odata.dat\0");
+		strcpy(cFileName,"cdata.dat\0");
 	}
 
 	else if(argc == 2)
 	{
 		strcpy(oFileName,argv[1]);
-		global_index = _145;
+		strcpy(cFileName,"cdata.dat\0");
 	}
 	else if(argc == 3)
 	{
 		strcpy(oFileName,argv[1]);
-		global_index = atoi(argv[2]);
-		printf("using %d as global_index\n",global_index);
+		strcpy(cFileName,argv[2]);
 	}
-/*
-	else if(argc == 3)
-	{
-		if((strcmp(argv[1],"test") == 0))
-		{
-			printf("testing\r\n");
-		}
-		printf("%s\r\n",argv[1]);
-		return 10;
-	}
-*/
-	else if(argc == 3)
-	{
-		if((strcmp(argv[1],"test") == 0))
-		{
-			printf("testing\r\n");
-		}
-		printf("%s\r\n",argv[1]);
-	}
-
 
 	id_arg = (int *)malloc(NUM_TASKS*sizeof(int));
 

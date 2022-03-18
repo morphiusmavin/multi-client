@@ -11,7 +11,7 @@
 #include "../ioports.h"
 
 extern int cLoadConfig(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg);
-extern int GetFileFormat(char *filename);
+extern int GetFileFormat2(char *filename);
 
 int main(int argc, char *argv[])
 {
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 	fptr1 = argv[1];
 	printf("filename: %s \n",fptr1);
 
-	if(GetFileFormat(fptr1) != 1)
+	if(GetFileFormat2(fptr1) != 1)
 	{
 		printf("%s does not have proper file format for input file\n",fptr1);
 		return 1;
@@ -65,42 +65,42 @@ int main(int argc, char *argv[])
 	pod = curr_o_array;
 
 	printf("\n");
+/*
 	if(comma_delim == 0)
 		printf("port\tonoff\tinput_port\tinput_type\ttype\ttime_delay\tlabel\n\n");
+*/
 	for(i = 0;i < osize/sizeof(C_DATA);i++)
 	{
 		if(pod->label[0] != 0)
 		{
 			if(comma_delim == 1)
 			{
-			printf("%d %d %d %d %d %d %d %d %d %d %s\n",
-			pod->index,
-			pod->client_no,
-			pod->cmd,
-			pod->dest,
-			pod->msg_len, 
-			pod->fn_ptr,
-			pod->data_ptr,
-			pod->hours,
-			pod->minutes,
-			pod->seconds,
-			pod->label);
+				printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%s\n",
+				pod->index,
+				pod->client_no,
+				pod->cmd,
+				pod->dest,
+				pod->msg_len, 
+				pod->fn_ptr,
+				pod->data_ptr,
+				pod->hours,
+				pod->minutes,
+				pod->seconds,
+				pod->label);
 			}else
 			{
-			printf("%d %d %d %d %d %d %d %d %d %d %s\n",
-			pod->index,
-			pod->client_no,
-			pod->cmd,
-			pod->dest,
-			pod->msg_len, 
-			pod->fn_ptr,
-			pod->data_ptr,
-			pod->hours,
-			pod->minutes,
-			pod->seconds,
-			pod->label);
-//				printf("%d\st%d\t%d\t%d\t%s\n",
-//					pod->port, pod->onoff, pod->input_port, pod->input_type, pod->label);
+				printf("%d %d %d %d %d %d %d %d %d %d %s\n",
+				pod->index,
+				pod->client_no,
+				pod->cmd,
+				pod->dest,
+				pod->msg_len, 
+				pod->fn_ptr,
+				pod->data_ptr,
+				pod->hours,
+				pod->minutes,
+				pod->seconds,
+				pod->label);
 			}
 		}
 		pod++;

@@ -35,6 +35,7 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 	fptr = (char *)filename;
 	UCHAR id;
 	C_DATA o_data;
+	int ret = 0;
 
 	fp = open((const char *)fptr, O_RDWR);
 	if(fp < 0)
@@ -52,14 +53,15 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 	{
 		strcpy(errmsg,"invalid file format - id is not 0x55\0");
 		close(fp);
+		printf("invalid file format\n");
 		return -1;
 	}
-	for(i = 0;i < NUM_PORT_BITS;i++)
+	for(i = 0;i < NO_CLLIST_RECS;i++)
 	{
-		read(fp,&o_data,sizeof(C_DATA));
+		ret += read(fp,&o_data,sizeof(C_DATA));
 		cllist_insert_data(i, oll, &o_data);
 	}
-//	printf("fp:%d  read: %d bytes in oLoadConfig\n",fp,i);
+	printf("fp:%d  read: %d bytes in clLoadConfig\n",fp,ret);
 	close(fp);
 	strcpy(errmsg,"Success\0");
 	return 0;
@@ -182,7 +184,7 @@ int cWriteConfig(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
 }
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
-int GetFileFormat(char *filename)
+int GetFileFormat2(char *filename)
 {
 	char *fptr;
 	int fp = -1;
@@ -212,7 +214,7 @@ int GetFileFormat(char *filename)
 	return 0;
 }
 /////////////////////////////////////////////////////////////////////////////
-int getFileCreationTime(char *path,char *str)
+int getFileCreationTime2(char *path,char *str)
 {
 // MM:DD-HH:MM:SS
     struct stat attr;

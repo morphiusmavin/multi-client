@@ -25,6 +25,7 @@
 #include "ioports.h"
 #include "serial_io.h"
 #include "queue/ollist_threads_rw.h"
+#include "queue/cllist_threads_rw.h"
 #include "tasks.h"
 //#include "cs_client/config_file.h"
 #include "lcd_func.h"
@@ -51,6 +52,7 @@ pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
 static UCHAR check_inputs(int index, int test);
 //extern CMD_STRUCT cmd_array[NO_CMDS];
 ollist_t oll;
+cllist_t cll;
 PARAM_STRUCT ps;
 
 //extern pthread_t serial_thread;	// workaround for closing serial task

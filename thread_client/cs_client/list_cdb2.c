@@ -11,7 +11,7 @@
 #include "../ioports.h"
 
 extern int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg);
-extern int GetFileFormat(char *filename);
+extern int GetFileFormat2(char *filename);
 extern int cllist_show(cllist_t *llistp);
 
 cllist_t oll;
@@ -25,7 +25,6 @@ int main(int argc, char *argv[])
 
 	int i,j,k;
 	int comma_delim;
-//	size_t isize;
 	size_t osize;
 	char errmsg[60];
 	int rc;
@@ -43,7 +42,7 @@ int main(int argc, char *argv[])
 	}
 	fptr1 = argv[1];
 
-	if(GetFileFormat(fptr1) != 1)
+	if(GetFileFormat2(fptr1) != 1)
 	{
 		printf("%s does not have proper file format for input file\n",fptr1);
 		return 1;
@@ -70,11 +69,7 @@ int main(int argc, char *argv[])
 */
 	for(i = 0;i < NO_CLLIST_RECS;i++)
 	{
-		j = cllist_find_data_ip(i,&otp,&oll);
-		if(j > -1)
-			printf("port: %2d\t\tinput: %2d\t %s\n",i,j,otp->label);
-//		if(otp->input_port != 0xFF)
-//			printf("%d\t %02x\t %s\n",otp->port,otp->input_port,otp->label);
+		printf("port: %2d\t\tinput: %2d\t %s\n",i,j,otp->label);
 	}
 	printf("\n");
 

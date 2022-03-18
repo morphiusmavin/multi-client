@@ -27,8 +27,8 @@
 typedef struct c_data
 {
 	char label[OLABELSIZE];
-	int index;
-	int client_no;			// the client this msg applies to 
+	int index;				// just the key 
+	int client_no;			// the client this msg applies to (could have just as well been the index)
 	UCHAR cmd;				// command to send
 	int dest;				// destination (any other client or server in the client_table list)
 	int msg_len;			// length of attached message if any
