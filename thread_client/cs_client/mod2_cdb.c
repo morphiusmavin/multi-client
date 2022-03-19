@@ -9,10 +9,15 @@
 #include <ctype.h>
 #include <assert.h>
 #include "../queue/cllist_threads_rw.h"
+#include "cconfig_file.h"
 #include "../ioports.h"
 
 extern int cLoadConfig(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg);
+extern int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg);
+extern int clWriteConfig(char *filename, cllist_t *oll, size_t size,char *errmsg);
+
 extern int GetFileFormat2(char *filename);
+cllist_t cll;
 
 int main(int argc, char *argv[])
 {
@@ -20,14 +25,17 @@ int main(int argc, char *argv[])
 	C_DATA *pod;
 	char *fptr1;
 	int num_valids = 0;
+	int nrecs;
+	int ret;
 
 	int i,j;
 	int comma_delim;
 //	size_t isize;
 	size_t osize;
 	char errmsg[60];
-	int nrecs;
-
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
+	
 	comma_delim = 0;
 	if(argc < 2)
 	{
@@ -49,22 +57,41 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	cllist_init(&cll);
 	nrecs = cGetnRecs(fptr1, errmsg);
-	printf("nrecs: %d\n",nrecs);
 
 	osize = sizeof(C_DATA);
 	osize *= nrecs;
 	printf("\nsizeof C_DATA: %lu\n",sizeof(C_DATA));
-	printf("osize: %d\n",osize);
 
-	curr_o_array = (C_DATA *)malloc(osize);
-	memset((void *)curr_o_array,0,osize);
-
-	if(cLoadConfig(fptr1,curr_o_array,osize,errmsg) < 0)
+	if(access(fptr1,F_OK) != -1)
 	{
-		printf("%s\n",errmsg);
-		return -1;
-	}
+		ret = clLoadConfig(fptr1,&cll,osize,errmsg);
+		if(ret > 0)
+		{
+//			myprintf1(errmsg);
+			printf("%s\r\n",errmsg);
+		}
+	}else printf("can't access %s\n",fptr1);
+
+	memset(ctp,0,sizeof(C_DATA));
+	ctp->index = 20;
+	ctp->cmd = 5;
+	strcpy(ctp->label,"test");
+//	rc = cllist_find_data(4,ctpp,&cll);
+	cllist_insert_data(nrecs,&cll,ctp);
+
+	ctp->index = 21;
+	ctp->cmd = 6;
+	strcpy(ctp->label,"test2");
+//	rc = cllist_find_data(4,ctpp,&cll);
+	cllist_insert_data(nrecs+1,&cll,ctp);
+//	cllist_insert_data(4,&cll,ctp);
+//	cllist_insert_data(nrecs+1, &cll, datap2);
+	osize += sizeof(C_DATA)*2;
+	clWriteConfig(fptr1,&cll,osize,errmsg);
+
+	return 0;
 
 	pod = curr_o_array;
 
@@ -111,6 +138,13 @@ int main(int argc, char *argv[])
 	}
 
 	pod = curr_o_array;
+	pod++;
+	pod++;
+	pod->cmd = 9;
+	pod = curr_o_array;
+	
+
+
 	num_valids = 0;
 	for(i = 0;i < nrecs;i++)
 	{
@@ -118,6 +152,9 @@ int main(int argc, char *argv[])
 			num_valids++;
 		pod++;
 	}
+//	osize -= sizeof(C_DATA);
+	ret = cWriteConfig(fptr1,curr_o_array,osize,errmsg);
+	printf("ret: %d\n",ret);
 	printf("num valid records: %d\n",num_valids);
 	printf("\n\n");
 	printf("sizeof: %ld \n",sizeof(C_DATA));

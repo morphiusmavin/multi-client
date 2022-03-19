@@ -157,10 +157,16 @@ cmd_tasks.o: cmd_tasks.c
 load_cmds.o: ../load_cmds.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../load_cmds.c
 
+cllist_threads_rw.o: queue/cllist_threads_rw.c queue/cllist_threads_rw.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c queue/cllist_threads_rw.c
+
+cconfig_file.o: cs_client/cconfig_file.c queue/cllist_threads_rw.h
+	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/cconfig_file.c
+
 #sched: sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o rdwr.o serial_io.o config_file.o lcd_func.o
-sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o lcd_func.o 
+sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o lcd_func.o cllist_threads_rw.o cconfig_file.o
 # if we don't use -static then the target should have: libpthread.so.0 in the /lib directory
-	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o lcd_func.o assign_client_table.o load_cmds.o -o sched -lm
+	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o lcd_func.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o -o sched -lm
 #	${CC} -static -pthread sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o #rdwr.o serial_io.o  lcd_func.o config_file.o -o sched
 
 clean :

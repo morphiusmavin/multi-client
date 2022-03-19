@@ -67,9 +67,10 @@ int main(int argc, char *argv[])
 	}
 	printf("\n");
 */
+	j = 0;
 	for(i = 0;i < NO_CLLIST_RECS;i++)
 	{
-		printf("port: %2d\t\tinput: %2d\t %s\n",i,j,otp->label);
+		printf("%2d\t\t%2d\t %s\n",i,j,otp->label);
 	}
 	printf("\n");
 

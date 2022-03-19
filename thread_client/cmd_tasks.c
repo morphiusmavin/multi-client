@@ -170,7 +170,6 @@ UCHAR get_host_cmd_task(int test)
 		}
 	}
 	init_ips();
-
 	printf("%s\n",cFileName);
 
 	cllist_init(&cll);

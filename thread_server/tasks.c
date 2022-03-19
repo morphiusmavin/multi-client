@@ -66,6 +66,8 @@ pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
 static UCHAR check_inputs(int index, int test);
 //extern CMD_STRUCT cmd_array[58];
 ollist_t oll;
+cllist_t cll;
+
 PARAM_STRUCT ps;
 
 //extern pthread_t serial_thread;	// workaround for closing serial task

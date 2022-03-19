@@ -129,7 +129,7 @@ int cLoadConfig(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
 	read(fp,&id,1);
 	if(id != 0xAA)
 	{
-		strcpy(errmsg,"invalid file format - id is not 0x55\0");
+		strcpy(errmsg,"invalid file format - id is not 0xAA\0");
 		close(fp);
 		return -1;
 	}
@@ -183,6 +183,86 @@ int cWriteConfig(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
 	return 0;
 }
 /////////////////////////////////////////////////////////////////////////////
+int cGetnRecs(char *filename, char *errmsg)
+{
+	char *fptr;
+	int fp = -1;
+	int i = 0;
+	fptr = (char *)filename;
+	UCHAR id;
+	size_t fsize;
+	int nrecs;
+
+	fp = open((const char *)fptr, O_RDWR);
+	if(fp < 0)
+	{
+		strcpy(errmsg,strerror(errno));
+		close(fp);
+		printf("%s  %s\n",errmsg,filename);
+		return -2;
+	}
+
+	fsize = lseek(fp,0,SEEK_END);
+	fsize--;
+	nrecs = fsize/sizeof(C_DATA);
+	printf("fsize: %d nrecs: %d\n",fsize,nrecs);
+	fsize = lseek(fp,0,SEEK_SET);
+	i = 0;
+	read(fp,&id,1);
+	if(id != 0xAA)
+	{
+		strcpy(errmsg,"invalid file format - id is not 0xAA\0");
+		close(fp);
+		return -1;
+	}
+//	printf("fp:%d  read: %d bytes in oLoadConfig\n",fp,i);
+	close(fp);
+	strcpy(errmsg,"Success\0");
+	return nrecs;
+}
+///////////////////// Write/LoadConfig functions used by init/list_db start here (see make_db) ///////////////////////
+/////////////////////////////////////////////////////////////////////////////
+int cWriteConfig2(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
+{
+	char *fptr;
+	int fp = -1;
+	int i,j,k;
+	fptr = (char *)filename;
+	C_DATA io;
+	C_DATA *pio = &io;
+	C_DATA *curr_o_array2 = curr_o_array;
+	UCHAR id = 0xAA;
+
+//#ifdef NOTARGET
+	fp = open((const char *)fptr, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+//#else
+//	fp = open((const char *)fptr, O_WRONLY | O_CREAT, 666);
+//#endif
+	if(fp < 0)
+	{
+		strcpy(errmsg,strerror(errno));
+		close(fp);
+		printf("%s  %s\n",errmsg,filename);
+		return -2;
+	}
+
+	j = 0;
+//	printf("fp = %d\n",fp);
+//	printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
+	i = lseek(fp,0,SEEK_SET);
+	write(fp,&id,1);
+	for(i = 0;i < size/sizeof(C_DATA);i++)
+	{
+//		memset(pio,0,sizeof(IC_DATA));
+		pio = curr_o_array2;
+		j += write(fp,(const void*)pio,sizeof(C_DATA));
+		curr_o_array2++;
+	}
+
+	close(fp);
+	strcpy(errmsg,"Success\0");
+	return 0;
+}
 /////////////////////////////////////////////////////////////////////////////
 int GetFileFormat2(char *filename)
 {

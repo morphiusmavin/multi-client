@@ -24,7 +24,7 @@ GNULDFLAGS_T = ${GNULDFLAGS} -pthread
 #####################################################
 CC = ${GNUCC}
 
-all : list_cdb2 list_cdb init_cdb
+all : list_cdb2 list_cdb init_cdb mod_cdb mod2_cdb
 
 cllist_threads_rw.o: ../queue/cllist_threads_rw.c ../queue/cllist_threads_rw.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/cllist_threads_rw.c
@@ -44,6 +44,12 @@ list_cdb.o: list_cdb.c  ../queue/cllist_threads_rw.h
 init_cdb.o: init_cdb.c  ../queue/cllist_threads_rw.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c init_cdb.c
 
+mod_cdb.o: mod_cdb.c  ../queue/cllist_threads_rw.h
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c mod_cdb.c
+
+mod2_cdb.o: mod2_cdb.c  ../queue/cllist_threads_rw.h
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c mod2_cdb.c
+
 list_cdb2: cconfig_file.o list_cdb2.o cllist_threads_rw.o rdwr.o
 	${CC} list_cdb2.o cconfig_file.o cllist_threads_rw.o rdwr.o -o list_cdb2
 
@@ -53,5 +59,11 @@ list_cdb: cconfig_file.o list_cdb.o cllist_threads_rw.o rdwr.o
 init_cdb: cconfig_file.o init_cdb.o cllist_threads_rw.o rdwr.o
 	${CC} init_cdb.o cconfig_file.o cllist_threads_rw.o rdwr.o -o init_cdb
 
+mod_cdb: cconfig_file.o mod_cdb.o cllist_threads_rw.o rdwr.o
+	${CC} mod_cdb.o cconfig_file.o cllist_threads_rw.o rdwr.o -o mod_cdb
+
+mod2_cdb: cconfig_file.o mod2_cdb.o cllist_threads_rw.o rdwr.o
+	${CC} mod2_cdb.o cconfig_file.o cllist_threads_rw.o rdwr.o -o mod2_cdb
+
 clean :
-	rm -f *.o *~ *# core list_cdb2 list_cdb init_cdb
+	rm -f *.o *~ *# core list_cdb2 list_cdb init_cdb mod_cdb mod2_cdb

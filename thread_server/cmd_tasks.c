@@ -27,20 +27,18 @@
 #include "tasks.h"
 #include "ioports.h"
 #include "serial_io.h"
-//#include "queue/illist_threads_rw.h"
 #include "queue/ollist_threads_rw.h"
-//#include "queue/rt_llist_threads_rw.h"
+#include "queue/cllist_threads_rw.h"
 #include "cs_client/config_file.h"
 #include "lcd_func.h"
 
 extern pthread_mutex_t     tcp_read_lock;
 extern pthread_mutex_t     tcp_write_lock;
-int config_file_ok = -1;
 extern CLIENT_TABLE1 client_table[];
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
-//extern illist_t ill;
 extern ollist_t oll;
+extern cllist_t cll;
 
 extern PARAM_STRUCT ps;
 extern char password[PASSWORD_SIZE];
@@ -81,8 +79,9 @@ UCHAR get_host_cmd_task(int test)
 	int i;
 	int j;
 	int k;
-	size_t isize;
 	size_t osize;
+	size_t csize;
+
 	UCHAR tempx[UPLOAD_BUFF_SIZE];
 	char temp_time[5];
 	char *pch;
@@ -134,16 +133,16 @@ UCHAR get_host_cmd_task(int test)
 
 	memset(dat_names,0,sizeof(dat_names));
 
-/*
-	i = NUM_PORT_BITS;
-	isize = sizeof(I_DATA);
-	isize *= i;
-*/
 	i = NUM_PORT_BITS;
 	//printf("no. port bits: %d\r\n",i);
 	osize = sizeof(O_DATA);
 	osize *= i;
 	//printf("osize: %d\r\n",osize);
+
+	i = NO_CLLIST_RECS;
+	//printf("no. port bits: %d\r\n",i);
+	csize = sizeof(C_DATA);
+	csize *= i;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 /*
@@ -155,7 +154,7 @@ UCHAR get_host_cmd_task(int test)
 	ollist_init(&oll);
 	if(access(oFileName,F_OK) != -1)
 	{
-		config_file_ok = olLoadConfig(oFileName,&oll,osize,errmsg);
+		olLoadConfig(oFileName,&oll,osize,errmsg);
 		if(rc > 0)
 		{
 //			myprintf1(errmsg);
@@ -163,6 +162,19 @@ UCHAR get_host_cmd_task(int test)
 		}
 	}
 	init_ips();
+	printf("%s\n",cFileName);
+
+	cllist_init(&cll);
+	if(access(cFileName,F_OK) != -1)
+	{
+		clLoadConfig(cFileName,&cll,csize,errmsg);
+		if(rc > 0)
+		{
+//			myprintf1(errmsg);
+			printf("%s\r\n",errmsg);
+		}
+	}else printf("can't access %s\n",cFileName);
+
 //printf("starting...\n");
 	same_msg = 0;
 
