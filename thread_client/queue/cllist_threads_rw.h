@@ -62,4 +62,5 @@ int cllist_change_output(int index, cllist_t *llistp, int onoff);
 int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp);
 int cllist_show(cllist_t *llistp);
 int cllist_printfile(int fp, cllist_t *llistp);
+int cllist_reorder(cllist_t *llistp);
 

@@ -368,6 +368,37 @@ int cllist_show(cllist_t *llistp)
 	return 0;
 }
 
+int cllist_reorder(cllist_t *llistp)
+{
+//	char list_buf[100];
+	char *ptr;
+	int iptr;
+	cllist_node_t *cur;
+	char list_buf[100];
+	int i = 0;
+
+	printf("re-ordering C_DATA\r\n");
+
+	pthread_rdwr_rlock_np(&(llistp->rwlock));
+	cur=llistp->first;
+
+//	printf("port\tonoff\tinput_port\ttype\ttime_delay\tlabel\r\n");
+
+	for (cur=llistp->first; cur != NULL; cur=cur->nextp)
+	{
+		if(cur->datap->label[0] != 0)
+		{
+			cur->datap->index = i++;
+			printf("%2d\t%2d\t%2d\t\t%2d\t%2d\t%s\r\n",
+				(int)cur->datap->index, cur->datap->client_no, (int)cur->datap->cmd, 
+				 cur->datap->dest, cur->datap->msg_len, cur->datap->label);
+		}
+	}
+	pthread_rdwr_runlock_np(&(llistp->rwlock));
+	return 0;
+}
+
+
 int cllist_printfile(int fp, cllist_t *llistp)
 {
 	char list_buf[50];

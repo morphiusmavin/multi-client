@@ -94,6 +94,7 @@ int clWriteConfig(char *filename,  cllist_t *oll, size_t size,char *errmsg)
 //	printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
 	i = lseek(fp,0,SEEK_SET);
 	write(fp,&id,1);
+	printf("nrecs: %d\n",size/sizeof(C_DATA));
 	for(i = 0;i < size/sizeof(C_DATA);i++)
 	{
 		cllist_find_data(i,&pio,oll);

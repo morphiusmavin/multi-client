@@ -162,7 +162,7 @@ cllist_threads_rw.o: queue/cllist_threads_rw.c queue/cllist_threads_rw.h
 
 cconfig_file.o: cs_client/cconfig_file.c queue/cllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/cconfig_file.c
-
+	
 sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o cllist_threads_rw.o serial_io.o config_file.o cconfig_file.o cmd_tasks.o lcd_func.o  
 # if we don't use -static then the target should have: libpthread.so.0 in the /lib directory
 	${CC} -static -pthread sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o cllist_threads_rw.o serial_io.o config_file.o cconfig_file.o cmd_tasks.o lcd_func.o   -o sched -lm

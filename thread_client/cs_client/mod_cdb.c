@@ -115,8 +115,6 @@ int main(int argc, char *argv[])
 	pod++;
 	pod->cmd = 9;
 	pod = curr_o_array;
-	
-
 
 	num_valids = 0;
 	for(i = 0;i < nrecs;i++)

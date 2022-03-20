@@ -74,21 +74,48 @@ int main(int argc, char *argv[])
 		}
 	}else printf("can't access %s\n",fptr1);
 
-	memset(ctp,0,sizeof(C_DATA));
-	ctp->index = 20;
+	cllist_show(&cll);
+	int index = 15;
+	ret = cllist_find_data(index,ctpp,&cll);
+	ctp->index = 10;
 	ctp->cmd = 5;
 	strcpy(ctp->label,"test");
-//	rc = cllist_find_data(4,ctpp,&cll);
-	cllist_insert_data(nrecs,&cll,ctp);
+	cllist_insert_data(index,&cll,ctp);
 
-	ctp->index = 21;
+	index = 18;
+	ret = cllist_find_data(index,ctpp,&cll);
+	ctp->index = 12;
+	ctp->cmd = 7;
+	strcpy(ctp->label,"test3");
+	cllist_insert_data(index,&cll,ctp);
+	index++;
+
+	ret = cllist_find_data(index,ctpp,&cll);
+	ctp->index = 11;
+	ctp->cmd = 8;
+	strcpy(ctp->label,"test4");
+	cllist_insert_data(index,&cll,ctp);
+//	index++;
+
+	ret = cllist_find_data(index,ctpp,&cll);
+	ctp->index = 10;
+	ctp->cmd = 9;
+	strcpy(ctp->label,"test5");
+	cllist_insert_data(index,&cll,ctp);
+
+	cllist_show(&cll);
+/*
+	ctp->index = 10;
 	ctp->cmd = 6;
 	strcpy(ctp->label,"test2");
 //	rc = cllist_find_data(4,ctpp,&cll);
 	cllist_insert_data(nrecs+1,&cll,ctp);
+*/
+	cllist_reorder(&cll);
+	cllist_show(&cll);
 //	cllist_insert_data(4,&cll,ctp);
 //	cllist_insert_data(nrecs+1, &cll, datap2);
-	osize += sizeof(C_DATA)*2;
+	osize += sizeof(C_DATA);
 	clWriteConfig(fptr1,&cll,osize,errmsg);
 
 	return 0;
