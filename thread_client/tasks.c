@@ -55,10 +55,6 @@ ollist_t oll;
 cllist_t cll;
 PARAM_STRUCT ps;
 
-//extern pthread_t serial_thread;	// workaround for closing serial task
-
-//extern int olLoadConfig(char *filename, ollist_t *oll, size_t size, char *errmsg);
-
 static UCHAR read_serial_buffer[SERIAL_BUFF_SIZE];
 static UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 static int no_serial_buff;

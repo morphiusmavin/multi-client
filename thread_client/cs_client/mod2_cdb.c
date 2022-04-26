@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 		ret = clLoadConfig(fptr1,&cll,osize,errmsg);
 		if(ret > 0)
 		{
-//			myprintf1(errmsg);
+//			myprintf1(errmsg);   
 			printf("%s\r\n",errmsg);
 		}
 	}else printf("can't access %s\n",fptr1);

@@ -34,6 +34,7 @@
 #define CMD_HOST_QKEY	1234
 
 
+
 // uSleep(0,100000000L); - roughly 100ms using uSleep();
 
 int global_socket;
@@ -134,7 +135,7 @@ static int serial_recv_on;
 static char dat_names[NUM_DAT_NAMES][DAT_NAME_STR_LEN];
 float convertF(int raw_data);
 extern char oFileName[20];
-extern char iFileName[20];
+extern char cFileName[20];
 int cmd_host_qid;
 
 extern UCHAR reboot_on_exit;

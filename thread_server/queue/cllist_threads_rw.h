@@ -28,14 +28,14 @@ typedef struct c_data
 {
 	char label[OLABELSIZE];
 	int index;				// just the key 
-	int client_no;			// the client this msg applies to (could have just as well been the index)
+	int client_no;			// the client this msg applies to (could just as well be the index)
 	UCHAR cmd;				// command to send
 	int dest;				// destination (any other client or server in the client_table list)
 	int msg_len;			// length of attached message if any
 	int fn_ptr;				// a ptr into an array of functions on the client (depends on cmd)
 	int data_ptr;			// a length into a huge array where data is stored for each client.
 	int hours;				// time interval if to send anything on a predermined interval.
-	int minutes;
+	int minutes;			// if all '0's then one-shot 
 	int seconds;
 } C_DATA;
 

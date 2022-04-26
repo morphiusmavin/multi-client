@@ -51,7 +51,9 @@ namespace EpServerEngineSampleClient
 			TEST_IO_PORT,
 			UPDATE_STATUS,
 			UPDATE_ALL,
-			SEND_MSG
+			SEND_MSG,
+			WRITE_CLIST_FILE_DISK,
+			CLIENT_RECONNECT
 		}
 
 		public ServerCmds()
@@ -124,6 +126,22 @@ namespace EpServerEngineSampleClient
 				Packet packet = new Packet(bytes, 0, bytes.Count(), false);
 				m_client.Send(packet);
 			}
+		}
+		public void Send_ClCmd(int sendcmd, int client, int cl_table_index)
+		{
+			byte[] atemp = BitConverter.GetBytes(client);
+			byte[] btemp = BitConverter.GetBytes(cl_table_index);
+			byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
+			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+			System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
+			ctemp.SetValue((byte)sendcmd, 0);
+			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+
+			if (m_client.IsConnectionAlive)
+			{
+				m_client.Send(packet);
+			}
+
 		}
 		public bool connection_alive()
 		{

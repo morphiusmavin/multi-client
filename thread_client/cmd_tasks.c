@@ -330,6 +330,10 @@ UCHAR get_host_cmd_task(int test)
 
  				switch(cmd)
 				{
+					case CLIENT_RECONNECT:
+						printf("cl reconn\n");
+						close_tcp();
+						break;
 					case WRITE_CLIST_FILE_DISK:
 						clWriteConfig(cFileName,&cll,csize,errmsg);
 						break;

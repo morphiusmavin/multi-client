@@ -32,6 +32,7 @@
 #include "ioports.h"
 #include "serial_io.h"
 #include "queue/ollist_threads_rw.h"
+#include "queue/cllist_threads_rw.h"
 #include "tasks.h"
 //#include "cs_client/config_file.h"
 #include "lcd_func.h"
@@ -69,10 +70,6 @@ ollist_t oll;
 cllist_t cll;
 
 PARAM_STRUCT ps;
-
-//extern pthread_t serial_thread;	// workaround for closing serial task
-
-//extern int olLoadConfig(char *filename, ollist_t *oll, size_t size, char *errmsg);
 
 static UCHAR read_serial_buffer[SERIAL_BUFF_SIZE];
 static UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
@@ -862,7 +859,7 @@ startover:
 
 			int rc = recv_tcp(windows_client_sock, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			//printf("cmd: %d\n",cmd);
+			printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
 /*
 			for(j = 0;j < rc;j++)
@@ -1013,6 +1010,18 @@ startover1:
 			}
 			if(ret > 200)
 				break;
+
+			if(cmd == CLIENT_RECONNECT)
+			{
+				printf("client reconnecting...\n");
+				uSleep(5,0);
+				printf("client reconnect\n");
+				close(client_table[index].socket);
+				client_table[index].socket = -1;
+				// the break statement only goes back up to 
+				// "read task 2"
+				goto startover1;
+			}
 			//printf("%02x %02x %02x\n",tempx[0],tempx[1],tempx[2]);
 /*
 			for(i = 0;i < ret;i++)
@@ -1538,7 +1547,7 @@ UCHAR tcp_monitor_task(int test)
 				if(strncmp(client_table[i].ip,tempx,3) == 0)
 				{
 					client_table[i].socket = new_socket;
-					//printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
+					printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
 
 					if(windows_client_sock < 0)
 					{
@@ -1552,6 +1561,8 @@ UCHAR tcp_monitor_task(int test)
 					{
 						memset(tempx,0,sizeof(tempx));
 						sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+						printf("should be sending msg to win cl: %s\n",tempx);
+						uSleep(0,TIME_DELAY/16);
 						send_msgb(windows_client_sock, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 					}
 					if(client_table[i].qid == 0)

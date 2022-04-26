@@ -247,12 +247,28 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
+				case CLIENT_RECONNECT:
+					for(i = 0;i < MAX_CLIENTS;i++)
+					{
+						if(client_table[i].socket > 0)
+						{
+							memset(tempx,0,sizeof(tempx));
+							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+							//printf("should be sending a msg to clients %s\n",tempx);
+							send_msg(client_table[i].socket, strlen(tempx)*2,tempx,CLIENT_RECONNECT);
+							uSleep(0,TIME_DELAY/2);
+						}
+					}
+					break;
+
 				case WRITE_CLIST_FILE_DISK:
 					break;
 
 				case SEND_CLIENT_LIST:
+					printf("!  SEND_CLIENT_LIST\n");
 					for(i = 0;i < MAX_CLIENTS;i++)
 					{
+						//printf("%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
 						if(client_table[i].socket > 0)
 						{
 							memset(tempx,0,sizeof(tempx));

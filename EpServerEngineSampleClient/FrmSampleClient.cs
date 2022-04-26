@@ -494,6 +494,7 @@ namespace EpServerEngineSampleClient
                     //AddMsg(ret);
 					string clmsg = " ";
 					bool avail = false;
+					AddMsg("SEND_CLIENT_LIST ");
                     foreach (var word in words)
                     {
                         switch (i)
@@ -740,9 +741,10 @@ namespace EpServerEngineSampleClient
         }
         private void RebootServer(object sender, EventArgs e)       // "test"
         {
-            string cmd = "SEND_CLIENT_LIST";
-            int offset = svrcmd.GetCmdIndexI(cmd);
-            svrcmd.Send_Cmd(offset);
+            //string cmd = "SEND_CLIENT_LIST";
+            //int offset = svrcmd.GetCmdIndexI(cmd);
+            //svrcmd.Send_Cmd(offset);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 0, false);
         }
         // Insert logic for processing found files here.
         public static void ProcessFile(string path)
@@ -846,43 +848,19 @@ namespace EpServerEngineSampleClient
         }
         private void DBMgmt(object sender, EventArgs e) // "test2"
         {
-            /*
-            int temp = 1;
-            int temp2 = 4;
-            byte[] atemp = BitConverter.GetBytes(temp);
-            byte[] btemp = BitConverter.GetBytes(temp2);
-            byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
-            ctemp[0] = svrcmd.GetCmdIndexB("REBOOT_IOBOX");
-            System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
-            Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-            if (m_client.IsConnectionAlive)
-            {
-                m_client.Send(packet);
-            }
-            */
-            //gpsform.Enable_Dlg(true);
-            //gpsform.StartPosition = FormStartPosition.Manual;
-            //gpsform.Location = new Point(100, 10);
-            //param = BitConverter.GetBytes(1);   // turn gps sending on
-            //System.Buffer.BlockCopy(src, src_offset, dest, dest_offset,count)
-            //AddMsg(param.Length.ToString() + " " + bytes.Length.ToString());
-            //System.Buffer.BlockCopy(param, 0, bytes, 2, param.Count());
-            //bytes[0] = svrcmd.GetCmdIndexB("ENABLE_GPS_SEND_DATA");
-            //Packet packet = new Packet(bytes, 0, bytes.Count(), false);
-            //if (m_client.IsConnectionAlive)
-            //{
-            //m_client.Send(packet);
-            //}
+            string cmd = "WRITE_CLIST_FILE_DISK";
+            int offset = svrcmd.GetCmdIndexI(cmd);
 
-            //param = BitConverter.GetBytes(0);// turn gps sending off
-            //System.Buffer.BlockCopy(param, 0, bytes, 2, param.Count());
-            //bytes[0] = svrcmd.GetCmdIndexB("ENABLE_GPS_SEND_DATA");
-            //packet = new Packet(bytes, 0, bytes.Count(), false);
-            //if (m_client.IsConnectionAlive)
-            //{
-            //m_client.Send(packet);
-            //}
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    AddMsg(cl.label);
+                    svrcmd.Send_ClCmd(offset, 0, cl.index);
+                   
+                }
+            }
+            svrcmd.Send_Cmd(offset);
         }
         private void ClearScreen(object sender, EventArgs e)
         {
@@ -914,7 +892,36 @@ namespace EpServerEngineSampleClient
         }
         private void btnAVR_Click(object sender, EventArgs e)		// test3
         {
-            /*
+            var temp = 9;   // _SERVER
+            byte[] atemp = BitConverter.GetBytes(temp);
+            byte[] btemp = BitConverter.GetBytes(temp);
+            byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
+            string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("CLIENT_RECONNECT"));
+            ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
+            System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
+            Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+            AddMsg(ctemp.Count().ToString());
+            if (m_client.IsConnectionAlive)
+            {
+                m_client.Send(packet);
+            }
+/*
+            string cmd = "CLIENT_RECONNECT";
+            int offset = svrcmd.GetCmdIndexI(cmd);
+
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    AddMsg(cl.label);
+                    svrcmd.Send_ClCmd(offset, cl.index);
+
+                }
+            }
+            svrcmd.Send_Cmd(offset);
+
+  
             int temp = 2;
             int temp2 = 4;
             byte[] atemp = BitConverter.GetBytes(temp);
@@ -1341,17 +1348,14 @@ namespace EpServerEngineSampleClient
         {
             AvailClientCurrentSection = lbAvailClients.SelectedIndex;
         }
-
         private void btnRebootClient_Click(object sender, EventArgs e)
         {
             SendClientMsg(svrcmd.GetCmdIndexI("REBOOT_IOBOX"),0,true);
         }
-
         private void btnShutdownClient_Click(object sender, EventArgs e)
         {
             SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"),0,true);
         }
-
         private void button1_Click(object sender, EventArgs e)		// get status
         {
             SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"),0,false);
@@ -1392,7 +1396,7 @@ namespace EpServerEngineSampleClient
 
             }
         }
-        private void SendClientMsg(int msg, string param, bool remove)
+        private void SendClientMsg(int msg, string param, int cl_db_index, bool remove)
         {
             foreach (ClientsAvail cl in clients_avail)
             {
@@ -1428,17 +1432,13 @@ namespace EpServerEngineSampleClient
 
             }
         }
-
 		private void btnSendMsg_Click(object sender, EventArgs e)
 		{
-            //            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), 0, false);
-            //AddMsg(tbSendMsg.Text);
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), tbSendMsg.Text, false);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), 0, false);
         }
-
-		private void btnSendSvrMsg_Click(object sender, EventArgs e)
+    	private void btnSendSvrMsg_Click(object sender, EventArgs e)
 		{
-            var temp = 9;   // _SERVER
+            var temp = 9;
             byte[] atemp = BitConverter.GetBytes(temp);
             byte[] btemp = BytesFromString(tbSendMsg.Text);
             byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
@@ -1453,7 +1453,6 @@ namespace EpServerEngineSampleClient
                 m_client.Send(packet);
             }
         }
-
 		private void bSetClientTime_Click(object sender, EventArgs e)
 		{
             foreach (ClientsAvail cl in clients_avail)
@@ -1494,12 +1493,10 @@ namespace EpServerEngineSampleClient
 				}
 			}
 		}
-
 		private void btnWaitReboot_Click(object sender, EventArgs e)
 		{
             SendClientMsg(svrcmd.GetCmdIndexI("WAIT_REBOOT_IOBOX"), 0, true);
         }
-
 		private void tbSendMsg_TextChanged(object sender, EventArgs e)
 		{
             sendmsgtext = tbSendMsg.Text;
