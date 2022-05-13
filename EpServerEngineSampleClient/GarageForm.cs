@@ -30,8 +30,8 @@ namespace EpServerEngineSampleClient
 		public System.Collections.Generic.List<GPSlist> gps_list;
 		private byte[] recv_buff;
 		private bool m_pause = false;
-		bool[] status = new bool[7];
-		bool[] prev_status = new bool[7];
+		bool[] status = new bool[8];
+		bool[] prev_status = new bool[8];
 		List<String> on_label_list = new List<String>();
 		List<String> off_label_list = new List<String>();
 		public System.Collections.Generic.List<ButtonList> button_list;
@@ -53,6 +53,7 @@ namespace EpServerEngineSampleClient
 			status[4] = false;
 			status[5] = false;
 			status[6] = false;
+			status[7] = false;
 
 			prev_status[0] = false;
 			prev_status[1] = false;
@@ -61,6 +62,7 @@ namespace EpServerEngineSampleClient
 			prev_status[4] = false;
 			prev_status[5] = false;
 			prev_status[6] = false;
+			prev_status[7] = false;
 			recv_buff = new byte[200];
 
 			on_label_list.Add("ALL_NORTH_ON");
@@ -68,21 +70,23 @@ namespace EpServerEngineSampleClient
 			on_label_list.Add("ALL_EAST_ON");
 			on_label_list.Add("ALL_WEST_ON");
 			on_label_list.Add("ALL_MIDDLE_ON");
-			on_label_list.Add("TWO_OFFICE_ON");
+			on_label_list.Add("ALL_OFFICE_ON");
 			on_label_list.Add("ALL_LIGHTS_ON");
+			on_label_list.Add("WORK_ON");
 
 			off_label_list.Add("ALL_NORTH_OFF");
 			off_label_list.Add("ALL_SOUTH_OFF");
 			off_label_list.Add("ALL_EAST_OFF");
 			off_label_list.Add("ALL_WEST_OFF");
 			off_label_list.Add("ALL_MIDDLE_OFF");
-			off_label_list.Add("TWO_OFFICE_OFF");
+			off_label_list.Add("ALL_OFFICE_OFF");
 			off_label_list.Add("ALL_LIGHTS_OFF");
+			off_label_list.Add("WORK_OFF");
 
 			button_list = new List<ButtonList>();
 			Control sCtl = this.btnNorth;
 			//for (int i = 0; i < this.Controls.Count; i++)
-			for (int i = 0; i < 7; i++)
+			for (int i = 0; i < 8; i++)
 			{
 				if (sCtl.GetType() == typeof(Button))
 				{
@@ -165,7 +169,7 @@ namespace EpServerEngineSampleClient
 					//m &= 63;
 					int len = temp.Length * 4;
 					len = len < 9 ? len : 8;
-					for(k = 0;k < 7;k++)
+					for(k = 0;k < 8;k++)
 					{
 						//AddMsg(m.ToString());
 						o = m & 1;
@@ -197,7 +201,7 @@ namespace EpServerEngineSampleClient
 					int which = (int)bytes[2] - 48;
 					int onoff = (int)bytes[6] - 48;
 					AddMsg(which.ToString() + " " + onoff.ToString());
-					if (which > -1 && which < 7)
+					if (which > -1 && which < 8)
 					{
 						status[which] = (onoff == 1 ? status[which] = true : status[which] = false);
 						AddMsg(status[which].ToString() + " " + which.ToString() + " " + onoff.ToString());
@@ -212,7 +216,7 @@ namespace EpServerEngineSampleClient
 		{
 			AddMsg(which.ToString());
 			if (which == -1)
-				for (int i = 0; i < 7; i++)
+				for (int i = 0; i < 8; i++)
 				{
 					//if (status[i] != prev_status[i])
 					if(true)
@@ -229,7 +233,7 @@ namespace EpServerEngineSampleClient
 						}
 					}
 				}
-			else if (which > -1 && which < 7)
+			else if (which > -1 && which < 8)
 			{
 				//if (status[which] != prev_status[which])
 				if(true)
@@ -251,10 +255,13 @@ namespace EpServerEngineSampleClient
 		private void SendCmd(int which, bool onoff)
 		{
 			string cmd = onoff ? on_label_list[which] : off_label_list[which];
+			//AddMsg(cmd);
 			int offset = svrcmd.GetCmdIndexI(cmd);
+			//AddMsg(offset.ToString());
 			offset = svrcmd.GetCmdIndexI(cmd);
-			AddMsg(which.ToString() + " " + cmd + " " + offset.ToString());
-			svrcmd.Send_Cmd(offset);
+			//AddMsg(which.ToString() + " " + cmd + " " + offset.ToString());
+			//svrcmd.Send_Cmd(offset);
+			svrcmd.Send_ClCmd(offset, 9, "test");
 			prev_status[which] = status[which];
 			ChangeStatus(which);
 			IfStatusChanged(which);
@@ -293,12 +300,32 @@ namespace EpServerEngineSampleClient
 
 		private void btnOffice_Click(object sender, EventArgs e)
 		{
-//			SendCmd(5, !status[5]);
+			SendCmd(5, !status[5]);
 		}
 
 		private void btnAll_Click(object sender, EventArgs e)
 		{
-//			SendCmd(6, !status[6]);
+			SendCmd(6, !status[6]);
+			int i = 0;
+			bool st = status[6];
+			if (st)
+			{
+				for (i = 0; i < 8; i++)
+				{
+					status[i] = true;
+					button_list[i].Ctl.Text = "ON";
+					button_list[i].Ctl.BackColor = Color.Aqua;
+				}
+			}
+			else
+			{
+				for (i = 0; i < 8; i++)
+				{
+					status[i] = false;
+					button_list[i].Ctl.Text = "OFF";
+					button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+				}
+			}
 		}
 
 		private void btnPollStatus_Click(object sender, EventArgs e)
@@ -308,7 +335,7 @@ namespace EpServerEngineSampleClient
 
 		private void btnClear_Click_1(object sender, EventArgs e)
 		{
-//			tbAddMsg.Clear();
+			SendCmd(7, !status[7]);
 		}
 
 		private void SendPollStatus()

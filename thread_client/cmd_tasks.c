@@ -107,6 +107,7 @@ UCHAR get_host_cmd_task(int test)
 	shutdown_all = 0;
 	char version[15] = "sched v1.03\0";
 	UINT utemp;
+	lcd_enabled = 0;
 //	UCHAR time_buffer[20];
 	UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 
@@ -489,7 +490,7 @@ uSleep(0,TIME_DELAY/3);
 						gettimeofday(&mtv, NULL);
 						curtime2 = mtv.tv_sec;
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
-						myprintf1(tempx);
+						//printf(tempx);
 						send_msg(strlen((char*)tempx),(UCHAR*)tempx,GET_TIME);
 						break;
 
@@ -653,7 +654,7 @@ exit_program:
 						i = WriteParams("param.conf", &ps, &password[0], errmsg);
 						if(i < 0)
 						{
-							myprintf1(errmsg);
+							printf(errmsg);
 						}
 
 						// pulse the LED on the IO box before shutting down

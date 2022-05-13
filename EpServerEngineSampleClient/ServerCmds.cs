@@ -26,6 +26,10 @@ namespace EpServerEngineSampleClient
 			ALL_WEST_ON,
 			ALL_WEST_OFF,
 			BLANK,
+			ALL_OFFICE_ON,
+			ALL_OFFICE_OFF,
+			WORK_ON,
+			WORK_OFF,
 			GET_TEMP4,
 			SHUTDOWN_IOBOX,
 			REBOOT_IOBOX,
@@ -94,7 +98,7 @@ namespace EpServerEngineSampleClient
 			{
 				cmd2 = Enum.GetName(typeof(Server_cmds), i);
 				i++;
-			} while (cmd2 != cmd);
+			} while (cmd2 != cmd && i < 200);
 			i--;
 			return i;
 		}
@@ -127,16 +131,18 @@ namespace EpServerEngineSampleClient
 				m_client.Send(packet);
 			}
 		}
-		public void Send_ClCmd(int sendcmd, int client, int cl_table_index)
+		public void Send_ClCmd(int msg, int index, string param)
 		{
-			byte[] atemp = BitConverter.GetBytes(client);
-			byte[] btemp = BitConverter.GetBytes(cl_table_index);
-			byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
+			var temp = index;
+			byte[] atemp = BitConverter.GetBytes(temp);
+			byte[] btemp = BytesFromString(param);
+			byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
+			string cmsg = GetName(msg);
+			ctemp[0] = GetCmdIndexB(cmsg);
 			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-			System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
-			ctemp.SetValue((byte)sendcmd, 0);
+			System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
 			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-
+			//AddMsg(ctemp.Count().ToString() + " " + temp.ToString());
 			if (m_client.IsConnectionAlive)
 			{
 				m_client.Send(packet);

@@ -237,7 +237,7 @@ int myprintf1(char *str)
 
 	if(!lcd_enabled)
 	{
-//		printf("%s\n",str);
+		printf("%s\n",str);
 		return 1;
 	}
 

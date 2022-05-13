@@ -106,6 +106,7 @@ UCHAR get_host_cmd_task(int test)
 	int msgtype = 1;
 	UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 	int temp;
+//	lcd_enabled = 0;
 
 	memset(write_serial_buffer, 0, SERIAL_BUFF_SIZE);
 	// since each card only has 20 ports then the 1st 2 port access bytes
@@ -162,9 +163,10 @@ UCHAR get_host_cmd_task(int test)
 		}
 	}
 	init_ips();
-	printf("%s\n",cFileName);
+//	printf("%s\n",cFileName);
 
 	cllist_init(&cll);
+
 	if(access(cFileName,F_OK) != -1)
 	{
 		clLoadConfig(cFileName,&cll,csize,errmsg);
@@ -176,12 +178,12 @@ UCHAR get_host_cmd_task(int test)
 	}else printf("can't access %s\n",cFileName);
 
 //printf("starting...\n");
+
 	same_msg = 0;
 
 	while(TRUE)
 	{
 		cmd = 0;
-
 		if (msgrcv(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
 //		MSG_NOERROR | IPC_NOWAIT) == -1) 
 		MSG_NOERROR) == -1) 
@@ -189,6 +191,7 @@ UCHAR get_host_cmd_task(int test)
 			if (errno != ENOMSG) 
 			{
 				perror("msgrcv");
+printf("msgrcv error\n");
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -196,18 +199,18 @@ UCHAR get_host_cmd_task(int test)
 		msg_len |= (int)(msg.mtext[2] << 4);
 		msg_len = (int)msg.mtext[1];
 		
-		printf("msg_len: %d\n",msg_len);
+//		printf("msg_len: %d\n",msg_len);
 		memcpy(tempx,msg.mtext+4,msg_len);
 		
-		for(i = 0;i < msg_len;i++)
-			printf("%02x ",tempx[i]);
+//		for(i = 0;i < msg_len;i++)
+//			printf("%02x ",tempx[i]);
 
 //		printf("\n");
 
 		if(cmd > 0)
 		{
 //				sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
-			printf("msg to svr: %s: ",cmd_array[cmd].cmd_str);
+//			printf("msg to svr: %s: ",cmd_array[cmd].cmd_str);
 //				if(cmd < LCD_TEST_MODE)
 //					myprintf1(cmd_array[cmd].cmd_str);
 		}
@@ -230,13 +233,17 @@ UCHAR get_host_cmd_task(int test)
 				case ALL_EAST_OFF:
 				case ALL_WEST_ON:
 				case ALL_WEST_OFF:
+				case ALL_OFFICE_ON:
+				case ALL_OFFICE_OFF:
+				case WORK_ON:
+				case WORK_OFF:
 				case SHUTDOWN_IOBOX:
 				case REBOOT_IOBOX:
 				case UPLOAD_NEW:
 				case UPLOAD_NEW_PARAM:
 				case SHELL_AND_RENAME:
 				case UPLOAD_OTHER:
-					//printf("sending que: %02x\r\n",cmd);
+//					printf("sending que: %02x\r\n",cmd);
 					memset(tempx,0,sizeof(tempx));
 					//send_serialother(cmd,(UCHAR *)tempx);
 					add_msg_queue(cmd);
@@ -419,7 +426,7 @@ UCHAR get_host_cmd_task(int test)
 					gettimeofday(&mtv, NULL);
 					curtime2 = mtv.tv_sec;
 					strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
-					myprintf1(tempx);
+					printf(tempx);
 //						send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,GET_TIME);
 					break;
 
@@ -432,7 +439,7 @@ UCHAR get_host_cmd_task(int test)
 					if(test_sock() > 0)
 					{
 						close_tcp();
-						myprintf1("disconnected\0");
+						printf("disconnected\n");
 					}
 					break;
 
@@ -564,26 +571,26 @@ exit_program:
 					j = 0;
 					if(reboot_on_exit == 1)
 					{
-						myprintf1("exit to shell\0");
+						printf("exit to shell\n");
 					}
 					else if(reboot_on_exit == 2)
 					{
-						myprintf1("rebooting...\0");
+						printf("rebooting...\n");
 					}
 					else if(reboot_on_exit == 3)
 					{
-						myprintf1("shutting down...\0");
+						printf("shutting down...\n");
 					}
 					else if(reboot_on_exit == 4)
 					{
-						myprintf1("upload new...\0");
+						printf("upload new...\n");
 					}
 
 					// save the current list of events
 					i = WriteParams("param.conf", &ps, &password[0], errmsg);
 					if(i < 0)
 					{
-						myprintf1(errmsg);
+						printf(errmsg);
 					}
 
 					usleep(10000000);

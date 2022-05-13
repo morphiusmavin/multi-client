@@ -24,37 +24,7 @@ namespace EpServerEngineSampleClient
 {
     public partial class FrmSampleClient : Form, INetworkClientCallback
     {
-        public class CommonControls : IEquatable<CommonControls>
-        {
-            public string CtlName { get; set; }     // the name of the button control (should be button0->9)
-            public string CtlText { get; set; }     // the text on the button (set programmatically)
-            public int TabOrder { get; set; }       // tab order
-            public Control Ctlinst { get; set; }    // instance of the control (makes the above 3 redundant)
-            public int cmd { get; set; }            // the index into enum command_types
-            public int len { get; set; }            // total length of included commands including 1st one (as a set)
-            public int offset { get; set; }
-
-            public override string ToString()
-            {
-                return CtlName + " " + CtlText + " " + TabOrder.ToString();
-            }
-            public override bool Equals(object obj)
-            {
-                if (obj == null) return false;
-                CommonControls objAsPart = obj as CommonControls;
-                if (objAsPart == null) return false;
-                else return Equals(objAsPart);
-            }
-            public override int GetHashCode()
-            {
-                return TabOrder;
-            }
-            public bool Equals(CommonControls other)
-            {
-                if (other == null) return false;
-                return (this.TabOrder.Equals(other.TabOrder));
-            }
-        }
+        
         ConfigParams cfg_params = new ConfigParams();
         private DlgSetParams dlgsetparams = null;
         private bool valid_cfg = false;
@@ -62,17 +32,9 @@ namespace EpServerEngineSampleClient
         INetworkClient m_client = new IocpTcpClient();
         private string password = "";
 
-        private PortSet2 psDlg = null;
-        private PortSet2 psDlg2 = null;
-        private PortSet2 psDlg3 = null;
-        private PortSet2 psDlg4 = null;
-        private PortSet2 psDlg5 = null;
-        private PortSet2 psDlg6 = null;
         private PlayerDlg playdlg = null;
         private GarageForm garageform = null;
-        private WifiIOT wifi = null;
         private BluetoothForm bluetoothform = null;
-        private NetClients netclients = null;
         private Child_Scrolling_List slist = null;
         private int AvailClientCurrentSection = 0;
 
@@ -80,7 +42,6 @@ namespace EpServerEngineSampleClient
         private List<ClientsAvail> clients_avail;
         private int i = 0;
         private int selected_address = 0;
-        private int selected_wifi_address = 0;
         private int please_lets_disconnect = 0;
         private int disconnect_attempts = 0;
         private string m_hostname;
@@ -117,8 +78,6 @@ namespace EpServerEngineSampleClient
             cbIPAdress.Enabled = true;
             tbReceived.Enabled = true;
             tbPort.Enabled = true;
-            btnConnectWifi.Enabled = true;    // these are normally set false
-            btnBTForm.Enabled = false;
             btnShutdown.Enabled = false;
             //btnReboot.Enabled = false;
             btnShowParams.Enabled = false;
@@ -126,39 +85,10 @@ namespace EpServerEngineSampleClient
             btnGetTime.Enabled = false;
 
             tbReceived.Clear();
-            //psDlg = new PortSet2(File.Exists(dialog_one_location_laptop) ? dialog_one_location_laptop : dialog_one_location_desktop, m_client);
-            psDlg = new PortSet2(xml_dialog1_location, m_client);
-            psDlg.SetButtonLabels();
-            //psDlg.Name = "Dialog One";
-            //psDlg.Set_Type(false);
-
-            //psDlg2 = new PortSet2(File.Exists(dialog_two_location_laptop) ? dialog_two_location_laptop : dialog_two_location_desktop, m_client);
-            psDlg2 = new PortSet2(xml_dialog2_location, m_client);
-            psDlg2.SetButtonLabels();
-            //psDlg2.Name = "Dialog Two";
-            //psDlg2.Set_Type(false);
-
-            psDlg3 = new PortSet2(xml_dialog3_location, m_client);
-            psDlg3.SetButtonLabels();
-            psDlg3.Text = "test";
-            //psDlg3.Name = "Test Ports";
-
-            psDlg4 = new PortSet2(xml_dialog4_location, m_client);
-            psDlg4.SetButtonLabels();
-            //psDlg4.Name = "Dialog Three";
-
-            psDlg5 = new PortSet2(xml_dialog5_location, m_client);
-            psDlg5.SetButtonLabels();
-            //psDlg5.Name = "Dialog Three";
-
-            psDlg6 = new PortSet2(xml_dialog6_location, m_client);
-            psDlg6.SetButtonLabels();
-            //psDlg6.Name = "Dialog Three";
 
             playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
 
             garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
-            wifi = new WifiIOT("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
 
             slist = new Child_Scrolling_List(m_client);
@@ -166,7 +96,7 @@ namespace EpServerEngineSampleClient
 
             client_params = new List<ClientParams>();
             ClientParams item = null;
-
+            
             DataSet ds = new DataSet();
             //XmlReader xmlFile = XmlReader.Create(File.Exists(xml_file2_location_laptop) ? xml_file2_location_laptop : xml_file2_location_desktop);
             XmlReader xmlFile = XmlReader.Create(xml_params_location);
@@ -262,6 +192,7 @@ namespace EpServerEngineSampleClient
                 disconnect_attempts = 0;
             }
         }
+            
         public void OnConnected(INetworkClient client, ConnectStatus status)
         {
             AddMsg(client.HostName);
@@ -272,9 +203,6 @@ namespace EpServerEngineSampleClient
                     tbConnected.Text = "connected";     // comment all these out in debug
                                                         //            cblistCommon.Enabled = true;      this one stays commneted out
                     btnConnect.Text = "Disconnect";
-                    btnConnectWifi.Enabled = true;             // shutdown engine button
-                                                               //btnStartEng.Enabled = true;             // start engine
-                                                               //btnStartEng.Text = "Stop Engine";
                     btnGarageForm.Enabled = true;
                     cbIPAdress.Enabled = false;     /// from here to MPH should be commented out when in debugger
 					tbPort.Enabled = false;
@@ -303,53 +231,24 @@ namespace EpServerEngineSampleClient
                 btnShutdown.Enabled = false;
             }
         }
+        
         protected override void OnClosed(EventArgs e)
         {
             if (m_client.IsConnectionAlive)
                 please_lets_disconnect = 1;
             else
             {
-                psDlg.Dispose();
-                psDlg2.Dispose();
-                psDlg3.Dispose();
-                psDlg4.Dispose();
-                psDlg5.Dispose();
-                psDlg6.Dispose();
                 playdlg.Dispose();
                 garageform.Dispose();
-                wifi.Dispose();
                 bluetoothform.Dispose();
                 base.OnClosed(e);
             }
         }
+        
         public void OnReceived(INetworkClient client, Packet receivedPacket)
         {
             // anything that gets sent here gets sent to home server if it's up
-            if (psDlg.Visible == true)
-            {
-                psDlg.Process_Msg(receivedPacket.PacketRaw);
-            }
-            else if (psDlg2.Visible == true)
-            {
-                psDlg2.Process_Msg(receivedPacket.PacketRaw);
-            }
-            else if (psDlg3.Visible == true)
-            {
-                psDlg3.Process_Msg(receivedPacket.PacketRaw);
-            }
-            else if (psDlg4.Visible == true)
-            {
-                psDlg4.Process_Msg(receivedPacket.PacketRaw);
-            }
-            else if (psDlg5.Visible == true)
-            {
-                psDlg5.Process_Msg(receivedPacket.PacketRaw);
-            }
-            else if (psDlg6.Visible == true)
-            {
-                psDlg6.Process_Msg(receivedPacket.PacketRaw);
-            }
-            else if (playdlg.Visible == true)
+            if (playdlg.Visible == true)
             {
                 playdlg.Process_Msg(receivedPacket.PacketRaw);
             }
@@ -365,14 +264,10 @@ namespace EpServerEngineSampleClient
             {
                 bluetoothform.Process_Msg(receivedPacket.PacketRaw);
             }
-            else if (wifi.Visible == true)
-            {
-                wifi.Process_Msg(receivedPacket.PacketRaw);
-            }
             else
                 Process_Msg(receivedPacket.PacketRaw);
         }
-
+        
         private void RedrawClientListBox()
         {
             lbAvailClients.Items.Clear();
@@ -706,26 +601,6 @@ namespace EpServerEngineSampleClient
             btnConnect_Click(sender, e);
         }
         // start/stop engine
-        private void BTMenu_Click(object sender, EventArgs e)
-        {
-            bluetoothform.Enable_Dlg(true);
-            bluetoothform.SetClient(m_client);
-            bluetoothform.StartPosition = FormStartPosition.Manual;
-            bluetoothform.Location = new Point(100, 10);
-            if (bluetoothform.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-            bluetoothform.Enable_Dlg(false);
-            /*
-                        string cmd = "ALL_MIDDLE_ON";
-                        //AddMsg("start seq: " + cmd);
-                        int offset = svrcmd.GetCmdIndexI(cmd);
-                        svrcmd2.Send_Cmd(offset);
-            */
-        }
         private void ShutdownServer(object sender, EventArgs e)
         {
             ManageServer dlg = new ManageServer(m_client);
@@ -741,9 +616,6 @@ namespace EpServerEngineSampleClient
         }
         private void RebootServer(object sender, EventArgs e)       // "test"
         {
-            //string cmd = "SEND_CLIENT_LIST";
-            //int offset = svrcmd.GetCmdIndexI(cmd);
-            //svrcmd.Send_Cmd(offset);
             SendClientMsg(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 0, false);
         }
         // Insert logic for processing found files here.
@@ -856,7 +728,7 @@ namespace EpServerEngineSampleClient
                 if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 {
                     AddMsg(cl.label);
-                    svrcmd.Send_ClCmd(offset, 0, cl.index);
+                    //svrcmd.Send_ClCmd(offset, 0, cl.index);
                    
                 }
             }
@@ -892,6 +764,7 @@ namespace EpServerEngineSampleClient
         }
         private void btnAVR_Click(object sender, EventArgs e)		// test3
         {
+            /*
             var temp = 9;   // _SERVER
             byte[] atemp = BitConverter.GetBytes(temp);
             byte[] btemp = BitConverter.GetBytes(temp);
@@ -906,7 +779,7 @@ namespace EpServerEngineSampleClient
             {
                 m_client.Send(packet);
             }
-/*
+
             string cmd = "CLIENT_RECONNECT";
             int offset = svrcmd.GetCmdIndexI(cmd);
 
@@ -953,65 +826,11 @@ namespace EpServerEngineSampleClient
             //AddMsg("start seq: " + cmd);
             int offset = svrcmd.GetCmdIndexI(cmd);
             svrcmd.Send_Cmd(offset);
-*/
+            */
         }
         private void Dialog1_Click(object sender, EventArgs e)
         {
 			SetTime(9);
-        }
-        private void Dialog2_Click(object sender, EventArgs e)
-        {
-            psDlg2.Name = "Dialog Two";
-            psDlg2.Enable_Dlg(true);
-            psDlg2.StartPosition = FormStartPosition.Manual;
-            psDlg2.Location = new Point(100, 10);
-            psDlg2.ShowDialog(this);
-            psDlg2.Enable_Dlg(false);
-        }
-        private void Dialog3_Click(object sender, EventArgs e)
-        {
-            psDlg.Name = "Dialog One";
-            psDlg.Enable_Dlg(true);
-            psDlg.StartPosition = FormStartPosition.Manual;
-            psDlg.Location = new Point(100, 10);
-            psDlg.ShowDialog(this);
-            psDlg.Enable_Dlg(false);
-        }
-        private void Dialog4_Click(object sender, EventArgs e)
-        {
-        }
-        private void ConnectWifi_Click(object sender, EventArgs e)
-        {
-            wifi.Enable_Dlg(true);
-            wifi.StartPosition = FormStartPosition.Manual;
-            wifi.Location = new Point(100, 10);
-            if (wifi.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-            wifi.Enable_Dlg(false);
-        }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //AddMsg(psDlg5.Name);
-            psDlg5.Enable_Dlg(true);
-            psDlg5.StartPosition = FormStartPosition.Manual;
-            psDlg5.Location = new Point(100, 10);
-            psDlg5.ShowDialog(this);
-            psDlg5.Enable_Dlg(false);
-            //AddMsg(psDlg5.Name);
-            //AddMsg(psDlg5.Text);
-
-        }
-        private void btnSettingsFour_Click(object sender, EventArgs e)
-        {
-            psDlg6.Enable_Dlg(true);
-            psDlg6.StartPosition = FormStartPosition.Manual;
-            psDlg6.Location = new Point(100, 10);
-            psDlg6.ShowDialog(this);
-            psDlg6.Enable_Dlg(false);
         }
         private void myTimerTick(object sender, EventArgs e)
         {
@@ -1358,7 +1177,7 @@ namespace EpServerEngineSampleClient
         }
         private void button1_Click(object sender, EventArgs e)		// get status
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"),0,false);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"), "status", 9,false);
         }
         private void SendClientMsg(int msg, int param, bool remove)
         {
@@ -1366,7 +1185,7 @@ namespace EpServerEngineSampleClient
             {
                 if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 {
-                    //AddMsg(cl.label);
+                    AddMsg(cl.label + " " + "don't do this");
                     if(remove)
 					{
                         cl.lbindex = -1;
@@ -1402,27 +1221,13 @@ namespace EpServerEngineSampleClient
             {
                 if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 {
-                    //AddMsg(cl.label);
+                    AddMsg(cl.label);
                     if(remove)
 					{
                         cl.lbindex = -1;
                         cl.socket = -1;
                     }
-                    var temp = cl.index;
-					AddMsg(param);
-                    byte[] atemp = BitConverter.GetBytes(temp);
-                    byte[] btemp = BytesFromString(param);
-                    byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
-                    string cmsg = svrcmd.GetName(msg);
-                    ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
-                    System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-                    System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
-                    Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-					//AddMsg(ctemp.Count().ToString() + " " + temp.ToString());
-                    if (m_client.IsConnectionAlive)
-                    {
-                        m_client.Send(packet);
-                    }
+                    svrcmd.Send_ClCmd(msg, cl.lbindex, param);
                     RedrawClientListBox();
 					if(!remove)
 					{
@@ -1434,25 +1239,28 @@ namespace EpServerEngineSampleClient
         }
 		private void btnSendMsg_Click(object sender, EventArgs e)
 		{
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), 0, false);
+            // if (sendmsgtext == "")
+               // sendmsgtext = "test";
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), sendmsgtext, 9, false);
         }
-    	private void btnSendSvrMsg_Click(object sender, EventArgs e)
-		{
-            var temp = 9;
-            byte[] atemp = BitConverter.GetBytes(temp);
-            byte[] btemp = BytesFromString(tbSendMsg.Text);
-            byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
-            string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("SEND_MSG"));
-            ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
-            System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
-            Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-            AddMsg(ctemp.Count().ToString());
-            if (m_client.IsConnectionAlive)
-            {
-                m_client.Send(packet);
-            }
-        }
+    	
+  //      private void btnSendSvrMsg_Click(object sender, EventArgs e)
+		//{
+  //          var temp = 9;
+  //          byte[] atemp = BitConverter.GetBytes(temp);
+  //          byte[] btemp = BytesFromString(tbSendMsg.Text);
+  //          byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
+  //          string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("SEND_MSG"));
+  //          ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
+  //          System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+  //          System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
+  //          Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+  //          AddMsg(ctemp.Count().ToString());
+  //          if (m_client.IsConnectionAlive)
+  //          {
+  //              m_client.Send(packet);
+  //          }
+  //      }
 		private void bSetClientTime_Click(object sender, EventArgs e)
 		{
             foreach (ClientsAvail cl in clients_avail)

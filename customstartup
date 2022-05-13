@@ -1,0 +1,20 @@
+#! /bin/sh
+# /etc/init.d/customstartup
+
+case "$1" in
+   start)
+     /usr/local/bin/ts7800ctl -n
+     cd /home/dan/dev/sched
+     /home/dan/dev/sched/try_sched.sh
+     ;;
+   stop)
+     cd /home/dan/dev/sched
+     /home/dan/dev/sched/stop.sh
+     ;;
+   *)
+     echo "Usage: customstartup start|stop" >&2
+     exit 3
+     ;;
+esac
+
+exit 0

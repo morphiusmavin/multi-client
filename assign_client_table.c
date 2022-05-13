@@ -114,7 +114,7 @@ void assign_client_table(void)
 	client_table[_159].socket = -1;
 	client_table[_159].type = WINDOWS_CLIENT;
 
-	strcpy(client_table[_145].ip,"145\0");
+	strcpy(client_table[_145].ip,"146\0");
 	strcpy(client_table[_145].label,"TS_client1\0");
 	client_table[_145].socket = -1;
 	client_table[_145].type = TS_CLIENT;
@@ -149,7 +149,7 @@ void assign_client_table(void)
 	client_table[_154].socket = -1;
 	client_table[_154].type = TS_CLIENT;
 
-	strcpy(client_table[_SERVER].ip,"146\0");
+	strcpy(client_table[_SERVER].ip,"145\0");
 	strcpy(client_table[_SERVER].label,"TS_Server\0");
 	client_table[_SERVER].socket = -1;
 	client_table[_SERVER].type = TS_SERVER;

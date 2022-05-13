@@ -84,7 +84,6 @@ int main(int argc, char **argv)
 		strcpy(oFileName,"odata.dat\0");
 		strcpy(cFileName,"cdata.dat\0");
 	}
-
 	else if(argc == 2)
 	{
 		strcpy(oFileName,argv[1]);

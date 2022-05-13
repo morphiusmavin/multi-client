@@ -47,7 +47,7 @@ static int set_interface_attribs (int fd, int speed, int parity)
 	memset (&tty, 0, sizeof tty);
 	if (tcgetattr (fd, &tty) != 0)
 	{
-		myprintf1("tcgetattr error\0", errno);
+		printf("tcgetattr error\0", errno);
 		perror(" ");
 		return -1;
 	}
@@ -76,7 +76,7 @@ static int set_interface_attribs (int fd, int speed, int parity)
 
 	if (tcsetattr (fd, TCSANOW, &tty) != 0)
 	{
-		myprintf1("tcgetattr error\0", errno);
+		printf("tcgetattr error\0", errno);
 		perror(" ");
 		return -1;
 	}
@@ -90,7 +90,7 @@ static void set_blocking (int fd, int should_block)
 	memset (&tty, 0, sizeof tty);
 	if (tcgetattr (fd, &tty) != 0)
 	{
-		myprintf1("tcgetattr error\0", errno);
+		printf("tcgetattr error\0", errno);
 		perror(" ");
 		return;
 	}
@@ -99,7 +99,7 @@ static void set_blocking (int fd, int should_block)
 	tty.c_cc[VTIME] = 10;						  // 0.5 seconds read timeout
 
 	if (tcsetattr (fd, TCSANOW, &tty) != 0)
-		myprintf1("term error\0", errno);
+		printf("term error\0", errno);
 }
 
 /************************************************************************************/
@@ -118,7 +118,7 @@ int init_serial(void)
 
 	if(tcgetattr(global_handle,&oldtio) != 0)	  /* save current port settings */
 	{
-		myprintf1("tcgetattr error\0", errno);
+		printf("tcgetattr error\0", errno);
 		close(global_handle);
 		exit(1);
 	}
@@ -271,7 +271,7 @@ int init_serial2(void)
 		}
 		if(tcgetattr(global_handle2,&oldtio2) != 0)	  /* save current port settings */
 		{
-			myprintf1("tcgetattr (2) error\0", errno);
+			printf("tcgetattr (2) error\0", errno);
 			close(global_handle2);
 			exit(1);
 		}
@@ -328,14 +328,14 @@ int init_serial3(int baudrate)
 		}
 		if(tcgetattr(global_handle3,&oldtio3) != 0)	  /* save current port settings */
 		{
-			myprintf1("tcgetattr (2) error\0", errno);
+			printf("tcgetattr (2) error\0", errno);
 			close(global_handle3);
 			//printString2("error on tcgetattr");
 			return -1;
 		}
 //		set_interface_attribs (global_handle3, BAUDRATE3, 0);
 		set_interface_attribs (global_handle3, actual_baudrate, 0);
-		myprintf1(tempx);
+		printf(tempx);
 		set_blocking (global_handle3, 1);	 // blocking
 //		set_blocking (global_handle2, 0);	// non-blocking
 	}

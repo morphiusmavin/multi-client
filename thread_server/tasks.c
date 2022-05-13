@@ -170,8 +170,8 @@ void init_ips(void)
 
 	if(i < 0)
 	{
-//		printf("%s\r\n",errmsg);
-		myprintf1(errmsg);
+		printf("%s\r\n",errmsg);
+//		myprintf1(errmsg);
 	}
 	i = 0;
 }
@@ -193,7 +193,7 @@ int uSleep(time_t sec, long nanosec)
 /* If any error other than a signal interrupt occurs, return an error */
 			if(errno != EINTR)
 			{
-				myprintf1("uSleep error\0");
+				printf("uSleep error\0");
 //             return -1;
 			}
 		}
@@ -232,8 +232,6 @@ static void set_output(O_DATA *otp, int onoff)
 	UCHAR buff[1];
 	char tempx[20];
 
-	//printf("test\r\n");
-
 	switch(otp->type)
 	{
 		case 0:
@@ -246,7 +244,7 @@ static void set_output(O_DATA *otp, int onoff)
 			otp->onoff = onoff;
 			change_output(otp->port,otp->onoff);
 			ollist_insert_data(otp->port,&oll,otp);
-			//printf("type 0 port: %d onoff: %d\r\n", otp->port, otp->onoff);
+//			printf("type 0 port: %d onoff: %d\r\n", otp->port, otp->onoff);
 			break;
 		case 1:
 			if(otp->reset == 0)
@@ -531,7 +529,6 @@ UCHAR monitor_fake_input_task(int test)
 //				printf("mask: %02x\r\n",mask);
 				if(mask > 0x80)
 				{
-					myprintf1("bad mask\0");
 					printf("bad mask 1 %02x\r\n",mask);
 					continue;
 				}
@@ -603,7 +600,7 @@ int change_output(int index, int onoff)
 
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
-	//printf("bank: %d\r\n",bank);
+//	printf("bank: %d\r\n",bank);
 	switch(bank)
 	{
 /*
@@ -632,9 +629,11 @@ int change_output(int index, int onoff)
 	pthread_mutex_unlock(&io_mem_lock);
 //	printf("change output: %d %d\r\n",index,onoff);
 
-//	sprintf(tempx,"%d %d %d", bank, index, onoff);
-//	myprintf1(tempx);
-
+/*
+	sprintf(tempx,"%d %d %d", bank, index, onoff);
+	printf(tempx);
+	printf("\n");
+*/
 	return index;
 }
 #endif
@@ -859,20 +858,21 @@ startover:
 
 			int rc = recv_tcp(windows_client_sock, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			printf("cmd: %d\n",cmd);
+//			printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
 /*
 			for(j = 0;j < rc;j++)
 				printf("%02x ",msg_buf[j]);
 			printf("\n");
 */
-			win_client_to_client_sock = msg_buf[2];
+			win_client_to_client_sock = msg_buf[2];		// offset into client table
 			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 
 			printf("\n");
 			for(i = 0;i < rc;i++)
 				printf("%02x ",msg_buf[i]);
 			printf("\n");
+
 			memset(tempx,0,sizeof(tempx));
 			k = 0;
 			for(j = 4;j < msg_len+4;j+=2)
@@ -880,7 +880,7 @@ startover:
 			msg_len /= 2;
 			msg_len -= 3;
 			printf("msg_len from win client: %d\n",msg_len);
-/*
+
 			for(j = 0;j < msg_len;j++)
 				printf("%02x ",tempx[j]);
 			printf("\n");
@@ -888,7 +888,7 @@ startover:
 			for(j = 0;j < msg_len;j++)
 				printf("%c",tempx[j]);
 			printf("\n");
-*/
+
 			if(cmd == DISCONNECT)
 			{
 				close(windows_client_sock);
@@ -909,7 +909,7 @@ startover:
 
 			if(win_client_to_client_sock == _SERVER)
 			{
-				printf("1: msg to cmd_host on server: %s\n",msg.mtext);
+				printf("msg to cmd_host on server: %s\n",msg.mtext + 4);
 				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					// keep getting "Invalid Argument" - cause I didn't set the mtype
@@ -926,11 +926,12 @@ startover:
 					client_table[win_client_to_client_sock].label);
 	//			send_msg(client_table[win_client_to_client_sock].socket,strlen(tempx),(UCHAR*)tempx,cmd);
 
+/*
 				printf("msg.mtext: ");
 				for(i = 0;i < msg_len+4;i++)
 					printf("%02x ",msg.mtext[i]);
 				printf("\n");
-
+*/
 				// this sends a msg to the appropriate client's SendTask
 				if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) 
 						&msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
@@ -971,7 +972,7 @@ int lookup_taskid(int index)
 /*********************************************************************/
 UCHAR ReadTask(int test)
 {
-	printf("readtask: %d\n",test);
+	//printf("readtask: %d\n",test);
 	int index = lookup_taskid(test);
 
 	char tempx[105];
@@ -983,14 +984,14 @@ UCHAR ReadTask(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	printf("sendtask: %s\n",client_table[index].label);
+	//printf("readtask: %s\n",client_table[index].label);
 
 	while(TRUE)
 	{
 startover1:
 		if(client_table[index].socket > 0)
 		{
-			printf("read task %d\n",index);
+			//printf("read task %d\n",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+1,1);
 			printf("ret: %d msg_len: %d\n",ret,msg_len);
@@ -1058,7 +1059,7 @@ startover1:
 
 		if(shutdown_all)
 		{
-			printf("leaving read task\n");
+			//printf("leaving read task\n");
 			return 0;
 		}
 		uSleep(0,TIME_DELAY/16);
@@ -1067,7 +1068,7 @@ startover1:
 /*********************************************************************/
 UCHAR SendTask(int test)
 {
-	printf("sendtask: %d\n",test);
+	//printf("sendtask: %d\n",test);
 	int index = lookup_taskid(test-1);
 
 	int msg_len;
@@ -1079,7 +1080,7 @@ UCHAR SendTask(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	printf("sendtask: %s\n",client_table[index].label);
+	//printf("sendtask: %s\n",client_table[index].label);
 
 	i = 0;
 	while(TRUE)
@@ -1172,7 +1173,7 @@ UCHAR serial_recv_task(int test)
 
 	if(fd = init_serial() < 0)
 	{
-		myprintf1("can't open comm port 1\0");
+		printf("can't open comm port 1\0");
 //		printf("can't open comm port 1");
 		//return 0;
 	}
@@ -1190,7 +1191,7 @@ UCHAR serial_recv_task(int test)
 	if(fd = init_serial3(ps.baudrate3) < 0)
 //	if(fd = init_serial3(2) < 0)
 	{
-		myprintf1("can't open comm port 3\0");
+		printf("can't open comm port 3\0");
 //		printf("can't open comm port 3");
 		//printString2("can't open comm3");
 	}else
@@ -1641,7 +1642,7 @@ void close_tcp(void)
 		global_socket = -1;
 	}else
 	{
-		myprintf1("socket already closed\0");
+		printf("socket already closed\0");
 //		printf("socket already closed\r\n");
 	}
 }
@@ -1655,8 +1656,6 @@ void *work_routine(void *arg)
 	int not_done=1;
 	i = not_done;
 	shutdown_all = 0;
-
-//printf("arg: %d\n",*my_id);
 
 	pthread_mutex_lock(&threads_ready_lock);
 	threads_ready_count++;
@@ -1736,7 +1735,9 @@ UCHAR basic_controls_task(int test)
 
 	memset(msg_queue,0,sizeof(msg_queue));
 	msg_queue_ptr = 0;
+
 //printf("starting basic_controls_task\n");
+
 	while(TRUE)
 	{
 		// wait for a new cmd to arrive in the msg_queue
@@ -1746,6 +1747,8 @@ UCHAR basic_controls_task(int test)
 		}while(cmd == 0 && shutdown_all == 0);
 
 		usleep(_5MS);
+
+//printf("q cmd: %d \n",cmd);
 
 		switch(cmd)
 		{
@@ -1802,6 +1805,7 @@ UCHAR basic_controls_task(int test)
 
 			case ALL_LIGHTS_OFF:
 				index = NORTHEAST_LIGHT;
+//				printf("que cmd: %d %d\n",cmd, index);
 				rc = ollist_find_data(index,otpp,&oll);
 				otp->onoff = 0;
 				set_output(otp,0);
@@ -1845,6 +1849,7 @@ UCHAR basic_controls_task(int test)
 
 			case ALL_NORTH_ON:
 				index = NORTHEAST_LIGHT;
+//				printf("que cmd: %d %d\n",cmd, index);
 				rc = ollist_find_data(index,otpp,&oll);
 				otp->onoff = 1;
 //				ollist_insert_data(index,&oll,otp);
@@ -1890,6 +1895,7 @@ UCHAR basic_controls_task(int test)
 
 			case ALL_NORTH_OFF:
 				index = NORTHEAST_LIGHT;
+//				printf("que cmd: %d %d\n",cmd, index);
 				rc = ollist_find_data(index,otpp,&oll);
 				otp->onoff = 0;
 				set_output(otp,0);
@@ -1987,7 +1993,6 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case ALL_WEST_OFF:
-
 				index = WEST_LIGHT;
 				rc = ollist_find_data(index,otpp,&oll);
 				otp->onoff = 0;
@@ -2003,6 +2008,73 @@ UCHAR basic_controls_task(int test)
 				otp->onoff = 0;
 				set_output(otp,0);
 				usleep(_100MS);
+				break;
+
+			case ALL_OFFICE_ON:
+				index = NORTHEAST_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				//printf("%s\r\n",otp->label);
+				otp->onoff = 1;
+				set_output(otp,1);
+				usleep(_100MS);
+
+				index = EAST_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				otp->onoff = 1;
+				set_output(otp,1);
+				usleep(_100MS);
+				break;
+			
+			case ALL_OFFICE_OFF:
+				index = NORTHEAST_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				//printf("%s\r\n",otp->label);
+				otp->onoff = 0;
+				set_output(otp,0);
+				usleep(_100MS);
+
+				index = EAST_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				otp->onoff = 0;
+				set_output(otp,0);
+				usleep(_100MS);
+				break;
+				
+			case WORK_ON:
+				index = MIDDLE_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				otp->onoff = 1;
+				set_output(otp,1);
+				usleep(_100MS);
+				index = SOUTHWEST_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				otp->onoff = 1;
+				set_output(otp,1);
+				usleep(_100MS);
+				index = SOUTHEAST_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				otp->onoff = 1;
+				set_output(otp,1);
+				usleep(_100MS);
+				break;
+
+			case WORK_OFF:
+				index = MIDDLE_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				otp->onoff = 0;
+				set_output(otp,0);
+				usleep(_100MS);
+				index = SOUTHWEST_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				otp->onoff = 0;
+				set_output(otp,0);
+				usleep(_100MS);
+				index = SOUTHEAST_LIGHT;
+				rc = ollist_find_data(index,otpp,&oll);
+				otp->onoff = 0;
+				set_output(otp,0);
+				usleep(_100MS);
+				break;
 /*
 				printf("test:\r\n");		// testing all outputs
 				for(i = 0;i < 20;i++)
@@ -2040,16 +2112,15 @@ UCHAR basic_controls_task(int test)
 
 				printf("done\r\n");
 */				
-				break;
 
 			case SHUTDOWN_IOBOX:
-				myprintf1("shutdown iobox\0");
+				printf("shutdown iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 3;
 				break;
 
 			case REBOOT_IOBOX:
-				myprintf1("reboot iobox\0");
+				printf("reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;
 				break;

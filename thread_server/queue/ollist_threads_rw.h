@@ -30,7 +30,7 @@ typedef struct o_data
 	UCHAR port;
 	UCHAR onoff;			// current state: 1 if on; 0 if off
 	UCHAR input_port;		// input port which affects this output (if not set to 0xFF)
-	UCHAR input_type;		// 
+	UCHAR input_type;		// not used
 							// 
 	UCHAR type;				// see below
 	UINT time_delay;		// when type 2-4 this is used as the time delay

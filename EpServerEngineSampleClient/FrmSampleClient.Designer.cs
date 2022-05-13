@@ -38,8 +38,6 @@
 			this.tbConnected = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.btn_PlayList = new System.Windows.Forms.Button();
-			this.btnConnectWifi = new System.Windows.Forms.Button();
-			this.btnBTForm = new System.Windows.Forms.Button();
 			this.tbServerTime = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -51,18 +49,14 @@
 			this.btnClear = new System.Windows.Forms.Button();
 			this.btnGetTime = new System.Windows.Forms.Button();
 			this.btnGarageForm = new System.Windows.Forms.Button();
-			this.DialogTwo = new System.Windows.Forms.Button();
 			this.btnHomeSvr = new System.Windows.Forms.Button();
 			this.DialogOne = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
-			this.btnSettingsFour = new System.Windows.Forms.Button();
-			this.btnSettingsThree = new System.Windows.Forms.Button();
 			this.lbAvailClients = new System.Windows.Forms.ListBox();
 			this.btnRebootClient = new System.Windows.Forms.Button();
 			this.btnShutdownClient = new System.Windows.Forms.Button();
 			this.btnSendStatus = new System.Windows.Forms.Button();
 			this.btnSendMsg = new System.Windows.Forms.Button();
-			this.btnSendSvrMsg = new System.Windows.Forms.Button();
 			this.bSetClientTime = new System.Windows.Forms.Button();
 			this.btnReportTimeUp = new System.Windows.Forms.Button();
 			this.btnWaitReboot = new System.Windows.Forms.Button();
@@ -161,30 +155,6 @@
 			this.btn_PlayList.Text = "Play List";
 			this.btn_PlayList.UseVisualStyleBackColor = false;
 			this.btn_PlayList.Click += new System.EventHandler(this.Btn_PlayList_Click);
-			// 
-			// btnConnectWifi
-			// 
-			this.btnConnectWifi.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnConnectWifi.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnConnectWifi.Location = new System.Drawing.Point(266, 352);
-			this.btnConnectWifi.Name = "btnConnectWifi";
-			this.btnConnectWifi.Size = new System.Drawing.Size(235, 61);
-			this.btnConnectWifi.TabIndex = 7;
-			this.btnConnectWifi.Text = "Wifi IoT";
-			this.btnConnectWifi.UseVisualStyleBackColor = false;
-			this.btnConnectWifi.Click += new System.EventHandler(this.ConnectWifi_Click);
-			// 
-			// btnBTForm
-			// 
-			this.btnBTForm.BackColor = System.Drawing.Color.Aqua;
-			this.btnBTForm.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnBTForm.Location = new System.Drawing.Point(266, 272);
-			this.btnBTForm.Name = "btnBTForm";
-			this.btnBTForm.Size = new System.Drawing.Size(235, 61);
-			this.btnBTForm.TabIndex = 5;
-			this.btnBTForm.Text = "Bluetooth Menu";
-			this.btnBTForm.UseVisualStyleBackColor = false;
-			this.btnBTForm.Click += new System.EventHandler(this.BTMenu_Click);
 			// 
 			// tbServerTime
 			// 
@@ -287,7 +257,7 @@
 			// 
 			this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnClear.Location = new System.Drawing.Point(15, 432);
+			this.btnClear.Location = new System.Drawing.Point(264, 352);
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(235, 61);
 			this.btnClear.TabIndex = 8;
@@ -319,23 +289,11 @@
 			this.btnGarageForm.UseVisualStyleBackColor = false;
 			this.btnGarageForm.Click += new System.EventHandler(this.GarageFormClick);
 			// 
-			// DialogTwo
-			// 
-			this.DialogTwo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.DialogTwo.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.DialogTwo.Location = new System.Drawing.Point(266, 512);
-			this.DialogTwo.Name = "DialogTwo";
-			this.DialogTwo.Size = new System.Drawing.Size(235, 61);
-			this.DialogTwo.TabIndex = 11;
-			this.DialogTwo.Text = "Settings Two";
-			this.DialogTwo.UseVisualStyleBackColor = false;
-			this.DialogTwo.Click += new System.EventHandler(this.Dialog2_Click);
-			// 
 			// btnHomeSvr
 			// 
 			this.btnHomeSvr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnHomeSvr.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnHomeSvr.Location = new System.Drawing.Point(15, 512);
+			this.btnHomeSvr.Location = new System.Drawing.Point(15, 424);
 			this.btnHomeSvr.Name = "btnHomeSvr";
 			this.btnHomeSvr.Size = new System.Drawing.Size(235, 61);
 			this.btnHomeSvr.TabIndex = 10;
@@ -347,7 +305,7 @@
 			// 
 			this.DialogOne.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.DialogOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.DialogOne.Location = new System.Drawing.Point(266, 432);
+			this.DialogOne.Location = new System.Drawing.Point(266, 272);
 			this.DialogOne.Name = "DialogOne";
 			this.DialogOne.Size = new System.Drawing.Size(235, 61);
 			this.DialogOne.TabIndex = 9;
@@ -359,30 +317,6 @@
 			// 
 			this.timer1.Interval = 2000;
 			this.timer1.Tick += new System.EventHandler(this.myTimerTick);
-			// 
-			// btnSettingsFour
-			// 
-			this.btnSettingsFour.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnSettingsFour.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSettingsFour.Location = new System.Drawing.Point(15, 592);
-			this.btnSettingsFour.Name = "btnSettingsFour";
-			this.btnSettingsFour.Size = new System.Drawing.Size(235, 61);
-			this.btnSettingsFour.TabIndex = 12;
-			this.btnSettingsFour.Text = "Settings Four";
-			this.btnSettingsFour.UseVisualStyleBackColor = false;
-			this.btnSettingsFour.Click += new System.EventHandler(this.btnSettingsFour_Click);
-			// 
-			// btnSettingsThree
-			// 
-			this.btnSettingsThree.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnSettingsThree.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSettingsThree.Location = new System.Drawing.Point(266, 592);
-			this.btnSettingsThree.Name = "btnSettingsThree";
-			this.btnSettingsThree.Size = new System.Drawing.Size(235, 61);
-			this.btnSettingsThree.TabIndex = 13;
-			this.btnSettingsThree.Text = "Settings Three";
-			this.btnSettingsThree.UseVisualStyleBackColor = false;
-			this.btnSettingsThree.Click += new System.EventHandler(this.button2_Click);
 			// 
 			// lbAvailClients
 			// 
@@ -440,21 +374,10 @@
 			this.btnSendMsg.UseVisualStyleBackColor = true;
 			this.btnSendMsg.Click += new System.EventHandler(this.btnSendMsg_Click);
 			// 
-			// btnSendSvrMsg
-			// 
-			this.btnSendSvrMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendSvrMsg.Location = new System.Drawing.Point(847, 520);
-			this.btnSendSvrMsg.Name = "btnSendSvrMsg";
-			this.btnSendSvrMsg.Size = new System.Drawing.Size(219, 37);
-			this.btnSendSvrMsg.TabIndex = 40;
-			this.btnSendSvrMsg.Text = "Send Svr Mgs";
-			this.btnSendSvrMsg.UseVisualStyleBackColor = true;
-			this.btnSendSvrMsg.Click += new System.EventHandler(this.btnSendSvrMsg_Click);
-			// 
 			// bSetClientTime
 			// 
 			this.bSetClientTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.bSetClientTime.Location = new System.Drawing.Point(847, 568);
+			this.bSetClientTime.Location = new System.Drawing.Point(847, 520);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(219, 37);
 			this.bSetClientTime.TabIndex = 41;
@@ -465,7 +388,7 @@
 			// btnReportTimeUp
 			// 
 			this.btnReportTimeUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnReportTimeUp.Location = new System.Drawing.Point(847, 616);
+			this.btnReportTimeUp.Location = new System.Drawing.Point(847, 568);
 			this.btnReportTimeUp.Name = "btnReportTimeUp";
 			this.btnReportTimeUp.Size = new System.Drawing.Size(219, 37);
 			this.btnReportTimeUp.TabIndex = 42;
@@ -504,17 +427,13 @@
 			this.Controls.Add(this.btnWaitReboot);
 			this.Controls.Add(this.btnReportTimeUp);
 			this.Controls.Add(this.bSetClientTime);
-			this.Controls.Add(this.btnSendSvrMsg);
 			this.Controls.Add(this.btnSendMsg);
 			this.Controls.Add(this.btnSendStatus);
 			this.Controls.Add(this.btnShutdownClient);
 			this.Controls.Add(this.btnRebootClient);
 			this.Controls.Add(this.lbAvailClients);
-			this.Controls.Add(this.btnSettingsThree);
-			this.Controls.Add(this.btnSettingsFour);
 			this.Controls.Add(this.DialogOne);
 			this.Controls.Add(this.btnHomeSvr);
-			this.Controls.Add(this.DialogTwo);
 			this.Controls.Add(this.btnGarageForm);
 			this.Controls.Add(this.btnGetTime);
 			this.Controls.Add(this.btnClear);
@@ -524,8 +443,6 @@
 			this.Controls.Add(this.btnShutdown);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.btn_PlayList);
-			this.Controls.Add(this.btnConnectWifi);
-			this.Controls.Add(this.btnBTForm);
 			this.Controls.Add(this.tbReceived);
 			this.Controls.Add(this.btnConnect);
 			this.Name = "FrmSampleClient";
@@ -561,8 +478,6 @@
         private System.Windows.Forms.TextBox tbConnected;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btn_PlayList;
-        private System.Windows.Forms.Button btnConnectWifi;
-        private System.Windows.Forms.Button btnBTForm;
         private System.Windows.Forms.TextBox tbServerTime;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -573,19 +488,15 @@
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnGetTime;
         private System.Windows.Forms.Button btnGarageForm;
-        private System.Windows.Forms.Button DialogTwo;
         private System.Windows.Forms.Button btnHomeSvr;
 		private System.Windows.Forms.Button DialogOne;
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.ComboBox cbIPAdress;
-        private System.Windows.Forms.Button btnSettingsFour;
-        private System.Windows.Forms.Button btnSettingsThree;
 		private System.Windows.Forms.ListBox lbAvailClients;
 		private System.Windows.Forms.Button btnRebootClient;
 		private System.Windows.Forms.Button btnShutdownClient;
 		private System.Windows.Forms.Button btnSendStatus;
 		private System.Windows.Forms.Button btnSendMsg;
-		private System.Windows.Forms.Button btnSendSvrMsg;
 		private System.Windows.Forms.Button bSetClientTime;
 		private System.Windows.Forms.Button btnReportTimeUp;
 		private System.Windows.Forms.Button btnWaitReboot;
