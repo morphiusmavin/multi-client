@@ -177,7 +177,7 @@ UCHAR get_host_cmd_task(int test)
 		}
 	}else printf("can't access %s\n",cFileName);
 
-//printf("starting...\n");
+	printf("server starting...\n");
 
 	same_msg = 0;
 
@@ -272,7 +272,7 @@ printf("msgrcv error\n");
 					break;
 
 				case SEND_CLIENT_LIST:
-					printf("!  SEND_CLIENT_LIST\n");
+					printf("SEND_CLIENT_LIST\n");
 					for(i = 0;i < MAX_CLIENTS;i++)
 					{
 						printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);

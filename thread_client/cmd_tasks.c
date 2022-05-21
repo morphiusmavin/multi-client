@@ -363,15 +363,16 @@ UCHAR get_host_cmd_task(int test)
 						tempx[0] = _SERVER;
 //						tempx[1] = (UCHAR)k;
 //						tempx[2] = (UCHAR)(k >> 4);
-						send_msg(strlen((char*)tempx),(UCHAR*)tempx, SEND_STATUS);
+//						send_msg(strlen((char*)tempx),(UCHAR*)tempx, SEND_STATUS);
 //						printf("%s\n",tempx);						
+						printf("send status\n");
 						break;
 
 					case SEND_MSG:
-						//printf("SEND_MSG\n");
-//						for(i = 0;i < msg_len;i++)
-//							printf("%02x ",tempx[i]);
-//						printf("\n");
+						printf("SEND_MSG\n");
+						for(i = 0;i < msg_len;i++)
+							printf("%02x ",tempx[i]);
+						printf("\n");
 						printf("%s\n",tempx);
 						break;
 					

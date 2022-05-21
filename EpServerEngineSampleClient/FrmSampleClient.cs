@@ -277,6 +277,7 @@ namespace EpServerEngineSampleClient
                 if (j.socket > 0)
                 {
                     string temp = j.label + " " + j.ip_addr + " " + j.socket.ToString();
+                    AddMsg(temp);
                     lbAvailClients.Items.Add(temp);
                     j.lbindex = i;
                     i++;
@@ -411,10 +412,10 @@ namespace EpServerEngineSampleClient
                                 clmsg += word + " " + sock.ToString();
 								//if(avail)
 									RedrawClientListBox();
-								AddMsg(clmsg);
+								//AddMsg(clmsg);
                                 break;
                             default:
-                                AddMsg("?");
+                                //AddMsg("?");
                                 break;
                         }
                         i++;
@@ -616,7 +617,8 @@ namespace EpServerEngineSampleClient
         }
         private void RebootServer(object sender, EventArgs e)       // "test"
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 0, false);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), "send client list", true);
+            AddMsg("send client list");
         }
         // Insert logic for processing found files here.
         public static void ProcessFile(string path)
@@ -1169,53 +1171,17 @@ namespace EpServerEngineSampleClient
         }
         private void btnRebootClient_Click(object sender, EventArgs e)
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("REBOOT_IOBOX"),0,true);
+            SendClientMsg(svrcmd.GetCmdIndexI("REBOOT_IOBOX"), " ", true);
         }
         private void btnShutdownClient_Click(object sender, EventArgs e)
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"),0,true);
+            SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), " ", true);
         }
         private void button1_Click(object sender, EventArgs e)		// get status
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"), "status", 9,false);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"), "status", false);
         }
-        private void SendClientMsg(int msg, int param, bool remove)
-        {
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                {
-                    AddMsg(cl.label + " " + "don't do this");
-                    if(remove)
-					{
-                        cl.lbindex = -1;
-                        cl.socket = -1;
-                    }
-                    var temp = cl.index;
-                    int temp2 = param;
-                    byte[] atemp = BitConverter.GetBytes(temp);
-                    byte[] btemp = BitConverter.GetBytes(temp2);
-                    byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
-                    string cmsg = svrcmd.GetName(msg);
-                    ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
-                    System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-                    System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
-                    Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-					//AddMsg(ctemp.Count().ToString());
-                    if (m_client.IsConnectionAlive)
-                    {
-                        m_client.Send(packet);
-                    }
-                    RedrawClientListBox();
-					if(!remove)
-					{
-                        lbAvailClients.SetSelected(cl.lbindex,true);
-					}
-                }
-
-            }
-        }
-        private void SendClientMsg(int msg, string param, int cl_db_index, bool remove)
+        private void SendClientMsg(int msg, string param, bool remove)
         {
             foreach (ClientsAvail cl in clients_avail)
             {
@@ -1227,40 +1193,22 @@ namespace EpServerEngineSampleClient
                         cl.lbindex = -1;
                         cl.socket = -1;
                     }
-                    svrcmd.Send_ClCmd(msg, cl.lbindex, param);
+                    svrcmd.Send_ClCmd(msg, cl.index, param);
+					AddMsg(index.ToString());
                     RedrawClientListBox();
 					if(!remove)
 					{
                         lbAvailClients.SetSelected(cl.lbindex,true);
 					}
                 }
-
             }
         }
 		private void btnSendMsg_Click(object sender, EventArgs e)
 		{
             // if (sendmsgtext == "")
                // sendmsgtext = "test";
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), sendmsgtext, 9, false);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), sendmsgtext, false);
         }
-    	
-  //      private void btnSendSvrMsg_Click(object sender, EventArgs e)
-		//{
-  //          var temp = 9;
-  //          byte[] atemp = BitConverter.GetBytes(temp);
-  //          byte[] btemp = BytesFromString(tbSendMsg.Text);
-  //          byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
-  //          string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("SEND_MSG"));
-  //          ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
-  //          System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-  //          System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
-  //          Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-  //          AddMsg(ctemp.Count().ToString());
-  //          if (m_client.IsConnectionAlive)
-  //          {
-  //              m_client.Send(packet);
-  //          }
-  //      }
 		private void bSetClientTime_Click(object sender, EventArgs e)
 		{
             foreach (ClientsAvail cl in clients_avail)
@@ -1303,7 +1251,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnWaitReboot_Click(object sender, EventArgs e)
 		{
-            SendClientMsg(svrcmd.GetCmdIndexI("WAIT_REBOOT_IOBOX"), 0, true);
+            SendClientMsg(svrcmd.GetCmdIndexI("WAIT_REBOOT_IOBOX"), " ", true);
         }
 		private void tbSendMsg_TextChanged(object sender, EventArgs e)
 		{

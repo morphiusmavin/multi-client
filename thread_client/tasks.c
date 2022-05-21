@@ -1515,7 +1515,7 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "reboot iobox");
 				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX);
 				uSleep(1,0);
-				//printf("reboot iobox\n");
+				printf("reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;
 				close_tcp();

@@ -136,15 +136,15 @@ int main(int argc, char **argv)
 
 	_threads[WINCL_READ_TASK1].sched = TIME_SLICE;	// 8
 	_threads[WINCL_READ_TASK2].sched = TIME_SLICE;	// 9
-//	_threads[WINCL_WRITE_TASK].sched = TIME_SLICE;
-	_threads[READ_TASK1].sched = TIME_SLICE;
-	_threads[SEND_TASK1].sched = TIME_SLICE;
 
-	_threads[READ_TASK2].sched = TIME_SLICE;
-	_threads[SEND_TASK2].sched = TIME_SLICE;
+	_threads[READ_TASK1].sched = TIME_SLICE;		// 10
+	_threads[SEND_TASK1].sched = TIME_SLICE;		// 11
 
-	_threads[READ_TASK3].sched = TIME_SLICE;
-	_threads[SEND_TASK3].sched = TIME_SLICE;
+	_threads[READ_TASK2].sched = TIME_SLICE;		// 12
+	_threads[SEND_TASK2].sched = TIME_SLICE;		// 13
+
+	_threads[READ_TASK3].sched = TIME_SLICE;		// 14
+	_threads[SEND_TASK3].sched = TIME_SLICE;		// 15
 
 
 	strcpy(_threads[GET_HOST_CMD].label,"GET_HOST_CMD\0");
