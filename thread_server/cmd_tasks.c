@@ -46,7 +46,7 @@ int shutdown_all;
 static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
 extern CMD_STRUCT cmd_array[];
-extern int windows_client_sock;
+//extern int windows_client_sock;
 
 void print_cmd(UCHAR cmd)
 {
@@ -275,27 +275,31 @@ printf("msgrcv error\n");
 					printf("!  SEND_CLIENT_LIST\n");
 					for(i = 0;i < MAX_CLIENTS;i++)
 					{
-						//printf("%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
-						if(client_table[i].socket > 0)
+						printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
+						if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 						{
 							memset(tempx,0,sizeof(tempx));
 							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
 							printf("%s\n",tempx);
-							send_msgb(windows_client_sock, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-							uSleep(0,TIME_DELAY/2);
+							for(j = 0;j < MAX_CLIENTS;j++)
+							{
+								if(client_table[j].type == WINDOWS_CLIENT && client_table[j].socket > 0)
+									send_msgb(client_table[j].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+								uSleep(0,TIME_DELAY/2);
+							}
 						}
 					}
 					break;
 				
 				case UPTIME_MSG:	// sent from client
-					printf("%d msg_len: %d\n %s\n",windows_client_sock, msg_len,tempx);
+//					printf("%d msg_len: %d\n %s\n",windows_client_sock, msg_len,tempx);
 					// this just displays the time on the msg box in win client
-					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
+//					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
 					break;
 
 				case SEND_TIMEUP:
 					sprintf(tempx,"%d days %dh %dm %ds",trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
-					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
+//					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
 					printf("%s\n",tempx);
 					break;
 
@@ -436,11 +440,7 @@ printf("msgrcv error\n");
 					break;
 
 				case DISCONNECT:
-					if(test_sock() > 0)
-					{
-						close_tcp();
-						printf("disconnected\n");
-					}
+					printf("disconnected\n");
 					break;
 
 				case UPDATE_CONFIG:
@@ -651,23 +651,16 @@ void send_msg(int sd, int msg_len, UCHAR *msg, UCHAR msg_type)
 	int i;
 	UCHAR temp[2];
 
-	if(test_sock())
-	{
-		ret = send_tcp(sd, &pre_preamble[0],8);
-		temp[0] = (UCHAR)(msg_len & 0x0F);
-		temp[1] = (UCHAR)((msg_len & 0xF0) >> 4);
-		//printf("%02x %02x\n",temp[0],temp[1]);
-		send_tcp(sd, (UCHAR *)&temp[0],1);
-		send_tcp(sd, (UCHAR *)&temp[1],1);
-		send_tcp(sd, (UCHAR *)&msg_type,1);
+	ret = send_tcp(sd, &pre_preamble[0],8);
+	temp[0] = (UCHAR)(msg_len & 0x0F);
+	temp[1] = (UCHAR)((msg_len & 0xF0) >> 4);
+	//printf("%02x %02x\n",temp[0],temp[1]);
+	send_tcp(sd, (UCHAR *)&temp[0],1);
+	send_tcp(sd, (UCHAR *)&temp[1],1);
+	send_tcp(sd, (UCHAR *)&msg_type,1);
 
-		for(i = 0;i < msg_len;i++)
-		{
-			send_tcp(sd, (UCHAR *)&msg[i],1);
-//			send_tcp((UCHAR *)&ret,1);
-		}
-//		printf("%d ",msg_len);
-	}
+	for(i = 0;i < msg_len;i++)
+		send_tcp(sd, (UCHAR *)&msg[i],1);
 }
 /*********************************************************************/
 // get/send_msgb is what the old server used to communicate with the
@@ -706,53 +699,42 @@ void send_msgb(int sd, int msg_len, UCHAR *msg, UCHAR msg_type)
 	int ret;
 	int i;
 
-	if(test_sock())
+	ret = send_tcp(sd, &pre_preamble[0],8);
+	msg_len++;
+	send_tcp(sd, (UCHAR *)&msg_len,1);
+	ret = 0;
+	send_tcp(sd, (UCHAR *)&ret,1);
+
+	for(i = 0;i < 6;i++)
+		send_tcp(sd, (UCHAR *)&ret,1);
+
+	send_tcp(sd, (UCHAR *)&msg_type,1);
+
+	ret = 0;
+	send_tcp(sd, (UCHAR *)&ret,1);
+
+	for(i = 0;i < msg_len;i++)
 	{
-		ret = send_tcp(sd, &pre_preamble[0],8);
-		msg_len++;
-		send_tcp(sd, (UCHAR *)&msg_len,1);
-		ret = 0;
+		send_tcp(sd, (UCHAR *)&msg[i],1);
 		send_tcp(sd, (UCHAR *)&ret,1);
-
-		for(i = 0;i < 6;i++)
-			send_tcp(sd, (UCHAR *)&ret,1);
-
-		send_tcp(sd, (UCHAR *)&msg_type,1);
-
-		ret = 0;
-		send_tcp(sd, (UCHAR *)&ret,1);
-
-		for(i = 0;i < msg_len;i++)
-		{
-			send_tcp(sd, (UCHAR *)&msg[i],1);
-			send_tcp(sd, (UCHAR *)&ret,1);
-		}
 	}
 }
 
 /*********************************************************************/
 int recv_tcp(int sd, UCHAR *str, int strlen,int block)
 {
-	int ret = 0;
+	int ret = -1;
 	char errmsg[20];
 	memset(errmsg,0,20);
-	if(test_sock())
-	{
 //		printf("start get_sock\n");
 //		pthread_mutex_lock( &tcp_read_lock);
-		ret = get_sock(sd, str,strlen,block,&errmsg[0]);
+	ret = get_sock(sd, str,strlen,block,&errmsg[0]);
 //		pthread_mutex_unlock(&tcp_read_lock);
 //		printf("end get_sock\n");
 //printf("%s\n",str);
-		if(ret < 0 && (strcmp(errmsg,"Success") != 0))
-		{
-			printf(errmsg);
-		}
-	}
-	else
+	if(ret < 0 && (strcmp(errmsg,"Success") != 0))
 	{
-		strcpy(errmsg,"sock closed");
-		ret = -1;
+		printf(errmsg);
 	}
 	return ret;
 }
@@ -781,29 +763,20 @@ int put_sock(int sd, UCHAR *buf,int buflen, int block, char *errmsg)
 {
 	int rc = 0;
 	char extra_msg[10];
-	if(test_sock())
-	{
-		if(block)
+	if(block)
 // block
-			rc = send(sd,buf,buflen,MSG_WAITALL);
-		else
-// don't block
-			rc = send(sd,buf,buflen,MSG_DONTWAIT);
-		if(rc < 0 && errno != 11)
-		{
-			strcpy(errmsg,strerror(errno));
-			sprintf(extra_msg," %d",errno);
-			strcat(errmsg,extra_msg);
-			strcat(errmsg," put_sock");
-			close_tcp();
-		}else strcpy(errmsg,"Success\0");
-	}
+		rc = send(sd,buf,buflen,MSG_WAITALL);
 	else
+// don't block
+		rc = send(sd,buf,buflen,MSG_DONTWAIT);
+	if(rc < 0 && errno != 11)
 	{
-// this keeps printing out until the client logs on
-		strcpy(errmsg,"sock closed");
-		rc = -1;
-	}
+		strcpy(errmsg,strerror(errno));
+		sprintf(extra_msg," %d",errno);
+		strcat(errmsg,extra_msg);
+		strcat(errmsg," put_sock");
+		close_tcp();
+	}else strcpy(errmsg,"Success\0");
 	return rc;
 }
 

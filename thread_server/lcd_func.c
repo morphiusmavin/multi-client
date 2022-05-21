@@ -454,7 +454,7 @@ static void lcdinit(void)
 
 }
 
-#ifndef MAKE_TARGET
+#if 0
 /*********************************************************************************************************/
 static void mydelay(unsigned long i)
 {

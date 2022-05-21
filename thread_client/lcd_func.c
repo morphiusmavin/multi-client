@@ -454,7 +454,7 @@ static void lcdinit(void)
 
 }
 
-#ifndef MAKE_TARGET
+#if 0
 /*********************************************************************************************************/
 static void mydelay(unsigned long i)
 {
@@ -640,8 +640,7 @@ int main(void)
 		}
 	}while(key != 'q');
 }
-#endif
-#else
+
 int myprintf1(char *str)
 {
 
@@ -657,4 +656,5 @@ void scroll_up(void)
 {
 	return;
 }
+#endif
 #endif

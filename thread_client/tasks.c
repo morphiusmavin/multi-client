@@ -212,7 +212,10 @@ static void set_output(O_DATA *otp, int onoff)
 	char tempx[20];
 
 	//printf("test\r\n");
-
+#ifndef USE_CARDS
+	printf("not using cards\n");
+	return;
+#endif
 	switch(otp->type)
 	{
 		case 0:
@@ -330,15 +333,17 @@ UCHAR monitor_input_task(int test)
 	char tempx[20];
 
 //	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
-/*
+#ifndef USE_CARDS
+	printf("not using cards\n");
+
 	while(TRUE)
 	{
 		uSleep(1,0);
-		printf("%02x %02x %02x\r\n", InPortByteD(), InPortByteE(), InPortByteF());
 		if(shutdown_all)
 			return 0;
 	}
-*/
+#endif
+
 	pthread_mutex_lock( &io_mem_lock);
 
 /*
@@ -459,6 +464,11 @@ int change_input(int index, int onoff)
 	UCHAR mask = 1;
 	UCHAR state = 0;
 
+#ifndef USE_CARDS
+	printf("not using cards\n");
+	return;
+#endif
+
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
 
@@ -489,6 +499,16 @@ UCHAR monitor_fake_input_task(int test)
 	int i, rc, flag;
 
 //	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
+#ifndef USE_CARDS
+	printf("not using cards\n");
+
+	while(TRUE)
+	{
+		uSleep(1,0);
+		if(shutdown_all)
+			return 0;
+	}
+#endif
 
 	for(i = 0;i < 6;i++)
 	{
@@ -576,6 +596,11 @@ int change_output(int index, int onoff)
 {
 	int bank;
 	char tempx[10];
+
+#ifndef USE_CARDS
+	printf("not using cards\n");
+	return 0;
+#endif
 
 	//printf("change output: %d %d\r\n",index,onoff);
 	pthread_mutex_lock( &io_mem_lock);
@@ -666,11 +691,9 @@ UCHAR timer2_task(int test)
 
 		time_lapse = 0;
 
-		if(test_sock())
-		{
 //			sprintf(tempx,"%dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
 //			send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SERVER_UPTIME);
-		}
+
 		if(shutdown_all)
 		{
 //			printf("done timer2 task\r\n");

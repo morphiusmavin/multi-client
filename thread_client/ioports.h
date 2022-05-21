@@ -26,12 +26,9 @@
 #define			OUTPORTD_OFFSET		3
 #define			OUTPORTE_OFFSET		4
 #define			OUTPORTF_OFFSET		5
-#ifdef MAKE_TARGET
+
 VUCHAR *card_ports;
-#else
-UCHAR *card_ports;
-UCHAR fake_port[NUM_PORTS];
-#endif
+
 UCHAR outportstatus[NUM_PORTS];
 UCHAR current_io_settings;
 size_t pagesize;

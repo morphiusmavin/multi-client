@@ -1,7 +1,7 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_TASKS           	15
+#define NUM_TASKS           	16
 #define DEFAULT                 0
 #define TIME_SLICE              1
 #define FIFO                    2
@@ -46,17 +46,17 @@ enum task_types
 	MONITOR_INPUTS2,
 	TIMER,
 	TIMER2,
-	WINCL_READ_TASK,
-//	WINCL_WRITE_TASK,
 	TCP_MONITOR,
 	SERIAL_RECV,
 	BASIC_CONTROLS,
-	READ_TASK1,
-	SEND_TASK1,
-	READ_TASK2,
-	SEND_TASK2,
-	READ_TASK3,
-	SEND_TASK3
+	WINCL_READ_TASK1,		// 8
+	WINCL_READ_TASK2,		// 9
+	READ_TASK1,				// 10
+	SEND_TASK1,				// 11
+	READ_TASK2,				// 12
+	SEND_TASK2,				// 13
+	READ_TASK3,				// 14
+	SEND_TASK3				// 15
 } TASK_TYPES;
 
 UCHAR get_host_cmd_task(int test);
@@ -65,7 +65,6 @@ UCHAR monitor_fake_input_task(int test);
 UCHAR timer_task(int test);
 UCHAR timer2_task(int test);
 UCHAR WinClReadTask(int test);
-//UCHAR WinClWriteTask(int test);
 UCHAR ReadTask(int test);
 UCHAR SendTask(int test);
 UCHAR serial_recv_task(int test);
@@ -96,7 +95,6 @@ int send_tcp(int sd, UCHAR *str,int len);
 int recv_tcp(int sd, UCHAR *str, int strlen,int block);
 void close_tcp(void);
 int test_sd(int test);
-int test_sock(void);
 void init_ips(void);
 void send_status_msg(char *msg);
 void set_gps_baudrate(int baudrate);

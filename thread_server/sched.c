@@ -102,8 +102,9 @@ int main(int argc, char **argv)
 	{
 		printf("no card found\r\n");
 		exit(1);
-//	}else printf("card ok\r\n");
 	}
+	//else printf("card ok\r\n");
+	
 
 	// get the queue id for the get_host_cmd_task
 	// CMD_HOST_QKEY
@@ -128,14 +129,14 @@ int main(int argc, char **argv)
 	_threads[TIMER].sched = PTIME_SLICE;
 	_threads[TIMER2].sched = PTIME_SLICE;
 
-	_threads[WINCL_READ_TASK].sched = TIME_SLICE;
-//	_threads[WINCL_WRITE_TASK].sched = TIME_SLICE;
-
 	_threads[SERIAL_RECV].sched = TIME_SLICE;
 //	_threads[SERIAL_RECV2].sched = TIME_SLICE;
 	_threads[TCP_MONITOR].sched = TIME_SLICE;
 	_threads[BASIC_CONTROLS].sched = TIME_SLICE;
 
+	_threads[WINCL_READ_TASK1].sched = TIME_SLICE;	// 8
+	_threads[WINCL_READ_TASK2].sched = TIME_SLICE;	// 9
+//	_threads[WINCL_WRITE_TASK].sched = TIME_SLICE;
 	_threads[READ_TASK1].sched = TIME_SLICE;
 	_threads[SEND_TASK1].sched = TIME_SLICE;
 
@@ -145,19 +146,20 @@ int main(int argc, char **argv)
 	_threads[READ_TASK3].sched = TIME_SLICE;
 	_threads[SEND_TASK3].sched = TIME_SLICE;
 
+
 	strcpy(_threads[GET_HOST_CMD].label,"GET_HOST_CMD\0");
 	strcpy(_threads[MONITOR_INPUTS].label,"MONITOR_INPUTS\0");
 	strcpy(_threads[MONITOR_INPUTS2].label,"MONITOR_INPUTS2\0");
 	strcpy(_threads[TIMER].label,"TIMER\0");
 	strcpy(_threads[TIMER2].label,"TIMER2\0");
 
-	strcpy(_threads[WINCL_READ_TASK].label,"WINCL_READ_TASK\0");
-//	strcpy(_threads[WINCL_WRITE_TASK].label,"WINCL_WRITE_TASK\0");
-
 	strcpy(_threads[SERIAL_RECV].label,"SERIAL_RECV\0");
 //	strcpy(_threads[SERIAL_RECV2].label,"SERIAL_RECV2\0");
 	strcpy(_threads[TCP_MONITOR].label,"TCP_MONITOR\0");
 	strcpy(_threads[BASIC_CONTROLS].label,"MSG_QUEUE\0");
+
+	strcpy(_threads[WINCL_READ_TASK1].label,"WINCL_READ_TASK1\0");
+	strcpy(_threads[WINCL_READ_TASK2].label,"WINCL_READ_TASK2\0");
 
 	strcpy(_threads[READ_TASK1].label,"READ_TASK1\0");
 	strcpy(_threads[SEND_TASK1].label,"SEND_TASK1\0");

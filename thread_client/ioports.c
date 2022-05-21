@@ -59,7 +59,7 @@ static void mydelay(unsigned long i)
 int init_mem(void)
 {
 	int key;
-#ifdef MAKE_TARGET
+#ifdef USE_CARDS
 	fd = open("/dev/mem", O_RDWR|O_SYNC);
 	
 	assert(fd != -1);
@@ -88,7 +88,7 @@ int init_mem(void)
 	}
 	return 0;
 #else
-	card_ports = &fake_port[0];
+	return 0;
 #endif
 }
 
@@ -260,9 +260,6 @@ void OutPortByteA(UCHAR byte)
 {
 //	pms->outportstatus[OUTPORTA_OFFSET] = byte;
 	*(card_ports + ROC_1) = byte;
-#ifdef MAKE_TARGET
-	printf("port A: %x\n",byte);
-#endif
 }
 
 
@@ -271,9 +268,6 @@ void OutPortByteB(UCHAR byte)
 {
 //	pms->outportstatus[OUTPORTB_OFFSET] = byte;
 	*(card_ports + ROC_2) = byte;
-#ifdef MAKE_TARGET
-	printf("port B: %x\n",byte);
-#endif
 }
 
 
@@ -282,9 +276,6 @@ void OutPortByteC(UCHAR byte)
 {
 //	pms->outportstatus[OUTPORTC_OFFSET] = byte;
 	*(card_ports + ROC_3) = byte;
-#ifdef MAKE_TARGET
-	printf("port C: %x\n",byte);
-#endif
 }
 
 
@@ -293,9 +284,6 @@ void OutPortByteD(UCHAR byte)
 {
 //	pms->outportstatus[OUTPORTA_OFFSET] = byte;
 	*(card_ports + ROC_4) = byte;
-#ifdef MAKE_TARGET
-	printf("port D: %x\n",byte);
-#endif
 }
 
 
@@ -304,9 +292,6 @@ void OutPortByteE(UCHAR byte)
 {
 //	pms->outportstatus[OUTPORTB_OFFSET] = byte;
 	*(card_ports + ROC_5) = byte;
-#ifdef MAKE_TARGET
-	printf("port E: %x\n",byte);
-#endif
 }
 
 
@@ -315,9 +300,6 @@ void OutPortByteF(UCHAR byte)
 {
 //	pms->outportstatus[OUTPORTC_OFFSET] = byte;
 	*(card_ports + ROC_6) = byte;
-#ifdef MAKE_TARGET
-	printf("port F: %x\n",byte);
-#endif
 }
 #endif
 /***********************************************************************************************************/
@@ -383,9 +365,9 @@ UCHAR InPortByteF(void)
 /**********************************************************************************************************/
 void close_mem(void)
 {
-//	printf("closing mapped mem\r\n");
+#ifdef USE_CARDS
 	if(munmap((void *)card_ports,pagesize) == -1)
 		perror("error un-mapping file\n");
 	close(fd);
-//	printf("done closing mapped mem\r\n");
+#endif
 }

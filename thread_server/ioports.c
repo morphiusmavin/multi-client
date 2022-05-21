@@ -52,14 +52,12 @@ static void mydelay(unsigned long i)
 
 	}
 }
-
-
 /**********************************************************************************************************/
 
 int init_mem(void)
 {
 	int key;
-#ifdef MAKE_TARGET
+#ifdef USE_CARDS
 	fd = open("/dev/mem", O_RDWR|O_SYNC);
 	
 	assert(fd != -1);
@@ -88,7 +86,7 @@ int init_mem(void)
 	}
 	return 0;
 #else
-	card_ports = &fake_port[0];
+	return 0;
 #endif
 }
 
@@ -383,9 +381,11 @@ UCHAR InPortByteF(void)
 /**********************************************************************************************************/
 void close_mem(void)
 {
+#ifdef USE_CARDS
 //	printf("closing mapped mem\r\n");
 	if(munmap((void *)card_ports,pagesize) == -1)
 		perror("error un-mapping file\n");
 	close(fd);
 //	printf("done closing mapped mem\r\n");
+#endif 
 }
