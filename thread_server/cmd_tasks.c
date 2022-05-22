@@ -176,7 +176,7 @@ UCHAR get_host_cmd_task(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}else printf("can't access %s\n",cFileName);
-
+	uSleep(5,0);
 	printf("server starting...\n");
 
 	same_msg = 0;
@@ -285,7 +285,7 @@ printf("msgrcv error\n");
 							{
 								if(client_table[j].type == WINDOWS_CLIENT && client_table[j].socket > 0)
 									send_msgb(client_table[j].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-								uSleep(0,TIME_DELAY/2);
+								uSleep(0,TIME_DELAY/20);
 							}
 						}
 					}

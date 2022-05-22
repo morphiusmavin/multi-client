@@ -77,7 +77,8 @@ int main(int argc, char **argv)
 	int sd;
 	int rc;
 	reboot_on_exit = 1;
-	key_t cmd_host_key = 1234;
+	key_t cmd_host_key;
+	key_t remote_key;
 
 	if(argc < 2)
 	{
@@ -112,6 +113,8 @@ int main(int argc, char **argv)
 	cmd_host_key = CMD_HOST_QKEY;
 	cmd_host_qid = msgget(cmd_host_key, IPC_CREAT | 0666);
 	//printf("cmd_host_qid: %d\n",cmd_host_qid);
+	remote_key = REMOTE_QKEY;
+	remote_qid = msgget(remote_key, IPC_CREAT | 0666);
 
 	for(i = 0;i < NUM_TASKS;i++)
 		id_arg[i] = i;
@@ -127,7 +130,7 @@ int main(int argc, char **argv)
 	_threads[MONITOR_INPUTS].sched = PFIFO;
 	_threads[MONITOR_INPUTS2].sched = PFIFO;
 	_threads[TIMER].sched = PTIME_SLICE;
-	_threads[TIMER2].sched = PTIME_SLICE;
+//	_threads[TIMER2].sched = PTIME_SLICE;
 
 	_threads[SERIAL_RECV].sched = TIME_SLICE;
 //	_threads[SERIAL_RECV2].sched = TIME_SLICE;
@@ -136,24 +139,25 @@ int main(int argc, char **argv)
 
 	_threads[WINCL_READ_TASK1].sched = TIME_SLICE;	// 8
 	_threads[WINCL_READ_TASK2].sched = TIME_SLICE;	// 9
+//	_threads[WINCL_READ_TASK3].sched = TIME_SLICE;	// 10
 
-	_threads[READ_TASK1].sched = TIME_SLICE;		// 10
-	_threads[SEND_TASK1].sched = TIME_SLICE;		// 11
+	_threads[READ_TASK1].sched = TIME_SLICE;		// 11
+	_threads[SEND_TASK1].sched = TIME_SLICE;		// 12
 
-	_threads[READ_TASK2].sched = TIME_SLICE;		// 12
-	_threads[SEND_TASK2].sched = TIME_SLICE;		// 13
+	_threads[READ_TASK2].sched = TIME_SLICE;		// 13
+	_threads[SEND_TASK2].sched = TIME_SLICE;		// 14
 
-	_threads[READ_TASK3].sched = TIME_SLICE;		// 14
-	_threads[SEND_TASK3].sched = TIME_SLICE;		// 15
+	_threads[READ_TASK3].sched = TIME_SLICE;		// 15
+	_threads[SEND_TASK3].sched = TIME_SLICE;		// 16
 
-	_threads[READ_TASK4].sched = TIME_SLICE;		// 16
-	_threads[SEND_TASK4].sched = TIME_SLICE;		// 17
+//	_threads[READ_TASK4].sched = TIME_SLICE;		// 17
+//	_threads[SEND_TASK4].sched = TIME_SLICE;		// 18
 
 	strcpy(_threads[GET_HOST_CMD].label,"GET_HOST_CMD\0");
 	strcpy(_threads[MONITOR_INPUTS].label,"MONITOR_INPUTS\0");
 	strcpy(_threads[MONITOR_INPUTS2].label,"MONITOR_INPUTS2\0");
 	strcpy(_threads[TIMER].label,"TIMER\0");
-	strcpy(_threads[TIMER2].label,"TIMER2\0");
+//	strcpy(_threads[TIMER2].label,"TIMER2\0");
 
 	strcpy(_threads[SERIAL_RECV].label,"SERIAL_RECV\0");
 //	strcpy(_threads[SERIAL_RECV2].label,"SERIAL_RECV2\0");
@@ -162,6 +166,7 @@ int main(int argc, char **argv)
 
 	strcpy(_threads[WINCL_READ_TASK1].label,"WINCL_READ_TASK1\0");
 	strcpy(_threads[WINCL_READ_TASK2].label,"WINCL_READ_TASK2\0");
+//	strcpy(_threads[WINCL_READ_TASK3].label,"WINCL_READ_TASK3\0");
 
 	strcpy(_threads[READ_TASK1].label,"READ_TASK1\0");
 	strcpy(_threads[SEND_TASK1].label,"SEND_TASK1\0");
@@ -172,8 +177,8 @@ int main(int argc, char **argv)
 	strcpy(_threads[READ_TASK3].label,"READ_TASK3\0");
 	strcpy(_threads[SEND_TASK3].label,"SEND_TASK3\0");
 
-	strcpy(_threads[READ_TASK4].label,"READ_TASK4\0");
-	strcpy(_threads[SEND_TASK4].label,"SEND_TASK4\0");
+//	strcpy(_threads[READ_TASK4].label,"READ_TASK4\0");
+//	strcpy(_threads[SEND_TASK4].label,"SEND_TASK4\0");
 /* spawn the threads */
 
 	assign_client_table();
@@ -232,7 +237,8 @@ int main(int argc, char **argv)
 			default:
 				break;
 		}
-//		printf("%s %d %d \n", _threads[i].label,_threads[i].prio_min, _threads[i].prio_max);
+//		printf("%d %s \n", i, _threads[i].label);
+//		printf("%d %s %d %d \n", i, _threads[i].label,_threads[i].prio_min, _threads[i].prio_max);
 //			if(i == 5)
 //				priority_param.sched_priority = _threads[i].prio_max;
 //			else
@@ -242,7 +248,7 @@ int main(int argc, char **argv)
 
 //		printf("setting priority(%d-%d) of thread %s to %d\n", _threads[i].prio_min, \
 			_threads[i].prio_max, _threads[i].label,priority_param.sched_priority);
-//printf("%d ",i);
+
 		if (pthread_attr_setschedparam(&pthread_custom_attr, &priority_param)!=0)
 			fprintf(stderr,"pthread_attr_setschedparam failed\n");
 

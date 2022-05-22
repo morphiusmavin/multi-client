@@ -57,9 +57,9 @@ pthread_mutex_t     msg_client_queue_lock=PTHREAD_MUTEX_INITIALIZER;
 int total_count;
 
 UCHAR (*fptr[NUM_TASKS])(int) = { get_host_cmd_task, monitor_input_task, 
-monitor_fake_input_task, timer_task, timer2_task, serial_recv_task, 
-tcp_monitor_task, basic_controls_task, WinClReadTask, WinClReadTask, 
-ReadTask, SendTask, ReadTask, SendTask, ReadTask, SendTask, ReadTask, SendTask};
+monitor_fake_input_task, timer_task, serial_recv_task, tcp_monitor_task, 
+basic_controls_task, WinClReadTask, WinClReadTask, /* WinClReadTask, */
+ReadTask, SendTask, ReadTask, SendTask, ReadTask, SendTask};
 
 int threads_ready_count=0;
 pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
@@ -747,7 +747,7 @@ UCHAR timer_task(int test)
 	int bank = 0;
 	int fp;
 	UCHAR mask;
-//	time_t curtime2;
+	time_t t;
 	struct timeval mtv;
 	O_DATA *otp;
 	O_DATA **otpp = &otp;
@@ -780,22 +780,18 @@ UCHAR timer_task(int test)
 //printf("timer task\n");
 	while(TRUE)
 	{
-/*
-		if(client_table[index].socket > 0)
+		msg.mtype = msgtype;
+
+		time(&t);
+		snprintf(msg.mtext, sizeof(msg.mtext), "a message at %s", ctime(&t));
+
+		if (msgsnd(remote_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 		{
-			msg.mtype = msgtype;
-
-			time(&t);
-			snprintf(msg.mtext, sizeof(msg.mtext), "a message at %s", ctime(&t));
-
-			if (msgsnd(client_table[index].qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
-			{
-				perror("msgsnd error");
-				exit(EXIT_FAILURE);
-			}
-			printf("sent: %s\n", msg.mtext);				
+			perror("msgsnd error");
+			exit(EXIT_FAILURE);
 		}
-*/
+		printf("sent: %s\n", msg.mtext);				
+
 		uSleep(5,0);
 
 		if(shutdown_all)
@@ -943,12 +939,15 @@ startover:
 				printf("\n");
 */
 				// this sends a msg to the appropriate client's SendTask
-				if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) 
-						&msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				if(client_table[win_client_to_client_sock].socket > 0)
 				{
-					perror("msgsnd error");
-					exit(EXIT_FAILURE);
-				}
+					if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) 
+							&msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+					{
+						perror("msgsnd error");
+						exit(EXIT_FAILURE);
+					}
+				}else printf("bad socket\n");
 				//printf("sent: %s\n", msg.mtext);				
 				//printf("\n");
 			}
@@ -995,8 +994,9 @@ UCHAR ReadTask(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	uSleep(1,0);
+//	uSleep(1,0);
 //	printf("readtask: %s\n",client_table[index].label);
+//	return 0;
 
 	while(TRUE)
 	{
@@ -1064,6 +1064,7 @@ startover1:
 */
 			memmove(tempx,tempx+1,msg_len);
 			printf("%s\n\n",tempx);
+			// this should actually be able to send to any client 
 			send_msg(client_table[index].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 
 		}
@@ -1093,8 +1094,9 @@ UCHAR SendTask(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	uSleep(1,0);
+//	uSleep(1,0);
 //	printf("sendtask: %s\n",client_table[index].label);
+//	return 0;
 
 	i = 0;
 	while(TRUE)

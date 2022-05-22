@@ -1,7 +1,7 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_TASKS           	18
+#define NUM_TASKS           	15
 #define DEFAULT                 0
 #define TIME_SLICE              1
 #define FIFO                    2
@@ -32,8 +32,7 @@
 #define _50MS		50000 	
 #define _5MS		5000 	
 #define CMD_HOST_QKEY	1234
-
-
+#define REMOTE_QKEY		1300
 
 // uSleep(0,100000000L); - roughly 100ms using uSleep();
 
@@ -45,12 +44,13 @@ enum task_types
 	MONITOR_INPUTS,
 	MONITOR_INPUTS2,
 	TIMER,
-	TIMER2,
-	TCP_MONITOR,
+//	TIMER2,
 	SERIAL_RECV,
+	TCP_MONITOR,
 	BASIC_CONTROLS,
-	WINCL_READ_TASK1,		// 8
-	WINCL_READ_TASK2,		// 9
+	WINCL_READ_TASK1,		// 7
+	WINCL_READ_TASK2,		// 8
+//	WINCL_READ_TASK3,		// 9
 	READ_TASK1,				// 10
 	SEND_TASK1,				// 11
 	READ_TASK2,				// 12
@@ -137,6 +137,7 @@ float convertF(int raw_data);
 extern char oFileName[20];
 extern char cFileName[20];
 int cmd_host_qid;
+int remote_qid;
 
 extern UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];
