@@ -397,25 +397,25 @@ namespace EpServerEngineSampleClient
                         {
                             case 0:     // index into clients_avail list
                                 j = int.Parse(word);
-                                //AddMsg(j.ToString());
+                                AddMsg(j.ToString());
 								clmsg = word + "  ";
                                 break;
                             case 1:     // ip address
-                                //AddMsg(word);
+                                AddMsg(word);
 								clmsg += word + "  ";
                                 break;
                             case 2:     // port no.
 								//if(clients_avail[i].socket < 0)
 									//avail = true;
                                 sock = clients_avail[j].socket = int.Parse(word);
-                                //AddMsg(clients_avail[j].socket.ToString());
+                                AddMsg(clients_avail[j].socket.ToString());
                                 clmsg += word + " " + sock.ToString();
 								//if(avail)
 									RedrawClientListBox();
-								//AddMsg(clmsg);
+								AddMsg(clmsg);
                                 break;
                             default:
-                                //AddMsg("?");
+                                AddMsg("?");
                                 break;
                         }
                         i++;
@@ -1194,7 +1194,6 @@ namespace EpServerEngineSampleClient
                         cl.socket = -1;
                     }
                     svrcmd.Send_ClCmd(msg, cl.index, param);
-					AddMsg(index.ToString());
                     RedrawClientListBox();
 					if(!remove)
 					{

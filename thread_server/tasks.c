@@ -59,7 +59,7 @@ int total_count;
 UCHAR (*fptr[NUM_TASKS])(int) = { get_host_cmd_task, monitor_input_task, 
 monitor_fake_input_task, timer_task, timer2_task, serial_recv_task, 
 tcp_monitor_task, basic_controls_task, WinClReadTask, WinClReadTask, 
-ReadTask, SendTask, ReadTask, SendTask, ReadTask, SendTask};
+ReadTask, SendTask, ReadTask, SendTask, ReadTask, SendTask, ReadTask, SendTask};
 
 int threads_ready_count=0;
 pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
@@ -862,6 +862,9 @@ startover:
 //			either one of these will work 
 //			printf("msg from windows client %d\n",client_table[i].socket);
 //			printf("msg from windows client %d\n",windows_client_sock);
+// in the bitstream of a,b,c,d,e...
+// a = command, c = index into client table 
+// d is the start of the message 
 			msg_len = get_msgb(client_table[index].socket);
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);

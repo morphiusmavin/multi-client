@@ -1,7 +1,7 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_TASKS           	16
+#define NUM_TASKS           	18
 #define DEFAULT                 0
 #define TIME_SLICE              1
 #define FIFO                    2
@@ -56,7 +56,9 @@ enum task_types
 	READ_TASK2,				// 12
 	SEND_TASK2,				// 13
 	READ_TASK3,				// 14
-	SEND_TASK3				// 15
+	SEND_TASK3,				// 15
+	READ_TASK4,				// 16
+	SEND_TASK4				// 17
 } TASK_TYPES;
 
 UCHAR get_host_cmd_task(int test);
