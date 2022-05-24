@@ -43,7 +43,6 @@ extern cllist_t cll;
 extern PARAM_STRUCT ps;
 extern char password[PASSWORD_SIZE];
 int shutdown_all;
-static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
 extern CMD_STRUCT cmd_array[];
 //extern int windows_client_sock;
@@ -176,7 +175,7 @@ UCHAR get_host_cmd_task(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}else printf("can't access %s\n",cFileName);
-	uSleep(5,0);
+
 	printf("server starting...\n");
 
 	same_msg = 0;
@@ -184,14 +183,14 @@ UCHAR get_host_cmd_task(int test)
 	while(TRUE)
 	{
 		cmd = 0;
-		if (msgrcv(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
+		if (msgrcv(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
 //		MSG_NOERROR | IPC_NOWAIT) == -1) 
 		MSG_NOERROR) == -1) 
 		{
 			if (errno != ENOMSG) 
 			{
 				perror("msgrcv");
-printf("msgrcv error\n");
+				printf("msgrcv error\n");
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -199,13 +198,13 @@ printf("msgrcv error\n");
 		msg_len |= (int)(msg.mtext[2] << 4);
 		msg_len = (int)msg.mtext[1];
 		
-//		printf("msg_len: %d\n",msg_len);
+		printf("msg_len: %d\n",msg_len);
 		memcpy(tempx,msg.mtext+4,msg_len);
 		
-//		for(i = 0;i < msg_len;i++)
-//			printf("%02x ",tempx[i]);
+		for(i = 0;i < msg_len;i++)
+			printf("%02x ",tempx[i]);
 
-//		printf("\n");
+		printf("\n");
 
 		if(cmd > 0)
 		{
@@ -262,7 +261,7 @@ printf("msgrcv error\n");
 							memset(tempx,0,sizeof(tempx));
 							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
 							//printf("should be sending a msg to clients %s\n",tempx);
-							send_msg(client_table[i].socket, strlen(tempx)*2,tempx,CLIENT_RECONNECT);
+//							send_msg(client_table[i].socket, strlen(tempx)*2,tempx,CLIENT_RECONNECT);
 							uSleep(0,TIME_DELAY/2);
 						}
 					}
@@ -272,6 +271,7 @@ printf("msgrcv error\n");
 					break;
 
 				case SEND_CLIENT_LIST:
+/*
 					printf("SEND_CLIENT_LIST\n");
 					for(i = 0;i < MAX_CLIENTS;i++)
 					{
@@ -289,6 +289,7 @@ printf("msgrcv error\n");
 							}
 						}
 					}
+*/
 					break;
 				
 				case UPTIME_MSG:	// sent from client
@@ -304,6 +305,7 @@ printf("msgrcv error\n");
 					break;
 
 				case SEND_MSG:
+					printf("cmd_tasks.c recv'd msg\n");
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");
@@ -609,196 +611,6 @@ exit_program:
 	return test + 1;
 }
 
-/*********************************************************************/
-// get preamble & msg len from client
-// preamble is: {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00,
-// msg_len(lowbyte),msg_len(highbyte),0x00,0x00,0x00,0x00,0x00,0x00}
-// returns message length
-int get_msg(int sd)
-{
-	int len;
-	UCHAR low, high;
-	int ret;
-	int i;
-
-	UCHAR preamble[10];
-	ret = recv_tcp(sd, preamble,8,1);
-	//printf("ret: %d\n",ret);
-	if(ret < 0)
-	{
-		printHexByte(ret);
-	}
-	if(memcmp(preamble,pre_preamble,8) != 0)
-	{
-		printf("bad preamble\n");
-		uSleep(5,0);
-		return -1;
-	}
-	ret = recv_tcp(sd, &low,1,1);
-	ret = recv_tcp(sd, &high,1,1);
-	//printf("%02x %02x\n",low,high);
-	len = 0;
-	len = (int)(high);
-	len <<= 4;
-	len |= (int)low;
-
-	return len;
-}
-/*********************************************************************/
-void send_msg(int sd, int msg_len, UCHAR *msg, UCHAR msg_type)
-{
-	int ret;
-	int i;
-	UCHAR temp[2];
-
-	ret = send_tcp(sd, &pre_preamble[0],8);
-	temp[0] = (UCHAR)(msg_len & 0x0F);
-	temp[1] = (UCHAR)((msg_len & 0xF0) >> 4);
-	//printf("%02x %02x\n",temp[0],temp[1]);
-	send_tcp(sd, (UCHAR *)&temp[0],1);
-	send_tcp(sd, (UCHAR *)&temp[1],1);
-	send_tcp(sd, (UCHAR *)&msg_type,1);
-
-	for(i = 0;i < msg_len;i++)
-		send_tcp(sd, (UCHAR *)&msg[i],1);
-}
-/*********************************************************************/
-// get/send_msgb is what the old server used to communicate with the
-// windows client - it gets each relavent byte as 2 bytes from the 
-// windows machine since that's how the tcp libraries that I'm using
-// are done - took me forever to figure this out
-int get_msgb(int sd)
-{
-	int len;
-	UCHAR low, high;
-	int ret;
-	int i;
-
-	UCHAR preamble[20];
-	ret = recv_tcp(sd, preamble,16,1);
-	if(ret < 0)
-	{
-		printHexByte(ret);
-	}
-	if(memcmp(preamble,pre_preamble,8) != 0)
-		return -1;
-
-	low = preamble[8];
-	high = preamble[9];
-	len = (int)(high);
-	len <<= 8;
-	len |= (int)low;
-
-	return len;
-}
-
-/*********************************************************************/
-void send_msgb(int sd, int msg_len, UCHAR *msg, UCHAR msg_type)
-{
-	int len;
-	int ret;
-	int i;
-
-	ret = send_tcp(sd, &pre_preamble[0],8);
-	msg_len++;
-	send_tcp(sd, (UCHAR *)&msg_len,1);
-	ret = 0;
-	send_tcp(sd, (UCHAR *)&ret,1);
-
-	for(i = 0;i < 6;i++)
-		send_tcp(sd, (UCHAR *)&ret,1);
-
-	send_tcp(sd, (UCHAR *)&msg_type,1);
-
-	ret = 0;
-	send_tcp(sd, (UCHAR *)&ret,1);
-
-	for(i = 0;i < msg_len;i++)
-	{
-		send_tcp(sd, (UCHAR *)&msg[i],1);
-		send_tcp(sd, (UCHAR *)&ret,1);
-	}
-}
-
-/*********************************************************************/
-int recv_tcp(int sd, UCHAR *str, int strlen,int block)
-{
-	int ret = -1;
-	char errmsg[20];
-	memset(errmsg,0,20);
-//		printf("start get_sock\n");
-//		pthread_mutex_lock( &tcp_read_lock);
-	ret = get_sock(sd, str,strlen,block,&errmsg[0]);
-//		pthread_mutex_unlock(&tcp_read_lock);
-//		printf("end get_sock\n");
-//printf("%s\n",str);
-	if(ret < 0 && (strcmp(errmsg,"Success") != 0))
-	{
-		printf(errmsg);
-	}
-	return ret;
-}
-
-/*********************************************************************/
-int send_tcp(int sd, UCHAR *str,int len)
-{
-	int ret = 0;
-	char errmsg[60];
-	memset(errmsg,0,60);
-//	pthread_mutex_lock( &tcp_write_lock);
-	ret = put_sock(sd, str,len,1,&errmsg[0]);
-//	pthread_mutex_unlock(&tcp_write_lock);
-	if(ret < 0 && (strcmp(errmsg,"Success") != 0))
-	{
-		if(same_msg == 0)
-			printf(errmsg);
-		same_msg = 1;
-	}
-	else same_msg = 0;
-	return ret;
-}
-
-/*********************************************************************/
-int put_sock(int sd, UCHAR *buf,int buflen, int block, char *errmsg)
-{
-	int rc = 0;
-	char extra_msg[10];
-	if(block)
-// block
-		rc = send(sd,buf,buflen,MSG_WAITALL);
-	else
-// don't block
-		rc = send(sd,buf,buflen,MSG_DONTWAIT);
-	if(rc < 0 && errno != 11)
-	{
-		strcpy(errmsg,strerror(errno));
-		sprintf(extra_msg," %d",errno);
-		strcat(errmsg,extra_msg);
-		strcat(errmsg," put_sock");
-		close_tcp();
-	}else strcpy(errmsg,"Success\0");
-	return rc;
-}
-
-/*********************************************************************/
-int get_sock(int sd, UCHAR *buf, int buflen, int block, char *errmsg)
-{
-	int rc;
-	char extra_msg[10];
-	if(block)
-		rc = recv(sd,buf,buflen,MSG_WAITALL);
-	else
-		rc = recv(sd,buf,buflen,MSG_DONTWAIT);
-	if(rc < 0 && errno != 11)
-	{
-		strcpy(errmsg,strerror(errno));
-		sprintf(extra_msg," %d",errno);
-		strcat(errmsg,extra_msg);
-		strcat(errmsg," get_sock");
-	}else strcpy(errmsg,"Success\0");
-	return rc;
-}
-/*********************************************************************/
 void send_param_msg(void)
 {
 	char tempx[40];

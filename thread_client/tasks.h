@@ -73,7 +73,7 @@ int put_sock(UCHAR *buf,int buflen, int block, char *errmsg);
 int get_sock(UCHAR *buf, int buflen, int block, char *errmsg);
 void set_sock(int open);
 int get_msg(void);
-void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type);
+void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type, UCHAR dest);
 void *work_routine(void *arg);
 int send_tcp(UCHAR *str,int len);
 int recv_tcp(UCHAR *str, int strlen,int block);

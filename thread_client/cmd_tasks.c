@@ -265,7 +265,7 @@ UCHAR get_host_cmd_task(int test)
 				rc = recv_tcp(&msg_buf[0],msg_len+1,1);
 				//printf("rc: %d\n",rc);
 				cmd = msg_buf[0];
-				//printf("cmd: %d\n",cmd);
+				printf("cmd: %d\n",cmd);
 				memset(tempx,0,sizeof(tempx));
 /*
 				printf("\n");
@@ -343,7 +343,7 @@ UCHAR get_host_cmd_task(int test)
 						memset(tempx,0,sizeof(tempx));
 						sprintf(tempx,"%d days %dh %dm %ds",trunning_days, trunning_hours, 
 							trunning_minutes, trunning_seconds);
-						send_msg(strlen((char*)tempx),(UCHAR*)tempx, UPTIME_MSG);
+						send_msg(strlen((char*)tempx),(UCHAR*)tempx, UPTIME_MSG, _SERVER);
 						printf("%s\n",tempx);
 						break;
 
@@ -492,7 +492,7 @@ uSleep(0,TIME_DELAY/3);
 						curtime2 = mtv.tv_sec;
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 						//printf(tempx);
-						send_msg(strlen((char*)tempx),(UCHAR*)tempx,GET_TIME);
+						send_msg(strlen((char*)tempx),(UCHAR*)tempx,GET_TIME, _SERVER);
 						break;
 
 					case BAD_MSG:
@@ -735,7 +735,8 @@ int get_msg(void)
 
 /*********************************************************************/
 /*********************************************************************/
-void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type)
+// send the preamble, msg len, msg_type & dest (dest is index into client table)
+void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type, UCHAR dest)
 {
 	int ret;
 	int i;
@@ -750,6 +751,7 @@ void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type)
 		send_tcp((UCHAR *)&temp[0],1);
 		send_tcp((UCHAR *)&temp[1],1);
 		send_tcp((UCHAR *)&msg_type,1);
+		send_tcp((UCHAR *)&dest,1);
 
 		for(i = 0;i < msg_len;i++)
 		{
@@ -881,6 +883,6 @@ void send_param_msg(void)
 /*********************************************************************/
 void send_status_msg(char *msg)
 {
-	send_msg(strlen((char*)msg)*2,(UCHAR*)msg, SEND_STATUS);
+	send_msg(strlen((char*)msg)*2,(UCHAR*)msg, SEND_STATUS,_SERVER);
 	printf("%s\n",msg);
 }

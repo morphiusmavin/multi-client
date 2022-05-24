@@ -34,6 +34,7 @@ namespace EpServerEngineSampleClient
 
         private PlayerDlg playdlg = null;
         private GarageForm garageform = null;
+        private CabinLights cabinLights = null;
         private BluetoothForm bluetoothform = null;
         private Child_Scrolling_List slist = null;
         private int AvailClientCurrentSection = 0;
@@ -89,6 +90,7 @@ namespace EpServerEngineSampleClient
             playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
 
             garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
+            cabinLights = new CabinLights("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
 
             slist = new Child_Scrolling_List(m_client);
@@ -240,6 +242,7 @@ namespace EpServerEngineSampleClient
             {
                 playdlg.Dispose();
                 garageform.Dispose();
+                cabinLights.Dispose();
                 bluetoothform.Dispose();
                 base.OnClosed(e);
             }
@@ -259,6 +262,10 @@ namespace EpServerEngineSampleClient
             else if (garageform.Visible == true)
             {
                 garageform.Process_Msg(receivedPacket.PacketRaw);
+            }
+            else if (cabinLights.Visible == true)
+            {
+                cabinLights.Process_Msg(receivedPacket.PacketRaw);
             }
             else if (bluetoothform.Visible == true)
             {
@@ -617,7 +624,8 @@ namespace EpServerEngineSampleClient
         }
         private void RebootServer(object sender, EventArgs e)       // "test"
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), "send client list", true);
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 9, "test");
+            //SendClientMsg(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), "send client list", true);
             AddMsg("send client list");
         }
         // Insert logic for processing found files here.
@@ -751,8 +759,6 @@ namespace EpServerEngineSampleClient
         }
         private void GarageFormClick(object sender, EventArgs e)
         {
-            byte[] param = new byte[4];
-            byte[] bytes = new byte[6];
             garageform.Enable_Dlg(true);
             garageform.StartPosition = FormStartPosition.Manual;
             garageform.Location = new Point(100, 10);
@@ -1256,5 +1262,20 @@ namespace EpServerEngineSampleClient
 		{
             sendmsgtext = tbSendMsg.Text;
 		}
-	}
+
+		private void btnCabinLights_Click(object sender, EventArgs e)
+		{
+            cabinLights.Enable_Dlg(true);
+            cabinLights.StartPosition = FormStartPosition.Manual;
+            cabinLights.Location = new Point(100, 10);
+            if (cabinLights.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+            cabinLights.Enable_Dlg(false);
+
+        }
+    }
 }

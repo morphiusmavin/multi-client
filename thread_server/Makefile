@@ -107,7 +107,7 @@ GNUNOANSI = -g -gnu99 -Wstrict-prototypes
 
 BULD_TARGET = $(PROJECT)
 
-all : sched test_remote 
+all : sched sock_mgt 
 #all : test_dio1
 #test_ioports test_inports # test_ports test_spi
 #llist_test_threads llist_test_threads_rw
@@ -151,8 +151,11 @@ cllist_threads_rw.o: queue/cllist_threads_rw.c queue/cllist_threads_rw.h
 cconfig_file.o: cs_client/cconfig_file.c queue/cllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/cconfig_file.c
 
-test_remote.o : test_remote.c 
-	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c test_remote.c
+sock_mgt.o : sock_mgt.c 
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_mgt.c
+
+sock_sched.o : sock_sched.c 
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_sched.c
 
 #sched: sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o rdwr.o serial_io.o config_file.o lcd_func.o
 sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o cconfig_file.o
@@ -160,9 +163,9 @@ sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_thread
 	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o -o sched -lm
 #	${CC} -static -pthread sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o #rdwr.o serial_io.o  lcd_func.o config_file.o -o sched
 
-test_remote: test_remote.o
-	${CC} -static test_remote.o -o test_remote
+sock_mgt: sock_mgt.o sock_sched.o ioports.o load_cmds.o
+	${CC} -static -pthread sock_sched.o assign_client_table.o sock_mgt.o ioports.o load_cmds.o -o sock_mgt
 
 clean :
-	rm -f *.o *~ *# core  sched test_remote
+	rm -f *.o *~ *# core  sched sock_mgt
 

@@ -1,7 +1,8 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_TASKS           	15
+#define NUM_SOCK_TASKS			6
+#define NUM_SCHED_TASKS			7
 #define DEFAULT                 0
 #define TIME_SLICE              1
 #define FIFO                    2
@@ -31,35 +32,33 @@
 #define _500MS		500000 	
 #define _50MS		50000 	
 #define _5MS		5000 	
-#define CMD_HOST_QKEY	1234
-#define REMOTE_QKEY		1300
+#define SEND_CMD_HOST_QKEY	1234
+#define RECV_CMD_HOST_QKEY	1300
 
 // uSleep(0,100000000L); - roughly 100ms using uSleep();
 
 int global_socket;
 
-enum task_types
+enum sock_task_types
 {
-	GET_HOST_CMD,
+	WINCL_READ_TASK1,
+	READ_TASK1,
+	READ_TASK2,
+	READ_TASK3,
+	GET_HOST_CMD1,
+	TCP_MONITOR,
+} SOCK_TASK_TYPES;
+
+enum sched_task_types
+{
+	GET_HOST_CMD2,
 	MONITOR_INPUTS,
 	MONITOR_INPUTS2,
 	TIMER,
-//	TIMER2,
+	TIMER2,
 	SERIAL_RECV,
-	TCP_MONITOR,
 	BASIC_CONTROLS,
-	WINCL_READ_TASK1,		// 7
-	WINCL_READ_TASK2,		// 8
-//	WINCL_READ_TASK3,		// 9
-	READ_TASK1,				// 10
-	SEND_TASK1,				// 11
-	READ_TASK2,				// 12
-	SEND_TASK2,				// 13
-	READ_TASK3,				// 14
-	SEND_TASK3,				// 15
-	READ_TASK4,				// 16
-	SEND_TASK4				// 17
-} TASK_TYPES;
+} SCHED_TASK_TYPES;
 
 UCHAR get_host_cmd_task(int test);
 UCHAR monitor_input_task(int test);
@@ -136,8 +135,8 @@ static char dat_names[NUM_DAT_NAMES][DAT_NAME_STR_LEN];
 float convertF(int raw_data);
 extern char oFileName[20];
 extern char cFileName[20];
-int cmd_host_qid;
-int remote_qid;
+int send_cmd_host_qid;
+int recv_cmd_host_qid;
 
 extern UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];

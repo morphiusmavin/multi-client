@@ -692,7 +692,7 @@ UCHAR timer2_task(int test)
 		time_lapse = 0;
 
 //			sprintf(tempx,"%dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
-//			send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SERVER_UPTIME);
+//			send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SERVER_UPTIME, _SERVER);
 
 		if(shutdown_all)
 		{
@@ -750,7 +750,7 @@ UCHAR timer_task(int test)
 		time_buffer[1] = (UCHAR)i;
 		time_buffer[2] = (UCHAR)(i >> 4);
 
-		send_msg(22,(UCHAR*)time_buffer,SEND_MSG);
+		send_msg(22,(UCHAR*)time_buffer,SEND_MSG, _SERVER);
 		i++;
 */
 		//printf("%d ",i);
@@ -766,7 +766,7 @@ UCHAR timer_task(int test)
 		time_buffer[1] = (UCHAR)i;
 		time_buffer[2] = (UCHAR)(i >> 4);
 
-		send_msg(22,(UCHAR*)time_buffer,SEND_MSG);
+		send_msg(22,(UCHAR*)time_buffer,SEND_MSG, _SERVER);
 		i++;
 		//printf("%d ",i);
 		uSleep(5,0);
@@ -1503,7 +1503,7 @@ UCHAR basic_controls_task(int test)
 
 			case SHUTDOWN_IOBOX:
 				snprintf(tempx, strlen(tempx), "shutdown iobox");
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX);
+				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
 				uSleep(1,0);
 				//printf("shutdown iobox\n");
 				shutdown_all = 1;
@@ -1513,7 +1513,7 @@ UCHAR basic_controls_task(int test)
 
 			case REBOOT_IOBOX:
 				snprintf(tempx, strlen(tempx), "reboot iobox");
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX);
+				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
 				uSleep(1,0);
 				printf("reboot iobox\n");
 				shutdown_all = 1;
@@ -1523,7 +1523,7 @@ UCHAR basic_controls_task(int test)
 
 			case WAIT_REBOOT_IOBOX:
 				snprintf(tempx, strlen(tempx), "wait reboot iobox");
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,WAIT_REBOOT_IOBOX);
+				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,WAIT_REBOOT_IOBOX, _SERVER);
 				uSleep(20,0);
 				//printf("reboot iobox\n");
 				shutdown_all = 1;

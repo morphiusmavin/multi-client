@@ -19,7 +19,7 @@ typedef unsigned long ULONG;
 #define NUM_ADC_CHANNELS 11
 #define SERIAL_BUFF_SIZE 100
 #define RAW_DATA_ARRAY_SIZE 15
-#define MAX_CLIENTS	9
+#define MAX_CLIENTS	8
 #define NO_CMDS 47
 #define NO_CLLIST_RECS 20
 
@@ -65,7 +65,7 @@ enum client_types
 enum client_list
 {
 	_149,
-	_153,
+//	_153,
 //	_159,
 	_154,
 	_147,

@@ -1,4 +1,9 @@
 thread_server/mingetty/
 thread_server/temp.c.txt
 thread_server/test_tcp/
+client_table_list.txt
+oneline.txt
+sd_card_TS-7800.txt
+thread_client/boot_flash.txt
+thread_client/temp.txt
 

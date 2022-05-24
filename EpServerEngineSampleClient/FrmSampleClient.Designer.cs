@@ -61,6 +61,7 @@
 			this.btnReportTimeUp = new System.Windows.Forms.Button();
 			this.btnWaitReboot = new System.Windows.Forms.Button();
 			this.tbSendMsg = new System.Windows.Forms.TextBox();
+			this.btnCabinLights = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -257,7 +258,7 @@
 			// 
 			this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnClear.Location = new System.Drawing.Point(264, 352);
+			this.btnClear.Location = new System.Drawing.Point(262, 424);
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(235, 61);
 			this.btnClear.TabIndex = 8;
@@ -305,7 +306,7 @@
 			// 
 			this.DialogOne.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.DialogOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.DialogOne.Location = new System.Drawing.Point(266, 272);
+			this.DialogOne.Location = new System.Drawing.Point(264, 352);
 			this.DialogOne.Name = "DialogOne";
 			this.DialogOne.Size = new System.Drawing.Size(235, 61);
 			this.DialogOne.TabIndex = 9;
@@ -417,12 +418,25 @@
 			this.tbSendMsg.TabIndex = 44;
 			this.tbSendMsg.TextChanged += new System.EventHandler(this.tbSendMsg_TextChanged);
 			// 
+			// btnCabinLights
+			// 
+			this.btnCabinLights.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnCabinLights.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnCabinLights.Location = new System.Drawing.Point(268, 271);
+			this.btnCabinLights.Name = "btnCabinLights";
+			this.btnCabinLights.Size = new System.Drawing.Size(233, 61);
+			this.btnCabinLights.TabIndex = 45;
+			this.btnCabinLights.Text = "Cabin Lights";
+			this.btnCabinLights.UseVisualStyleBackColor = false;
+			this.btnCabinLights.Click += new System.EventHandler(this.btnCabinLights_Click);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1084, 688);
+			this.Controls.Add(this.btnCabinLights);
 			this.Controls.Add(this.tbSendMsg);
 			this.Controls.Add(this.btnWaitReboot);
 			this.Controls.Add(this.btnReportTimeUp);
@@ -501,6 +515,7 @@
 		private System.Windows.Forms.Button btnReportTimeUp;
 		private System.Windows.Forms.Button btnWaitReboot;
 		private System.Windows.Forms.TextBox tbSendMsg;
+		private System.Windows.Forms.Button btnCabinLights;
 	}
 }
 
