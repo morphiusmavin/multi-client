@@ -12,7 +12,8 @@
 
 #define PROTOPORT			5193				  /* default protocol port number */
 #define QLEN				6					  /* size of request queue        */
-#define MSG_QUEUE_SIZE		50
+//#define MSG_QUEUE_SIZE		50
+#define BASIC_CONTROLS_QKEY	1301
 
 // params for usleep()
 #define _5SEC	 	5000000 
@@ -83,7 +84,7 @@ int test_sock(void);
 void init_ips(void);
 void send_status_msg(char *msg);
 void set_gps_baudrate(int baudrate);
-static void print_cmd(UCHAR cmd);
+void print_cmd(UCHAR cmd);
 void assign_client_table(void);
 //double getDistance(double lat1, double lon1, double lat2, double lon2, int units);
 typedef struct
@@ -113,5 +114,6 @@ extern char cFileName[20];
 extern UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];
 static int same_msg;
+int basic_controls_qid;
 
 #endif

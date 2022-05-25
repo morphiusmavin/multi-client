@@ -20,6 +20,8 @@
 #include <netdb.h>
 #include <errno.h>
 #include <dirent.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #include "../cmd_types.h"
 #include "../mytypes.h"
 #include "ioports.h"
@@ -73,8 +75,8 @@ static int raw_data_ptr;
 int avg_raw_data(int prev_data);
 int max_ips;
 IP ip[40];
-static UCHAR msg_queue[MSG_QUEUE_SIZE];
-static int msg_queue_ptr;
+//static UCHAR msg_queue[MSG_QUEUE_SIZE];
+//static int msg_queue_ptr;
 
 #define ON 1
 #define OFF 0
@@ -1152,32 +1154,22 @@ void *work_routine(void *arg)
 /*********************************************************************/
 void add_msg_queue(UCHAR cmd)
 {
-//	while(msg_queue_ptr >= MSG_QUEUE_SIZE);
+	struct msgqbuf msg;
+	int msgtype = 1;
+	msg.mtype = msgtype;
+	msg.mtext[0] = cmd;
 	pthread_mutex_lock(&msg_queue_lock);
-	if(msg_queue_ptr < MSG_QUEUE_SIZE)
+
+	if (msgsnd(basic_controls_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 	{
-		msg_queue_ptr++;
-		msg_queue[msg_queue_ptr] = cmd;
+		// keep getting "Invalid Argument" - cause I didn't set the mtype
+		perror("msgsnd error");
+		exit(EXIT_FAILURE);
 	}
+
 	pthread_mutex_unlock(&msg_queue_lock);
 //	printf("add: %d %x\r\n",msg_queue_ptr,cmd);
 }
-/*********************************************************************/
-UCHAR get_msg_queue(void)
-{
-	UCHAR cmd;
-	pthread_mutex_lock(&msg_queue_lock);
-	if(msg_queue_ptr > 0)
-	{
-		cmd = msg_queue[msg_queue_ptr];
-		msg_queue_ptr--;
-	}else cmd = 0;
-	pthread_mutex_unlock(&msg_queue_lock);
-//	if(cmd != 0)
-//		printf("get: %d %x\r\n",msg_queue_ptr,cmd);
-	return cmd;
-}
-
 /*********************************************************************/
 UCHAR basic_controls_task(int test)
 {
@@ -1192,18 +1184,27 @@ UCHAR basic_controls_task(int test)
 	char errmsg[50];
 	UCHAR cmd;
 	char tempx[SERIAL_BUFF_SIZE];
+	struct msgqbuf msg;
+	int msgtype = 1;
 
-	memset(msg_queue,0,sizeof(msg_queue));
-	msg_queue_ptr = 0;
+//	memset(msg_queue,0,sizeof(msg_queue));
+	msg.mtype = msgtype;
 
 	while(TRUE)
 	{
-		// wait for a new cmd to arrive in the msg_queue
-		do{
-			cmd = get_msg_queue();
-			usleep(_5MS);
-		}while(cmd == 0 && shutdown_all == 0);
-
+		if (msgrcv(basic_controls_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
+//		MSG_NOERROR | IPC_NOWAIT) == -1) 
+		MSG_NOERROR) == -1) 
+		{
+			if (errno != ENOMSG) 
+			{
+				perror("msgrcv");
+				printf("msgrcv error\n");
+				exit(EXIT_FAILURE);
+			}
+		}
+		cmd = msg.mtext[0];
+		print_cmd(cmd);
 		usleep(_5MS);
 
 		switch(cmd)

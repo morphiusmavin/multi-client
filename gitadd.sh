@@ -4,6 +4,7 @@ git add mytypes.h
 git add cmd_types.h
 git add assign_client_table.c
 git add load_cmds.c
+git add README.md
 
 git add thread_server/ioports.c
 git add thread_server/Makefile

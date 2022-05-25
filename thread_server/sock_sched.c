@@ -42,8 +42,6 @@ extern void *work_routine(void *arg);
 char oFileName[20];
 char cFileName[20];
 
-UCHAR reboot_on_exit;
-
 //pthread_t serial_thread;	// workaround for closing serial thread (serial read is blocking)
 
 typedef struct
@@ -69,7 +67,6 @@ int main(int argc, char **argv)
 	UCHAR test2;
 	int sd;
 	int rc;
-	reboot_on_exit = 1;
 	key_t send_cmd_host_key;
 	key_t recv_cmd_host_key;
 
@@ -125,16 +122,13 @@ int main(int argc, char **argv)
 //	_threads[WINCL_READ_TASK3].sched = TIME_SLICE;
 
 	_threads[READ_TASK1].sched = TIME_SLICE;
-//	_threads[SEND_TASK1].sched = TIME_SLICE;
 
 	_threads[READ_TASK2].sched = TIME_SLICE;
-//	_threads[SEND_TASK2].sched = TIME_SLICE;
 
 	_threads[READ_TASK3].sched = TIME_SLICE;
-//	_threads[SEND_TASK3].sched = TIME_SLICE;
 
 //	_threads[READ_TASK4].sched = TIME_SLICE;
-//	_threads[SEND_TASK4].sched = TIME_SLICE;
+
 	_threads[GET_HOST_CMD1].sched = TIME_SLICE;
 	_threads[TCP_MONITOR].sched = TIME_SLICE;
 
@@ -145,16 +139,12 @@ int main(int argc, char **argv)
 //	strcpy(_threads[WINCL_READ_TASK3].label,"WINCL_READ_TASK3\0");
 
 	strcpy(_threads[READ_TASK1].label,"READ_TASK1\0");
-//	strcpy(_threads[SEND_TASK1].label,"SEND_TASK1\0");
 
 	strcpy(_threads[READ_TASK2].label,"READ_TASK2\0");
-//	strcpy(_threads[SEND_TASK2].label,"SEND_TASK2\0");
 
 	strcpy(_threads[READ_TASK3].label,"READ_TASK3\0");
-//	strcpy(_threads[SEND_TASK3].label,"SEND_TASK3\0");
 
 //	strcpy(_threads[READ_TASK4].label,"READ_TASK4\0");
-//	strcpy(_threads[SEND_TASK4].label,"SEND_TASK4\0");
 /* spawn the threads */
 
 	assign_client_table();
@@ -252,46 +242,8 @@ int main(int argc, char **argv)
 			pthread_cancel(_threads[SERIAL_RECV].pthread);
 			pthread_cancel(_threads[TCP_MONITOR].pthread);
 		}
-//		printf("closing task :%d %s\r\n",i,_threads[i].label);
 	}
 	close_mem();
 
-//	RS232_CloseComport(1);
-//	strcpy(str2,"close");
-//	send(sd,str2,5,0);
-	printf("reboot_on_exit: %d\n",reboot_on_exit);
-//	usleep(100000);
-//	closesocket(sd);
-//	printf("socket closed\n");
-//	llist_show(&ll);
-	if(reboot_on_exit == 1)
-	{
-		//printf("sched: exit to shell\r\n");
-		return 1;
-	}
-	else if(reboot_on_exit == 2)
-	{
-		printf("sched: reboot\r\n");
-		return 2;
-	}
-	else if(reboot_on_exit == 3)
-	{
-		printf("sched: shutdown\r\n");
-		return 3;
-	}
-	else if(reboot_on_exit == 4)
-	{
-		//printf("upload new sched\r\n");
-		return 4;
-	}
-	else if(reboot_on_exit == 5)
-	{
-		//printf("upload new param\r\n");
-		return 5;
-	}
-	else if(reboot_on_exit == 6)
-	{
-		//printString3("shell and rename (sched.c)");
-		return 6;
-	}
+	return 1;
 }

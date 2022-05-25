@@ -86,12 +86,7 @@ static int raw_data_ptr;
 int avg_raw_data(int prev_data);
 int max_ips;
 IP ip[40];
-static UCHAR msg_queue[MSG_QUEUE_SIZE];
 CLIENT_TABLE1 client_table[MAX_CLIENTS];
-
-static int msg_queue_ptr;
-static int msg_client_queue_ptr;
-//static CLIENTS clients[MSG_CLIENT_QUEUE_SIZE];
 
 #define ON 1
 #define OFF 0
@@ -1093,39 +1088,22 @@ void *work_routine(void *arg)
 /*********************************************************************/
 void add_msg_queue(UCHAR cmd)
 {
-//	while(msg_queue_ptr >= MSG_QUEUE_SIZE);
+	struct msgqbuf msg;
+	int msgtype = 1;
+	msg.mtype = msgtype;
+	msg.mtext[0] = cmd;
 	pthread_mutex_lock(&msg_queue_lock);
-	if(msg_queue_ptr < MSG_QUEUE_SIZE)
+
+	if (msgsnd(basic_controls_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 	{
-		msg_queue_ptr++;
-		msg_queue[msg_queue_ptr] = cmd;
+		// keep getting "Invalid Argument" - cause I didn't set the mtype
+		perror("msgsnd error");
+		exit(EXIT_FAILURE);
 	}
+
 	pthread_mutex_unlock(&msg_queue_lock);
 //	printf("add: %d %x\r\n",msg_queue_ptr,cmd);
 }
-/*********************************************************************/
-UCHAR get_msg_queue(void)
-{
-	UCHAR cmd;
-	pthread_mutex_lock(&msg_queue_lock);
-	if(msg_queue_ptr > 0)
-	{
-		cmd = msg_queue[msg_queue_ptr];
-		msg_queue_ptr--;
-	}else cmd = 0;
-	pthread_mutex_unlock(&msg_queue_lock);
-//	if(cmd != 0)
-//		printf("get: %d %x\r\n",msg_queue_ptr,cmd);
-	return cmd;
-}
-/*********************************************************************/
-/*
-	char ip[4];
-	int socket;
-	UCHAR msg_type;
-	int msg_len;
-	char message[20];
-*/
 /*********************************************************************/
 UCHAR basic_controls_task(int test)
 {
@@ -1144,22 +1122,23 @@ UCHAR basic_controls_task(int test)
 	int msgtype = 1;
 	msg.mtype = msgtype;
 
-	memset(msg_queue,0,sizeof(msg_queue));
-	msg_queue_ptr = 0;
-
 //printf("starting basic_controls_task\n");
 
 	while(TRUE)
 	{
-		// wait for a new cmd to arrive in the msg_queue
-		do{
-			cmd = get_msg_queue();
-			usleep(_5MS);
-		}while(cmd == 0 && shutdown_all == 0);
-
-		usleep(_5MS);
-
-//printf("q cmd: %d \n",cmd);
+		if (msgrcv(basic_controls_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
+//		MSG_NOERROR | IPC_NOWAIT) == -1) 
+		MSG_NOERROR) == -1) 
+		{
+			if (errno != ENOMSG) 
+			{
+				perror("msgrcv");
+				printf("msgrcv error\n");
+				exit(EXIT_FAILURE);
+			}
+		}
+		cmd = msg.mtext[0];
+		print_cmd(cmd);
 
 		switch(cmd)
 		{
@@ -1525,45 +1504,23 @@ UCHAR basic_controls_task(int test)
 */				
 
 			case SHUTDOWN_IOBOX:
+			case REBOOT_IOBOX:
+			case UPLOAD_NEW:
+			case UPLOAD_NEW_PARAM:
+			case SHELL_AND_RENAME:
+			case UPLOAD_OTHER:
 				printf("shutdown iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 3;
 				msg.mtype = msgtype;
-				msg.mtext[0] = SHUTDOWN_IOBOX;
+				msg.mtext[0] = cmd;
 				if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 				{
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
 				}
-
 				break;
 
-			case REBOOT_IOBOX:
-				printf("reboot iobox\n");
-				shutdown_all = 1;
-				reboot_on_exit = 2;
-				break;
-
-			case UPLOAD_NEW:
-				shutdown_all = 1;
-				reboot_on_exit = 4;
-				break;
-
-			case UPLOAD_NEW_PARAM:
-				shutdown_all = 1;
-				reboot_on_exit = 5;
-				break;
-
-			case SHELL_AND_RENAME:
-				shutdown_all = 1;
-				reboot_on_exit = 6;
-				break;
-
-			case UPLOAD_OTHER:
-				shutdown_all = 1;
-				reboot_on_exit = 1;
-//				printf("upload other\r\n");
-				break;
 
 			default:
 				break;

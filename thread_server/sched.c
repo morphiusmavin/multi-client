@@ -78,6 +78,7 @@ int main(int argc, char **argv)
 	reboot_on_exit = 1;
 	key_t send_cmd_host_key;
 	key_t recv_cmd_host_key;
+	key_t basic_controls_key;
 
 	if(argc < 2)
 	{
@@ -111,9 +112,11 @@ int main(int argc, char **argv)
 
 	send_cmd_host_key = SEND_CMD_HOST_QKEY;
 	recv_cmd_host_key = RECV_CMD_HOST_QKEY;
+	basic_controls_key = BASIC_CONTROLS_QKEY;
 
 	send_cmd_host_qid = msgget(send_cmd_host_key, IPC_CREAT | 0666);
 	recv_cmd_host_qid = msgget(recv_cmd_host_key, IPC_CREAT | 0666);
+	basic_controls_qid = msgget(basic_controls_key, IPC_CREAT | 0666);
 
 	for(i = 0;i < NUM_SCHED_TASKS;i++)
 		id_arg[i] = i;

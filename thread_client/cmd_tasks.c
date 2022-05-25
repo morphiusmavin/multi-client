@@ -50,7 +50,7 @@ static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
 #endif
 
-static void print_cmd(UCHAR cmd)
+void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
 

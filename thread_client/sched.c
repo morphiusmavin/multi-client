@@ -28,6 +28,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <sys/ipc.h>
 #include "../mytypes.h"
 #include "ioports.h"
 #include "serial_io.h"
@@ -76,6 +77,7 @@ int main(int argc, char **argv)
 	int sd;
 	int rc;
 	reboot_on_exit = 1;
+	key_t basic_controls_key;
 
 	if(argc < 2)
 	{
@@ -103,6 +105,9 @@ int main(int argc, char **argv)
 		exit(1);
 //	}else printf("card ok\r\n");
 	}
+	
+	basic_controls_key = BASIC_CONTROLS_QKEY;
+	basic_controls_qid = msgget(basic_controls_key, IPC_CREAT | 0666);
 
 	for(i = 0;i < NUM_TASKS;i++)
 		id_arg[i] = i;

@@ -66,12 +66,7 @@ static UCHAR check_inputs(int index, int test);
 extern CMD_STRUCT cmd_array[];
 int shutdown_all;
 
-static UCHAR msg_queue[MSG_QUEUE_SIZE];
 CLIENT_TABLE1 client_table[MAX_CLIENTS];
-
-static int msg_queue_ptr;
-static int msg_client_queue_ptr;
-//static CLIENTS clients[MSG_CLIENT_QUEUE_SIZE];
 
 #define ON 1
 #define OFF 0
@@ -194,7 +189,6 @@ UCHAR get_host_cmd_task(int test)
 //		for(i = 1;i < msg_len+1;i++)
 //			printf("%02x ",tempx[i]);
 
-
 		if(cmd > 0)
 		{
 			rc = 0;
@@ -203,12 +197,13 @@ UCHAR get_host_cmd_task(int test)
 			{
 				case SHUTDOWN_IOBOX:
 				case REBOOT_IOBOX:
+				case SHELL_AND_RENAME:
 //					printf("sending que: %02x\r\n",cmd);
 					memset(tempx,0,sizeof(tempx));
 					//send_serialother(cmd,(UCHAR *)tempx);
 //					add_msg_queue(cmd);
 					printf("shutdown get_host_cmd_task\n");
-					return 0;
+					shutdown_all = 1;
 					break;
 				default:
 					break;
@@ -456,7 +451,8 @@ startover:
 				//printf("\n");
 			}
 		}
-		if((cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX) && win_client_to_client_sock == _SERVER)
+		if((cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME) 
+						&& win_client_to_client_sock == _SERVER)
 		{
 			// tell all clients to shutdown
 			strcpy(tempx,"shutdown\0");
@@ -469,9 +465,7 @@ startover:
 				}
 			}
 			shutdown_all = 1;
-			reboot_on_exit = 2;
 		}
-
 		//printf("*");
 		uSleep(0,TIME_DELAY/16);
 
@@ -539,7 +533,7 @@ startover1:
 
 			//printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
-			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == WAIT_REBOOT_IOBOX)
+			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME)
 			{
 				printf("shutdown or reboot\n");
 				close(client_table[index].socket);

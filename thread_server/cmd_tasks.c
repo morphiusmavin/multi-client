@@ -267,43 +267,6 @@ UCHAR get_host_cmd_task(int test)
 					}
 					break;
 
-				case WRITE_CLIST_FILE_DISK:
-					break;
-
-				case SEND_CLIENT_LIST:
-/*
-					printf("SEND_CLIENT_LIST\n");
-					for(i = 0;i < MAX_CLIENTS;i++)
-					{
-						printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
-						if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
-						{
-							memset(tempx,0,sizeof(tempx));
-							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-							printf("%s\n",tempx);
-							for(j = 0;j < MAX_CLIENTS;j++)
-							{
-								if(client_table[j].type == WINDOWS_CLIENT && client_table[j].socket > 0)
-									send_msgb(client_table[j].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-								uSleep(0,TIME_DELAY/20);
-							}
-						}
-					}
-*/
-					break;
-				
-				case UPTIME_MSG:	// sent from client
-//					printf("%d msg_len: %d\n %s\n",windows_client_sock, msg_len,tempx);
-					// this just displays the time on the msg box in win client
-//					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
-					break;
-
-				case SEND_TIMEUP:
-					sprintf(tempx,"%d days %dh %dm %ds",trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
-//					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
-					printf("%s\n",tempx);
-					break;
-
 				case SEND_MSG:
 					printf("cmd_tasks.c recv'd msg\n");
 					for(i = 0;i < msg_len;i++)
@@ -548,7 +511,6 @@ UCHAR get_host_cmd_task(int test)
 */
 					usleep(500);
 					i = WriteParams("param.conf", &ps, &password[0], errmsg);
-
 					break;
 
 				case GET_CONFIG2:
@@ -568,37 +530,10 @@ UCHAR get_host_cmd_task(int test)
 					change_output(i*8 + j, k);
 					break;
 
-				case EXIT_PROGRAM:
-exit_program:
-					j = 0;
-					if(reboot_on_exit == 1)
-					{
-						printf("exit to shell\n");
-					}
-					else if(reboot_on_exit == 2)
-					{
-						printf("rebooting...\n");
-					}
-					else if(reboot_on_exit == 3)
-					{
-						printf("shutting down...\n");
-					}
-					else if(reboot_on_exit == 4)
-					{
-						printf("upload new...\n");
-					}
-
-					// save the current list of events
-					i = WriteParams("param.conf", &ps, &password[0], errmsg);
-					if(i < 0)
-					{
-						printf(errmsg);
-					}
-
-					usleep(10000000);
-					shutdown_all = 1;
-					return 0;
+					//i = WriteParams("param.conf", &ps, &password[0], errmsg);
+				default:	
 					break;
+					
 			}								  // end of switch
 		}									  // if rc > 0
 		uSleep(0,TIME_DELAY/8);

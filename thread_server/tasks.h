@@ -13,8 +13,6 @@
 
 #define PROTOPORT			5193				  /* default protocol port number */
 #define QLEN				6					  /* size of request queue        */
-#define MSG_QUEUE_SIZE		50
-#define MSG_CLIENT_QUEUE_SIZE 10
 
 // params for usleep()
 #define _5SEC	 	5000000 
@@ -34,6 +32,7 @@
 #define _5MS		5000 	
 #define SEND_CMD_HOST_QKEY	1234
 #define RECV_CMD_HOST_QKEY	1300
+#define BASIC_CONTROLS_QKEY	1301
 
 // uSleep(0,100000000L); - roughly 100ms using uSleep();
 
@@ -80,7 +79,6 @@ void send_serialother(UCHAR cmd, UCHAR *buf);
 void send_lcd(UCHAR *buf, int size);
 void send_param_msg(void);
 void add_msg_queue(UCHAR cmd);
-UCHAR get_msg_queue(void);
 UCHAR get_client_msg_queue(void);
 void add_client_msg_queue(UCHAR cmd);
 
@@ -137,6 +135,7 @@ extern char oFileName[20];
 extern char cFileName[20];
 int send_cmd_host_qid;
 int recv_cmd_host_qid;
+int basic_controls_qid;
 
 extern UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];
