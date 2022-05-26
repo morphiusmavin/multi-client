@@ -1,7 +1,4 @@
 #if 1
-#ifdef SERVER
-#warning "server defined"
-#endif
 #include <unistd.h>
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -86,7 +83,6 @@ static int raw_data_ptr;
 int avg_raw_data(int prev_data);
 int max_ips;
 IP ip[40];
-CLIENT_TABLE1 client_table[MAX_CLIENTS];
 
 #define ON 1
 #define OFF 0

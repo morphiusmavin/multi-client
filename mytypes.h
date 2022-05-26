@@ -42,18 +42,12 @@ typedef struct
 	char ip[4];
 	char label[30];
 	int type;
-}CLIENT_TABLE2;		// client
-
-typedef struct
-{
-	int socket;
-	char ip[4];
-	char label[30];
-	int type;
 	key_t qkey;
 	int qid;
 	int task_id;
-}CLIENT_TABLE1;		// server
+}CLIENT_TABLE;
+
+CLIENT_TABLE client_table[MAX_CLIENTS];
 
 enum client_types
 {

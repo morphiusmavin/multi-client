@@ -5,13 +5,11 @@
 #include <semaphore.h>
 #include "mytypes.h"
 
-#ifdef SERVER
-#warning "SERVER DEFINED"
-extern CLIENT_TABLE1 client_table[MAX_CLIENTS];
+extern CLIENT_TABLE client_table[MAX_CLIENTS];
 void assign_client_table(void)
 {
 	int i;
-	memset(client_table,0,sizeof(CLIENT_TABLE1)*MAX_CLIENTS);
+	memset(client_table,0,sizeof(CLIENT_TABLE)*MAX_CLIENTS);
 
 // 0
 	strcpy(client_table[_149].ip,"149\0");
@@ -99,68 +97,5 @@ void assign_client_table(void)
 	
 //	for(i = 0;i < MAX_CLIENTS;i++)
 //		printf("%d %d %s\n",i, client_table[i].task_id,client_table[i].label);
-	
-}
-#else
-#warning "SERVER NOT DEFINED"
-extern CLIENT_TABLE2 client_table[MAX_CLIENTS];
-void assign_client_table(void)
-{
-	memset(client_table,0,sizeof(CLIENT_TABLE2)*MAX_CLIENTS);
-
-// 0
-	strcpy(client_table[_149].ip,"149\0");
-	strcpy(client_table[_149].label,"Second_Windows7\0");
-	client_table[_149].socket = -1;
-	client_table[_149].type = WINDOWS_CLIENT;
-
-/*
-	strcpy(client_table[_153].ip,"153\0");
-	strcpy(client_table[_153].label,"LAPTOP-C0BNP1TE\0");
-	client_table[_153].socket = -1;
-	client_table[_153].type = WINDOWS_CLIENT;
-
-
-	strcpy(client_table[_159].ip,"159\0");
-	strcpy(client_table[_159].label,"Win7-x64\0");
-	client_table[_159].socket = -1;
-	client_table[_159].type = WINDOWS_CLIENT;
-*/
-// 1
-	strcpy(client_table[_154].ip,"154\0");
-	strcpy(client_table[_154].label,"TS_client1\0");
-	client_table[_154].socket = -1;
-	client_table[_154].type = TS_CLIENT;
-// 2
-	strcpy(client_table[_147].ip,"147\0");
-	strcpy(client_table[_147].label,"TS_client2\0");
-	client_table[_147].socket = -1;
-	client_table[_147].type = TS_CLIENT;
-// 3
-	strcpy(client_table[_150].ip,"150\0");
-	strcpy(client_table[_150].label,"TS_client3\0");
-	client_table[_150].socket = -1;
-	client_table[_150].type = TS_CLIENT;
-// 4
-	strcpy(client_table[_151].ip,"151\0");
-	strcpy(client_table[_151].label,"TS_client4\0");
-	client_table[_151].socket = -1;
-	client_table[_151].type = TS_CLIENT;
-// 5
-	strcpy(client_table[_152].ip,"152\0");
-	strcpy(client_table[_152].label,"TS_client5\0");
-	client_table[_152].socket = -1;
-	client_table[_152].type = TS_CLIENT;
-// 6
-	strcpy(client_table[_145].ip,"145\0");
-	strcpy(client_table[_145].label,"TS_client7\0");
-	client_table[_145].socket = -1;
-	client_table[_145].type = TS_CLIENT;
-// 7
-	strcpy(client_table[_SERVER].ip,"146\0");
-	strcpy(client_table[_SERVER].label,"TS_Server\0");
-	client_table[_SERVER].socket = -1;
-	client_table[_SERVER].type = TS_SERVER;
 
 }
-#endif

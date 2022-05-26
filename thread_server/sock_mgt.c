@@ -66,7 +66,7 @@ static UCHAR check_inputs(int index, int test);
 extern CMD_STRUCT cmd_array[];
 int shutdown_all;
 
-CLIENT_TABLE1 client_table[MAX_CLIENTS];
+CLIENT_TABLE client_table[MAX_CLIENTS];
 
 #define ON 1
 #define OFF 0
@@ -358,7 +358,7 @@ startover:
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			printf("cmd: %d\n",cmd);
+//			printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
 /*
 			for(j = 0;j < rc;j++)
@@ -366,7 +366,7 @@ startover:
 			printf("\n");
 */
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
-			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+//			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 /*
 			printf("\n");
 			for(i = 0;i < rc;i++)
@@ -379,7 +379,7 @@ startover:
 				tempx[k++] = msg_buf[j];
 			msg_len /= 2;
 			msg_len -= 3;
-			printf("msg_len from win client: %d\n",msg_len);
+//			printf("msg_len from win client: %d\n",msg_len);
 /*
 			for(j = 0;j < msg_len;j++)
 				printf("%02x ",tempx[j]);
@@ -408,7 +408,7 @@ startover:
 
 			if(win_client_to_client_sock == _SERVER)
 			{
-				printf("msg to cmd_host on server: %s %d\n",msg.mtext + 4,cmd);
+//				printf("msg to cmd_host on server: %s %d\n",msg.mtext + 4,cmd);
 				// send msg's to sched 
 				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
@@ -422,12 +422,11 @@ startover:
 				// the windows client sends as the 1st byte the index into 
 				// the client_table[] array 
 				uSleep(0,TIME_DELAY/16);
+/*
 				printf("msg to client: sock: %d %s %d\n",client_table[win_client_to_client_sock].socket, 
 					client_table[win_client_to_client_sock].label, client_table[win_client_to_client_sock].qid);
 				print_cmd(cmd);	
-	//			send_msg(client_table[win_client_to_client_sock].socket,strlen(tempx),(UCHAR*)tempx,cmd);
 
-/*
 				printf("msg.mtext: ");
 				for(i = 0;i < msg_len+4;i++)
 					printf("%02x ",msg.mtext[i]);
@@ -530,9 +529,13 @@ startover1:
 			printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
+			printf("dest: %d\n",dest);
 
 			//printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
+			memmove(tempx,tempx+2,msg_len);
+			printf("%s\n\n",tempx);
+
 			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME)
 			{
 				printf("shutdown or reboot\n");
@@ -564,37 +567,24 @@ startover1:
 				printf("%02x ",tempx[i]);
 			}
 */
-			printf("recip: %s\n", client_table[index].label);
-/*
-			if(index == _SERVER)		// from one of the clients to the server
+			if(dest == _SERVER)		// from one of the clients to the server
 			{
+				printf("dest: server\n");
 				memset(msg.mtext,0,sizeof(msg.mtext));
 				msg.mtext[0] = cmd;
 				memcpy(msg.mtext + 1,tempx,msg_len);
-				printf("2: msg to cmd_host: %s\n",tempx);
-				if (msgsnd(cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+				printf("msg to cmd_host from client %d: %s\n",dest, tempx);
+				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
 				}
 			}else 						// from one of the clients to another client 
 			{
-				memmove(tempx,tempx+2,ret-2);
-				printf("%s\n\n",tempx);
-				send_msg(client_table[index].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+				if(client_table[dest].socket > 0)
+					send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 			}
-*/
-			memmove(tempx,tempx+2,msg_len);
-			printf("%s\n\n",tempx);
-			if(dest == _SERVER)
-			{
-				printf("dest: server\n");
-			}else 
-			// this should actually be able to send to any client (dest)
-			send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
-
 		}
-		//printf("&");
 
 		if(shutdown_all)
 		{
@@ -770,10 +760,12 @@ UCHAR tcp_monitor_task(int test)
 			//socket descriptor
 //			sd = client_socket[i];
 			sd = client_table[i].socket;
+/*
 			if(sd > 0)
 			{
 				printf("sd: %d %s\n",sd,client_table[i].ip);
 			}
+*/
 			//if valid socket descriptor then add to read list
 			if(sd > 0)
 				FD_SET( sd , &readfds);

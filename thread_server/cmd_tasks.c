@@ -34,7 +34,7 @@
 
 extern pthread_mutex_t     tcp_read_lock;
 extern pthread_mutex_t     tcp_write_lock;
-extern CLIENT_TABLE1 client_table[];
+extern CLIENT_TABLE client_table[];
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
 extern ollist_t oll;
@@ -268,7 +268,6 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_MSG:
-					printf("cmd_tasks.c recv'd msg\n");
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");

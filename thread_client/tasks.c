@@ -61,7 +61,6 @@ static UCHAR read_serial_buffer[SERIAL_BUFF_SIZE];
 static UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 static int no_serial_buff;
 char password[PASSWORD_SIZE];
-CLIENT_TABLE2 client_table[MAX_CLIENTS];
 
 static int serial_rec;
 static void set_output(O_DATA *otp, int onoff);
@@ -737,6 +736,7 @@ UCHAR timer_task(int test)
 	}
 	i = 0;
 */
+	uSleep(10,0);
 	while(TRUE)
 	{
 		if(shutdown_all)
@@ -745,7 +745,7 @@ UCHAR timer_task(int test)
 			//printString2("done timer");
 			return 0;
 		}
-/*
+
 		memset(time_buffer,0,sizeof(time_buffer));
 		sprintf(time_buffer,"____ABCDEF145JM %d\0",i);
 		time_buffer[0] = _SERVER;
@@ -753,10 +753,14 @@ UCHAR timer_task(int test)
 		time_buffer[2] = (UCHAR)(i >> 4);
 
 		send_msg(22,(UCHAR*)time_buffer,SEND_MSG, _SERVER);
+		uSleep(5,0);
+		send_msg(22,(UCHAR*)time_buffer,SEND_MSG, 1);
+		uSleep(5,0);
+		send_msg(22,(UCHAR*)time_buffer,SEND_MSG, 2);
+		uSleep(5,0);
 		i++;
-*/
+
 		//printf("%d ",i);
-		uSleep(1,0);
 
 /*
 	i = 0;
