@@ -733,9 +733,6 @@ UCHAR timer_task(int test)
 	char tempx[100];
 //	UCHAR tempx[SERIAL_BUFF_SIZE];
 	int index = 3;
-	int bank = 0;
-	int fp;
-	UCHAR mask;
 	time_t t;
 	struct timeval mtv;
 	O_DATA *otp;
@@ -744,10 +741,7 @@ UCHAR timer_task(int test)
 	O_DATA **otpp2 = &otp2;
 //	static int test_ctr = 0;
 //	static int test_ctr2 = 0;
-	UCHAR cmd = 0x21;
-	UCHAR ucbuff[6];
-	char recip[4];
-	int temp;
+	UCHAR cmd = GET_TEMP4;
 	int msg_len;
 	int ret;
 	struct msgqbuf msg;
@@ -764,26 +758,36 @@ UCHAR timer_task(int test)
 			cmd = 0x21;
 	}
 	i = 0;
-	cmd = 0x21;
-	index = 3;
 //printf("timer task\n");
 	while(TRUE)
 	{
-/*
-		msg.mtype = msgtype;
-
-		time(&t);
-		snprintf(msg.mtext, sizeof(msg.mtext), " a message at %s\0", ctime(&t));
-		msg.mtext[0] = SEND_MSG;
-
-		if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+		if(timer_on > 0)
 		{
-			perror("msgsnd error");
-			exit(EXIT_FAILURE);
-		}
-//		printf("sent: %s\n", msg.mtext);				
-*/
-		uSleep(1,0);
+			cmd = GET_TEMP4;
+			for(i = 0;i < MAX_CLIENTS;i++)
+			{
+				//printf("%s %d\n",client_table[i].label, client_table[i].socket);
+				time(&t);
+				snprintf(time_buffer, sizeof(time_buffer), "a message at %s\0", ctime(&t));
+				msg_len = strlen(time_buffer);
+				//printf("msg_len: %d\n",msg_len);
+				if(client_table[i].type == TS_CLIENT && client_table[i].socket > 0)
+				{
+					msg.mtext[0] = cmd;
+					msg.mtext[1] = (UCHAR)i;
+					msg.mtext[2] = (UCHAR)msg_len;
+					msg.mtext[3] = (UCHAR)(msg_len >> 4);
+					printf("msg_len: %d\n",msg_len);
+					memcpy(msg.mtext+4,time_buffer,msg_len);
+					if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+					{
+						perror("msgsnd error");
+						exit(EXIT_FAILURE);
+					}
+				}
+				uSleep(timer_seconds,0);
+			}
+		} else uSleep(1,0);
 
 		if(shutdown_all)
 		{
@@ -1500,14 +1504,13 @@ UCHAR basic_controls_task(int test)
 */				
 
 			case SHUTDOWN_IOBOX:
+				reboot_on_exit = 3;
 			case REBOOT_IOBOX:
-			case UPLOAD_NEW:
-			case UPLOAD_NEW_PARAM:
+				reboot_on_exit = 2;
 			case SHELL_AND_RENAME:
-			case UPLOAD_OTHER:
+				reboot_on_exit = 6;
 				printf("shutdown iobox\n");
 				shutdown_all = 1;
-				reboot_on_exit = 3;
 				msg.mtype = msgtype;
 				msg.mtext[0] = cmd;
 				if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 

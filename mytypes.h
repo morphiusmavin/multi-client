@@ -19,8 +19,8 @@ typedef unsigned long ULONG;
 #define NUM_ADC_CHANNELS 11
 #define SERIAL_BUFF_SIZE 100
 #define RAW_DATA_ARRAY_SIZE 15
-#define MAX_CLIENTS	8
-#define NO_CMDS 47
+#define MAX_CLIENTS	10
+#define NO_CMDS 51
 #define NO_CLLIST_RECS 20
 
 // format of message queue (msgsnd & msgrcv)
@@ -59,13 +59,13 @@ enum client_types
 enum client_list
 {
 	_149,
-//	_153,
-//	_159,
+	_153,
+	_159,
 	_154,
 	_147,
 	_150,
 	_151,
-	_152,
+	_155,
 	_145,
 	_SERVER
 }CLIENT_LIST;

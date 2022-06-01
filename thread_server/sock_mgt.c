@@ -144,7 +144,7 @@ UCHAR get_host_cmd_task(int test)
 	int i;
 	int j;
 	int k;
-	UCHAR tempx[100];
+	UCHAR tempx[200];
 	char temp_time[5];
 	char *pch;
 	time_t curtime2;
@@ -160,6 +160,7 @@ UCHAR get_host_cmd_task(int test)
 	int msgtype = 1;
 	msg.mtype = msgtype;
 	int temp;
+	int dest;
 
 	printf("sock_mgnt starting...\n");
 
@@ -178,13 +179,16 @@ UCHAR get_host_cmd_task(int test)
 				exit(EXIT_FAILURE);
 			}
 		}
-		cmd = msg.mtext[0];
-		printf("cmd: %d\n",cmd);
-		msg_len |= (int)(msg.mtext[2] << 4);
-		msg_len = (int)msg.mtext[1];
-		
-		printf("msg_len: %d\n",msg_len);
+		cmd = msg.mtext[0];							// first byte is cmd
+		dest = (int)msg.mtext[1];					// 2nd byte is dest
+		print_cmd(cmd);
+		printf("dest: %d\n",dest);
+		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
+		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
+		tempx[0] = cmd;
+		//printf("msg_len: %d\n",msg_len);
 		memcpy(tempx,msg.mtext+4,msg_len);
+		//printf("msg to tcp: %s\n",tempx);
 		
 //		for(i = 1;i < msg_len+1;i++)
 //			printf("%02x ",tempx[i]);
@@ -220,7 +224,7 @@ UCHAR get_host_cmd_task(int test)
 							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
 							//printf("should be sending a msg to clients %s\n",tempx);
 //							send_msg(client_table[i].socket, strlen(tempx)*2,tempx,CLIENT_RECONNECT);
-							uSleep(0,TIME_DELAY/2);
+							uSleep(0,TIME_DELAY/10);
 						}
 					}
 					break;
@@ -277,7 +281,7 @@ UCHAR get_host_cmd_task(int test)
 */
 					tempx[0] = 'A';
 					memcpy(msg.mtext,tempx,msg_len);
-					uSleep(1,0);
+//					uSleep(1,0);
 
 					if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 					{
@@ -305,6 +309,13 @@ UCHAR get_host_cmd_task(int test)
 					printf("disconnected\n");
 					break;
 
+				case GET_TEMP4:
+					if(client_table[dest].socket > 0)
+					{
+						printf("dest: %d sock: %d msg_len: %d\n",dest,client_table[dest].socket,msg_len);
+						send_msg(client_table[dest].socket, msg_len, (UCHAR*)&tempx[0],cmd);
+					}
+					break;
 
 				case GET_VERSION:
 					//send_status_msg(version);
@@ -366,7 +377,7 @@ startover:
 			printf("\n");
 */
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
-//			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 /*
 			printf("\n");
 			for(i = 0;i < rc;i++)
@@ -408,7 +419,7 @@ startover:
 
 			if(win_client_to_client_sock == _SERVER)
 			{
-//				printf("msg to cmd_host on server: %s %d\n",msg.mtext + 4,cmd);
+				printf("msg to cmd_host on server: %s %d\n",msg.mtext + 4,cmd);
 				// send msg's to sched 
 				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
@@ -455,6 +466,7 @@ startover:
 		{
 			// tell all clients to shutdown
 			strcpy(tempx,"shutdown\0");
+
 			for(i = 0;i < MAX_CLIENTS;i++)
 			{
 				if(client_table[i].socket > 0 && client_table[i].type == TS_CLIENT)
@@ -543,6 +555,20 @@ startover1:
 				client_table[index].socket = -1;
 				// the break statement only goes back up to 
 				// "read task 2"
+
+				// tell the sched which client was shutdown 
+				msg.mtext[0] = UPDATE_CLIENT_LIST;
+				msg.mtext[1] = 2;
+				msg.mtext[2] = 0;
+				msg.mtext[3] = (UCHAR)index;		// which client
+				msg.mtext[4] = -1;
+				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+				{
+					// keep getting "Invalid Argument" - cause I didn't set the mtype
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+				
 				goto startover1;
 //				break;
 			}
@@ -552,8 +578,6 @@ startover1:
 			if(cmd == CLIENT_RECONNECT)
 			{
 				printf("client reconnecting...\n");
-				uSleep(5,0);
-				printf("client reconnect\n");
 				close(client_table[index].socket);
 				client_table[index].socket = -1;
 				// the break statement only goes back up to 
@@ -579,11 +603,11 @@ startover1:
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
 				}
-			}else 						// from one of the clients to another client 
+			}else if(dest < MAX_CLIENTS)		// from one of the clients to another client 
 			{
 				if(client_table[dest].socket > 0)
 					send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
-			}
+			}else printf("no destination\n");
 		}
 
 		if(shutdown_all)
@@ -662,6 +686,9 @@ UCHAR tcp_monitor_task(int test)
 	char ch;
 	char recip[4];
 	int to_sock;
+	struct msgqbuf msg;
+	int msgtype = 1;
+	msg.mtype = msgtype;
 	
 // 156 & 157 are the next 2 avail - 155 is the firstpi.local
 
@@ -669,7 +696,6 @@ UCHAR tcp_monitor_task(int test)
 //	if(s != 0)
 //		handle_err_en(s, "pthread_setcancelstate");
 //		printf("setcancelstate\r\n");
-	uSleep(2,0);
 	printf("starting tcp_monitor_task\n");
 	memset((char  *)&address,0,sizeof(address));	  /* clear sockaddr structure   */
 	address.sin_family = AF_INET;				  /* set family to Internet     */
@@ -823,22 +849,31 @@ UCHAR tcp_monitor_task(int test)
 				{
 					client_table[i].socket = new_socket;
 					printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
+					memset(tempx,0,sizeof(tempx));
+
+					sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+					printf("should be sending msg to win cl: %s\n",tempx);
+					uSleep(0,TIME_DELAY/16);
+
+					send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+
 					if(client_table[i].qid == 0)
 					{
 						client_table[i].qid = msgget(client_table[i].qkey, IPC_CREAT | 0666);
 						printf("new connection qid: %d : %d\n",i,client_table[i].qid);
 					}
-				}
-			}
-			for(i = 0;i < MAX_CLIENTS;i++)
-			{
-				if(client_table[i].socket > 0)
-				{
-					memset(tempx,0,sizeof(tempx));
-					sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-					printf("should be sending msg to win cl: %s\n",tempx);
-					uSleep(0,TIME_DELAY/16);
-					send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+					msg.mtext[0] = UPDATE_CLIENT_LIST;
+					msg.mtext[1] = 2;
+					msg.mtext[2] = 0;
+					msg.mtext[3] = (UCHAR)i;		// which client
+					msg.mtext[4] = new_socket;
+					if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+					{
+						// keep getting "Invalid Argument" - cause I didn't set the mtype
+						perror("msgsnd error");
+						exit(EXIT_FAILURE);
+					}
+
 				}
 			}
 			if(shutdown_all)
@@ -954,7 +989,6 @@ int get_msg(int sd)
 	if(memcmp(preamble,pre_preamble,8) != 0)
 	{
 		printf("bad preamble\n");
-		uSleep(5,0);
 		return -1;
 	}
 	ret = recv_tcp(sd, &low,1,1);

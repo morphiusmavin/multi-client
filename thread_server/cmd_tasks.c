@@ -179,6 +179,8 @@ UCHAR get_host_cmd_task(int test)
 	printf("server starting...\n");
 
 	same_msg = 0;
+	timer_on = 0;
+	timer_seconds = 0;
 
 	while(TRUE)
 	{
@@ -195,11 +197,12 @@ UCHAR get_host_cmd_task(int test)
 			}
 		}
 		cmd = msg.mtext[0];
+		print_cmd(cmd);
 		msg_len |= (int)(msg.mtext[2] << 4);
 		msg_len = (int)msg.mtext[1];
 		
 		printf("msg_len: %d\n",msg_len);
-		memcpy(tempx,msg.mtext+4,msg_len);
+		memcpy(tempx,msg.mtext+3,msg_len);
 		
 		for(i = 0;i < msg_len;i++)
 			printf("%02x ",tempx[i]);
@@ -253,6 +256,10 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
+				case UPDATE_CLIENT_LIST:
+					client_table[tempx[0]].socket = tempx[1];
+					break;
+				
 				case CLIENT_RECONNECT:
 					for(i = 0;i < MAX_CLIENTS;i++)
 					{

@@ -75,7 +75,7 @@ int main(int argc, char **argv)
 	UCHAR test2;
 	int sd;
 	int rc;
-	reboot_on_exit = 1;
+	reboot_on_exit = 6;
 	key_t send_cmd_host_key;
 	key_t recv_cmd_host_key;
 	key_t basic_controls_key;
@@ -265,27 +265,27 @@ int main(int argc, char **argv)
 	}
 	else if(reboot_on_exit == 2)
 	{
-		//printf("sched: reboot\r\n");
+		printf("sched: reboot\r\n");
 		return 2;
 	}
 	else if(reboot_on_exit == 3)
 	{
-		//printf("sched: shutdown\r\n");
+		printf("sched: shutdown\r\n");
 		return 3;
 	}
 	else if(reboot_on_exit == 4)
 	{
-		//printf("upload new sched\r\n");
+		printf("upload new sched\r\n");
 		return 4;
 	}
 	else if(reboot_on_exit == 5)
 	{
-		//printf("upload new param\r\n");
+		printf("upload new param\r\n");
 		return 5;
 	}
 	else if(reboot_on_exit == 6)
 	{
-		//printString3("shell and rename (sched.c)");
+		printf("shell and rename\n");
 		return 6;
 	}
 }

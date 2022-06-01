@@ -745,7 +745,8 @@ UCHAR timer_task(int test)
 			//printString2("done timer");
 			return 0;
 		}
-
+		uSleep(5,0);
+/*
 		memset(time_buffer,0,sizeof(time_buffer));
 		sprintf(time_buffer,"____ABCDEF145JM %d\0",i);
 		time_buffer[0] = _SERVER;
@@ -762,7 +763,7 @@ UCHAR timer_task(int test)
 
 		//printf("%d ",i);
 
-/*
+
 	i = 0;
 	while(TRUE)
 	{

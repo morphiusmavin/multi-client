@@ -69,8 +69,8 @@ UCHAR get_host_cmd_task(int test)
 //	I_DATA *itp;
 	O_DATA *otp;
 	O_DATA **otpp = &otp;
-	C_DATA *ctp;
-	C_DATA **ctpp = &ctp;
+//	C_DATA *ctp;
+//	C_DATA **ctpp = &ctp;
 	int rc = 0; 
 	int rc1 = 0;
 	UCHAR cmd = 0x21;
@@ -82,7 +82,7 @@ UCHAR get_host_cmd_task(int test)
 	int i;
 	int j;
 	int k;
-	size_t csize;
+//	size_t csize;
 	size_t osize;
 	struct dirent **namelist;
 	DIR *d;
@@ -148,8 +148,8 @@ UCHAR get_host_cmd_task(int test)
 	//printf("osize: %d\r\n",osize);
 	i = NO_CLLIST_RECS;
 	//printf("no. port bits: %d\r\n",i);
-	csize = sizeof(C_DATA);
-	csize *= i;
+//	csize = sizeof(C_DATA);
+//	csize *= i;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 /*
@@ -171,6 +171,7 @@ UCHAR get_host_cmd_task(int test)
 		}
 	}
 	init_ips();
+/*
 	printf("%s\n",cFileName);
 
 	cllist_init(&cll);
@@ -183,7 +184,7 @@ UCHAR get_host_cmd_task(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}else printf("can't access %s\n",cFileName);
-/*	
+	
 	cllist_show(&cll);
 	rc = cllist_find_data(4,ctpp,&cll);
 	printf("%d %d %d %s\n",ctp->index,ctp->client_no,ctp->cmd, ctp->label);
@@ -253,7 +254,7 @@ UCHAR get_host_cmd_task(int test)
 			memset(msg_buf,0,sizeof(msg_buf));
 			//printf("wait for msg_len\n");
 			msg_len = get_msg();
-//			printf("msg_len: %d\n",msg_len);
+			printf("msg_len: %d\n",msg_len);
 //			printHexByte(msg_len);
 			if(msg_len < 0)
 			{
@@ -263,32 +264,23 @@ UCHAR get_host_cmd_task(int test)
 			}else
 			{
 				rc = recv_tcp(&msg_buf[0],msg_len+1,1);
-				//printf("rc: %d\n",rc);
+				printf("rc: %d\n",rc);
+/*
+				rc = cllist_find_data(msg_buf[0],ctpp,&cll);
+				printf("%d %d %d %d %s\n",ctp->index,ctp->client_no,ctp->cmd, ctp-> dest, ctp->label);
+				printf("this: %s %s\n",client_table[ctp->dest].ip, client_table[ctp->dest].label);
+				printf("dest: %s %s\n",client_table[ctp->client_no].ip, client_table[ctp->client_no].label);
+				cmd = ctp->cmd;
+*/
 				cmd = msg_buf[0];
-				printf("cmd: %d\n",cmd);
+				print_cmd(cmd);
 				memset(tempx,0,sizeof(tempx));
-/*
-				printf("\n");
-				for(i = 0;i < rc;i++)
-					printf("%02x ",msg_buf[i]);
-				printf("\n");
-*/
-				for(i = 1;i < rc;i++)
-					tempx[i-1] = msg_buf[i];
-/*
-				for(i = 0;i < rc;i++)
-					printf("%c",tempx[i]);
-				printf("\n");
-
-				for(i = 0;i < rc;i++)
-					printf("%02x ",tempx[i]);
-				printf("\n");
-*/
+				memcpy(tempx,msg_buf,msg_len);
 			}
 
 			if(cmd > 0)
 			{
-				printf("cmd: %d %s\n",cmd,cmd_array[cmd].cmd_str);
+//				printf("cmd: %d %s\n",cmd,cmd_array[cmd].cmd_str);
 //				printf("%s\r\n",cmd_array[cmd].cmd_str);
 //				if(cmd < LCD_TEST_MODE)
 //					myprintf1(cmd_array[cmd].cmd_str);
@@ -335,8 +327,14 @@ UCHAR get_host_cmd_task(int test)
 						printf("cl reconn\n");
 						close_tcp();
 						break;
+
+					case UPDATE_CLIENT_LIST:
+						printf("tempx: %d %d\n", tempx[1], tempx[2]);
+						client_table[tempx[1]].socket = tempx[2];
+						break;
+
 					case WRITE_CLIST_FILE_DISK:
-						clWriteConfig(cFileName,&cll,csize,errmsg);
+//						clWriteConfig(cFileName,&cll,csize,errmsg);
 						break;
 					
 					case SEND_TIMEUP:
@@ -354,7 +352,7 @@ UCHAR get_host_cmd_task(int test)
 					case SEND_CLIENT_LIST:
 						for(i = 0;i < MAX_CLIENTS;i++)
 						{
-							usleep(1000);
+							usleep(100);
 						}
 						break;
 					case SEND_STATUS:
@@ -375,7 +373,11 @@ UCHAR get_host_cmd_task(int test)
 						printf("\n");
 						printf("%s\n",tempx);
 						break;
-					
+
+					case GET_TEMP4:
+						printf("%s\n",tempx);
+						break;
+
 					case SET_PARAMS:
 //						send_param_msg();
 						break;
@@ -491,7 +493,7 @@ uSleep(0,TIME_DELAY/3);
 						gettimeofday(&mtv, NULL);
 						curtime2 = mtv.tv_sec;
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
-						//printf(tempx);
+						printf(tempx);
 						send_msg(strlen((char*)tempx),(UCHAR*)tempx,GET_TIME, _SERVER);
 						break;
 
@@ -630,7 +632,7 @@ uSleep(0,TIME_DELAY/3);
 //						myprintf1(tempx);
 						change_output(i*8 + j, k);
 						break;
-
+/*
 					case EXIT_PROGRAM:
 exit_program:
 						j = 0;
@@ -687,6 +689,10 @@ exit_program:
 						shutdown_all = 1;
 						return 0;
 						break;
+*/
+					default:
+						printf("default in main loop\n");
+						break;
 				}								  // end of switch
 			}									  // if rc > 0
 		}else									  // if test_sock
@@ -741,6 +747,9 @@ void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type, UCHAR dest)
 	int ret;
 	int i;
 	UCHAR temp[2];
+
+	if(dest > MAX_CLIENTS)
+		return;
 
 	if(test_sock())
 	{
