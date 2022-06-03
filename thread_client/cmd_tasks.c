@@ -110,6 +110,8 @@ UCHAR get_host_cmd_task(int test)
 	lcd_enabled = 0;
 //	UCHAR time_buffer[20];
 	UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
+	timer_on = 0;
+	timer_seconds = 20;
 
 	memset(write_serial_buffer, 0, SERIAL_BUFF_SIZE);
 	// since each card only has 20 ports then the 1st 2 port access bytes
@@ -275,7 +277,7 @@ UCHAR get_host_cmd_task(int test)
 				cmd = msg_buf[0];
 				print_cmd(cmd);
 				memset(tempx,0,sizeof(tempx));
-				memcpy(tempx,msg_buf,msg_len);
+				memcpy(tempx,msg_buf+1,msg_len);
 			}
 
 			if(cmd > 0)
@@ -323,6 +325,22 @@ UCHAR get_host_cmd_task(int test)
 
  				switch(cmd)
 				{
+					case SET_TIMER:
+						timer_seconds = tempx[0];
+						printf("%02x %02x %02x\n",tempx[0], tempx[1], tempx[2]);
+						printf("timer set to: %d seconds\n",timer_seconds);
+						break;
+
+					case START_TIMER:
+						timer_on = 1;
+						printf("timer on\n");
+						break;
+
+					case STOP_TIMER:
+						timer_on = 0;
+						printf("timer off\n");
+						break;
+
 					case CLIENT_RECONNECT:
 						printf("cl reconn\n");
 						close_tcp();

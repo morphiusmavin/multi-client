@@ -736,16 +736,22 @@ UCHAR timer_task(int test)
 	}
 	i = 0;
 */
-	uSleep(10,0);
+	uSleep(1,0);
 	while(TRUE)
 	{
+		if(timer_on > 0)
+		{
+			uSleep(timer_seconds,0);
+			printf("timer: %d\n",timer_seconds);
+		} else uSleep(0,TIME_DELAY/16);
+
+
 		if(shutdown_all)
 		{
 			//printf("done timer_task\r\n");
 			//printString2("done timer");
 			return 0;
 		}
-		uSleep(5,0);
 /*
 		memset(time_buffer,0,sizeof(time_buffer));
 		sprintf(time_buffer,"____ABCDEF145JM %d\0",i);

@@ -57,7 +57,12 @@ namespace EpServerEngineSampleClient
 			UPDATE_ALL,
 			SEND_MSG,
 			WRITE_CLIST_FILE_DISK,
-			CLIENT_RECONNECT
+			CLIENT_RECONNECT,
+			DB_LOOKUP,
+			SET_TIMER,
+			START_TIMER,
+			STOP_TIMER,
+			UPDATE_CLIENT_LIST
 		}
 
 		public ServerCmds()
@@ -141,6 +146,24 @@ namespace EpServerEngineSampleClient
 			ctemp[0] = GetCmdIndexB(cmsg);
 			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
 			System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
+			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+			//AddMsg(ctemp.Count().ToString() + " " + temp.ToString());
+			if (m_client.IsConnectionAlive)
+			{
+				m_client.Send(packet);
+			}
+		}
+		public void Send_ClCmd(int msg, int index, int iparam)
+		{
+			var temp = index;
+			var temp2 = iparam;
+			byte[] atemp = BitConverter.GetBytes(temp);
+			byte[] a2temp = BitConverter.GetBytes(temp2);
+			byte[] ctemp = new byte[atemp.Count() + a2temp.Count() + 2];
+			string cmsg = GetName(msg);
+			ctemp[0] = GetCmdIndexB(cmsg);
+			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+			System.Buffer.BlockCopy(a2temp, 0, ctemp, 4, a2temp.Count());
 			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
 			//AddMsg(ctemp.Count().ToString() + " " + temp.ToString());
 			if (m_client.IsConnectionAlive)

@@ -35,7 +35,8 @@ namespace EpServerEngineSampleClient
         private PlayerDlg playdlg = null;
         private GarageForm garageform = null;
         private CabinLights cabinLights = null;
-        private BluetoothForm bluetoothform = null;
+//        private BluetoothForm bluetoothform = null;
+        private ClientDest clientdest = null;
         private Child_Scrolling_List slist = null;
         private int AvailClientCurrentSection = 0;
 
@@ -91,7 +92,9 @@ namespace EpServerEngineSampleClient
 
             garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             cabinLights = new CabinLights("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
-            bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
+            //bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
+            clientdest = new ClientDest();
+            clientdest.SetClient(m_client);
 
             slist = new Child_Scrolling_List(m_client);
             slist.Enable_Dlg(false);
@@ -145,7 +148,6 @@ namespace EpServerEngineSampleClient
                 item2 = null;
 				lb_index++;
             }
-
 
             bool found = false;
 
@@ -243,7 +245,8 @@ namespace EpServerEngineSampleClient
                 playdlg.Dispose();
                 garageform.Dispose();
                 cabinLights.Dispose();
-                bluetoothform.Dispose();
+                //bluetoothform.Dispose();
+                clientdest.Dispose();
                 base.OnClosed(e);
             }
         }
@@ -267,10 +270,12 @@ namespace EpServerEngineSampleClient
             {
                 cabinLights.Process_Msg(receivedPacket.PacketRaw);
             }
+/*
             else if (bluetoothform.Visible == true)
             {
                 bluetoothform.Process_Msg(receivedPacket.PacketRaw);
             }
+*/
             else
                 Process_Msg(receivedPacket.PacketRaw);
         }
@@ -284,6 +289,7 @@ namespace EpServerEngineSampleClient
                 if (j.socket > 0)
                 {
                     string temp = j.label + " " + j.ip_addr + " " + j.socket.ToString();
+                    AddMsg("redraw");
                     AddMsg(temp);
                     lbAvailClients.Items.Add(temp);
                     j.lbindex = i;
@@ -624,7 +630,7 @@ namespace EpServerEngineSampleClient
         }
         private void RebootServer(object sender, EventArgs e)       // "test"
         {
-            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 9, "test");
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 7, "test");
             //SendClientMsg(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), "send client list", true);
             AddMsg("send client list");
         }
@@ -755,7 +761,7 @@ namespace EpServerEngineSampleClient
             svrcmd.Send_Cmd(offset);
             cmd = "GET_VERSION";
             offset = svrcmd.GetCmdIndexI(cmd);
-            svrcmd.Send_Cmd(offset);
+            //svrcmd.Send_Cmd(offset);
         }
         private void GarageFormClick(object sender, EventArgs e)
         {
@@ -772,69 +778,15 @@ namespace EpServerEngineSampleClient
         }
         private void btnAVR_Click(object sender, EventArgs e)		// test3
         {
-            /*
-            var temp = 9;   // _SERVER
-            byte[] atemp = BitConverter.GetBytes(temp);
-            byte[] btemp = BitConverter.GetBytes(temp);
-            byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
-            string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("CLIENT_RECONNECT"));
-            ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
-            System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Length);
-            Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-            AddMsg(ctemp.Count().ToString());
-            if (m_client.IsConnectionAlive)
-            {
-                m_client.Send(packet);
-            }
-
-            string cmd = "CLIENT_RECONNECT";
-            int offset = svrcmd.GetCmdIndexI(cmd);
-
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                {
-                    AddMsg(cl.label);
-                    svrcmd.Send_ClCmd(offset, cl.index);
-
-                }
-            }
-            svrcmd.Send_Cmd(offset);
-
-  
-            int temp = 2;
-            int temp2 = 4;
-            byte[] atemp = BitConverter.GetBytes(temp);
-            byte[] btemp = BitConverter.GetBytes(temp2);
-            byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
-            ctemp[0] = svrcmd.GetCmdIndexB("REBOOT_IOBOX");
-            System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
-            Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-            if (m_client.IsConnectionAlive)
-            {
-                m_client.Send(packet);
-            }
-
-            
-            bluetoothform.Enable_Dlg(true);
-            bluetoothform.SetClient(m_client);
-            bluetoothform.StartPosition = FormStartPosition.Manual;
-            bluetoothform.Location = new Point(100, 10);
-            if (bluetoothform.ShowDialog(this) == DialogResult.OK)
+            //clientdest.Enable_Dlg(true);
+            clientdest.StartPosition = FormStartPosition.Manual;
+            clientdest.Location = new Point(100, 10);
+            if (clientdest.ShowDialog(this) == DialogResult.OK)
             {
             }
             else
             {
             }
-            bluetoothform.Enable_Dlg(false);
-
-            string cmd = "ALL_MIDDLE_OFF";
-            //AddMsg("start seq: " + cmd);
-            int offset = svrcmd.GetCmdIndexI(cmd);
-            svrcmd.Send_Cmd(offset);
-            */
         }
         private void Dialog1_Click(object sender, EventArgs e)
         {
@@ -1181,7 +1133,26 @@ namespace EpServerEngineSampleClient
         }
         private void btnShutdownClient_Click(object sender, EventArgs e)
         {
-            SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), " ", true);
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (cl.type == 1 && cl.socket > 0)
+                {
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), cl.index, " ");
+                    AddMsg(cl.label);
+                    cl.socket = -1;
+                }
+
+            }
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (cl.type == 2 && cl.socket > 0)
+                {
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), cl.index, " ");
+                    AddMsg(cl.label);
+                    cl.socket = -1;
+                }
+            }
+            lbAvailClients.Items.Clear();
         }
         private void button1_Click(object sender, EventArgs e)		// get status
         {

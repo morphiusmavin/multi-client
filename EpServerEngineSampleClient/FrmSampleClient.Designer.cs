@@ -298,7 +298,7 @@
 			this.btnHomeSvr.Name = "btnHomeSvr";
 			this.btnHomeSvr.Size = new System.Drawing.Size(235, 61);
 			this.btnHomeSvr.TabIndex = 10;
-			this.btnHomeSvr.Text = "Clients Reconn";
+			this.btnHomeSvr.Text = "Timers";
 			this.btnHomeSvr.UseVisualStyleBackColor = false;
 			this.btnHomeSvr.Click += new System.EventHandler(this.btnAVR_Click);
 			// 

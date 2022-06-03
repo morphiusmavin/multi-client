@@ -750,13 +750,14 @@ UCHAR timer_task(int test)
 
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 	memset(time_buffer,0,sizeof(time_buffer));
-	temp = 0;
+/*
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
 	{
 		write_serial_buffer[i] = cmd;
 		if(++cmd > 0x7e)
 			cmd = 0x21;
 	}
+*/
 	i = 0;
 //printf("timer task\n");
 	while(TRUE)
@@ -784,10 +785,10 @@ UCHAR timer_task(int test)
 						perror("msgsnd error");
 						exit(EXIT_FAILURE);
 					}
+					uSleep(timer_seconds,0);
 				}
-				uSleep(timer_seconds,0);
 			}
-		} else uSleep(1,0);
+		} else uSleep(0,TIME_DELAY/16);
 
 		if(shutdown_all)
 		{
@@ -801,8 +802,6 @@ UCHAR timer_task(int test)
 		{
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &time_buffer[0],msg_len+1,1);
-			strncpy(recip,&time_buffer[1],3);
-	//		printf("recip: %s\n",recip);
 	//		printf("ret: %d\n",ret);
 			cmd = time_buffer[0];
 	//		printf("cmd: %d\n",cmd);

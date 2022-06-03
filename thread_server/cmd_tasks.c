@@ -180,7 +180,7 @@ UCHAR get_host_cmd_task(int test)
 
 	same_msg = 0;
 	timer_on = 0;
-	timer_seconds = 0;
+	timer_seconds = 20;
 
 	while(TRUE)
 	{
@@ -256,6 +256,21 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
+				case SET_TIMER:
+					timer_seconds = tempx[1];
+					printf("timer set to: %d seconds\n",timer_seconds);
+					break;
+
+				case START_TIMER:
+					timer_on = 1;
+					printf("timer on\n");
+					break;
+
+				case STOP_TIMER:
+					timer_on = 0;
+					printf("timer off\n");
+					break;
+
 				case UPDATE_CLIENT_LIST:
 					client_table[tempx[0]].socket = tempx[1];
 					break;

@@ -369,21 +369,15 @@ startover:
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-//			printf("cmd: %d\n",cmd);
 			print_cmd(cmd);
-/*
-			for(j = 0;j < rc;j++)
-				printf("%02x ",msg_buf[j]);
-			printf("\n");
-*/
+
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
 			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
-/*
-			printf("\n");
-			for(i = 0;i < rc;i++)
+
+			for(i = 2;i < rc;i+=2)
 				printf("%02x ",msg_buf[i]);
 			printf("\n");
-*/
+
 			memset(tempx,0,sizeof(tempx));
 			k = 0;
 			for(j = 4;j < msg_len+4;j+=2)
@@ -433,16 +427,16 @@ startover:
 				// the windows client sends as the 1st byte the index into 
 				// the client_table[] array 
 				uSleep(0,TIME_DELAY/16);
-/*
-				printf("msg to client: sock: %d %s %d\n",client_table[win_client_to_client_sock].socket, 
-					client_table[win_client_to_client_sock].label, client_table[win_client_to_client_sock].qid);
+
+				//printf("msg to client: sock: %d %s %d\n",client_table[win_client_to_client_sock].socket, 
+					//client_table[win_client_to_client_sock].label, client_table[win_client_to_client_sock].qid);
 				print_cmd(cmd);	
 
 				printf("msg.mtext: ");
 				for(i = 0;i < msg_len+4;i++)
 					printf("%02x ",msg.mtext[i]);
 				printf("\n");
-*/
+
 				// this sends a msg to the appropriate client's SendTask
 				if(client_table[win_client_to_client_sock].socket > 0)
 				{
