@@ -129,20 +129,20 @@ namespace EpServerEngineSampleClient
             int lb_index = 0;
             foreach (DataRow dr in ds2.Tables[0].Rows)
             {
-                string temp = "";
+                //string temp = "";
                 item2 = new ClientsAvail();
                 item2.lbindex = -1;
 //                item2.index = Convert.ToInt16(dr.ItemArray[1]);
                 item2.index = lb_index;
                 item2.ip_addr = dr.ItemArray[0].ToString();
-                temp += item2.ip_addr;
-                temp += "  ";
+                //temp += item2.ip_addr;
+                //temp += "  ";
                 item2.label = dr.ItemArray[1].ToString();
-                temp += item2.label;
-                temp += "  ";
+                //temp += item2.label;
+                //temp += "  ";
                 item2.socket = Convert.ToInt16(dr.ItemArray[2]);
                 //temp += item2.socket.ToString();
-                item2.type = Convert.ToInt16(dr.ItemArray[3]);		// not using this for anything
+                item2.type = Convert.ToInt16(dr.ItemArray[3]);  // type is: 0 - win client; 1 - TS_CLIENT; 2 - TS_SERVER (only one of these)
 				//AddMsg(item2.label.ToString() + " " + item2.ip_addr.ToString());
                 clients_avail.Add(item2);
                 item2 = null;
@@ -175,6 +175,18 @@ namespace EpServerEngineSampleClient
             timer1.Enabled = true;
             //ListMsg("Hello!",true);
         }
+		public static string GetLocalIPAddress()
+		{
+			var host = Dns.GetHostEntry(Dns.GetHostName());
+			foreach (var ip in host.AddressList)
+			{
+				if (ip.AddressFamily == AddressFamily.InterNetwork)
+				{
+					return ip.ToString();
+				}
+			}
+			throw new Exception("No network adapters with an IPv4 address in the system!");
+		}
         private void btnConnect_Click(object sender, EventArgs e)
         {
             if (!client_connected)      // let's connect here! (see timer callback at end of file)
@@ -189,6 +201,7 @@ namespace EpServerEngineSampleClient
                 m_client.Connect(ops);
                 please_lets_disconnect = 0;
                 disconnect_attempts++;
+				//AddMsg(GetLocalIPAddress());
             }
             else
             {
@@ -286,7 +299,7 @@ namespace EpServerEngineSampleClient
             int i = 0;
             foreach (ClientsAvail j in clients_avail)
             {
-                if (j.socket > 0)
+                if (j.socket > 0 && j.type != 0)
                 {
                     string temp = j.label + " " + j.ip_addr + " " + j.socket.ToString();
                     AddMsg("redraw");
@@ -1164,7 +1177,7 @@ namespace EpServerEngineSampleClient
             {
                 if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 {
-                    AddMsg(cl.label);
+                    AddMsg("send msg: " + cl.label + " " + cl.index);
                     if(remove)
 					{
                         cl.lbindex = -1;

@@ -1,7 +1,7 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_SOCK_TASKS			6
+#define NUM_SOCK_TASKS			7
 #define NUM_SCHED_TASKS			7
 #define DEFAULT                 0
 #define TIME_SLICE              1
@@ -41,11 +41,13 @@ int global_socket;
 enum sock_task_types
 {
 	WINCL_READ_TASK1,
+	WINCL_READ_TASK2,
+//	WINCL_READ_TASK3,
 	READ_TASK1,
 	READ_TASK2,
 	READ_TASK3,
 	GET_HOST_CMD1,
-	TCP_MONITOR,
+	TCP_MONITOR
 } SOCK_TASK_TYPES;
 
 enum sched_task_types

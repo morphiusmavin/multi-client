@@ -52,9 +52,10 @@ pthread_mutex_t     tcp_read_lock=PTHREAD_MUTEX_INITIALIZER;
 UCHAR (*fptr[NUM_SOCK_TASKS])(int) = 
 { 
 	WinClReadTask, 
+	WinClReadTask, 
 	ReadTask, 
-	ReadTask, 
-	ReadTask, 
+	ReadTask,
+	ReadTask,
 	get_host_cmd_task, 
 	tcp_monitor_task
 };
@@ -162,7 +163,7 @@ UCHAR get_host_cmd_task(int test)
 	int temp;
 	int dest;
 
-	printf("sock_mgnt starting...\n");
+	printf("sock_mgnt starting %d\n",test);
 
 	while(TRUE)
 	{
@@ -294,9 +295,9 @@ UCHAR get_host_cmd_task(int test)
 				case SEND_STATUS:
 					printf("sock_mgt send status\n");
 					temp = 0;
-					//temp = (int)(tempx[3] << 4);
-					//temp |= (int)tempx[2];
-					//printf("temp: %d\n",temp);
+					temp = (int)(tempx[3] << 4);
+					temp |= (int)tempx[2];
+					printf("temp: %d\n",temp);
 					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,SEND_STATUS);
 					break;
 
@@ -369,15 +370,15 @@ startover:
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
-			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
-
+			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+/*
 			for(i = 2;i < rc;i+=2)
 				printf("%02x ",msg_buf[i]);
 			printf("\n");
-
+*/
 			memset(tempx,0,sizeof(tempx));
 			k = 0;
 			for(j = 4;j < msg_len+4;j+=2)
@@ -385,6 +386,7 @@ startover:
 			msg_len /= 2;
 			msg_len -= 3;
 //			printf("msg_len from win client: %d\n",msg_len);
+
 /*
 			for(j = 0;j < msg_len;j++)
 				printf("%02x ",tempx[j]);
@@ -409,7 +411,7 @@ startover:
 			msg.mtext[0] = cmd;
 			msg.mtext[1] = (UCHAR)msg_len;
 			msg.mtext[2] = (UCHAR)(msg_len >> 4);
-			memcpy(msg.mtext + 4,tempx,msg_len);
+			memcpy(msg.mtext + 3,tempx,msg_len);
 
 			if(win_client_to_client_sock == _SERVER)
 			{
@@ -537,11 +539,16 @@ startover1:
 			dest = tempx[1];
 			printf("dest: %d\n",dest);
 
-			//printf("cmd: %d\n",cmd);
-			print_cmd(cmd);
-			memmove(tempx,tempx+2,msg_len);
-			printf("%s\n\n",tempx);
+			for(i = 0;i < msg_len+2;i++)
+				printf("%02x ",tempx[i]);
+			printf("\n");
 
+			//printf("cmd: %d\n",cmd);
+			//print_cmd(cmd);
+			memmove(tempx,tempx+2,msg_len);
+			for(i = 0;i < msg_len;i++)
+				printf("%02x ",tempx[i]);
+			printf("\n");
 			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME)
 			{
 				printf("shutdown or reboot\n");
@@ -587,11 +594,16 @@ startover1:
 */
 			if(dest == _SERVER)		// from one of the clients to the server
 			{
-				printf("dest: server\n");
+				//printf("dest: server\n");
 				memset(msg.mtext,0,sizeof(msg.mtext));
 				msg.mtext[0] = cmd;
-				memcpy(msg.mtext + 1,tempx,msg_len);
-				printf("msg to cmd_host from client %d: %s\n",dest, tempx);
+				msg.mtext[1] = (UCHAR)msg_len;
+				msg.mtext[2] = (UCHAR)(msg_len >> 4);
+				memcpy(msg.mtext + 3,tempx,msg_len);
+//				printf("msg to cmd_host from client %d\n",dest);
+				for(i = 0;i < msg_len+3;i++)
+					printf("%02x ",msg.mtext[i]);
+				printf("\n");
 				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					perror("msgsnd error");
@@ -634,6 +646,22 @@ int get_client_sock(char *recip)
 		}
 	}
 	return sock;
+}
+int get_client_index(char *recip)
+{
+	int i;
+	int index = -1;
+
+	for(i = 0;i < MAX_CLIENTS;i++)
+	{
+		if(strncmp(client_table[i].ip,recip,3) == 0)
+		{
+			//printf("%s %d\n",client_table[i].label,(sock = client_table[i].socket));
+			index = i;
+			return index;
+		}
+	}
+	return index;
 }
 /*********************************************************************/
 char *get_client_recip(int sock)
@@ -683,6 +711,7 @@ UCHAR tcp_monitor_task(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
+	int winclipaddr = -1;
 	
 // 156 & 157 are the next 2 avail - 155 is the firstpi.local
 
@@ -690,7 +719,7 @@ UCHAR tcp_monitor_task(int test)
 //	if(s != 0)
 //		handle_err_en(s, "pthread_setcancelstate");
 //		printf("setcancelstate\r\n");
-	printf("starting tcp_monitor_task\n");
+	printf("starting tcp_monitor_task %d\n",test);
 	memset((char  *)&address,0,sizeof(address));	  /* clear sockaddr structure   */
 	address.sin_family = AF_INET;				  /* set family to Internet     */
 	address.sin_addr.s_addr = INADDR_ANY;		  /* set the local IP address */
@@ -726,7 +755,7 @@ UCHAR tcp_monitor_task(int test)
 	}
 //#endif
 
-	printf("master socket: %d\n",master_socket);
+	//printf("master socket: %d\n",master_socket);
 	//set master socket to allow multiple connections ,
 	//this is just a good habit, it will work without this
 	if( setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt,
@@ -835,6 +864,9 @@ UCHAR tcp_monitor_task(int test)
 			strncpy(tempx,&address_string[j],3);
 			printf("tempx: %s\n",tempx);
 
+			if(winclipaddr < 0)
+			winclipaddr = get_client_index(tempx);
+
 			// later on we want to have more than 1 windows client be able
 			// to log in
 			for(i = 0;i < MAX_CLIENTS;i++)
@@ -849,7 +881,14 @@ UCHAR tcp_monitor_task(int test)
 					printf("should be sending msg to win cl: %s\n",tempx);
 					uSleep(0,TIME_DELAY/16);
 
-					send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+					for(j = 0;j < MAX_CLIENTS;j++)
+					{
+						if(client_table[j].type == WINDOWS_CLIENT && client_table[j].socket > 0)
+						{
+							send_msgb(client_table[j].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+							printf("%s\n",client_table[j].label);
+						}
+					}
 
 					if(client_table[i].qid == 0)
 					{

@@ -204,7 +204,7 @@ UCHAR get_host_cmd_task(int test)
 		printf("msg_len: %d\n",msg_len);
 		memcpy(tempx,msg.mtext+3,msg_len);
 		
-		for(i = 0;i < msg_len;i++)
+		for(i = 0;i < msg_len+3;i++)
 			printf("%02x ",tempx[i]);
 
 		printf("\n");
@@ -257,7 +257,7 @@ UCHAR get_host_cmd_task(int test)
 			switch(cmd)
 			{
 				case SET_TIMER:
-					timer_seconds = tempx[1];
+					timer_seconds = tempx[0];
 					printf("timer set to: %d seconds\n",timer_seconds);
 					break;
 
@@ -296,11 +296,11 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_STATUS:
-					printf("send status\n");
+					printf("send status (sched)\n");
 					temp = 0;
-					//temp = (int)(tempx[3] << 4);
-					//temp |= (int)tempx[2];
-					//printf("temp: %d\n",temp);
+					temp = (int)(tempx[1] << 4);
+					temp |= (int)tempx[0];
+					printf("temp: %d\n",temp);
 					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,SEND_STATUS);
 					break;
 
