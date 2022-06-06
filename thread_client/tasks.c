@@ -1543,25 +1543,9 @@ UCHAR basic_controls_task(int test)
 				close_tcp();
 				break;
 
-			case UPLOAD_NEW:
-				shutdown_all = 1;
-				reboot_on_exit = 4;
-				break;
-
-			case UPLOAD_NEW_PARAM:
-				shutdown_all = 1;
-				reboot_on_exit = 5;
-				break;
-
 			case SHELL_AND_RENAME:
 				shutdown_all = 1;
 				reboot_on_exit = 6;
-				break;
-
-			case UPLOAD_OTHER:
-				shutdown_all = 1;
-				reboot_on_exit = 1;
-//				printf("upload other\r\n");
 				break;
 
 			default:

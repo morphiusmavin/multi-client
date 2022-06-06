@@ -185,6 +185,9 @@ UCHAR get_host_cmd_task(int test)
 	while(TRUE)
 	{
 		cmd = 0;
+//		send_cmd_host_key = SEND_CMD_HOST_QKEY;		// sched -> sock
+//		recv_cmd_host_key = RECV_CMD_HOST_QKEY;		// sock -> sched
+//		get msg from sock_mgt		
 		if (msgrcv(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
 //		MSG_NOERROR | IPC_NOWAIT) == -1) 
 		MSG_NOERROR) == -1) 
@@ -241,10 +244,7 @@ UCHAR get_host_cmd_task(int test)
 				case WORK_OFF:
 				case SHUTDOWN_IOBOX:
 				case REBOOT_IOBOX:
-				case UPLOAD_NEW:
-				case UPLOAD_NEW_PARAM:
 				case SHELL_AND_RENAME:
-				case UPLOAD_OTHER:
 //					printf("sending que: %02x\r\n",cmd);
 					memset(tempx,0,sizeof(tempx));
 					//send_serialother(cmd,(UCHAR *)tempx);
@@ -296,7 +296,7 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_STATUS:
-					printf("send status (sched)\n");
+					//printf("send status (sched)\n");
 					temp = 0;
 					temp = (int)(tempx[1] << 4);
 					temp |= (int)tempx[0];
@@ -539,16 +539,6 @@ UCHAR get_host_cmd_task(int test)
 
 				case GET_VERSION:
 					send_status_msg(version);
-					break;
-
-				case TEST_IO_PORT:
-					i = (UINT)tempx[2];	// bank 
-					j = (UINT)tempx[4];	// port 
-					k = (UINT)tempx[6];	// onoff
-//						sprintf(tempx,"bank: %d port: %d %d",(int)msg_buf[2],
-//								(int)msg_buf[4],(int)msg_buf[6]);
-//						myprintf1(tempx);
-					change_output(i*8 + j, k);
 					break;
 
 					//i = WriteParams("param.conf", &ps, &password[0], errmsg);

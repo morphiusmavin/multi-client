@@ -168,6 +168,8 @@ UCHAR get_host_cmd_task(int test)
 	while(TRUE)
 	{
 		cmd = 0;
+//		send_cmd_host_key = SEND_CMD_HOST_QKEY;		// sched -> sock
+//		recv_cmd_host_key = RECV_CMD_HOST_QKEY;		// sock -> sched
 		// recv msg's from sched
 		if (msgrcv(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
 //		MSG_NOERROR | IPC_NOWAIT) == -1) 
@@ -230,9 +232,6 @@ UCHAR get_host_cmd_task(int test)
 					}
 					break;
 
-				case WRITE_CLIST_FILE_DISK:
-					break;
-
 				case SEND_CLIENT_LIST:
 
 					printf("SEND_CLIENT_LIST\n");
@@ -268,7 +267,7 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_MSG:
-					printf("\nSEND_MSG\n");
+					printf("\nSEND_MSG (sock_mgt)\n");
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");

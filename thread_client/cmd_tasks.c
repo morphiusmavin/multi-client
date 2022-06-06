@@ -88,6 +88,7 @@ UCHAR get_host_cmd_task(int test)
 	DIR *d;
 	struct dirent *dir;
 	UCHAR tempx[SERIAL_BUFF_SIZE];
+	UCHAR tempx2[SERIAL_BUFF_SIZE];
 	char temp_time[5];
 	char *pch;
 	int fname_index;
@@ -305,10 +306,7 @@ UCHAR get_host_cmd_task(int test)
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
 					case WAIT_REBOOT_IOBOX:
-					case UPLOAD_NEW:
-					case UPLOAD_NEW_PARAM:
 					case SHELL_AND_RENAME:
-					case UPLOAD_OTHER:
 						//printf("sending que: %02x\r\n",cmd);
 						memset(tempx,0,sizeof(tempx));
 						//send_serialother(cmd,(UCHAR *)tempx);
@@ -350,10 +348,6 @@ UCHAR get_host_cmd_task(int test)
 						printf("tempx: %d %d\n", tempx[1], tempx[2]);
 						client_table[tempx[1]].socket = tempx[2];
 						break;
-
-					case WRITE_CLIST_FILE_DISK:
-//						clWriteConfig(cFileName,&cll,csize,errmsg);
-						break;
 					
 					case SEND_TIMEUP:
 						memset(tempx,0,sizeof(tempx));
@@ -392,7 +386,14 @@ UCHAR get_host_cmd_task(int test)
 						for(i = 0;i < msg_len;i++)
 							printf("%02x ",tempx[i]);
 						printf("\n");
-						printf("%s\n",tempx);
+						
+						for(i = msg_len;i > 0;i--)
+							tempx2[i] = tempx[i];
+						
+						for(i = 0;i < msg_len;i++)
+							printf("%02x ",tempx[i]);
+						printf("\n");
+						send_msg(strlen((char*)tempx2),(UCHAR*)tempx2, SEND_STATUS, _SERVER);
 						break;
 
 					case GET_TEMP4:
@@ -642,16 +643,6 @@ uSleep(0,TIME_DELAY/3);
 
 					case GET_VERSION:
 						send_status_msg(version);
-						break;
-
-					case TEST_IO_PORT:
-						i = (UINT)msg_buf[2];	// bank 
-						j = (UINT)msg_buf[4];	// port 
-						k = (UINT)msg_buf[6];	// onoff
-//						sprintf(tempx,"bank: %d port: %d %d",(int)msg_buf[2],
-//								(int)msg_buf[4],(int)msg_buf[6]);
-//						myprintf1(tempx);
-						change_output(i*8 + j, k);
 						break;
 /*
 					case EXIT_PROGRAM:
