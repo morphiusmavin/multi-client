@@ -369,13 +369,16 @@ UCHAR get_host_cmd_task(int test)
 						break;
 					case SEND_STATUS:
 						k++;
+						j += 10;
 
 						memset(tempx,0,sizeof(tempx));
 						tempx[0] = (UCHAR)k;
 						tempx[1] = (UCHAR)(k >> 4);
-						tempx[2] = 0;
+						tempx[2] = (UCHAR)j;
+						tempx[3] = (UCHAR)(j >> 4);
+						tempx[4] = 0;
 
-						send_msg(2,(UCHAR*)tempx, SEND_STATUS, _SERVER);
+						send_msg(4,(UCHAR*)tempx, SEND_STATUS, _SERVER);
 //						send_msg(strlen((char*)tempx),(UCHAR*)tempx, SEND_STATUS, _SERVER);
 						printf("k: %d\n",k);
 //						printf("send status\n");

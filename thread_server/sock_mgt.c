@@ -337,9 +337,9 @@ UCHAR get_host_cmd_task(int test)
 /*********************************************************************/
 UCHAR WinClReadTask(int test)
 {
-	printf("winclread: %d\n",test);
+	//printf("winclread: %d\n",test);
 	int index = lookup_taskid(test);
-	printf("index: %d\n",index);
+	printf("wclread: %d %d\n",test, index);
 
 	int i,j,k,rc,msg_len;
 	char tempx[105];
@@ -369,10 +369,10 @@ startover:
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			//print_cmd(cmd);
+			print_cmd(cmd);
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
-			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 /*
 			for(i = 2;i < rc;i+=2)
 				printf("%02x ",msg_buf[i]);
@@ -478,7 +478,7 @@ startover:
 		if(shutdown_all)
 		{
 			uSleep(1,0);
-			printf("shutting down WinClReadTask\n");
+			printf("\nshutting down WinClReadTask\n");
 			return 0;
 		}
 	}
@@ -487,14 +487,14 @@ startover:
 int lookup_taskid(int index)
 {
 	int i;
-//printf("lookup_taskid\n");
+	//printf("lookup_taskid %d\n",index);
 	for(i = 0;i < MAX_CLIENTS;i++)
 	{
 		//printf("task_id: %d\n",client_table[i].task_id);
 		if(client_table[i].task_id >= 0 && client_table[i].task_id == index)
 		{
 			//printf("found %d %s\n",i,client_table[i].label);
-			return i;
+			return index;
 		}
 	}
 	return -1;
@@ -507,9 +507,9 @@ int lookup_taskid(int index)
 // whether it be the windows client, the server or another client 
 UCHAR ReadTask(int test)
 {
-	printf("readtask: %d\n",test);
+	//printf("readtask: %d\n",test);
 	int index = lookup_taskid(test);
-	printf("index: %d\n",index);
+	printf("readtask: %d %d\n",test, index);
 
 	char tempx[105];
 	int msg_len;

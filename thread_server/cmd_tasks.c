@@ -301,6 +301,10 @@ UCHAR get_host_cmd_task(int test)
 					temp = (int)(tempx[1] << 4);
 					temp |= (int)tempx[0];
 					printf("temp: %d\n",temp);
+					temp = 0;
+					temp = (int)(tempx[3] << 4);
+					temp |= (int)tempx[2];
+					printf("temp: %d\n",temp);
 					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,SEND_STATUS);
 					break;
 
