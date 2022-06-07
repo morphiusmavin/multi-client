@@ -52,7 +52,7 @@ pthread_mutex_t     tcp_read_lock=PTHREAD_MUTEX_INITIALIZER;
 UCHAR (*fptr[NUM_SOCK_TASKS])(int) = 
 { 
 	WinClReadTask, 
-	WinClReadTask, 
+	ReadTask, 
 	ReadTask, 
 	ReadTask,
 	ReadTask,
@@ -861,7 +861,7 @@ UCHAR tcp_monitor_task(int test)
 			}
 			memset(tempx,0,sizeof(tempx));
 			strncpy(tempx,&address_string[j],3);
-			printf("tempx: %s\n",tempx);
+			//printf("tempx: %s\n",tempx);
 
 			if(winclipaddr < 0)
 			winclipaddr = get_client_index(tempx);
@@ -880,6 +880,7 @@ UCHAR tcp_monitor_task(int test)
 					printf("should be sending msg to win cl: %s\n",tempx);
 					uSleep(0,TIME_DELAY/16);
 
+/*
 					for(j = 0;j < MAX_CLIENTS;j++)
 					{
 						if(client_table[j].type == WINDOWS_CLIENT && client_table[j].socket > 0)
@@ -888,12 +889,15 @@ UCHAR tcp_monitor_task(int test)
 							printf("%s\n",client_table[j].label);
 						}
 					}
+*/
+					send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 
 					if(client_table[i].qid == 0)
 					{
 						client_table[i].qid = msgget(client_table[i].qkey, IPC_CREAT | 0666);
 						printf("new connection qid: %d : %d\n",i,client_table[i].qid);
 					}
+					// tell the sched which clients have logged in/out
 					msg.mtext[0] = UPDATE_CLIENT_LIST;
 					msg.mtext[1] = 2;
 					msg.mtext[2] = 0;

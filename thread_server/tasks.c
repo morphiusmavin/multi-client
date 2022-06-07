@@ -767,11 +767,11 @@ UCHAR timer_task(int test)
 			cmd = GET_TEMP4;
 			for(i = 0;i < MAX_CLIENTS;i++)
 			{
-				//printf("%s %d\n",client_table[i].label, client_table[i].socket);
+				printf("%s %d\n",client_table[i].label, client_table[i].socket);
 				time(&t);
 				snprintf(time_buffer, sizeof(time_buffer), "a message at %s\0", ctime(&t));
 				msg_len = strlen(time_buffer);
-				//printf("msg_len: %d\n",msg_len);
+				printf("msg_len: %d\n",msg_len);
 				if(client_table[i].type == TS_CLIENT && client_table[i].socket > 0)
 				{
 					msg.mtext[0] = cmd;

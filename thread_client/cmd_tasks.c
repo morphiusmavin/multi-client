@@ -380,7 +380,7 @@ UCHAR get_host_cmd_task(int test)
 
 						send_msg(4,(UCHAR*)tempx, SEND_STATUS, _SERVER);
 //						send_msg(strlen((char*)tempx),(UCHAR*)tempx, SEND_STATUS, _SERVER);
-						printf("k: %d\n",k);
+						printf("k: %d j: %d\n",k,j);
 //						printf("send status\n");
 						break;
 

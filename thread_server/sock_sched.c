@@ -121,8 +121,6 @@ int main(int argc, char **argv)
 	_threads[TCP_MONITOR].sched = TIME_SLICE;
 
 	_threads[WINCL_READ_TASK1].sched = TIME_SLICE;
-	_threads[WINCL_READ_TASK2].sched = TIME_SLICE;
-//	_threads[WINCL_READ_TASK3].sched = TIME_SLICE;
 
 	_threads[READ_TASK1].sched = TIME_SLICE;
 
@@ -130,13 +128,11 @@ int main(int argc, char **argv)
 
 	_threads[READ_TASK3].sched = TIME_SLICE;
 
-//	_threads[READ_TASK4].sched = TIME_SLICE;
+	_threads[READ_TASK4].sched = TIME_SLICE;
 
 	strcpy(_threads[GET_HOST_CMD1].label,"GET_HOST_CMD\0");
 	strcpy(_threads[TCP_MONITOR].label,"TCP_MONITOR\0");
 	strcpy(_threads[WINCL_READ_TASK1].label,"WINCL_READ_TASK1\0");
-	strcpy(_threads[WINCL_READ_TASK2].label,"WINCL_READ_TASK2\0");
-//	strcpy(_threads[WINCL_READ_TASK3].label,"WINCL_READ_TASK3\0");
 
 	strcpy(_threads[READ_TASK1].label,"READ_TASK1\0");
 
@@ -144,7 +140,7 @@ int main(int argc, char **argv)
 
 	strcpy(_threads[READ_TASK3].label,"READ_TASK3\0");
 
-//	strcpy(_threads[READ_TASK4].label,"READ_TASK4\0");
+	strcpy(_threads[READ_TASK4].label,"READ_TASK4\0");
 /* spawn the threads */
 
 	assign_client_table();
