@@ -206,12 +206,11 @@ UCHAR get_host_cmd_task(int test)
 		
 		printf("msg_len: %d\n",msg_len);
 		memcpy(tempx,msg.mtext+3,msg_len);
-		
+/*		
 		for(i = 0;i < msg_len+3;i++)
 			printf("%02x ",tempx[i]);
-
 		printf("\n");
-
+*/
 		if(cmd > 0)
 		{
 //				sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);

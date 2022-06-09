@@ -725,7 +725,7 @@ UCHAR timer_task(int test)
 	UCHAR cmd = 0x21;
 	UCHAR ucbuff[6];
 	int temp;
-/*
+
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 	temp = 0;
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
@@ -735,7 +735,7 @@ UCHAR timer_task(int test)
 			cmd = 0x21;
 	}
 	i = 0;
-*/
+
 	uSleep(1,0);
 	while(TRUE)
 	{
@@ -743,6 +743,7 @@ UCHAR timer_task(int test)
 		{
 			uSleep(timer_seconds,0);
 			printf("timer: %d\n",timer_seconds);
+			send_msg(strlen((char*)write_serial_buffer),(UCHAR*)write_serial_buffer, SEND_MSG, _SERVER);
 		} else uSleep(0,TIME_DELAY/16);
 
 

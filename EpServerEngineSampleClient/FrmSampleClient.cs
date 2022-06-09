@@ -175,6 +175,7 @@ namespace EpServerEngineSampleClient
             timer1.Enabled = true;
             //ListMsg("Hello!",true);
         }
+/*
 		public static string GetLocalIPAddress()
 		{
 			var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -187,6 +188,7 @@ namespace EpServerEngineSampleClient
 			}
 			throw new Exception("No network adapters with an IPv4 address in the system!");
 		}
+*/
         private void btnConnect_Click(object sender, EventArgs e)
         {
             if (!client_connected)      // let's connect here! (see timer callback at end of file)
@@ -230,9 +232,9 @@ namespace EpServerEngineSampleClient
 
                     btn_PlayList.Enabled = true;
                     btnGetTime.Enabled = true;
-                    AddMsg("server_up_seconds: " + server_up_seconds.ToString());
+                    //AddMsg("server_up_seconds: " + server_up_seconds.ToString());
                     btnShowParams.Enabled = valid_cfg;
-                    clients_avail[9].socket = 1;        // 9 is _SERVER
+                    clients_avail[7].socket = 1;        // 7 is _SERVER (this is bad!)
                 }
             }
             else AddMsg(client.HostName);

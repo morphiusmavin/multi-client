@@ -279,7 +279,6 @@ UCHAR get_host_cmd_task(int test)
 					msg.mtext[1] = (UCHAR)msg_len;
 					msg.mtext[2] = (UCHAR)(msg_len >> 4);
 */
-					tempx[0] = 'A';
 					memcpy(msg.mtext,tempx,msg_len);
 //					uSleep(1,0);
 
@@ -432,12 +431,12 @@ startover:
 				//printf("msg to client: sock: %d %s %d\n",client_table[win_client_to_client_sock].socket, 
 					//client_table[win_client_to_client_sock].label, client_table[win_client_to_client_sock].qid);
 				print_cmd(cmd);	
-
+/*
 				printf("msg.mtext: ");
 				for(i = 0;i < msg_len+4;i++)
 					printf("%02x ",msg.mtext[i]);
 				printf("\n");
-
+*/
 				// this sends a msg to the appropriate client's SendTask
 				if(client_table[win_client_to_client_sock].socket > 0)
 				{
@@ -537,17 +536,19 @@ startover1:
 			cmd = tempx[0];
 			dest = tempx[1];
 			printf("dest: %d\n",dest);
-
+/*
 			for(i = 0;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);
 			printf("\n");
-
+*/
 			//printf("cmd: %d\n",cmd);
 			//print_cmd(cmd);
 			memmove(tempx,tempx+2,msg_len);
+/*
 			for(i = 0;i < msg_len;i++)
 				printf("%02x ",tempx[i]);
 			printf("\n");
+*/
 			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME)
 			{
 				printf("shutdown or reboot\n");
@@ -600,9 +601,11 @@ startover1:
 				msg.mtext[2] = (UCHAR)(msg_len >> 4);
 				memcpy(msg.mtext + 3,tempx,msg_len);
 //				printf("msg to cmd_host from client %d\n",dest);
+/*
 				for(i = 0;i < msg_len+3;i++)
 					printf("%02x ",msg.mtext[i]);
 				printf("\n");
+*/
 				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					perror("msgsnd error");

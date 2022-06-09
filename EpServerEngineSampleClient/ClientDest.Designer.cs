@@ -47,8 +47,6 @@ namespace EpServerEngineSampleClient
 			this.cbSource.FormattingEnabled = true;
 			this.cbSource.Items.AddRange(new object[] {
             "Second Windows 7  (149)",
-            "Laptop (153)",
-            "Win7-x64 (159)",
             "TS-client 1 (154)",
             "TS-client 2 (147)",
             "TS-client 3 (150)",
