@@ -56,6 +56,7 @@ UCHAR (*fptr[NUM_SOCK_TASKS])(int) =
 	ReadTask, 
 	ReadTask,
 	ReadTask,
+	ReadTask,
 	get_host_cmd_task, 
 	tcp_monitor_task
 };
@@ -507,7 +508,7 @@ UCHAR ReadTask(int test)
 {
 	//printf("readtask: %d\n",test);
 	int index = lookup_taskid(test);
-	//printf("readtask: %d %d\n",test, index);
+	printf("readtask: %d %d\n",test, index);
 
 	char tempx[105];
 	int msg_len;

@@ -52,7 +52,7 @@ namespace EpServerEngineSampleClient
             "TS-client 2 (147)",
             "TS-client 3 (150)",
             "TS-client 4 (151)",
-            "TS-client 5 (152)",
+            "TS-client 5 (155)",
             "TS-client 6 (145)",
             "TS-server (146)"});
 			this.cbSource.Location = new System.Drawing.Point(13, 67);

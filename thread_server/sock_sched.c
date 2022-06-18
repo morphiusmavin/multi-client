@@ -123,24 +123,20 @@ int main(int argc, char **argv)
 	_threads[WINCL_READ_TASK1].sched = TIME_SLICE;
 
 	_threads[READ_TASK1].sched = TIME_SLICE;
-
 	_threads[READ_TASK2].sched = TIME_SLICE;
-
 	_threads[READ_TASK3].sched = TIME_SLICE;
-
 	_threads[READ_TASK4].sched = TIME_SLICE;
+	_threads[READ_TASK5].sched = TIME_SLICE;
 
 	strcpy(_threads[GET_HOST_CMD1].label,"GET_HOST_CMD\0");
 	strcpy(_threads[TCP_MONITOR].label,"TCP_MONITOR\0");
 	strcpy(_threads[WINCL_READ_TASK1].label,"WINCL_READ_TASK1\0");
 
 	strcpy(_threads[READ_TASK1].label,"READ_TASK1\0");
-
 	strcpy(_threads[READ_TASK2].label,"READ_TASK2\0");
-
 	strcpy(_threads[READ_TASK3].label,"READ_TASK3\0");
-
 	strcpy(_threads[READ_TASK4].label,"READ_TASK4\0");
+	strcpy(_threads[READ_TASK5].label,"READ_TASK5\0");
 /* spawn the threads */
 
 	assign_client_table();

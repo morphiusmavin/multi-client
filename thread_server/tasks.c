@@ -773,7 +773,6 @@ UCHAR timer_task(int test)
 					msg.mtext[1] = (UCHAR)i;
 					msg.mtext[2] = (UCHAR)msg_len;
 					msg.mtext[3] = (UCHAR)(msg_len >> 4);
-					printf("msg_len: %d\n",msg_len);
 					memcpy(msg.mtext+4,time_buffer,msg_len);
 					if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 					{
