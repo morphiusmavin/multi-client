@@ -36,28 +36,13 @@ namespace EpServerEngineSampleClient
 			InitializeComponent();
 			sindex = 0;
 			cbTimerSeconds.SelectedIndex = 0;
-			iparam = 200;
+			iparam = 0;
 		}
 		public void SetClient(INetworkClient client)
 		{
 			m_client = client;
 			svrcmd.SetClient(m_client);
 		}
-		/*		public void setClientsAvail(List<ClientsAvail> ca)
-				{
-					clients_avail = ca;
-					foreach (ClientsAvail cl in clients_avail)
-					{
-						AddMsg(cl.label);
-						if (cl.socket > 0)
-						{
-							AddMsg(cl.socket.ToString());
-							cbSource.Items.Add(cl.label);
-							cbDest.Items.Add(cl.label);
-						}
-					}
-				}
-		*/
 		delegate void AddMsg_Involk(string message);
 		public void AddMsg(string message)
 		{
@@ -113,7 +98,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnStartTimer_Click(object sender, EventArgs e)
 		{
-			SendCmd("START_TIMER", sindex, iparam);
+			SendCmd("START_TIMER1", sindex, iparam);
 		}
 		private void btnStopTimer_Click(object sender, EventArgs e)
 		{
@@ -125,6 +110,12 @@ namespace EpServerEngineSampleClient
 			int offset = svrcmd.GetCmdIndexI(cmd);
 			svrcmd.Send_ClCmd(offset, sindex, dindex);
 		}
+
+		private void btnStartTimer2_Click(object sender, EventArgs e)
+		{
+			SendCmd("START_TIMER2", sindex, iparam);
+		}
+
 		private void cbSource_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			sindex = cbSource.SelectedIndex;

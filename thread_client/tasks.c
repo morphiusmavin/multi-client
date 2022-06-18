@@ -152,7 +152,7 @@ void init_ips(void)
 	if(i < 0)
 	{
 //		printf("%s\r\n",errmsg);
-		myprintf1(errmsg);
+		
 	}
 	i = 0;
 }
@@ -174,8 +174,7 @@ int uSleep(time_t sec, long nanosec)
 /* If any error other than a signal interrupt occurs, return an error */
 			if(errno != EINTR)
 			{
-				myprintf1("uSleep error\0");
-//             return -1;
+				return -1;
 			}
 		}
 		else
@@ -531,7 +530,6 @@ UCHAR monitor_fake_input_task(int test)
 //				printf("mask: %02x\r\n",mask);
 				if(mask > 0x80)
 				{
-					myprintf1("bad mask\0");
 					printf("bad mask 1 %02x\r\n",mask);
 					continue;
 				}
@@ -736,21 +734,53 @@ UCHAR timer_task(int test)
 	}
 	i = 0;
 
-	uSleep(1,0);
+	fp = init_serial();
+	if(fp < 0)
+	{
+		printf("can't open comm port 1\n");
+	}else printf("com port1: %d\n",fp);
+
+	fp = init_serial2();
+	if(fp < 0)
+	{
+		printf("can't open comm port 2\n");
+	}else printf("com port2: %d\n",fp);
+
+	fp = init_serial3(5);
+	if(fp < 0)
+	{
+		printf("can't open comm port 3\n");
+	}else printf("com port3: %d\n",fp);
+
+	//uSleep(1,0);
 	while(TRUE)
 	{
-		if(timer_on > 0)
+		if(timer_on == 1)
 		{
 			uSleep(timer_seconds,0);
-			printf("timer: %d\n",timer_seconds);
+			//printf("timer 1: %d\n",timer_seconds);
 			send_msg(strlen((char*)write_serial_buffer),(UCHAR*)write_serial_buffer, SEND_MSG, _SERVER);
-		} else uSleep(0,TIME_DELAY/16);
-
+		} else if(timer_on == 2)
+		{
+			uSleep(timer_seconds,0);
+			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
+				write_serial(write_serial_buffer[i]);
+			uSleep(0,TIME_DELAY/16);
+			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
+				write_serial2(write_serial_buffer[i]);
+			uSleep(0,TIME_DELAY/16);
+			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
+				write_serial3(write_serial_buffer[i]);
+			uSleep(0,TIME_DELAY/16);
+		}else uSleep(0,TIME_DELAY/16);
 
 		if(shutdown_all)
 		{
 			//printf("done timer_task\r\n");
 			//printString2("done timer");
+			close_serial();
+			close_serial2();
+			close_serial3();
 			return 0;
 		}
 /*
@@ -826,6 +856,7 @@ UCHAR serial_recv_task(int test)
 	memset(errmsg,0,20);
 	//usleep(_5SEC);	// delay 5 seconds because it hangs when trying
 					// to send to STM32 when starting up
+
 	while(TRUE)
 	{
 		uSleep(0,TIME_DELAY/2);
@@ -839,35 +870,32 @@ UCHAR serial_recv_task(int test)
 
 	if(fd = init_serial() < 0)
 	{
-		myprintf1("can't open comm port 1\0");
 //		printf("can't open comm port 1");
 		//return 0;
 	}
-/*
+
 	if(fd = init_serial2() < 0)
 	{
-		myprintf1("can't open comm port 2\0");
 //		printf("can't open comm port 2");
-	}
-*/
+	}else printf("com port2: %d\n",fd);
+
 	usleep(100000);
 
 	//printString2("trying to open comm3");
-#ifdef TS_7800
-	if(fd = init_serial3(ps.baudrate3) < 0)
-//	if(fd = init_serial3(2) < 0)
+
+//	if(fd = init_serial3(ps.baudrate3) < 0)
+	if(fd = init_serial3(2) < 0)	// 2 = 19200
 	{
-		myprintf1("can't open comm port 3\0");
 //		printf("can't open comm port 3");
 		//printString2("can't open comm3");
 	}else
 	{
+		printf("com port3: %d\n",fd);
 		//printString2("comm3 open");
 		//printString3("comm3 open");
 	}
-#endif
+
 	ch = ch2 = 0x7e;
-//	myprintf1("serial ports opened\0");
 
 //	red_led(0);
 //	green_led(0);

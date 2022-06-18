@@ -301,7 +301,6 @@ UCHAR get_host_cmd_task(int test)
 
 				case BAD_MSG:
 //						shutdown_all = 1;
-//						myprintf1("bad msg");
 					break;
 
 				case DISCONNECT:
@@ -338,7 +337,7 @@ UCHAR WinClReadTask(int test)
 {
 	//printf("winclread: %d\n",test);
 	int index = lookup_taskid(test);
-	printf("wclread: %d %d\n",test, index);
+	//printf("wclread: %d %d\n",test, index);
 
 	int i,j,k,rc,msg_len;
 	char tempx[105];
@@ -508,7 +507,7 @@ UCHAR ReadTask(int test)
 {
 	//printf("readtask: %d\n",test);
 	int index = lookup_taskid(test);
-	printf("readtask: %d %d\n",test, index);
+	//printf("readtask: %d %d\n",test, index);
 
 	char tempx[105];
 	int msg_len;

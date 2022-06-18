@@ -94,7 +94,8 @@ LD_SYS_LIBS = $(SYS_LIBRARIES)
 # gcc3 and gcc4 doesn't support thumb-interworking, but compiles anyway
 # gcc3/4 doesn't work with -mapcs-32
 #CC_FLAGS = -static -g -DTS_7800 -DUSE_CARDS -Wstrict-prototypes -mcpu=arm920t
-CC_FLAGS = -static -g -DTS_7800 -Wstrict-prototypes -mcpu=arm920t
+#CC_FLAGS = -static -g -DTS_7800 -Wstrict-prototypes -mcpu=arm920t
+CC_FLAGS = -static -g -Wstrict-prototypes -mcpu=arm920t
 #CC_FLAGS = -static -g -Wstrict-prototypes -mcpu=arm920t -mapcs-32 -mthumb-interwork
 #this works for either TS-7200 or TS-7800
 #CC_FLAGS = -g -Wstrict-prototypes -mcpu=arm920t -mapcs-32
@@ -142,8 +143,8 @@ rdwr.o: queue/rdwr.c queue/rdwr.h
 config_file.o: cs_client/config_file.c  queue/ollist_threads_rw.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/config_file.c
 
-lcd_func.o: lcd_func.c lcd_func.h
-	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c lcd_func.c
+#lcd_func.o: lcd_func.c lcd_func.h
+#	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c lcd_func.c
 
 cmd_tasks.o: cmd_tasks.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cmd_tasks.c
@@ -157,9 +158,9 @@ cllist_threads_rw.o: queue/cllist_threads_rw.c queue/cllist_threads_rw.h
 cconfig_file.o: cs_client/cconfig_file.c queue/cllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/cconfig_file.c
 	
-sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o cllist_threads_rw.o serial_io.o config_file.o cconfig_file.o cmd_tasks.o lcd_func.o  
+sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o cllist_threads_rw.o serial_io.o config_file.o cconfig_file.o cmd_tasks.o  
 # if we don't use -static then the target should have: libpthread.so.0 in the /lib directory
-	${CC} -static -pthread sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o cllist_threads_rw.o serial_io.o config_file.o cconfig_file.o cmd_tasks.o lcd_func.o   -o sched -lm
+	${CC} -static -pthread sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o cllist_threads_rw.o serial_io.o config_file.o cconfig_file.o cmd_tasks.o  -o sched -lm
 
 clean :
 	rm -f *.o *~ *# core  sched

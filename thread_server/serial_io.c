@@ -11,7 +11,6 @@
 #include "../mytypes.h"
 #include "serial_io.h"
 
-// AVR_t6963/test uses comm 1 of TS-7200 at 19200
 #define BAUDRATE B115200
 #define BAUDRATE2 B19200
 #define BAUDRATE3 B115200
@@ -22,9 +21,10 @@
 #define MODEMDEVICE3 "/dev/ttts4"
 #warning "TS_7800 defined"
 #else  
+#warning "TS_7800 not defined"
 #define MODEMDEVICE "/dev/ttyAM0"				  // 7200 uses ttyAM0 if console disabled
-#define MODEMDEVICE2 "/dev/ttyAM1"				  // 7200 uses ttyAM1 as 2nd serial port
-#warning "TS-7200 defined"
+#define MODEMDEVICE2 "/dev/ttyxuart1"
+#define MODEMDEVICE3 "/dev/ttyxuart2"
 #endif	// end of ifdef TS_7800
 
 #define _POSIX_SOURCE 1							  /* POSIX compliant source */
@@ -284,7 +284,6 @@ int init_serial2(void)
 }
 
 /************************************************************************************/
-#ifdef TS_7800
 int init_serial3(int baudrate)
 {
 	global_handle3 = -1;
@@ -342,7 +341,6 @@ int init_serial3(int baudrate)
 
 	return global_handle3;
 }
-#endif
 /************************************************************************************/
 void printHexByte(UCHAR byte) 
 {

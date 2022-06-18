@@ -11,9 +11,8 @@
 #include "../mytypes.h"
 #include "serial_io.h"
 
-// AVR_t6963/test uses comm 1 of TS-7200 at 19200
 #define BAUDRATE B115200
-#define BAUDRATE2 B19200
+#define BAUDRATE2 B115200
 #define BAUDRATE3 B115200
 
 #ifdef TS_7800
@@ -22,9 +21,10 @@
 #define MODEMDEVICE3 "/dev/ttts4"
 #warning "TS_7800 defined"
 #else  
+#warning "TS_7800 not defined"
 #define MODEMDEVICE "/dev/ttyAM0"				  // 7200 uses ttyAM0 if console disabled
-#define MODEMDEVICE2 "/dev/ttyAM1"				  // 7200 uses ttyAM1 as 2nd serial port
-#warning "TS-7200 defined"
+#define MODEMDEVICE2 "/dev/ttyxuart1"
+#define MODEMDEVICE3 "/dev/ttyxuart2"
 #endif	// end of ifdef TS_7800
 
 #define _POSIX_SOURCE 1							  /* POSIX compliant source */
@@ -38,8 +38,42 @@ static struct termios oldtio2;
 static struct termios oldtio3;
 extern PARAM_STRUCT ps;
 
-//volatile int STOP=FALSE;
 
+int test_init(void)
+{
+	int fd, c, res;
+    struct termios oldtio, newtio;
+    char buf[255] = {0};
+    
+    fd = open(MODEMDEVICE2, O_RDWR | O_NOCTTY ); 
+    if(fd <0) 
+    {
+            perror(MODEMDEVICE2); 
+            return -1;
+    }
+	global_handle2 = fd;
+    
+    tcgetattr(fd, &oldtio); /* save current port settings */
+    
+    bzero(&newtio, sizeof(newtio));
+    newtio.c_cflag = CRTSCTS | CS8 | CLOCAL | CREAD;
+    newtio.c_iflag = IGNPAR;
+    newtio.c_oflag = 0;
+    /* set input mode (non-canonical, no echo,...) */
+    newtio.c_lflag = 0;
+     
+    newtio.c_cc[VTIME]    = 0;   /* inter-character timer unused */
+    newtio.c_cc[VMIN]     = 2;   /* blocking read until 2 chars received */
+    
+    tcflush(fd, TCIFLUSH);
+    tcsetattr(fd, TCSANOW, &newtio);
+
+
+//	restore 	
+//    tcsetattr(fd, TCSANOW, &oldtio);
+
+    return fd;
+}
 /************************************************************************************/
 static int set_interface_attribs (int fd, int speed, int parity)
 {
@@ -47,13 +81,13 @@ static int set_interface_attribs (int fd, int speed, int parity)
 	memset (&tty, 0, sizeof tty);
 	if (tcgetattr (fd, &tty) != 0)
 	{
-		myprintf1("tcgetattr error\0", errno);
+		printf("tcgetattr error\n", errno);
 		perror(" ");
 		return -1;
 	}
 
-	cfsetospeed (&tty, speed);
-	cfsetispeed (&tty, speed);
+//	cfsetospeed (&tty, speed);
+//	cfsetispeed (&tty, speed);
 
 	tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;	  // 8-bit chars
 // disable IGNBRK for mismatched speed tests; otherwise receive break
@@ -76,7 +110,7 @@ static int set_interface_attribs (int fd, int speed, int parity)
 
 	if (tcsetattr (fd, TCSANOW, &tty) != 0)
 	{
-		myprintf1("tcgetattr error\0", errno);
+		printf("tcgetattr error\n", errno);
 		perror(" ");
 		return -1;
 	}
@@ -90,7 +124,7 @@ static void set_blocking (int fd, int should_block)
 	memset (&tty, 0, sizeof tty);
 	if (tcgetattr (fd, &tty) != 0)
 	{
-		myprintf1("tcgetattr error\0", errno);
+		printf("tcgetattr error\n", errno);
 		perror(" ");
 		return;
 	}
@@ -99,7 +133,7 @@ static void set_blocking (int fd, int should_block)
 	tty.c_cc[VTIME] = 10;						  // 0.5 seconds read timeout
 
 	if (tcsetattr (fd, TCSANOW, &tty) != 0)
-		myprintf1("term error\0", errno);
+		printf("term error\n", errno);
 }
 
 /************************************************************************************/
@@ -114,11 +148,11 @@ int init_serial(void)
 		perror(MODEMDEVICE);
 		exit(-1);
 	}
-//	printf("global_handle = %d\nse",global_handle);
+	//printf("global_handle = %d\n",global_handle);
 
 	if(tcgetattr(global_handle,&oldtio) != 0)	  /* save current port settings */
 	{
-		myprintf1("tcgetattr error\0", errno);
+		printf("tcgetattr error\n", errno);
 		close(global_handle);
 		exit(1);
 	}
@@ -271,20 +305,22 @@ int init_serial2(void)
 		}
 		if(tcgetattr(global_handle2,&oldtio2) != 0)	  /* save current port settings */
 		{
-			myprintf1("tcgetattr (2) error\0", errno);
+			printf("tcgetattr (2) error\n", errno);
 			close(global_handle2);
 			exit(1);
 		}
+		//printf("global_handle2 = %d\n",global_handle2);
+
 		set_interface_attribs (global_handle2, BAUDRATE2, 0);
-//		set_blocking (global_handle2, 1);	 // blocking
-		set_blocking (global_handle2, 0);	// non-blocking
+		set_blocking (global_handle2, 1);	 // blocking
+//		set_blocking (global_handle2, 0);	// non-blocking
 	}
 
 	return global_handle2;
 }
 
 /************************************************************************************/
-#ifdef TS_7800
+
 int init_serial3(int baudrate)
 {
 	global_handle3 = -1;
@@ -328,21 +364,21 @@ int init_serial3(int baudrate)
 		}
 		if(tcgetattr(global_handle3,&oldtio3) != 0)	  /* save current port settings */
 		{
-			myprintf1("tcgetattr (2) error\0", errno);
+			printf("tcgetattr (2) error\0", errno);
 			close(global_handle3);
 			//printString2("error on tcgetattr");
 			return -1;
 		}
-//		set_interface_attribs (global_handle3, BAUDRATE3, 0);
-		set_interface_attribs (global_handle3, actual_baudrate, 0);
-		myprintf1(tempx);
+		set_interface_attribs (global_handle3, BAUDRATE3, 0);
+//		set_interface_attribs (global_handle3, actual_baudrate, 0);
+//		printf(tempx);
 		set_blocking (global_handle3, 1);	 // blocking
 //		set_blocking (global_handle2, 0);	// non-blocking
 	}
 
 	return global_handle3;
 }
-#endif
+
 /************************************************************************************/
 void printHexByte(UCHAR byte) 
 {

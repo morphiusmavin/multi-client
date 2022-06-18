@@ -108,11 +108,10 @@ UCHAR get_host_cmd_task(int test)
 	shutdown_all = 0;
 	char version[15] = "sched v1.03\0";
 	UINT utemp;
-	lcd_enabled = 0;
 //	UCHAR time_buffer[20];
 	UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 	timer_on = 0;
-	timer_seconds = 20;
+	timer_seconds = 2;
 
 	memset(write_serial_buffer, 0, SERIAL_BUFF_SIZE);
 	// since each card only has 20 ports then the 1st 2 port access bytes
@@ -169,7 +168,6 @@ UCHAR get_host_cmd_task(int test)
 		olLoadConfig(oFileName,&oll,osize,errmsg);
 		if(rc > 0)
 		{
-//			myprintf1(errmsg);
 			printf("%s\r\n",errmsg);
 		}
 	}
@@ -183,7 +181,6 @@ UCHAR get_host_cmd_task(int test)
 		clLoadConfig(cFileName,&cll,csize,errmsg);
 		if(rc > 0)
 		{
-//			myprintf1(errmsg);
 			printf("%s\r\n",errmsg);
 		}
 	}else printf("can't access %s\n",cFileName);
@@ -285,8 +282,7 @@ UCHAR get_host_cmd_task(int test)
 			{
 //				printf("cmd: %d %s\n",cmd,cmd_array[cmd].cmd_str);
 //				printf("%s\r\n",cmd_array[cmd].cmd_str);
-//				if(cmd < LCD_TEST_MODE)
-//					myprintf1(cmd_array[cmd].cmd_str);
+
 				rc = 0;
 
 				switch(cmd)
@@ -329,9 +325,14 @@ UCHAR get_host_cmd_task(int test)
 						printf("timer set to: %d seconds\n",timer_seconds);
 						break;
 
-					case START_TIMER:
+					case START_TIMER1:
 						timer_on = 1;
-						printf("timer on\n");
+						printf("timer 1 on\n");
+						break;
+
+					case START_TIMER2:
+						timer_on = 2;
+						printf("timer 2 on\n");
 						break;
 
 					case STOP_TIMER:
@@ -387,7 +388,7 @@ UCHAR get_host_cmd_task(int test)
 					case SEND_MSG:
 						printf("SEND_MSG\n");
 						for(i = 0;i < msg_len;i++)
-							printf("%02x ",tempx[i]);
+							printf("%c",tempx[i]);
 						printf("\n");
 						
 						for(i = msg_len;i > 0;i--)
@@ -524,7 +525,6 @@ uSleep(0,TIME_DELAY/3);
 
 					case BAD_MSG:
 //						shutdown_all = 1;
-//						myprintf1("bad msg");
 						break;
 
 					case DISCONNECT:

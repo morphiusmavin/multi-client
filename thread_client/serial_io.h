@@ -18,4 +18,5 @@ void close_serial(void);
 int global_handle;
 void printHexByte(UCHAR byte);
 char nibbleToHexCharacter(UCHAR nibble);
+int test_init(void);
 

@@ -2,13 +2,7 @@
 #define __IOPORTS_H
 //#warning "IOPORTS defined"
 #define			VUCHAR volatile unsigned char
-#ifdef TS_7800
 #define			PORTBASEADD			0xEE000000
-#warning "TS-7800 defined"
-#else
-#define			PORTBASEADD			0x11E00000
-#warning "TS-7200 defined"
-#endif
 
 //#define			IOCARDBASEADD78			0xEC000000	// 8-bit memory
 //#define			IOCARDBASEADD78			0xEE000000	// 8-bit io				(this one works)
@@ -26,12 +20,8 @@
 #define			OUTPORTD_OFFSET		3
 #define			OUTPORTE_OFFSET		4
 #define			OUTPORTF_OFFSET		5
-#ifdef MAKE_TARGET
+
 VUCHAR *card_ports;
-#else
-UCHAR *card_ports;
-UCHAR fake_port[NUM_PORTS];
-#endif
 UCHAR outportstatus[NUM_PORTS];
 UCHAR current_io_settings;
 size_t pagesize;

@@ -54,7 +54,8 @@ namespace EpServerEngineSampleClient
 			CLIENT_RECONNECT,
 			DB_LOOKUP,
 			SET_TIMER,
-			START_TIMER,
+			START_TIMER1,
+			START_TIMER2,
 			STOP_TIMER,
 			UPDATE_CLIENT_LIST
 		}

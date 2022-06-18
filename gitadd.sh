@@ -13,8 +13,6 @@ git add thread_server/ioports.h
 git add thread_server/tasks.c
 git add thread_server/cmd_tasks.c
 git add thread_server/tasks.h
-git add thread_server/lcd_func.c
-git add thread_server/lcd_func.h
 git add thread_server/queue/rdwr.h
 git add thread_server/queue/rdwr.c
 git add thread_server/queue/ollist_threads_rw.h
@@ -32,8 +30,6 @@ git add thread_client/ioports.h
 git add thread_client/tasks.c
 git add thread_client/cmd_tasks.c
 git add thread_client/tasks.h
-git add thread_client/lcd_func.c
-git add thread_client/lcd_func.h
 git add thread_client/queue/rdwr.h
 git add thread_client/queue/rdwr.c
 git add thread_client/queue/ollist_threads_rw.h

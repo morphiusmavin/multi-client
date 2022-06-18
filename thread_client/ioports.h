@@ -2,13 +2,7 @@
 #define __IOPORTS_H
 //#warning "IOPORTS defined"
 #define			VUCHAR volatile unsigned char
-#ifdef TS_7800
 #define			PORTBASEADD			0xEE000000
-#warning "TS-7800 defined"
-#else
-#define			PORTBASEADD			0x11E00000
-#warning "TS-7200 defined"
-#endif
 
 //#define			IOCARDBASEADD78			0xEC000000	// 8-bit memory
 //#define			IOCARDBASEADD78			0xEE000000	// 8-bit io				(this one works)
@@ -28,7 +22,6 @@
 #define			OUTPORTF_OFFSET		5
 
 VUCHAR *card_ports;
-
 UCHAR outportstatus[NUM_PORTS];
 UCHAR current_io_settings;
 size_t pagesize;
@@ -204,14 +197,5 @@ UCHAR InPortByteC(void);
 UCHAR InPortByteD(void);
 UCHAR InPortByteE(void);
 UCHAR InPortByteF(void);
-#if 0
-void OutPortByteA(UCHAR byte);
-void OutPortByteB(UCHAR byte);
-void OutPortByteC(UCHAR byte);
-void OutPortByteD(UCHAR byte);
-void OutPortByteE(UCHAR byte);
-void OutPortByteF(UCHAR byte);
-void TurnOffAllOutputs(void);
-#endif 
 #endif
 

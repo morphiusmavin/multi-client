@@ -159,7 +159,6 @@ void init_ips(void)
 	if(i < 0)
 	{
 		printf("%s\r\n",errmsg);
-//		myprintf1(errmsg);
 	}
 	i = 0;
 }
@@ -360,7 +359,6 @@ UCHAR monitor_input_task(int test)
 		if(shutdown_all)
 		{
 //				printf("done mon input tasks\r\n"); 
-//				myprintf1("done mon input");
 				//printString2("done mon");
 			return 0;
 		}
@@ -409,7 +407,6 @@ UCHAR monitor_input_task(int test)
 /*
 				if(mask > 0x80)
 				{
-					myprintf1("bad mask\0");
 					//printf("bad mask 1 %02x\r\n",mask);
 					continue;
 				}
@@ -448,14 +445,12 @@ UCHAR monitor_input_task(int test)
 							ollist_find_data(ip[i].port,&otp,&oll);
 							set_output(otp, onoff);
 //							sprintf(tempx,"+%d %d", index, otp->port);
-//							myprintf1(tempx);
 						}else
 						{
 							if(onoff == ON)
 							{
 								add_msg_queue(ip[i].function);
 	//							sprintf(tempx,"-%d %d", ip[i].input, ip[i].function);
-	//							myprintf1(tempx);
 	//							printf("msg queue: %d %d\r\n",ip[i].input, ip[i].function);
 							}
 						}
@@ -767,13 +762,13 @@ UCHAR timer_task(int test)
 			cmd = GET_TEMP4;
 			for(i = 0;i < MAX_CLIENTS;i++)
 			{
-				printf("%s %d\n",client_table[i].label, client_table[i].socket);
-				time(&t);
-				snprintf(time_buffer, sizeof(time_buffer), "a message at %s\0", ctime(&t));
-				msg_len = strlen(time_buffer);
-				printf("msg_len: %d\n",msg_len);
 				if(client_table[i].type == TS_CLIENT && client_table[i].socket > 0)
 				{
+					printf("%s %d\n",client_table[i].label, client_table[i].socket);
+					time(&t);
+					snprintf(time_buffer, sizeof(time_buffer), "a message at %s\0", ctime(&t));
+					msg_len = strlen(time_buffer);
+					printf("msg_len: %d\n",msg_len);
 					msg.mtext[0] = cmd;
 					msg.mtext[1] = (UCHAR)i;
 					msg.mtext[2] = (UCHAR)msg_len;
@@ -856,8 +851,6 @@ UCHAR serial_recv_task(int test)
 	memset(errmsg,0,20);
 	//usleep(_5SEC);	// delay 5 seconds because it hangs when trying
 					// to send to STM32 when starting up
-
-
 	while(TRUE)
 	{
 		uSleep(5,0);
@@ -872,17 +865,16 @@ UCHAR serial_recv_task(int test)
 //		printf("can't open comm port 1");
 		//return 0;
 	}
-/*
+
 	if(fd = init_serial2() < 0)
 	{
-		myprintf1("can't open comm port 2\0");
 //		printf("can't open comm port 2");
 	}
-*/
+
 	usleep(100000);
 
 	//printString2("trying to open comm3");
-#ifdef TS_7800
+
 	if(fd = init_serial3(ps.baudrate3) < 0)
 //	if(fd = init_serial3(2) < 0)
 	{
@@ -894,9 +886,8 @@ UCHAR serial_recv_task(int test)
 		//printString2("comm3 open");
 		//printString3("comm3 open");
 	}
-#endif
+
 	ch = ch2 = 0x7e;
-//	myprintf1("serial ports opened\0");
 
 //	red_led(0);
 //	green_led(0);
