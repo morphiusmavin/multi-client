@@ -114,6 +114,7 @@ UCHAR get_host_cmd_task(int test)
 //	UCHAR time_buffer[20];
 	timer_on = 0;
 	timer_seconds = 2;
+	next_client = 0;
 
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
@@ -302,6 +303,30 @@ UCHAR get_host_cmd_task(int test)
 
  				switch(cmd)
 				{
+					case SET_NEXT_CLIENT:
+						next_client = tempx[0];
+						if(next_client == 7)
+							next_client = 0;
+						printf("next client: %d\n",next_client);
+						j = 0;
+						break;
+
+					case SEND_NEXT_CLIENT:
+						cmd = 0x21;
+						for(i = 0;i < SERIAL_BUFF_SIZE;i++)
+						{
+							tempx[i] = cmd;
+							if(++cmd > 0x7e)
+								cmd = 0x21;
+						}
+						send_msg(200,(UCHAR*)&tempx[j], SEND_MESSAGE, next_client);
+						uSleep(0,TIME_DELAY/10);
+						send_msg(1,(UCHAR*)&tempx[j], SEND_NEXT_CLIENT, next_client);
+						j++;
+						if(j > 10)
+							j = 0;
+						break;
+
 					case SET_TIMER:
 						timer_seconds = tempx[0];
 						//printf("%02x %02x %02x\n",tempx[0], tempx[1], tempx[2]);

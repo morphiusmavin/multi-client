@@ -250,7 +250,7 @@
 			this.btnDBMgmt.Name = "btnDBMgmt";
 			this.btnDBMgmt.Size = new System.Drawing.Size(235, 61);
 			this.btnDBMgmt.TabIndex = 2;
-			this.btnDBMgmt.Text = "test2";
+			this.btnDBMgmt.Text = "Set Next Client";
 			this.btnDBMgmt.UseVisualStyleBackColor = false;
 			this.btnDBMgmt.Click += new System.EventHandler(this.DBMgmt);
 			// 

@@ -119,6 +119,12 @@
     <Compile Include="NetClients.Designer.cs">
       <DependentUpon>NetClients.cs</DependentUpon>
     </Compile>
+    <Compile Include="SetNextClient.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SetNextClient.Designer.cs">
+      <DependentUpon>SetNextClient.cs</DependentUpon>
+    </Compile>
     <Compile Include="WifiIOT.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -208,6 +214,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SetNextClient.resx">
+      <DependentUpon>SetNextClient.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WifiIOT.resx">
       <DependentUpon>WifiIOT.cs</DependentUpon>
     </EmbeddedResource>

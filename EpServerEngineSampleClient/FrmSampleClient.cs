@@ -37,6 +37,7 @@ namespace EpServerEngineSampleClient
         private CabinLights cabinLights = null;
 //        private BluetoothForm bluetoothform = null;
         private ClientDest clientdest = null;
+        private SetNextClient setnextclient = null;
         private Child_Scrolling_List slist = null;
         private int AvailClientCurrentSection = 0;
 
@@ -95,6 +96,8 @@ namespace EpServerEngineSampleClient
             //bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
             clientdest = new ClientDest();
             clientdest.SetClient(m_client);
+            setnextclient = new SetNextClient();
+            setnextclient.SetClient(m_client);
 
             slist = new Child_Scrolling_List(m_client);
             slist.Enable_Dlg(false);
@@ -262,6 +265,7 @@ namespace EpServerEngineSampleClient
                 cabinLights.Dispose();
                 //bluetoothform.Dispose();
                 clientdest.Dispose();
+                setnextclient.Dispose();
                 base.OnClosed(e);
             }
         }
@@ -752,21 +756,14 @@ namespace EpServerEngineSampleClient
         }
         private void DBMgmt(object sender, EventArgs e) // "test2"
         {
-/*
-            string cmd = "WRITE_CLIST_FILE_DISK";
-            int offset = svrcmd.GetCmdIndexI(cmd);
-
-            foreach (ClientsAvail cl in clients_avail)
+            setnextclient.StartPosition = FormStartPosition.Manual;
+            setnextclient.Location = new Point(100, 10);
+            if (setnextclient.ShowDialog(this) == DialogResult.OK)
             {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                {
-                    AddMsg(cl.label);
-                    //svrcmd.Send_ClCmd(offset, 0, cl.index);
-                   
-                }
             }
-            svrcmd.Send_Cmd(offset);
-*/
+            else
+            {
+            }
         }
         private void ClearScreen(object sender, EventArgs e)
         {

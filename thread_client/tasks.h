@@ -117,5 +117,6 @@ static int same_msg;
 int basic_controls_qid;
 int timer_on;
 int timer_seconds;
+int next_client;
 
 #endif
