@@ -218,24 +218,6 @@ UCHAR get_host_cmd_task(int test)
 #endif
 
 	printf("%s\n",version);
-/*
-	i = (UINT)msg_buf[2];	// bank 
-	j = (UINT)msg_buf[4];	// port 
-	k = (UINT)msg_buf[6];	// onoff
-*
-	printf("starting io test\r\n");
-
-	for(j = 0;j < 20;j++)
-	{
-		for(k = 0;k < 2;k++)
-		{
-			change_output(j, k);
-			usleep(100000);
-			printf("%d %d\r\n",j,k);
-		}
-	}
-	printf("done testing io\r\n");
-*/	
 	j = k = i = 0;
 	cmd = 0x21;
 
@@ -274,7 +256,7 @@ UCHAR get_host_cmd_task(int test)
 				cmd = ctp->cmd;
 */
 				cmd = msg_buf[0];
-				print_cmd(cmd);
+				//print_cmd(cmd);
 				memset(tempx,0,sizeof(tempx));
 				memcpy(tempx,msg_buf+1,msg_len);
 			}
@@ -322,23 +304,23 @@ UCHAR get_host_cmd_task(int test)
 				{
 					case SET_TIMER:
 						timer_seconds = tempx[0];
-						printf("%02x %02x %02x\n",tempx[0], tempx[1], tempx[2]);
-						printf("timer set to: %d seconds\n",timer_seconds);
+						//printf("%02x %02x %02x\n",tempx[0], tempx[1], tempx[2]);
+						//printf("timer set to: %d seconds\n",timer_seconds);
 						break;
 
 					case START_TIMER1:
 						timer_on = 1;
-						printf("timer 1 on\n");
+						//printf("timer 1 on\n");
 						break;
 
 					case START_TIMER2:
 						timer_on = 2;
-						printf("timer 2 on\n");
+						//printf("timer 2 on\n");
 						break;
 
 					case STOP_TIMER:
 						timer_on = 0;
-						printf("timer off\n");
+						//printf("timer off\n");
 						break;
 
 					case CLIENT_RECONNECT:
@@ -387,11 +369,11 @@ UCHAR get_host_cmd_task(int test)
 						break;
 
 					case SEND_MESSAGE:
-						printf("SEND_MESSAGE\n");
+						//printf("SEND_MESSAGE\n");
 						for(i = 0;i < msg_len;i++)
 							printf("%c",tempx[i]);
 						printf("\n");
-						
+/*						
 						for(i = msg_len;i > 0;i--)
 							tempx2[i] = tempx[i];
 						
@@ -399,6 +381,7 @@ UCHAR get_host_cmd_task(int test)
 							printf("%02x ",tempx[i]);
 						printf("\n");
 						send_msg(strlen((char*)tempx2),(UCHAR*)tempx2, SEND_STATUS, _SERVER);
+*/
 						break;
 
 					case GET_TEMP4:

@@ -201,7 +201,7 @@ UCHAR get_host_cmd_task(int test)
 		msg_len |= (int)(msg.mtext[2] << 4);
 		msg_len = (int)msg.mtext[1];
 		
-		printf("msg_len: %d\n",msg_len);
+		//printf("msg_len: %d\n",msg_len);
 		memcpy(tempx,msg.mtext+3,msg_len);
 
 		if(cmd > 0)
@@ -275,6 +275,12 @@ UCHAR get_host_cmd_task(int test)
 							uSleep(0,TIME_DELAY/2);
 						}
 					}
+					break;
+
+				case SEND_TIMEUP:
+					sprintf(tempx,"%d days %dh %dm %ds",trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
+//					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
+					printf("%s\n",tempx);
 					break;
 
 				case SEND_MESSAGE:

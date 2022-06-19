@@ -190,6 +190,7 @@ UCHAR get_host_cmd_task(int test)
 		cmd = msg.mtext[0];							// first byte is cmd
 		dest = (int)msg.mtext[1];					// 2nd byte is dest
 		//printf("x dest: %d\n",dest);
+		printf("sock: ");
 		print_cmd(cmd);
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
@@ -372,10 +373,10 @@ startover:
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
-			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 /*
 			for(i = 2;i < rc;i+=2)
 				printf("%02x ",msg_buf[i]);
@@ -417,7 +418,7 @@ startover:
 
 			if(win_client_to_client_sock == _SERVER)
 			{
-				printf("msg to cmd_host on server: %s %d\n",msg.mtext + 4,cmd);
+				//printf("msg to cmd_host on server: %s %d\n",msg.mtext + 4,cmd);
 				// send msg's to sched 
 				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
@@ -434,7 +435,7 @@ startover:
 
 				//printf("msg to client: sock: %d %s %d\n",client_table[win_client_to_client_sock].socket, 
 					//client_table[win_client_to_client_sock].label, client_table[win_client_to_client_sock].qid);
-				print_cmd(cmd);	
+				//print_cmd(cmd);	
 /*
 				printf("msg.mtext: ");
 				for(i = 0;i < msg_len+4;i++)
@@ -512,7 +513,7 @@ UCHAR ReadTask(int test)
 {
 	//printf("readtask: %d\n",test);
 	int index = lookup_taskid(test);
-	printf("readtask: %d %d\n",test, index);
+	//printf("readtask: %d %d\n",test, index);
 
 	char tempx[SERIAL_BUFF_SIZE];
 	int msg_len;
@@ -536,10 +537,10 @@ startover1:
 			//printf("read task %d\n",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+2,1);
-			printf("ret: %d msg_len: %d\n",ret,msg_len);
+			//printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			printf("dest: %d\n",dest);
+			//printf("dest: %d\n",dest);
 /*
 			for(i = 0;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);
@@ -596,7 +597,7 @@ startover1:
 */
 			if(dest == _SERVER)		// from one of the clients to the server
 			{
-				printf("dest: server\n");
+				//printf("dest: server\n");
 				memset(msg.mtext,0,sizeof(msg.mtext));
 				msg.mtext[0] = cmd;
 				msg.mtext[1] = (UCHAR)msg_len;
@@ -622,8 +623,8 @@ startover1:
 
 		if(shutdown_all)
 		{
-			printf("leaving read task\n");
-			uSleep(1,0);
+			//printf("leaving read task\n");
+			uSleep(0,TIME_DELAY/16);
 			return 0;
 		}
 		uSleep(0,TIME_DELAY/16);
@@ -1052,7 +1053,7 @@ void send_msg(int sd, int msg_len, UCHAR *msg, UCHAR msg_type)
 	ret = send_tcp(sd, &pre_preamble[0],8);
 	temp[0] = (UCHAR)(msg_len & 0x0F);
 	temp[1] = (UCHAR)((msg_len & 0xF0) >> 4);
-	printf("%02x %02x\n",temp[0],temp[1]);
+	//printf("%02x %02x\n",temp[0],temp[1]);
 	send_tcp(sd, (UCHAR *)&temp[0],1);
 	send_tcp(sd, (UCHAR *)&temp[1],1);
 	send_tcp(sd, (UCHAR *)&msg_type,1);

@@ -658,6 +658,7 @@ namespace EpServerEngineSampleClient
         private void ShowParamsClick(object sender, EventArgs e)
         {
             //AddMsg(dlgsetparams.GetSet().ToString());
+            return;
             if (m_client.IsConnectionAlive)
             {
                 if (dlgsetparams.ShowDialog(this) == DialogResult.OK)
@@ -751,6 +752,7 @@ namespace EpServerEngineSampleClient
         }
         private void DBMgmt(object sender, EventArgs e) // "test2"
         {
+/*
             string cmd = "WRITE_CLIST_FILE_DISK";
             int offset = svrcmd.GetCmdIndexI(cmd);
 
@@ -764,6 +766,7 @@ namespace EpServerEngineSampleClient
                 }
             }
             svrcmd.Send_Cmd(offset);
+*/
         }
         private void ClearScreen(object sender, EventArgs e)
         {
