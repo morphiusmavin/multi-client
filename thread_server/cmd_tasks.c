@@ -277,7 +277,7 @@ UCHAR get_host_cmd_task(int test)
 					}
 					break;
 
-				case SEND_MSG:
+				case SEND_MESSAGE:
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");

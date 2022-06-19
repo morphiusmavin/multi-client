@@ -17,7 +17,7 @@ typedef unsigned long ULONG;
 #define TDATE_STAMP_STR_LEN 16
 #define UPLOAD_BUFF_SIZE 200
 #define NUM_ADC_CHANNELS 11
-#define SERIAL_BUFF_SIZE 100
+#define SERIAL_BUFF_SIZE 255
 #define RAW_DATA_ARRAY_SIZE 15
 #define MAX_CLIENTS	8
 #define NO_CMDS 46
@@ -27,7 +27,7 @@ typedef unsigned long ULONG;
 struct msgqbuf 
 {
 	long mtype;
-	UCHAR mtext[100];
+	UCHAR mtext[SERIAL_BUFF_SIZE];
 };
 
 typedef struct

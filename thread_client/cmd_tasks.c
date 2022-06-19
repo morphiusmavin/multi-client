@@ -41,8 +41,8 @@ extern CMD_STRUCT cmd_array[];
 extern ollist_t oll;
 extern cllist_t cll;
 
-UCHAR msg_buf[UPLOAD_BUFF_SIZE];
-UCHAR msg_buf2[UPLOAD_BUFF_SIZE];
+UCHAR msg_buf[SERIAL_BUFF_SIZE];
+UCHAR msg_buf2[SERIAL_BUFF_SIZE];
 extern PARAM_STRUCT ps;
 extern char password[PASSWORD_SIZE];
 int shutdown_all;
@@ -53,6 +53,9 @@ static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
+	
+	if(cmd >= NO_CMDS)
+		printf("unknown cmd: %d\n",cmd);
 
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
 	printf("%s\r\n",cmd_array[cmd].cmd_str);
@@ -109,11 +112,9 @@ UCHAR get_host_cmd_task(int test)
 	char version[15] = "sched v1.03\0";
 	UINT utemp;
 //	UCHAR time_buffer[20];
-	UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 	timer_on = 0;
 	timer_seconds = 2;
 
-	memset(write_serial_buffer, 0, SERIAL_BUFF_SIZE);
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
 	// inportstatus array, representing 3 byts of each 2 (3x8x2 = 48) to
@@ -235,7 +236,7 @@ UCHAR get_host_cmd_task(int test)
 	}
 	printf("done testing io\r\n");
 */	
-	k = i = 0;
+	j = k = i = 0;
 	cmd = 0x21;
 
 	while(TRUE)
@@ -254,7 +255,7 @@ UCHAR get_host_cmd_task(int test)
 			memset(msg_buf,0,sizeof(msg_buf));
 			//printf("wait for msg_len\n");
 			msg_len = get_msg();
-			printf("msg_len: %d\n",msg_len);
+			//printf("msg_len: %d\n",msg_len);
 //			printHexByte(msg_len);
 			if(msg_len < 0)
 			{
@@ -264,7 +265,7 @@ UCHAR get_host_cmd_task(int test)
 			}else
 			{
 				rc = recv_tcp(&msg_buf[0],msg_len+1,1);
-				printf("rc: %d\n",rc);
+				//printf("rc: %d\n",rc);
 /*
 				rc = cllist_find_data(msg_buf[0],ctpp,&cll);
 				printf("%d %d %d %d %s\n",ctp->index,ctp->client_no,ctp->cmd, ctp-> dest, ctp->label);
@@ -385,8 +386,8 @@ UCHAR get_host_cmd_task(int test)
 //						printf("send status\n");
 						break;
 
-					case SEND_MSG:
-						printf("SEND_MSG\n");
+					case SEND_MESSAGE:
+						printf("SEND_MESSAGE\n");
 						for(i = 0;i < msg_len;i++)
 							printf("%c",tempx[i]);
 						printf("\n");
@@ -627,15 +628,6 @@ uSleep(0,TIME_DELAY/3);
 						j = 0;
 
 						memset(password,0,PASSWORD_SIZE);
-/*
-						for(i = 0;i < 7;i+= 2)
-						{
-							password[j] = write_serial_buffer[j + 20] = msg_buf[i+36];
-							j++;
-						}
-						write_serial_buffer[j] = 0;
-						password[4] = 0;
-*/
 						usleep(500);
 						i = WriteParams("param.conf", &ps, &password[0], errmsg);
 
@@ -745,7 +737,7 @@ int get_msg(void)
 	}
 	ret = recv_tcp(&low,1,1);
 	ret = recv_tcp(&high,1,1);
-	//printf("%02x %02x\n",low,high);
+//	printf("%02x %02x\n",low,high);
 	len = 0;
 	len = (int)(high);
 	len <<= 4;
@@ -782,7 +774,7 @@ void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type, UCHAR dest)
 			send_tcp((UCHAR *)&msg[i],1);
 //			send_tcp((UCHAR *)&ret,1);
 		}
-//		printf("%d ",msg_len);
+		//printf("%d ",msg_len);
 	}
 }
 /*********************************************************************/

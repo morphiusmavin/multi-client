@@ -707,17 +707,12 @@ UCHAR timer2_task(int test)
 UCHAR timer_task(int test)
 {
 	int i;
-	UCHAR time_buffer[30];
-	int index = 0;
-	int bank = 0;
-	int fp;
-	UCHAR mask;
-//	time_t curtime2;
-	struct timeval mtv;
+/*
 	O_DATA *otp;
 	O_DATA **otpp = &otp;
 	O_DATA *otp2;
 	O_DATA **otpp2 = &otp2;
+*/
 //	static int test_ctr = 0;
 //	static int test_ctr2 = 0;
 	UCHAR cmd = 0x21;
@@ -732,8 +727,9 @@ UCHAR timer_task(int test)
 		if(++cmd > 0x7e)
 			cmd = 0x21;
 	}
+	write_serial_buffer[SERIAL_BUFF_SIZE - 20] = 0;
 	i = 0;
-
+/*
 	fp = init_serial();
 	if(fp < 0)
 	{
@@ -751,18 +747,20 @@ UCHAR timer_task(int test)
 	{
 		printf("can't open comm port 3\n");
 	}else printf("com port3: %d\n",fp);
-
+*/
 	//uSleep(1,0);
 	while(TRUE)
 	{
 		if(timer_on == 1)
 		{
 			uSleep(timer_seconds,0);
-			//printf("timer 1: %d\n",timer_seconds);
-			send_msg(strlen((char*)write_serial_buffer),(UCHAR*)write_serial_buffer, SEND_MSG, _SERVER);
+			printf("timer 1: %d\n",timer_seconds);
+			//send_msg(strlen((char*)write_serial_buffer),(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
+			send_msg(SERIAL_BUFF_SIZE-20,(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
 		} else if(timer_on == 2)
 		{
 			uSleep(timer_seconds,0);
+/*			
 			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
 				write_serial(write_serial_buffer[i]);
 			uSleep(0,TIME_DELAY/16);
@@ -771,6 +769,7 @@ UCHAR timer_task(int test)
 			uSleep(0,TIME_DELAY/16);
 			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
 				write_serial3(write_serial_buffer[i]);
+*/
 			uSleep(0,TIME_DELAY/16);
 		}else uSleep(0,TIME_DELAY/16);
 
@@ -778,50 +777,11 @@ UCHAR timer_task(int test)
 		{
 			//printf("done timer_task\r\n");
 			//printString2("done timer");
-			close_serial();
-			close_serial2();
-			close_serial3();
+			//close_serial();
+			//close_serial2();
+			//close_serial3();
 			return 0;
 		}
-/*
-		memset(time_buffer,0,sizeof(time_buffer));
-		sprintf(time_buffer,"____ABCDEF145JM %d\0",i);
-		time_buffer[0] = _SERVER;
-		time_buffer[1] = (UCHAR)i;
-		time_buffer[2] = (UCHAR)(i >> 4);
-
-		send_msg(22,(UCHAR*)time_buffer,SEND_MSG, _SERVER);
-		uSleep(5,0);
-		send_msg(22,(UCHAR*)time_buffer,SEND_MSG, 1);
-		uSleep(5,0);
-		send_msg(22,(UCHAR*)time_buffer,SEND_MSG, 2);
-		uSleep(5,0);
-		i++;
-
-		//printf("%d ",i);
-
-
-	i = 0;
-	while(TRUE)
-	{
-		memset(time_buffer,0,sizeof(time_buffer));
-		sprintf(time_buffer,"____ABCDEF145JM %d\0",i);
-		time_buffer[0] = global_index;		// this is passed in as a cmd line param on startup
-		time_buffer[1] = (UCHAR)i;
-		time_buffer[2] = (UCHAR)(i >> 4);
-
-		send_msg(22,(UCHAR*)time_buffer,SEND_MSG, _SERVER);
-		i++;
-		//printf("%d ",i);
-		uSleep(5,0);
-		uSleep(0,TIME_DELAY/6);
-		if(shutdown_all)
-		{
-//			printf("done timer_task\r\n");
-			//printString2("done timer");
-			return 0;
-		}
-*/
 	}
 	return 1;
 }

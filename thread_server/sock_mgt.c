@@ -78,6 +78,9 @@ void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
 
+	if(cmd >= NO_CMDS)
+		printf("unknown cmd: %d\n",cmd);
+	
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
 	printf("%s\r\n",cmd_array[cmd].cmd_str);
 }
@@ -147,6 +150,7 @@ UCHAR get_host_cmd_task(int test)
 	int j;
 	int k;
 	UCHAR tempx[200];
+	UCHAR write_serial_buff[SERIAL_BUFF_SIZE];
 	char temp_time[5];
 	char *pch;
 	time_t curtime2;
@@ -185,13 +189,13 @@ UCHAR get_host_cmd_task(int test)
 		}
 		cmd = msg.mtext[0];							// first byte is cmd
 		dest = (int)msg.mtext[1];					// 2nd byte is dest
+		//printf("x dest: %d\n",dest);
 		print_cmd(cmd);
-		printf("dest: %d\n",dest);
-		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
-		tempx[0] = cmd;
+		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
+		write_serial_buff[0] = cmd;
 		//printf("msg_len: %d\n",msg_len);
-		memcpy(tempx,msg.mtext+4,msg_len);
+		memcpy(write_serial_buff,msg.mtext+4,msg_len);
 		//printf("msg to tcp: %s\n",tempx);
 		
 //		for(i = 1;i < msg_len+1;i++)
@@ -267,7 +271,7 @@ UCHAR get_host_cmd_task(int test)
 					printf("%s\n",tempx);
 					break;
 
-				case SEND_MSG:
+				case SEND_MESSAGE:
 					printf("\nSEND_MSG (sock_mgt)\n");
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
@@ -280,7 +284,7 @@ UCHAR get_host_cmd_task(int test)
 					msg.mtext[1] = (UCHAR)msg_len;
 					msg.mtext[2] = (UCHAR)(msg_len >> 4);
 */
-					memcpy(msg.mtext,tempx,msg_len);
+					memcpy(msg.mtext,write_serial_buff,msg_len);
 //					uSleep(1,0);
 
 					if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
@@ -294,8 +298,8 @@ UCHAR get_host_cmd_task(int test)
 				case SEND_STATUS:
 					printf("sock_mgt send status\n");
 					temp = 0;
-					temp = (int)(tempx[3] << 4);
-					temp |= (int)tempx[2];
+					temp = (int)(write_serial_buff[3] << 4);
+					temp |= (int)write_serial_buff[2];
 					printf("temp: %d\n",temp);
 					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,SEND_STATUS);
 					break;
@@ -311,8 +315,8 @@ UCHAR get_host_cmd_task(int test)
 				case GET_TEMP4:
 					if(client_table[dest].socket > 0)
 					{
-						printf("dest: %d sock: %d msg_len: %d\n",dest,client_table[dest].socket,msg_len);
-						send_msg(client_table[dest].socket, msg_len, (UCHAR*)&tempx[0],cmd);
+						//printf("dest: %d sock: %d msg_len: %d\n",dest,client_table[dest].socket,msg_len);
+						send_msg(client_table[dest].socket, msg_len, (UCHAR*)&write_serial_buff[0],cmd);
 					}
 					break;
 
@@ -510,7 +514,7 @@ UCHAR ReadTask(int test)
 	int index = lookup_taskid(test);
 	printf("readtask: %d %d\n",test, index);
 
-	char tempx[105];
+	char tempx[SERIAL_BUFF_SIZE];
 	int msg_len;
 	int ret;
 	UCHAR cmd;
@@ -573,8 +577,6 @@ startover1:
 				goto startover1;
 //				break;
 			}
-			if(ret > 200)
-				break;
 
 			if(cmd == CLIENT_RECONNECT)
 			{
@@ -594,7 +596,7 @@ startover1:
 */
 			if(dest == _SERVER)		// from one of the clients to the server
 			{
-				//printf("dest: server\n");
+				printf("dest: server\n");
 				memset(msg.mtext,0,sizeof(msg.mtext));
 				msg.mtext[0] = cmd;
 				msg.mtext[1] = (UCHAR)msg_len;
@@ -1050,7 +1052,7 @@ void send_msg(int sd, int msg_len, UCHAR *msg, UCHAR msg_type)
 	ret = send_tcp(sd, &pre_preamble[0],8);
 	temp[0] = (UCHAR)(msg_len & 0x0F);
 	temp[1] = (UCHAR)((msg_len & 0xF0) >> 4);
-	//printf("%02x %02x\n",temp[0],temp[1]);
+	printf("%02x %02x\n",temp[0],temp[1]);
 	send_tcp(sd, (UCHAR *)&temp[0],1);
 	send_tcp(sd, (UCHAR *)&temp[1],1);
 	send_tcp(sd, (UCHAR *)&msg_type,1);

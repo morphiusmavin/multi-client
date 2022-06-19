@@ -724,7 +724,6 @@ UCHAR timer2_task(int test)
 UCHAR timer_task(int test)
 {
 	int i;
-	char time_buffer[100];
 	char tempx[100];
 //	UCHAR tempx[SERIAL_BUFF_SIZE];
 	int index = 3;
@@ -736,44 +735,43 @@ UCHAR timer_task(int test)
 	O_DATA **otpp2 = &otp2;
 //	static int test_ctr = 0;
 //	static int test_ctr2 = 0;
-	UCHAR cmd = GET_TEMP4;
+	UCHAR cmd;
 	int msg_len;
 	int ret;
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
 
-	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
-	memset(time_buffer,0,sizeof(time_buffer));
-/*
+//	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
+
+	cmd = 0x21;
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
 	{
 		write_serial_buffer[i] = cmd;
 		if(++cmd > 0x7e)
 			cmd = 0x21;
 	}
-*/
+
 	i = 0;
-//printf("timer task\n");
+	cmd = GET_TEMP4;
+
 	while(TRUE)
 	{
 		if(timer_on > 0)
 		{
-			cmd = GET_TEMP4;
+			//printf("%s %d\n",client_table[i].label, client_table[i].socket);
 			for(i = 0;i < MAX_CLIENTS;i++)
 			{
 				if(client_table[i].type == TS_CLIENT && client_table[i].socket > 0)
 				{
-					printf("%s %d\n",client_table[i].label, client_table[i].socket);
-					time(&t);
-					snprintf(time_buffer, sizeof(time_buffer), "a message at %s\0", ctime(&t));
-					msg_len = strlen(time_buffer);
-					printf("msg_len: %d\n",msg_len);
+					//printf("%s %d\n",client_table[i].label, client_table[i].socket);
+					msg_len = SERIAL_BUFF_SIZE-20;
+					//printf("msg_len: %d\n",msg_len);
 					msg.mtext[0] = cmd;
 					msg.mtext[1] = (UCHAR)i;
 					msg.mtext[2] = (UCHAR)msg_len;
 					msg.mtext[3] = (UCHAR)(msg_len >> 4);
-					memcpy(msg.mtext+4,time_buffer,msg_len);
+					memcpy(msg.mtext+4,write_serial_buffer,msg_len);
 					if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 					{
 						perror("msgsnd error");
@@ -788,33 +786,6 @@ UCHAR timer_task(int test)
 		{
 			return 0;
 		}
-	}
-
-	while(TRUE)
-	{
-		if(client_table[index].socket > 0)
-		{
-			msg_len = get_msg(client_table[index].socket);
-			ret = recv_tcp(client_table[index].socket, &time_buffer[0],msg_len+1,1);
-	//		printf("ret: %d\n",ret);
-			cmd = time_buffer[0];
-	//		printf("cmd: %d\n",cmd);
-			if(ret > 200)
-				break;
-			memset(tempx,0,sizeof(tempx));
-			for(i = 5;i < ret+1;i++)
-			{
-				tempx[i-5] = time_buffer[i];
-	//			printf("%02x ",tempx[i]);
-			}
-			printf("%s\n",tempx);
-		}
-		if(shutdown_all)
-		{
-			return 0;
-		}
-		uSleep(0,TIME_DELAY/16);
-		uSleep(2,0);
 	}
 	return 1;
 }
