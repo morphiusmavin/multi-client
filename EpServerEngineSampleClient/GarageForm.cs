@@ -261,7 +261,7 @@ namespace EpServerEngineSampleClient
 			offset = svrcmd.GetCmdIndexI(cmd);
 			//AddMsg(which.ToString() + " " + cmd + " " + offset.ToString());
 			//svrcmd.Send_Cmd(offset);
-			svrcmd.Send_ClCmd(offset, 9, "test");
+			svrcmd.Send_ClCmd(offset, 8, "test");       // TODO: set this to whatever client (in this case server) is offset 8 in assign_client_table.c
 			prev_status[which] = status[which];
 			ChangeStatus(which);
 			IfStatusChanged(which);

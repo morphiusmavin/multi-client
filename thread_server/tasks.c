@@ -1082,7 +1082,7 @@ UCHAR basic_controls_task(int test)
 	int msgtype = 1;
 	msg.mtype = msgtype;
 
-//printf("starting basic_controls_task\n");
+printf("starting basic_controls_task\n");
 
 	while(TRUE)
 	{

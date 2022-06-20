@@ -52,6 +52,7 @@ pthread_mutex_t     tcp_read_lock=PTHREAD_MUTEX_INITIALIZER;
 UCHAR (*fptr[NUM_SOCK_TASKS])(int) = 
 { 
 	WinClReadTask, 
+	WinClReadTask, 
 	ReadTask, 
 	ReadTask, 
 	ReadTask,
@@ -168,7 +169,7 @@ UCHAR get_host_cmd_task(int test)
 	int temp;
 	int dest;
 
-	printf("sock_mgnt starting %d\n",test);
+	//printf("sock_mgnt starting %d\n",test);
 
 	while(TRUE)
 	{
@@ -189,23 +190,22 @@ UCHAR get_host_cmd_task(int test)
 		}
 		cmd = msg.mtext[0];							// first byte is cmd
 		dest = (int)msg.mtext[1];					// 2nd byte is dest
-		//printf("x dest: %d\n",dest);
-		printf("sock: ");
-		print_cmd(cmd);
+		printf("dest: %d\n",dest);
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
 		write_serial_buff[0] = cmd;
-		//printf("msg_len: %d\n",msg_len);
+		printf("msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+4,msg_len);
 		//printf("msg to tcp: %s\n",tempx);
 		
 //		for(i = 1;i < msg_len+1;i++)
 //			printf("%02x ",tempx[i]);
 
-		if(cmd > 0)
+//		if(cmd > 0)
+		if(1)
 		{
 			rc = 0;
-			
+#if 0
 			switch(cmd)
 			{
 				case SHUTDOWN_IOBOX:
@@ -221,26 +221,12 @@ UCHAR get_host_cmd_task(int test)
 				default:
 					break;
 			}
-
+#endif
+			print_cmd(cmd);
 			switch(cmd)
 			{
-				case CLIENT_RECONNECT:
-					for(i = 0;i < MAX_CLIENTS;i++)
-					{
-						if(client_table[i].socket > 0)
-						{
-							memset(tempx,0,sizeof(tempx));
-							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-							//printf("should be sending a msg to clients %s\n",tempx);
-//							send_msg(client_table[i].socket, strlen(tempx)*2,tempx,CLIENT_RECONNECT);
-							uSleep(0,TIME_DELAY/10);
-						}
-					}
-					break;
 
 				case SEND_CLIENT_LIST:
-
-					printf("SEND_CLIENT_LIST\n");
 					for(i = 0;i < MAX_CLIENTS;i++)
 					{
 						printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
@@ -249,15 +235,16 @@ UCHAR get_host_cmd_task(int test)
 							memset(tempx,0,sizeof(tempx));
 							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
 							printf("%s\n",tempx);
+
 							for(j = 0;j < MAX_CLIENTS;j++)
 							{
 								if(client_table[j].type == WINDOWS_CLIENT && client_table[j].socket > 0)
 									send_msgb(client_table[j].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 								uSleep(0,TIME_DELAY/20);
 							}
+
 						}
 					}
-
 					break;
 				
 				case UPTIME_MSG:	// sent from client
@@ -376,7 +363,7 @@ startover:
 			//print_cmd(cmd);
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
-			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 /*
 			for(i = 2;i < rc;i+=2)
 				printf("%02x ",msg_buf[i]);
@@ -418,7 +405,8 @@ startover:
 
 			if(win_client_to_client_sock == _SERVER)
 			{
-				//printf("msg to cmd_host on server: %s %d\n",msg.mtext + 4,cmd);
+				printf("msg to cmd_host on server: %s %d\n",msg.mtext + 3,cmd);
+				print_cmd(cmd);
 				// send msg's to sched 
 				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
@@ -800,13 +788,18 @@ UCHAR tcp_monitor_task(int test)
 		//add master socket to set
 		FD_SET(master_socket, &readfds);
 		max_sd = master_socket;
-		client_table[7].socket = max_sd;
+		client_table[_SERVER].socket = max_sd;
 /*
+		for(i = 0;i < MAX_CLIENTS;i++)
+		{
+			printf("%d %s %d\n",i, client_table[i].label, client_table[i].socket);
+		}
+
 		memset(tempx,0,sizeof(tempx));
 		sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
 		printf("should be sending server info to win cl: %s\n",tempx);
 		uSleep(0,TIME_DELAY/16);
-		send_msgb(client_table[7].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+		send_msgb(client_table[8].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 */
 		//add child sockets to set
 		for ( i = 0 ; i < MAX_CLIENTS ; i++)
@@ -896,12 +889,14 @@ UCHAR tcp_monitor_task(int test)
 						}
 					}
 */
+					// send msg to 1st win client (149)
 					send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+					send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 
 					if(client_table[i].qid == 0)
 					{
 						client_table[i].qid = msgget(client_table[i].qkey, IPC_CREAT | 0666);
-						printf("new connection qid: %d : %d\n",i,client_table[i].qid);
+						//printf("new connection qid: %d : %d\n",i,client_table[i].qid);
 					}
 					// tell the sched which clients have logged in/out
 					msg.mtext[0] = UPDATE_CLIENT_LIST;

@@ -305,9 +305,11 @@ UCHAR get_host_cmd_task(int test)
 				{
 					case SET_NEXT_CLIENT:
 						next_client = tempx[0];
-						if(next_client == 7)
+						if(next_client == 8)
+						{
 							next_client = 0;
-						printf("next client: %d\n",next_client);
+							printf("stop\n");
+						}else printf("next client: %s\n", client_table[next_client].label);
 						j = 0;
 						break;
 
@@ -319,7 +321,7 @@ UCHAR get_host_cmd_task(int test)
 							if(++cmd > 0x7e)
 								cmd = 0x21;
 						}
-						send_msg(200,(UCHAR*)&tempx[j], SEND_MESSAGE, next_client);
+						send_msg(200-j,(UCHAR*)&tempx[j], SEND_MESSAGE, next_client);
 						uSleep(0,TIME_DELAY/10);
 						send_msg(1,(UCHAR*)&tempx[j], SEND_NEXT_CLIENT, next_client);
 						j++;

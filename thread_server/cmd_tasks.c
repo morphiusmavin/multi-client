@@ -196,6 +196,7 @@ UCHAR get_host_cmd_task(int test)
 				exit(EXIT_FAILURE);
 			}
 		}
+		printf("sched cmd host: ");
 		cmd = msg.mtext[0];
 		print_cmd(cmd);
 		msg_len |= (int)(msg.mtext[2] << 4);
@@ -228,7 +229,7 @@ UCHAR get_host_cmd_task(int test)
 				case SHUTDOWN_IOBOX:
 				case REBOOT_IOBOX:
 				case SHELL_AND_RENAME:
-//					printf("sending que: %02x\r\n",cmd);
+					//printf("sending que: %02x\r\n",cmd);
 					memset(tempx,0,sizeof(tempx));
 					//send_serialother(cmd,(UCHAR *)tempx);
 					add_msg_queue(cmd);
@@ -260,7 +261,24 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case UPDATE_CLIENT_LIST:
+					printf("update client list: %d %d\n",tempx[0],tempx[1]);
 					client_table[tempx[0]].socket = tempx[1];
+					break;
+				
+				case SEND_CLIENT_LIST:
+					msg.mtext[0] = cmd;
+					msg.mtext[1] = 9;
+					msg_len = 2;
+					msg.mtext[2] = (UCHAR)msg_len;
+					msg.mtext[3] = (UCHAR)(msg_len >> 4);
+
+					if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+					{
+						// keep getting "Invalid Argument" - cause I didn't set the mtype
+						perror("msgsnd error");
+						printf("exit from send client list\n");
+						exit(EXIT_FAILURE);
+					}
 					break;
 				
 				case CLIENT_RECONNECT:

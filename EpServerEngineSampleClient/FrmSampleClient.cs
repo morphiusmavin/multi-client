@@ -146,7 +146,7 @@ namespace EpServerEngineSampleClient
                 item2.socket = Convert.ToInt16(dr.ItemArray[2]);
                 //temp += item2.socket.ToString();
                 item2.type = Convert.ToInt16(dr.ItemArray[3]);  // type is: 0 - win client; 1 - TS_CLIENT; 2 - TS_SERVER (only one of these)
-				//AddMsg(item2.label.ToString() + " " + item2.ip_addr.ToString());
+				//AddMsg(item2.label.ToString() + " " + item2.ip_addr.ToString() + " " + item2.socket.ToString());
                 clients_avail.Add(item2);
                 item2 = null;
 				lb_index++;
@@ -198,7 +198,7 @@ namespace EpServerEngineSampleClient
             {
                 m_hostname = cbIPAdress.Items[selected_address].ToString();
                 m_portno = tbPort.Text;
-                AddMsg("trying to connect to:    " + m_hostname + ":" + m_portno.ToString() + "...");
+                //AddMsg("trying to connect to:    " + m_hostname + ":" + m_portno.ToString() + "...");
                 ClientOps ops = new ClientOps(this, m_hostname, m_portno);
                 // set the timeout to 5ms - by default it's 0 which causes it to wait a long time
                 // and slows down the UI
@@ -217,7 +217,7 @@ namespace EpServerEngineSampleClient
             
         public void OnConnected(INetworkClient client, ConnectStatus status)
         {
-            AddMsg(client.HostName);
+            //AddMsg(client.HostName);
             if (client.HostName == m_hostname)
             {
                 if (m_client.IsConnectionAlive)
@@ -237,7 +237,7 @@ namespace EpServerEngineSampleClient
                     btnGetTime.Enabled = true;
                     //AddMsg("server_up_seconds: " + server_up_seconds.ToString());
                     btnShowParams.Enabled = valid_cfg;
-                    clients_avail[7].socket = 1;        // 7 is _SERVER (this is bad!)
+                    clients_avail[8].socket = 1;        // 8 is _SERVER (this is bad!)
                 }
             }
             else AddMsg(client.HostName);
@@ -303,13 +303,13 @@ namespace EpServerEngineSampleClient
         {
             lbAvailClients.Items.Clear();
             int i = 0;
+            //AddMsg("redraw: ");
             foreach (ClientsAvail j in clients_avail)
             {
+                //AddMsg(j.ip_addr + " " + j.label + " " + j.socket.ToString() + " " + j.type);
                 if (j.socket > 0 && j.type != 0)
                 {
                     string temp = j.label + " " + j.ip_addr + " " + j.socket.ToString();
-                    AddMsg("redraw");
-                    AddMsg(temp);
                     lbAvailClients.Items.Add(temp);
                     j.lbindex = i;
                     i++;
@@ -429,18 +429,18 @@ namespace EpServerEngineSampleClient
                         {
                             case 0:     // index into clients_avail list
                                 j = int.Parse(word);
-                                AddMsg(j.ToString());
+                               //AddMsg(j.ToString());
 								clmsg = word + "  ";
                                 break;
                             case 1:     // ip address
-                                AddMsg(word);
+                                //AddMsg(word);
 								clmsg += word + "  ";
                                 break;
                             case 2:     // port no.
 								//if(clients_avail[i].socket < 0)
 									//avail = true;
                                 sock = clients_avail[j].socket = int.Parse(word);
-                                AddMsg(clients_avail[j].socket.ToString());
+                                //AddMsg(clients_avail[j].socket.ToString());
                                 clmsg += word + " " + sock.ToString();
 								//if(avail)
 									RedrawClientListBox();
@@ -649,7 +649,7 @@ namespace EpServerEngineSampleClient
         }
         private void RebootServer(object sender, EventArgs e)       // "test"
         {
-            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 7, "test");
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
             //SendClientMsg(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), "send client list", true);
             AddMsg("send client list");
         }
