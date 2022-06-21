@@ -119,6 +119,7 @@ namespace EpServerEngineSampleClient
 		private void cbSource_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			sindex = cbSource.SelectedIndex;
+			sindex += 2;
 			AddMsg("source: " + sindex.ToString());
 		}
 		

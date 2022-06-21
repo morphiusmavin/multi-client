@@ -1,7 +1,7 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_SOCK_TASKS			9
+#define NUM_SOCK_TASKS			10
 #define NUM_SCHED_TASKS			7
 #define DEFAULT                 0
 #define TIME_SLICE              1
@@ -47,6 +47,7 @@ enum sock_task_types
 	READ_TASK3,
 	READ_TASK4,
 	READ_TASK5,
+	READ_TASK6,
 	GET_HOST_CMD1,
 	TCP_MONITOR
 } SOCK_TASK_TYPES;

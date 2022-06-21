@@ -47,7 +47,6 @@ namespace EpServerEngineSampleClient
 			this.cbSource.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.cbSource.FormattingEnabled = true;
 			this.cbSource.Items.AddRange(new object[] {
-            "Second Windows 7  (149)",
             "TS-client 1 (154)",
             "TS-client 2 (147)",
             "TS-client 3 (150)",
