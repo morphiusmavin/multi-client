@@ -285,8 +285,8 @@ UCHAR get_host_cmd_task(int test)
 					case ALL_WEST_OFF:
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
-					case WAIT_REBOOT_IOBOX:
 					case SHELL_AND_RENAME:
+					case EXIT_TO_SHELL:
 						//printf("sending que: %02x\r\n",cmd);
 						memset(tempx,0,sizeof(tempx));
 						//send_serialother(cmd,(UCHAR *)tempx);
@@ -296,7 +296,7 @@ UCHAR get_host_cmd_task(int test)
 						break;
 				}
 
-				if(cmd == WAIT_REBOOT_IOBOX || cmd == REBOOT_IOBOX || cmd == SHUTDOWN_IOBOX)
+				if(cmd == SHELL_AND_RENAME || cmd == REBOOT_IOBOX || cmd == SHUTDOWN_IOBOX || cmd == EXIT_TO_SHELL)
 				{
 					return 1;
 				}
@@ -649,64 +649,7 @@ uSleep(0,TIME_DELAY/3);
 					case GET_VERSION:
 						send_status_msg(version);
 						break;
-/*
-					case EXIT_PROGRAM:
-exit_program:
-						j = 0;
-						if(reboot_on_exit == 1)
-						{
-							printf("exit to shell\0");
-						}
-						else if(reboot_on_exit == 2)
-						{
-							printf("rebooting...\0");
-						}
-						else if(reboot_on_exit == 3)
-						{
-							printf("shutting down...\0");
-						}
-						else if(reboot_on_exit == 4)
-						{
-							printf("upload new...\0");
-						}
 
-						// save the current list of events
-						i = WriteParams("param.conf", &ps, &password[0], errmsg);
-						if(i < 0)
-						{
-							printf(errmsg);
-						}
-
-						// pulse the LED on the IO box before shutting down
-#if 0
-						for(i = 0;i < 20;i++)
-						{
-							setdioline(7,0);
-							uSleep(0,TIME_DELAY/30);
-							setdioline(7,1);
-							uSleep(0,TIME_DELAY/30);
-						}
-						setdioline(7,0);
-						uSleep(2,0);
-						setdioline(7,1);
-
-						// pulse the LED's on the card FWIW
-
-						for(i = 0;i < 20;i++)
-						{
-							red_led(1);
-							usleep(20000);
-							red_led(0);
-							green_led(1);
-							usleep(20000);
-							green_led(0);
-						}
-#endif
-						usleep(10000000);
-						shutdown_all = 1;
-						return 0;
-						break;
-*/
 					default:
 						printf("default in main loop\n");
 						break;

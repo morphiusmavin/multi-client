@@ -52,16 +52,13 @@ namespace EpServerEngineSampleClient
         private string m_hostname2;
         private string m_portno2;
         private int server_up_seconds = 0;
-        //private string current_password = "testasdf";
-        //private int password_length = 8;
-        private int wait_before_starting = 0;
-        //private int server_connection_attempts = 1;
         private bool client_connected = false;
         private bool home_svr_connected = false;
         // initially try for 20 seconds to connect, then 
         // give up until user hits 'Call Home' button
         private int timer_offset;
         private string sendmsgtext;
+        int tick = 0;	
 
         private string xml_dialog1_location = "c:\\Users\\daniel\\dev\\uiformat1.xml";
         private string xml_dialog2_location = "c:\\Users\\daniel\\dev\\uiformat2.xml";
@@ -178,20 +175,6 @@ namespace EpServerEngineSampleClient
             timer1.Enabled = true;
             //ListMsg("Hello!",true);
         }
-/*
-		public static string GetLocalIPAddress()
-		{
-			var host = Dns.GetHostEntry(Dns.GetHostName());
-			foreach (var ip in host.AddressList)
-			{
-				if (ip.AddressFamily == AddressFamily.InterNetwork)
-				{
-					return ip.ToString();
-				}
-			}
-			throw new Exception("No network adapters with an IPv4 address in the system!");
-		}
-*/
         private void btnConnect_Click(object sender, EventArgs e)
         {
             if (!client_connected)      // let's connect here! (see timer callback at end of file)
@@ -360,7 +343,7 @@ namespace EpServerEngineSampleClient
                     svrcmd.Send_Cmd(offset);
                     break;
 
-                case "SEND_MSG":
+                case "SEND_MESSAGE":
                     AddMsg("str: " + str + " " + str.Length.ToString());
                     AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
                     AddMsg(ret);
@@ -807,11 +790,21 @@ namespace EpServerEngineSampleClient
         {
 			SetTime(9);
         }
+
         private void myTimerTick(object sender, EventArgs e)
         {
-            if (wait_before_starting != 0)
-                wait_before_starting--;
-
+            tick++;
+            if (tick == 30)
+			{
+				 foreach (ClientsAvail cl in clients_avail)
+				{
+					if (cl.type == 1 && cl.socket > 0)
+					{
+						SetTime(cl.index);
+					}
+				}
+			}
+                
             switch (please_lets_disconnect)            // send the msg to server saying we are disconnecting
             {
                 case 0:
@@ -1148,7 +1141,9 @@ namespace EpServerEngineSampleClient
         }
         private void btnShutdownClient_Click(object sender, EventArgs e)
         {
-            foreach (ClientsAvail cl in clients_avail)
+            SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), " ", true);
+
+/*            foreach (ClientsAvail cl in clients_avail)
             {
                 if (cl.type == 1 && cl.socket > 0)
                 {
@@ -1168,7 +1163,7 @@ namespace EpServerEngineSampleClient
                 }
             }
             lbAvailClients.Items.Clear();
-        }
+*/        }
         private void button1_Click(object sender, EventArgs e)		// get status
         {
             SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"), "status", false);
@@ -1196,9 +1191,7 @@ namespace EpServerEngineSampleClient
         }
 		private void btnSendMsg_Click(object sender, EventArgs e)
 		{
-            // if (sendmsgtext == "")
-               // sendmsgtext = "test";
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MSG"), sendmsgtext, false);
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MESSAGE"), sendmsgtext, false);
         }
 		private void bSetClientTime_Click(object sender, EventArgs e)
 		{
@@ -1242,7 +1235,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnWaitReboot_Click(object sender, EventArgs e)
 		{
-            SendClientMsg(svrcmd.GetCmdIndexI("WAIT_REBOOT_IOBOX"), " ", true);
+            SendClientMsg(svrcmd.GetCmdIndexI("SHELL_AND_RENAME"), " ", true);
         }
 		private void tbSendMsg_TextChanged(object sender, EventArgs e)
 		{
@@ -1263,5 +1256,10 @@ namespace EpServerEngineSampleClient
             cabinLights.Enable_Dlg(false);
 
         }
-    }
+
+		private void button1_Click_1(object sender, EventArgs e)
+		{
+            SendClientMsg(svrcmd.GetCmdIndexI("SHELL_AND_RENAME"), " ", true);
+        }
+	}
 }

@@ -1447,7 +1447,6 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case ALL_WEST_OFF:
-
 				index = WEST_LIGHT;
 				rc = ollist_find_data(index,otpp,&oll);
 				otp->onoff = 0;
@@ -1463,78 +1462,46 @@ UCHAR basic_controls_task(int test)
 				otp->onoff = 0;
 				set_output(otp,0);
 				usleep(_100MS);
-/*
-				printf("test:\r\n");		// testing all outputs
-				for(i = 0;i < 20;i++)
-				{
-					change_output(i,1);
-					usleep(_200MS);
-				}
-					usleep(_500MS);
-				for(i = 0;i < 20;i++)
-				{
-					change_output(i,0);
-					usleep(_200MS);
-				}
-
-				for(i = 0;i < 5;i++);		// this doesn't work for some reason
-				{
-					rc = ollist_find_data(index,otpp,&oll);
-					otp->onoff = 1;
-					set_output(otp,1);
-					usleep(_500MS);
-//					printf("on: %d\r\n",index);
-					index++;
-				}
-				usleep(_1SEC);
-				index = EAST_LIGHT;
-				for(i = 0;i < 5;i++);
-				{
-					rc = ollist_find_data(index,otpp,&oll);
-					otp->onoff = 0;
-					set_output(otp,0);
-					usleep(_500MS);
-//					printf("off: %d\r\n",index);
-					index++;
-				}
-
-				printf("done\r\n");
-*/				
 				break;
 
-			case SHUTDOWN_IOBOX:
-				snprintf(tempx, strlen(tempx), "shutdown iobox");
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
-				uSleep(1,0);
-				//printf("shutdown iobox\n");
+			case EXIT_TO_SHELL:
+				snprintf(tempx, strlen(tempx), "exit to shell");
+				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
+				uSleep(0,TIME_DELAY/16);
+				printf("exit to shell\n");
 				shutdown_all = 1;
-				reboot_on_exit = 3;
+				reboot_on_exit = 1;
 				close_tcp();
 				break;
 
 			case REBOOT_IOBOX:
 				snprintf(tempx, strlen(tempx), "reboot iobox");
 				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
-				uSleep(1,0);
+				uSleep(0,TIME_DELAY/16);
 				printf("reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;
 				close_tcp();
 				break;
 
-			case WAIT_REBOOT_IOBOX:
-				snprintf(tempx, strlen(tempx), "wait reboot iobox");
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,WAIT_REBOOT_IOBOX, _SERVER);
-				uSleep(20,0);
-				//printf("reboot iobox\n");
+			case SHUTDOWN_IOBOX:
+				snprintf(tempx, strlen(tempx), "shutdown iobox");
+				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
+				uSleep(0,TIME_DELAY/16);
+				printf("shutdown iobox\n");
 				shutdown_all = 1;
-				reboot_on_exit = 2;
+				reboot_on_exit = 3;
 				close_tcp();
 				break;
 
 			case SHELL_AND_RENAME:
+				snprintf(tempx, strlen(tempx), "shell and rename");
+				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
+				uSleep(0,TIME_DELAY/16);
+				printf("shell and rename\n");
 				shutdown_all = 1;
 				reboot_on_exit = 6;
+				close_tcp();
 				break;
 
 			default:

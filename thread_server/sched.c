@@ -260,7 +260,7 @@ int main(int argc, char **argv)
 //	llist_show(&ll);
 	if(reboot_on_exit == 1)
 	{
-		//printf("sched: exit to shell\r\n");
+		printf("sched: exit to shell\r\n");
 		return 1;
 	}
 	else if(reboot_on_exit == 2)

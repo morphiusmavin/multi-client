@@ -62,6 +62,7 @@
 			this.btnWaitReboot = new System.Windows.Forms.Button();
 			this.tbSendMsg = new System.Windows.Forms.TextBox();
 			this.btnCabinLights = new System.Windows.Forms.Button();
+			this.button1 = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -324,9 +325,9 @@
 			this.lbAvailClients.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbAvailClients.FormattingEnabled = true;
 			this.lbAvailClients.ItemHeight = 15;
-			this.lbAvailClients.Location = new System.Drawing.Point(847, 43);
+			this.lbAvailClients.Location = new System.Drawing.Point(821, 43);
 			this.lbAvailClients.Name = "lbAvailClients";
-			this.lbAvailClients.Size = new System.Drawing.Size(219, 199);
+			this.lbAvailClients.Size = new System.Drawing.Size(245, 184);
 			this.lbAvailClients.TabIndex = 35;
 			this.lbAvailClients.SelectedIndexChanged += new System.EventHandler(this.AvailClientSelIndexChanged);
 			// 
@@ -356,7 +357,7 @@
 			// btnSendStatus
 			// 
 			this.btnSendStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendStatus.Location = new System.Drawing.Point(847, 424);
+			this.btnSendStatus.Location = new System.Drawing.Point(847, 471);
 			this.btnSendStatus.Name = "btnSendStatus";
 			this.btnSendStatus.Size = new System.Drawing.Size(219, 37);
 			this.btnSendStatus.TabIndex = 38;
@@ -367,7 +368,7 @@
 			// btnSendMsg
 			// 
 			this.btnSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendMsg.Location = new System.Drawing.Point(847, 472);
+			this.btnSendMsg.Location = new System.Drawing.Point(847, 519);
 			this.btnSendMsg.Name = "btnSendMsg";
 			this.btnSendMsg.Size = new System.Drawing.Size(219, 37);
 			this.btnSendMsg.TabIndex = 39;
@@ -378,7 +379,7 @@
 			// bSetClientTime
 			// 
 			this.bSetClientTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.bSetClientTime.Location = new System.Drawing.Point(847, 520);
+			this.bSetClientTime.Location = new System.Drawing.Point(847, 567);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(219, 37);
 			this.bSetClientTime.TabIndex = 41;
@@ -389,7 +390,7 @@
 			// btnReportTimeUp
 			// 
 			this.btnReportTimeUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnReportTimeUp.Location = new System.Drawing.Point(847, 568);
+			this.btnReportTimeUp.Location = new System.Drawing.Point(847, 615);
 			this.btnReportTimeUp.Name = "btnReportTimeUp";
 			this.btnReportTimeUp.Size = new System.Drawing.Size(219, 37);
 			this.btnReportTimeUp.TabIndex = 42;
@@ -405,7 +406,7 @@
 			this.btnWaitReboot.Name = "btnWaitReboot";
 			this.btnWaitReboot.Size = new System.Drawing.Size(219, 35);
 			this.btnWaitReboot.TabIndex = 43;
-			this.btnWaitReboot.Text = "Wait Reboot ";
+			this.btnWaitReboot.Text = "Exit to Shell";
 			this.btnWaitReboot.UseVisualStyleBackColor = false;
 			this.btnWaitReboot.Click += new System.EventHandler(this.btnWaitReboot_Click);
 			// 
@@ -430,12 +431,24 @@
 			this.btnCabinLights.UseVisualStyleBackColor = false;
 			this.btnCabinLights.Click += new System.EventHandler(this.btnCabinLights_Click);
 			// 
+			// button1
+			// 
+			this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.button1.Location = new System.Drawing.Point(847, 424);
+			this.button1.Name = "button1";
+			this.button1.Size = new System.Drawing.Size(219, 37);
+			this.button1.TabIndex = 46;
+			this.button1.Text = "Shell and Rename";
+			this.button1.UseVisualStyleBackColor = true;
+			this.button1.Click += new System.EventHandler(this.button1_Click_1);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(1084, 688);
+			this.ClientSize = new System.Drawing.Size(1113, 688);
+			this.Controls.Add(this.button1);
 			this.Controls.Add(this.btnCabinLights);
 			this.Controls.Add(this.tbSendMsg);
 			this.Controls.Add(this.btnWaitReboot);
@@ -516,6 +529,7 @@
 		private System.Windows.Forms.Button btnWaitReboot;
 		private System.Windows.Forms.TextBox tbSendMsg;
 		private System.Windows.Forms.Button btnCabinLights;
+		private System.Windows.Forms.Button button1;
 	}
 }
 

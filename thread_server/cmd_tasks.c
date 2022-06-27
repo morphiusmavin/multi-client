@@ -45,11 +45,13 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 
 extern CMD_STRUCT cmd_array[];
-//extern int windows_client_sock;
 
 void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
+
+	if(cmd >= NO_CMDS)
+		printf("unknown cmd: %d\n",cmd);
 
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
 	printf("%s\r\n",cmd_array[cmd].cmd_str);
@@ -179,6 +181,11 @@ UCHAR get_host_cmd_task(int test)
 	timer_on = 0;
 	timer_seconds = 20;
 
+	for(i = 0;i < NO_CMDS;i++)
+	{
+		print_cmd(i);
+	}
+
 	while(TRUE)
 	{
 		cmd = 0;
@@ -196,7 +203,7 @@ UCHAR get_host_cmd_task(int test)
 				exit(EXIT_FAILURE);
 			}
 		}
-		printf("sched cmd host: ");
+		//printf("sched cmd host: ");
 		cmd = msg.mtext[0];
 		print_cmd(cmd);
 		msg_len |= (int)(msg.mtext[2] << 4);
@@ -296,9 +303,21 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_TIMEUP:
-					sprintf(tempx,"%d days %dh %dm %ds",trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
-//					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
-					printf("%s\n",tempx);
+					sprintf(tempx,"%d %d %d %d",trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
+					msg.mtext[0] = cmd;
+					msg.mtext[1] = 0;	// dest don't matter
+					msg_len = strlen(tempx);
+					msg.mtext[2] = (UCHAR)msg_len;
+					msg.mtext[3] = (UCHAR)(msg_len >> 4);
+					memcpy(msg.mtext+4,tempx,msg_len);
+
+					if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+					{
+						// keep getting "Invalid Argument" - cause I didn't set the mtype
+						perror("msgsnd error");
+						printf("exit from send client list\n");
+						exit(EXIT_FAILURE);
+					}
 					break;
 
 				case SEND_MESSAGE:

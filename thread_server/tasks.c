@@ -1465,10 +1465,6 @@ printf("starting basic_controls_task\n");
 
 			case SHUTDOWN_IOBOX:
 				reboot_on_exit = 3;
-			case REBOOT_IOBOX:
-				reboot_on_exit = 2;
-			case SHELL_AND_RENAME:
-				reboot_on_exit = 6;
 				printf("shutdown iobox\n");
 				shutdown_all = 1;
 				msg.mtype = msgtype;
@@ -1479,8 +1475,30 @@ printf("starting basic_controls_task\n");
 					exit(EXIT_FAILURE);
 				}
 				break;
-
-
+			case REBOOT_IOBOX:
+				reboot_on_exit = 2;
+				printf("reboot iobox\n");
+				shutdown_all = 1;
+				msg.mtype = msgtype;
+				msg.mtext[0] = cmd;
+				if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+				break;
+			case SHELL_AND_RENAME:
+				reboot_on_exit = 1;
+				printf("shell and rename\n");
+				shutdown_all = 1;
+				msg.mtype = msgtype;
+				msg.mtext[0] = cmd;
+				if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+				break;
 			default:
 				break;
 		}	// end of switch
