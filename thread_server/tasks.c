@@ -236,7 +236,7 @@ static void set_output(O_DATA *otp, int onoff)
 			otp->onoff = onoff;
 			change_output(otp->port,otp->onoff);
 			ollist_insert_data(otp->port,&oll,otp);
-//			printf("type 0 port: %d onoff: %d\r\n", otp->port, otp->onoff);
+			//printf("type 0 port: %d onoff: %d\r\n", otp->port, otp->onoff);
 			break;
 		case 1:
 			if(otp->reset == 0)
@@ -626,36 +626,36 @@ int change_output(int index, int onoff)
 
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
-//	printf("bank: %d\r\n",bank);
+	//printf("bank: %d\r\n",bank);
 	switch(bank)
 	{
 /*
 		case 0:
-			OutPortA(onoff, index);			  // 0-7
+			OutPortA(onoff, index);
 			break;
 		case 1:
-			OutPortB(onoff, index);			  // 0-7
+			OutPortB(onoff, index);
 			break;
 		case 2:
-			OutPortC(onoff, index);			  // 0-3
+			OutPortC(onoff, index);
 			break;
 */
 		case 0:
-			OutPortD(onoff, index);			  // 0-7
+			OutPortD(onoff, index);
 			break;
 		case 1:
-			OutPortE(onoff, index);			  // 0-7
+			OutPortE(onoff, index);
 			break;
 		case 2:
-			OutPortF(onoff, index);			  // 0-3
+			OutPortF(onoff, index);
 			break;
+
 		default:
 			break;
 	}
 	pthread_mutex_unlock(&io_mem_lock);
-//	printf("change output: %d %d\r\n",index,onoff);
-
 /*
+	printf("change output: %d %d\r\n",index,onoff);
 	sprintf(tempx,"%d %d %d", bank, index, onoff);
 	printf(tempx);
 	printf("\n");
@@ -1098,7 +1098,7 @@ printf("starting basic_controls_task\n");
 			}
 		}
 		cmd = msg.mtext[0];
-		print_cmd(cmd);
+		//print_cmd(cmd);
 
 		switch(cmd)
 		{

@@ -163,7 +163,7 @@ UCHAR get_host_cmd_task(int test)
 	}
 	init_ips();
 //	printf("%s\n",cFileName);
-
+/*
 	cllist_init(&cll);
 
 	if(access(cFileName,F_OK) != -1)
@@ -174,17 +174,21 @@ UCHAR get_host_cmd_task(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}else printf("can't access %s\n",cFileName);
-
+*/
 	printf("server starting...\n");
 
+/*
+	for(i = 0;i < 40;i ++)
+	{
+		change_output(i,1);
+		uSleep(0,TIME_DELAY/8);
+		change_output(i,0);
+		uSleep(0,TIME_DELAY/8);
+	}
+*/
 	same_msg = 0;
 	timer_on = 0;
-	timer_seconds = 20;
-
-	for(i = 0;i < NO_CMDS;i++)
-	{
-		print_cmd(i);
-	}
+	timer_seconds = 2;
 
 	while(TRUE)
 	{

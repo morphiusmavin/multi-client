@@ -1,3 +1,4 @@
+
 /********************************************************
  * An example source module to accompany...
  *
@@ -35,8 +36,6 @@
 #include "tasks.h"
 #include "queue/ollist_threads_rw.h"
 
-extern int init_mem(void);
-extern void close_mem(void);
 extern void *work_routine(void *arg);
 
 char oFileName[20];
@@ -87,15 +86,6 @@ int main(int argc, char **argv)
 	}
 
 	id_arg = (int *)malloc(NUM_SOCK_TASKS*sizeof(int));
-
-	i = init_mem();
-	if(i != 0)
-	{
-		printf("no card found\r\n");
-		exit(1);
-	}
-	//else printf("card ok\r\n");
-	
 
 	// get the queue id for the get_host_cmd_task
 	// CMD_HOST_QKEY
@@ -240,7 +230,6 @@ int main(int argc, char **argv)
 			pthread_cancel(_threads[TCP_MONITOR].pthread);
 		}
 	}
-	close_mem();
 
 	return 1;
 }

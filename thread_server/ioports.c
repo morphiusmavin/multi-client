@@ -172,7 +172,7 @@ void OutPortD(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTD_OFFSET] = state;
 	*(card_ports + ROC_4) = *pstate;
-//	printf("%2x ",state);
+	//printf("%2x ",state);
 }
 
 
@@ -193,7 +193,7 @@ void OutPortE(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTE_OFFSET] = state;
 	*(card_ports + ROC_5) = *pstate;
-//	printf("%2x ",state);
+	//printf("%2x ",state);
 }
 
 
@@ -214,7 +214,7 @@ void OutPortF(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTF_OFFSET] = state;
 	*(card_ports + ROC_6) = *pstate;
-//	printf("%2x ",state);
+	//printf("%2x ",state);
 }
 
 
@@ -291,9 +291,9 @@ void OutPortByteD(UCHAR byte)
 {
 //	pms->outportstatus[OUTPORTA_OFFSET] = byte;
 	*(card_ports + ROC_4) = byte;
-#ifdef MAKE_TARGET
+
 	printf("port D: %x\n",byte);
-#endif
+
 }
 
 
@@ -302,9 +302,9 @@ void OutPortByteE(UCHAR byte)
 {
 //	pms->outportstatus[OUTPORTB_OFFSET] = byte;
 	*(card_ports + ROC_5) = byte;
-#ifdef MAKE_TARGET
+
 	printf("port E: %x\n",byte);
-#endif
+
 }
 
 
@@ -313,9 +313,9 @@ void OutPortByteF(UCHAR byte)
 {
 //	pms->outportstatus[OUTPORTC_OFFSET] = byte;
 	*(card_ports + ROC_6) = byte;
-#ifdef MAKE_TARGET
+
 	printf("port F: %x\n",byte);
-#endif
+
 }
 #endif
 /***********************************************************************************************************/
@@ -328,8 +328,6 @@ UCHAR InPortByte(int bank)
 		state = *(card_ports + DIR_1 + bank);
 	return state;
 }
-
-
 /***********************************************************************************************************/
 UCHAR InPortByteA(void)
 {

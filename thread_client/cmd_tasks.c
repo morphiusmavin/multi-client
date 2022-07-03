@@ -218,6 +218,8 @@ UCHAR get_host_cmd_task(int test)
 	}
 #endif
 
+	for(i = 0;i < 
+
 	printf("%s\n",version);
 	j = k = i = 0;
 	cmd = 0x21;
