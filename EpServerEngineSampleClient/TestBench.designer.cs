@@ -1,6 +1,6 @@
 ﻿namespace EpServerEngineSampleClient
 {
-	partial class CabinLights
+	partial class TestBench
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -53,9 +53,9 @@
 			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label1.Location = new System.Drawing.Point(22, 19);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(122, 24);
+			this.label1.Size = new System.Drawing.Size(59, 24);
 			this.label1.TabIndex = 9;
-			this.label1.Text = "North Lights";
+			this.label1.Text = "24v 1";
 			// 
 			// label2
 			// 
@@ -63,9 +63,9 @@
 			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label2.Location = new System.Drawing.Point(22, 74);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(125, 24);
+			this.label2.Size = new System.Drawing.Size(59, 24);
 			this.label2.TabIndex = 10;
-			this.label2.Text = "South Lights";
+			this.label2.Text = "24v 2";
 			// 
 			// label3
 			// 
@@ -73,9 +73,9 @@
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label3.Location = new System.Drawing.Point(22, 129);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(111, 24);
+			this.label3.Size = new System.Drawing.Size(59, 24);
 			this.label3.TabIndex = 11;
-			this.label3.Text = "East Lights";
+			this.label3.Text = "12v 1";
 			// 
 			// label4
 			// 
@@ -83,9 +83,9 @@
 			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label4.Location = new System.Drawing.Point(22, 184);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(117, 24);
+			this.label4.Size = new System.Drawing.Size(59, 24);
 			this.label4.TabIndex = 12;
-			this.label4.Text = "West Lights";
+			this.label4.Text = "12v 2";
 			// 
 			// label5
 			// 
@@ -93,9 +93,9 @@
 			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label5.Location = new System.Drawing.Point(22, 239);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(134, 24);
+			this.label5.Size = new System.Drawing.Size(48, 24);
 			this.label5.TabIndex = 13;
-			this.label5.Text = "Middle Lights";
+			this.label5.Text = "5v 1";
 			// 
 			// label6
 			// 
@@ -103,9 +103,9 @@
 			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label6.Location = new System.Drawing.Point(22, 294);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(125, 24);
+			this.label6.Size = new System.Drawing.Size(48, 24);
 			this.label6.TabIndex = 14;
-			this.label6.Text = "Office Lights";
+			this.label6.Text = "5v 2";
 			// 
 			// label7
 			// 
@@ -113,9 +113,9 @@
 			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label7.Location = new System.Drawing.Point(22, 349);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(95, 24);
+			this.label7.Size = new System.Drawing.Size(59, 24);
 			this.label7.TabIndex = 15;
-			this.label7.Text = "All Lights";
+			this.label7.Text = "3v3 1";
 			// 
 			// tbAddMsg
 			// 
@@ -222,16 +222,16 @@
 			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label8.Location = new System.Drawing.Point(22, 404);
 			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(108, 24);
+			this.label8.Size = new System.Drawing.Size(59, 24);
 			this.label8.TabIndex = 16;
-			this.label8.Text = "Work Area";
+			this.label8.Text = "3v3 2";
 			// 
-			// CabinLights
+			// TestBench
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(651, 461);
+			this.ClientSize = new System.Drawing.Size(651, 462);
 			this.Controls.Add(this.label8);
 			this.Controls.Add(this.btnClear);
 			this.Controls.Add(this.btnAll);
@@ -249,8 +249,8 @@
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
-			this.Name = "CabinLights";
-			this.Text = "Cabin Lights";
+			this.Name = "TestBench";
+			this.Text = "Test Bench";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

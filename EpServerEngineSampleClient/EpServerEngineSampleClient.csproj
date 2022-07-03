@@ -107,11 +107,11 @@
     <Compile Include="FrmSampleClient.Designer.cs">
       <DependentUpon>FrmSampleClient.cs</DependentUpon>
     </Compile>
-    <Compile Include="CabinLights.cs">
+    <Compile Include="TestBench.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CabinLights.designer.cs">
-      <DependentUpon>CabinLights.cs</DependentUpon>
+    <Compile Include="TestBench.designer.cs">
+      <DependentUpon>TestBench.cs</DependentUpon>
     </Compile>
     <Compile Include="NetClients.cs">
       <SubType>Form</SubType>
@@ -186,8 +186,8 @@
     <EmbeddedResource Include="BTForm.resx">
       <DependentUpon>BTForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CabinLights.resx">
-      <DependentUpon>CabinLights.cs</DependentUpon>
+    <EmbeddedResource Include="TestBench.resx">
+      <DependentUpon>TestBench.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GarageForm.resx">
       <DependentUpon>GarageForm.cs</DependentUpon>

@@ -358,11 +358,11 @@ startover:
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
 			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
-
+/*
 			for(i = 2;i < rc;i+=2)
 				printf("%02x ",msg_buf[i]);
 			printf("\n");
-
+*/
 			memset(tempx,0,sizeof(tempx));
 			k = 0;
 			for(j = 4;j < msg_len+4;j+=2)

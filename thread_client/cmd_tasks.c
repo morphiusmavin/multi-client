@@ -271,18 +271,16 @@ UCHAR get_host_cmd_task(int test)
 
 				switch(cmd)
 				{
-					case ALL_LIGHTS_ON:
-					case ALL_LIGHTS_OFF:
-					case ALL_NORTH_ON:
-					case ALL_SOUTH_ON:
-					case ALL_MIDDLE_ON:
-					case ALL_NORTH_OFF:
-					case ALL_SOUTH_OFF:
-					case ALL_MIDDLE_OFF:
-					case ALL_EAST_ON:
-					case ALL_EAST_OFF:
-					case ALL_WEST_ON:
-					case ALL_WEST_OFF:
+					case BENCH_24V_1:
+					case BENCH_24V_2:
+					case BENCH_12V_1:
+					case BENCH_12V_2:
+					case BENCH_5V_1:
+					case BENCH_5V_2:
+					case BENCH_3V3_1:
+					case BENCH_3V3_2:
+					case BENCH_LIGHT1:
+					case BENCH_LIGHT2:
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
 					case SHELL_AND_RENAME:

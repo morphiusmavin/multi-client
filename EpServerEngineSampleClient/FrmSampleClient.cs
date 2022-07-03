@@ -34,7 +34,7 @@ namespace EpServerEngineSampleClient
 
         private PlayerDlg playdlg = null;
         private GarageForm garageform = null;
-        private CabinLights cabinLights = null;
+        private TestBench testbench = null;
 //        private BluetoothForm bluetoothform = null;
         private ClientDest clientdest = null;
         private SetNextClient setnextclient = null;
@@ -89,7 +89,7 @@ namespace EpServerEngineSampleClient
             playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
 
             garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
-            cabinLights = new CabinLights("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
+            testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             //bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
             clientdest = new ClientDest();
             clientdest.SetClient(m_client);
@@ -245,7 +245,7 @@ namespace EpServerEngineSampleClient
             {
                 playdlg.Dispose();
                 garageform.Dispose();
-                cabinLights.Dispose();
+                testbench.Dispose();
                 //bluetoothform.Dispose();
                 clientdest.Dispose();
                 setnextclient.Dispose();
@@ -268,9 +268,9 @@ namespace EpServerEngineSampleClient
             {
                 garageform.Process_Msg(receivedPacket.PacketRaw);
             }
-            else if (cabinLights.Visible == true)
+            else if (testbench.Visible == true)
             {
-                cabinLights.Process_Msg(receivedPacket.PacketRaw);
+                testbench.Process_Msg(receivedPacket.PacketRaw);
             }
 /*
             else if (bluetoothform.Visible == true)
@@ -1244,16 +1244,16 @@ namespace EpServerEngineSampleClient
 
 		private void btnCabinLights_Click(object sender, EventArgs e)
 		{
-            cabinLights.Enable_Dlg(true);
-            cabinLights.StartPosition = FormStartPosition.Manual;
-            cabinLights.Location = new Point(100, 10);
-            if (cabinLights.ShowDialog(this) == DialogResult.OK)
+            testbench.Enable_Dlg(true);
+            testbench.StartPosition = FormStartPosition.Manual;
+            testbench.Location = new Point(100, 10);
+            if (testbench.ShowDialog(this) == DialogResult.OK)
             {
             }
             else
             {
             }
-            cabinLights.Enable_Dlg(false);
+            testbench.Enable_Dlg(false);
 
         }
 

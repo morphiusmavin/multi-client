@@ -109,51 +109,19 @@ enum input_types
 
 enum output_types
 {
-	DESK_LIGHT,
-	EAST_LIGHT,			// bank 0
-	NORTHWEST_LIGHT,
-	SOUTHEAST_LIGHT,
-	MIDDLE_LIGHT,
-	WEST_LIGHT,
-	NORTHEAST_LIGHT,
-	SOUTHWEST_LIGHT,
-
-	TESTOUTPUT8,		// bank 1
-	TESTOUTPUT9,
-	TESTOUTPUT10,
-	TESTOUTPUT11,
-	TESTOUTPUT12,
-	TESTOUTPUT13,
-	TESTOUTPUT14,
-	TESTOUTPUT15,
-
-	TESTOUTPUT16,			// bank 2
-	TESTOUTPUT17,
-	TESTOUTPUT18,
-	TESTOUTPUT19,
-	TESTOUTPUT20,
-	TESTOUTPUT21,
-	TESTOUTPUT22,
-	TESTOUTPUT23,
-
-	TESTOUTPUT24,
-	TESTOUTPUT25,			// bank 3
-	TESTOUTPUT26,
-	TESTOUTPUT27,
-	TESTOUTPUT28,
-	TESTOUTPUT29,
-	TESTOUTPUT30,
-	TESTOUTPUT31,
-
-	TESTOUTPUT32,		// bank 4
-	TESTOUTPUT33,
-	TESTOUTPUT34,
-	TESTOUTPUT35,
-	TESTOUTPUT36,
-	TESTOUTPUT37,
-	TESTOUTPUT38,
-	TESTOUTPUT39
+	BENCH_24V_1a,
+	BENCH_24V_2a,
+	BENCH_12V_1a,
+	BENCH_12V_2a,
+	BENCH_5V_1a,
+	BENCH_5V_2a,
+	BENCH_3V3_1a,
+	BENCH_3V3_2a,
+	BENCH_LIGHT1a,
+	BENCH_LIGHT2a
 }OUTPUT_TYPES;
+
+int switch_status[10];
 
 /****************************************************************************************************/
 static double curtime(void)
@@ -1264,6 +1232,7 @@ UCHAR basic_controls_task(int test)
 
 //	memset(msg_queue,0,sizeof(msg_queue));
 	msg.mtype = msgtype;
+	memset(switch_status,0,sizeof(switch_status));
 
 	while(TRUE)
 	{
@@ -1279,263 +1248,69 @@ UCHAR basic_controls_task(int test)
 			}
 		}
 		cmd = msg.mtext[0];
-		print_cmd(cmd);
+		//printf("basic controls: ");
+		//print_cmd(cmd);
 		usleep(_5MS);
 
 		switch(cmd)
 		{
-			case  ALL_LIGHTS_ON:
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = DESK_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case  BENCH_24V_1:
+				switch_status[BENCH_24V_1a] = switch_status[BENCH_24V_1a]==1?0:1;
+				change_output(BENCH_24V_1a,switch_status[BENCH_24V_1a]);
 				usleep(_100MS);
 				break;
 
-			case ALL_LIGHTS_OFF:
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = DESK_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
+			case  BENCH_24V_2:
+				switch_status[BENCH_24V_2a] = switch_status[BENCH_24V_2a]==1?0:1;
+				change_output(BENCH_24V_2a,switch_status[BENCH_24V_2a]);
 				usleep(_100MS);
 				break;
 
-			case ALL_NORTH_ON:
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-//				ollist_insert_data(index,&oll,otp);
-				set_output(otp,1);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case  BENCH_12V_1:
+				switch_status[BENCH_12V_1a] = switch_status[BENCH_12V_1a]==1?0:1;
+				change_output(BENCH_12V_1a,switch_status[BENCH_12V_1a]);
 				usleep(_100MS);
 				break;
 
-			case ALL_SOUTH_ON:
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case  BENCH_12V_2:
+				switch_status[BENCH_12V_2a] = switch_status[BENCH_12V_2a]==1?0:1;
+				change_output(BENCH_12V_2a,switch_status[BENCH_12V_2a]);
 				usleep(_100MS);
 				break;
 
-			case ALL_MIDDLE_ON:
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case  BENCH_5V_1:
+				switch_status[BENCH_5V_1a] = switch_status[BENCH_5V_1a]==1?0:1;
+				change_output(BENCH_5V_1a,switch_status[BENCH_5V_1a]);
 				usleep(_100MS);
 				break;
 
-			case ALL_NORTH_OFF:
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
+			case  BENCH_5V_2:
+				switch_status[BENCH_5V_2a] = switch_status[BENCH_5V_2a]==1?0:1;
+				change_output(BENCH_5V_2a,switch_status[BENCH_5V_2a]);
 				usleep(_100MS);
 				break;
 
-			case ALL_SOUTH_OFF:
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
+			case  BENCH_3V3_1:
+				switch_status[BENCH_3V3_1a] = switch_status[BENCH_3V3_1a]==1?0:1;
+				change_output(BENCH_3V3_1a,switch_status[BENCH_3V3_1a]);
 				usleep(_100MS);
 				break;
 
-			case ALL_MIDDLE_OFF:
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				break;
-			
-			case ALL_EAST_ON:
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case  BENCH_3V3_2:
+				switch_status[BENCH_3V3_2a] = switch_status[BENCH_3V3_2a]==1?0:1;
+				change_output(BENCH_3V3_2a,switch_status[BENCH_3V3_2a]);
 				usleep(_100MS);
 				break;
 
-			case ALL_EAST_OFF:
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
+			case  BENCH_LIGHT1:
+				switch_status[BENCH_LIGHT1a] = switch_status[BENCH_LIGHT1a]==1?0:1;
+				change_output(BENCH_LIGHT1a,switch_status[BENCH_LIGHT1a]);
 				usleep(_100MS);
 				break;
 
-			case ALL_WEST_ON:
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				break;
-
-			case ALL_WEST_OFF:
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
+			case  BENCH_LIGHT2:
+				switch_status[BENCH_LIGHT2a] = switch_status[BENCH_LIGHT2a]==1?0:1;
+				change_output(BENCH_LIGHT2a,switch_status[BENCH_LIGHT2a]);
 				usleep(_100MS);
 				break;
 

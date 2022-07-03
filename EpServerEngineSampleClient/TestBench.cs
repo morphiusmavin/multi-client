@@ -21,7 +21,7 @@ using static EpServerEngineSampleClient.FrmSampleClient;
 
 namespace EpServerEngineSampleClient
 {
-	public partial class CabinLights : Form
+	public partial class TestBench : Form
 	{
 		private INetworkClient m_client;
 		private bool m_wait = false;
@@ -35,7 +35,7 @@ namespace EpServerEngineSampleClient
 		List<String> on_label_list = new List<String>();
 		List<String> off_label_list = new List<String>();
 		public System.Collections.Generic.List<ButtonList> button_list;
-		public CabinLights(string xml_file_location, INetworkClient client)
+		public TestBench(string xml_file_location, INetworkClient client)
 		{
 			InitializeComponent();
 			m_client = client;
@@ -65,23 +65,14 @@ namespace EpServerEngineSampleClient
 			prev_status[7] = false;
 			recv_buff = new byte[200];
 
-			on_label_list.Add("ALL_NORTH_ON");
-			on_label_list.Add("ALL_SOUTH_ON");
-			on_label_list.Add("ALL_EAST_ON");
-			on_label_list.Add("ALL_WEST_ON");
-			on_label_list.Add("ALL_MIDDLE_ON");
-			on_label_list.Add("ALL_OFFICE_ON");
-			on_label_list.Add("ALL_LIGHTS_ON");
-			on_label_list.Add("WORK_ON");
-
-			off_label_list.Add("ALL_NORTH_OFF");
-			off_label_list.Add("ALL_SOUTH_OFF");
-			off_label_list.Add("ALL_EAST_OFF");
-			off_label_list.Add("ALL_WEST_OFF");
-			off_label_list.Add("ALL_MIDDLE_OFF");
-			off_label_list.Add("ALL_OFFICE_OFF");
-			off_label_list.Add("ALL_LIGHTS_OFF");
-			off_label_list.Add("WORK_OFF");
+			on_label_list.Add("BENCH_24V_1");
+			on_label_list.Add("BENCH_24V_2");
+			on_label_list.Add("BENCH_12V_1");
+			on_label_list.Add("BENCH_12V_2");
+			on_label_list.Add("BENCH_5V_1");
+			on_label_list.Add("BENCH_5V_2");
+			on_label_list.Add("BENCH_3V3_1");
+			on_label_list.Add("BENCH_3V3_2");
 
 			button_list = new List<ButtonList>();
 			Control sCtl = this.btnNorth;
@@ -254,7 +245,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void SendCmd(int which, bool onoff)
 		{
-			string cmd = onoff ? on_label_list[which] : off_label_list[which];
+			string cmd = on_label_list[which];
 			int offset = svrcmd.GetCmdIndexI(cmd);
 			svrcmd.Send_ClCmd(offset, 3, "test");		// TODO: set this to whatever client is offset 3 in assign_client_table.c
 			prev_status[which] = status[which];
@@ -301,26 +292,6 @@ namespace EpServerEngineSampleClient
 		private void btnAll_Click(object sender, EventArgs e)
 		{
 			SendCmd(6, !status[6]);
-			int i = 0;
-			bool st = status[6];
-			if (st)
-			{
-				for (i = 0; i < 8; i++)
-				{
-					status[i] = true;
-					button_list[i].Ctl.Text = "ON";
-					button_list[i].Ctl.BackColor = Color.Aqua;
-				}
-			}
-			else
-			{
-				for (i = 0; i < 8; i++)
-				{
-					status[i] = false;
-					button_list[i].Ctl.Text = "OFF";
-					button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-				}
-			}
 		}
 
 		private void btnPollStatus_Click(object sender, EventArgs e)
@@ -340,6 +311,16 @@ namespace EpServerEngineSampleClient
 			offset = svrcmd.GetCmdIndexI(cmd);
 			//AddMsg(offset.ToString());
 			svrcmd.Send_Cmd(offset);
+		}
+
+		private void button1_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void button2_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

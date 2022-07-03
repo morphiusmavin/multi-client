@@ -427,7 +427,7 @@
 			this.btnCabinLights.Name = "btnCabinLights";
 			this.btnCabinLights.Size = new System.Drawing.Size(233, 61);
 			this.btnCabinLights.TabIndex = 45;
-			this.btnCabinLights.Text = "Cabin Lights";
+			this.btnCabinLights.Text = "Test Bench";
 			this.btnCabinLights.UseVisualStyleBackColor = false;
 			this.btnCabinLights.Click += new System.EventHandler(this.btnCabinLights_Click);
 			// 
