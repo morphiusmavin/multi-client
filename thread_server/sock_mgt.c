@@ -354,10 +354,10 @@ startover:
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
-			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 
 			for(i = 2;i < rc;i+=2)
 				printf("%02x ",msg_buf[i]);
@@ -369,7 +369,7 @@ startover:
 				tempx[k++] = msg_buf[j];
 			msg_len /= 2;
 			msg_len -= 3;
-			printf("msg_len from win client: %d\n",msg_len);
+			//printf("msg_len from win client: %d\n",msg_len);
 
 /*
 			for(j = 0;j < msg_len;j++)
@@ -396,17 +396,17 @@ startover:
 			msg.mtext[2] = (UCHAR)(msg_len >> 4);
 			memcpy(msg.mtext + 3,tempx,msg_len);
 			// send msg's to sched 
-			if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-			{
-				// keep getting "Invalid Argument" - cause I didn't set the mtype
-				perror("msgsnd error");
-				exit(EXIT_FAILURE);
-			}
 
 			if(win_client_to_client_sock == _SERVER)
 			{
 				//printf("msg to cmd_host on server: %s %d\n",msg.mtext + 3,cmd);
 				print_cmd(cmd);
+				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+				{
+					// keep getting "Invalid Argument" - cause I didn't set the mtype
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
 
 				if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
 				{
@@ -530,13 +530,13 @@ UCHAR ReadTask(int test)
 startover1:
 		if(client_table[index].socket > 0)
 		{
-			//printf("read task %d\n",index);
+			printf("read task %d\n",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+2,1);
 			//printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			//printf("dest: %d\n",dest);
+			printf("dest: %d\n",dest);
 /*
 			for(i = 0;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);

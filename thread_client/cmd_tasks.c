@@ -218,8 +218,6 @@ UCHAR get_host_cmd_task(int test)
 	}
 #endif
 
-	for(i = 0;i < 
-
 	printf("%s\n",version);
 	j = k = i = 0;
 	cmd = 0x21;
@@ -653,7 +651,7 @@ uSleep(0,TIME_DELAY/3);
 						break;
 
 					default:
-						printf("default in main loop\n");
+						//printf("default in main loop\n");
 						break;
 				}								  // end of switch
 			}									  // if rc > 0

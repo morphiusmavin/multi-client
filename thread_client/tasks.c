@@ -79,6 +79,81 @@ IP ip[40];
 
 #define ON 1
 #define OFF 0
+enum input_types
+{
+	STARTER_INPUT,				// 0 	STARTER & COOLINGFAN don't go to the tray
+	COOLINGFAN_INPUT,			// 1 	first card starts @ 280h
+	BRAKE_INPUT,				// 2
+	SEAT_SWITCH,				// 3
+	DOOR_SWITCH,				// 4
+	WIPER_HOME,					// 5  	red wire from the wiper motor
+	WIPER1_INPUT,				// 6  	switch to turn on slow wipers
+	WIPER2_INPUT,				// 7 	switch to turn on fast wipers
+	WIPER_OFF_INPUT,			// 8
+	BACKUP_INPUT,				// 9
+	HEADLAMP_INPUT,				// 10 	this starts the DB-15 under the dash
+	RUNNING_LIGHTS_INPUT,		// 11 	HEADLAMP_INPUT -> BRIGHTS_INPUT comes
+	MOMENTARY_INPUT,			// 12 	from the AM turn signal switch
+	LEFTBLINKER_INPUT,			// 13 	20 is the start of the 2nd card @ 300h
+	RIGHTBLINKER_INPUT,			// 14
+	BRIGHTS_INPUT,				// 15
+	ESTOP_INPUT = 27,			// 27	emergency stop
+	ROCKER1_INPUT,				// 28
+	ROCKER2_INPUT,				// 29
+	ROCKER3_INPUT,				// 30
+	ROCKER4_INPUT,				// 31
+	ROCKER5_INPUT,				// 32
+}INPUT_TYPES;
+
+// * 25 not working only because wire from DB-15 not going to cable on dip on TS-7800
+
+enum output_types
+{
+	DESK_LIGHT,
+	EAST_LIGHT,			// bank 0
+	NORTHWEST_LIGHT,
+	SOUTHEAST_LIGHT,
+	MIDDLE_LIGHT,
+	WEST_LIGHT,
+	NORTHEAST_LIGHT,
+	SOUTHWEST_LIGHT,
+
+	TESTOUTPUT8,		// bank 1
+	TESTOUTPUT9,
+	TESTOUTPUT10,
+	TESTOUTPUT11,
+	TESTOUTPUT12,
+	TESTOUTPUT13,
+	TESTOUTPUT14,
+	TESTOUTPUT15,
+
+	TESTOUTPUT16,			// bank 2
+	TESTOUTPUT17,
+	TESTOUTPUT18,
+	TESTOUTPUT19,
+	TESTOUTPUT20,
+	TESTOUTPUT21,
+	TESTOUTPUT22,
+	TESTOUTPUT23,
+
+	TESTOUTPUT24,
+	TESTOUTPUT25,			// bank 3
+	TESTOUTPUT26,
+	TESTOUTPUT27,
+	TESTOUTPUT28,
+	TESTOUTPUT29,
+	TESTOUTPUT30,
+	TESTOUTPUT31,
+
+	TESTOUTPUT32,		// bank 4
+	TESTOUTPUT33,
+	TESTOUTPUT34,
+	TESTOUTPUT35,
+	TESTOUTPUT36,
+	TESTOUTPUT37,
+	TESTOUTPUT38,
+	TESTOUTPUT39
+}OUTPUT_TYPES;
 
 /****************************************************************************************************/
 static double curtime(void)
