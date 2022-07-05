@@ -94,8 +94,8 @@ LD_SYS_LIBS = $(SYS_LIBRARIES)
 # gcc3 and gcc4 doesn't support thumb-interworking, but compiles anyway
 # gcc3/4 doesn't work with -mapcs-32
 # use the USE_CARDS define when using a 20-port pc-104 daughter card
-CC_FLAGS = -static -g -DTS_7800 -DUSE_CARDS -Wstrict-prototypes -mcpu=arm920t
-#CC_FLAGS = -static -g -DTS_7800 -Wstrict-prototypes -mcpu=arm920t
+#CC_FLAGS = -static -g -DTS_7800 -DUSE_CARDS -Wstrict-prototypes -mcpu=arm920t
+CC_FLAGS = -static -g -DTS_7800 -Wstrict-prototypes -mcpu=arm920t
 #CC_FLAGS = -static -g -Wstrict-prototypes -mcpu=arm920t
 GNULDFLAGS_T = ${GNULDFLAGS} -pthread
 #CC_FLAGST = ${CC_FLAGS} + GNULDFLAGS_T
@@ -164,8 +164,8 @@ sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_thread
 	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o -o sched -lm
 #	${CC} -static -pthread sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o #rdwr.o serial_io.o  lcd_func.o config_file.o -o sched
 
-sock_mgt: sock_mgt.o sock_sched.o ioports.o load_cmds.o
-	${CC} -static -pthread sock_sched.o assign_client_table.o sock_mgt.o ioports.o load_cmds.o -o sock_mgt
+sock_mgt: sock_mgt.o sock_sched.o load_cmds.o
+	${CC} -static -pthread sock_sched.o assign_client_table.o sock_mgt.o load_cmds.o -o sock_mgt
 
 clean :
 	rm -f *.o *~ *# core  sched sock_mgt

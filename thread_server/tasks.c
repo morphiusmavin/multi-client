@@ -41,9 +41,6 @@
 #define handle_error(msg) \
 	   do { perror(msg); exit(EXIT_FAILURE); } while (0)
 
-pthread_cond_t       threads_ready;
-pthread_mutex_t     tcp_write_lock=PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t     tcp_read_lock=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t     io_mem_lock=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t     serial_write_lock=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t     serial_read_lock=PTHREAD_MUTEX_INITIALIZER;
@@ -53,12 +50,6 @@ pthread_mutex_t     msg_queue_lock=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t     msg_client_queue_lock=PTHREAD_MUTEX_INITIALIZER;
 int total_count;
 
-UCHAR (*fptr[NUM_SCHED_TASKS])(int) = { get_host_cmd_task, monitor_input_task, 
-monitor_fake_input_task, timer_task, timer2_task, serial_recv_task, basic_controls_task};
-
-int threads_ready_count=0;
-pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
-pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
 static UCHAR check_inputs(int index, int test);
 //extern CMD_STRUCT cmd_array[58];
 ollist_t oll;
@@ -1083,42 +1074,6 @@ void close_tcp(void)
 		printf("socket already closed\0");
 //		printf("socket already closed\r\n");
 	}
-}
-
-/**********************************************************************/
-void *work_routine(void *arg)
-{
-	int *my_id=(int *)arg;
-	int i;
-	UCHAR pattern = 0;
-	int not_done=1;
-	i = not_done;
-	shutdown_all = 0;
-
-	pthread_mutex_lock(&threads_ready_lock);
-	threads_ready_count++;
-	if (threads_ready_count == NUM_SCHED_TASKS)
-	{
-/* I was the last thread to become ready.  Tell the rest. */
-		pthread_cond_broadcast(&threads_ready);
-	}
-	else
-	{
-/* At least one thread isn't ready.  Wait. */
-		while (threads_ready_count != NUM_SCHED_TASKS)
-		{
-			pthread_cond_wait(&threads_ready, &threads_ready_lock);
-		}
-	}
-	pthread_mutex_unlock(&threads_ready_lock);
-
-	while(not_done)
-	{
-		(*fptr[*my_id])(*my_id);
-		i--;
-		not_done--;
-	}
-	return(NULL);
 }
 /*********************************************************************/
 void add_msg_queue(UCHAR cmd)

@@ -38,6 +38,8 @@ git add thread_client/queue/ollist_threads_rw.h
 git add thread_client/queue/ollist_threads_rw.c
 git add thread_client/serial_io.c
 git add thread_client/serial_io.h
+git add thread_client/sock_mgt.c
+git add thread_client/sock_sched.c
 
 git add thread_client/cs_client/config_file.c
 git add thread_client/cs_client/config_file.h

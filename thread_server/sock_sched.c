@@ -38,9 +38,6 @@
 
 extern void *work_routine(void *arg);
 
-char oFileName[20];
-char cFileName[20];
-
 //pthread_t serial_thread;	// workaround for closing serial thread (serial read is blocking)
 
 typedef struct
@@ -68,22 +65,6 @@ int main(int argc, char **argv)
 	int rc;
 	key_t send_cmd_host_key;
 	key_t recv_cmd_host_key;
-
-	if(argc < 2)
-	{
-		strcpy(oFileName,"odata.dat\0");
-		strcpy(cFileName,"cdata.dat\0");
-	}
-	else if(argc == 2)
-	{
-		strcpy(oFileName,argv[1]);
-		strcpy(cFileName,"cdata.dat\0");
-	}
-	else if(argc == 3)
-	{
-		strcpy(oFileName,argv[1]);
-		strcpy(cFileName,argv[2]);
-	}
 
 	id_arg = (int *)malloc(NUM_SOCK_TASKS*sizeof(int));
 

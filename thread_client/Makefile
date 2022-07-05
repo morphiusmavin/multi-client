@@ -114,7 +114,7 @@ GNUNOANSI = -g -gnu99 -Wstrict-prototypes
 
 BULD_TARGET = $(PROJECT)
 
-all : sched
+all : sched sock_mgt
 #all : test_dio1
 #test_ioports test_inports # test_ports test_spi
 #llist_test_threads llist_test_threads_rw
@@ -158,9 +158,17 @@ cllist_threads_rw.o: queue/cllist_threads_rw.c queue/cllist_threads_rw.h
 cconfig_file.o: cs_client/cconfig_file.c queue/cllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/cconfig_file.c
 	
-sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o cllist_threads_rw.o serial_io.o config_file.o cconfig_file.o cmd_tasks.o  
-# if we don't use -static then the target should have: libpthread.so.0 in the /lib directory
-	${CC} -static -pthread sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o cllist_threads_rw.o serial_io.o config_file.o cconfig_file.o cmd_tasks.o  -o sched -lm
+sock_mgt.o : sock_mgt.c 
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_mgt.c
+
+sock_sched.o : sock_sched.c 
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_sched.c
+
+sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o cconfig_file.o
+	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o -o sched -lm
+
+sock_mgt: sock_mgt.o sock_sched.o load_cmds.o
+	${CC} -static -pthread sock_sched.o assign_client_table.o sock_mgt.o load_cmds.o -o sock_mgt
 
 clean :
 	rm -f *.o *~ *# core  sched

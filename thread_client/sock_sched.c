@@ -34,22 +34,14 @@
 #include "serial_io.h"
 #include "tasks.h"
 #include "queue/ollist_threads_rw.h"
-
-extern int init_mem(void);
-extern void close_mem(void);
-pthread_cond_t       threads_ready;
 int threads_ready_count=0;
 pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
 pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
 
-UCHAR (*fptr[NUM_SCHED_TASKS])(int) = { 
-	get_host_cmd_task2, 
-	monitor_input_task, 
-	monitor_fake_input_task, 
-	timer_task, 
-	timer2_task, 
-	serial_recv_task, 
-	basic_controls_task};
+UCHAR (*fptr[NUM_SOCK_TASKS])(int) = { 
+	get_host_cmd_task1,
+	tcp_monitor_task,
+	recv_msg_task };
 
 /*
  * Thread initialization
@@ -68,7 +60,7 @@ void *work_routine(void *arg)
 
 	pthread_mutex_lock(&threads_ready_lock);
 	threads_ready_count++;
-	if (threads_ready_count == NUM_SCHED_TASKS)
+	if (threads_ready_count == NUM_SOCK_TASKS)
 	{
 /* I was the last thread to become ready.  Tell the rest. */
 		pthread_cond_broadcast(&threads_ready);
@@ -76,7 +68,7 @@ void *work_routine(void *arg)
 	else
 	{
 /* At least one thread isn't ready.  Wait. */
-		while (threads_ready_count != NUM_SCHED_TASKS)
+		while (threads_ready_count != NUM_SOCK_TASKS)
 		{
 			pthread_cond_wait(&threads_ready, &threads_ready_lock);
 		}
@@ -91,12 +83,6 @@ void *work_routine(void *arg)
 	}
 	return(NULL);
 }
-
-char oFileName[20];
-char cFileName[20];
-
-key_t send_cmd_host_key;
-key_t recv_cmd_host_key;
 
 UCHAR reboot_on_exit;
 
@@ -115,8 +101,7 @@ typedef struct
 int main(int argc, char **argv)
 {
 	int rtn, t, i, j, *id_arg, prio_min, prio_max;
-//	pthread_t threads[NUM_SCHED_TASKS];
-	THREADS _threads[NUM_SCHED_TASKS];
+	THREADS _threads[NUM_SOCK_TASKS];
 	int sched = PTIME_SLICE;
 	pthread_attr_t pthread_custom_attr;
 	struct sched_param priority_param;
@@ -127,39 +112,11 @@ int main(int argc, char **argv)
 	int sd;
 	int rc;
 	reboot_on_exit = 1;
-	key_t basic_controls_key;
 
-//	usleep(10000000);
+	//printf("starting sock_sched...\n");
 
-//	printf("starting sched...\n");
+	id_arg = (int *)malloc(NUM_SOCK_TASKS*sizeof(int));
 
-	if(argc < 2)
-	{
-		strcpy(oFileName,"odata.dat\0");
-		strcpy(cFileName,"cdata.dat\0");
-	}
-
-	else if(argc == 2)
-	{
-		strcpy(oFileName,argv[1]);
-		strcpy(cFileName,"cdata.dat\0");
-	}
-	else if(argc == 3)
-	{
-		strcpy(oFileName,argv[1]);
-		strcpy(cFileName,argv[2]);
-	}
-
-	id_arg = (int *)malloc(NUM_SCHED_TASKS*sizeof(int));
-
-	i = init_mem();
-	if(i != 0)
-	{
-		printf("no card found\r\n");
-		exit(1);
-//	}else printf("card ok\r\n");
-	}
-	
 	basic_controls_key = BASIC_CONTROLS_QKEY;
 	send_cmd_host_key = SEND_CMD_HOST_QKEY;
 	recv_cmd_host_key = RECV_CMD_HOST_QKEY;
@@ -168,27 +125,19 @@ int main(int argc, char **argv)
 	send_cmd_host_qid = msgget(send_cmd_host_key, IPC_CREAT | 0666);
 	recv_cmd_host_qid = msgget(recv_cmd_host_key, IPC_CREAT | 0666);
 
-	for(i = 0;i < NUM_SCHED_TASKS;i++)
+	for(i = 0;i < NUM_SOCK_TASKS;i++)
 		id_arg[i] = i;
 
-	_threads[GET_HOST_CMD2].sched = TIME_SLICE;
-	_threads[MONITOR_INPUTS].sched = PFIFO;
-	_threads[MONITOR_INPUTS2].sched = PFIFO;
-	_threads[TIMER].sched = PTIME_SLICE;
-	_threads[TIMER2].sched = PTIME_SLICE;
-	_threads[SERIAL_RECV].sched = TIME_SLICE;
-	_threads[BASIC_CONTROLS].sched = TIME_SLICE;
+	_threads[GET_HOST_CMD1].sched = TIME_SLICE;
+	_threads[TCP_MONITOR].sched = TIME_SLICE;
+	_threads[RECV_MSG].sched = TIME_SLICE;
 
-	strcpy(_threads[GET_HOST_CMD2].label,"GET_HOST_CMD2\0");
-	strcpy(_threads[MONITOR_INPUTS].label,"MONITOR_INPUTS\0");
-	strcpy(_threads[MONITOR_INPUTS2].label,"MONITOR_INPUTS2\0");
-	strcpy(_threads[TIMER].label,"TIMER\0");
-	strcpy(_threads[TIMER2].label,"TIMER2\0");
-	strcpy(_threads[SERIAL_RECV].label,"SERIAL_RECV\0");
-	strcpy(_threads[BASIC_CONTROLS].label,"MSG_QUEUE\0");
+	strcpy(_threads[GET_HOST_CMD1].label,"GET_HOST_CMD1\0");
+	strcpy(_threads[TCP_MONITOR].label,"TCP_MONITOR\0");
+	strcpy(_threads[RECV_MSG].label,"RECV_MSG\0");
 
 /* spawn the threads */
-	for (i = 0; i < NUM_SCHED_TASKS; i++)
+	for (i = 0; i < NUM_SOCK_TASKS; i++)
 //	for (i = 5;i < 6;i++)
 	{
 /*
@@ -219,7 +168,7 @@ int main(int argc, char **argv)
 				_threads[i].prio_min = sched_get_priority_min(SCHED_FIFO);
 				_threads[i].prio_max = sched_get_priority_max(SCHED_FIFO);
 				priority_param.sched_priority = _threads[i].prio_min + \
-					1*(_threads[i].prio_max - _threads[i].prio_min)/(NUM_SCHED_TASKS-1);
+					1*(_threads[i].prio_max - _threads[i].prio_min)/(NUM_SOCK_TASKS-1);
 				break;
 			case TIME_SLICE:
 				pthread_attr_setschedpolicy(&pthread_custom_attr, SCHED_RR);
@@ -238,7 +187,7 @@ int main(int argc, char **argv)
 				_threads[i].prio_max = sched_get_priority_max(SCHED_RR);
 				_threads[i].prio_min = sched_get_priority_min(SCHED_RR);
 				priority_param.sched_priority = _threads[i].prio_min + \
-					4*(_threads[i].prio_max - _threads[i].prio_min)/(NUM_SCHED_TASKS-1);
+					4*(_threads[i].prio_max - _threads[i].prio_min)/(NUM_SOCK_TASKS-1);
 				break;
 			default:
 				break;
@@ -264,27 +213,28 @@ int main(int argc, char **argv)
 			perror("main() pthread create with attr obj failed"),exit(1);
 	}
 
-//	printf("\nmain()\t\t\t\t%d threads created. Main running fifo at max\n", NUM_SCHED_TASKS);
+	//printf("\nmain()\t\t\t\t%d threads created. Main running fifo at max\n", NUM_SOCK_TASKS);
 
 /* wait until all threads have finished */
 //	serial_thread = _threads[SERIAL_RECV].pthread;
 
-	for (i = 0; i < NUM_SCHED_TASKS; i++)
+	for (i = 0; i < NUM_SOCK_TASKS; i++)
 	{
 		if (pthread_join(_threads[i].pthread, NULL) !=0)
 		{
 			printf("exit\r\n");
 			perror("main() pthread_join failed"),exit(1);
 		}
-//printf("closing task: %s\n",_threads[i].label);
+printf("closing task: %s\n",_threads[i].label);
+/*
 		if(i == 0)
 		{
 			pthread_cancel(_threads[SERIAL_RECV].pthread);
 			pthread_cancel(_threads[TCP_MONITOR].pthread);
 		}
+*/
 //		printf("closing task :%d %s\r\n",i,_threads[i].label);
 	}
-	close_mem();
 
 //	RS232_CloseComport(1);
 //	strcpy(str2,"close");
@@ -296,32 +246,32 @@ int main(int argc, char **argv)
 //	llist_show(&ll);
 	if(reboot_on_exit == 1)
 	{
-		//printf("sched: exit to shell\r\n");
+		printf("sched: exit to shell\r\n");
 		return 1;
 	}
 	else if(reboot_on_exit == 2)
 	{
-		//printf("sched: reboot\r\n");
+		printf("sched: reboot\r\n");
 		return 2;
 	}
 	else if(reboot_on_exit == 3)
 	{
-		//printf("sched: shutdown\r\n");
+		printf("sched: shutdown\r\n");
 		return 3;
 	}
 	else if(reboot_on_exit == 4)
 	{
-		//printf("upload new sched\r\n");
+		printf("upload new sched\r\n");
 		return 4;
 	}
 	else if(reboot_on_exit == 5)
 	{
-		//printf("upload new param\r\n");
+		printf("upload new param\r\n");
 		return 5;
 	}
 	else if(reboot_on_exit == 6)
 	{
-		//printString3("shell and rename (sched.c)");
+		printf("shell and rename\n");
 		return 6;
 	}
 }

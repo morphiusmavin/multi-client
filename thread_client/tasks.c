@@ -30,12 +30,8 @@
 #include "queue/cllist_threads_rw.h"
 #include "tasks.h"
 //#include "cs_client/config_file.h"
-#include "lcd_func.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
-pthread_cond_t       threads_ready;
-pthread_mutex_t     tcp_write_lock=PTHREAD_MUTEX_INITIALIZER;
-pthread_mutex_t     tcp_read_lock=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t     io_mem_lock=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t     serial_write_lock=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t     serial_read_lock=PTHREAD_MUTEX_INITIALIZER;
@@ -44,13 +40,6 @@ pthread_mutex_t     serial_write_lock2=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t     msg_queue_lock=PTHREAD_MUTEX_INITIALIZER;
 int total_count;
 
-UCHAR (*fptr[NUM_TASKS])(int) = { get_host_cmd_task, monitor_input_task, 
-monitor_fake_input_task, timer_task, timer2_task, serial_recv_task, 
-tcp_monitor_task, basic_controls_task};
-
-int threads_ready_count=0;
-pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
-pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
 static UCHAR check_inputs(int index, int test);
 //extern CMD_STRUCT cmd_array[NO_CMDS];
 ollist_t oll;
@@ -229,7 +218,6 @@ int uSleep(time_t sec, long nanosec)
 
 	return 0;									  /* Return success */
 }
-
 
 /*********************************************************************/
 static int mask2int(UCHAR mask)
@@ -799,7 +787,7 @@ UCHAR timer_task(int test)
 			uSleep(timer_seconds,0);
 			printf("timer 1: %d\n",timer_seconds);
 			//send_msg(strlen((char*)write_serial_buffer),(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
-			send_msg(SERIAL_BUFF_SIZE-20,(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
+//			send_msg(SERIAL_BUFF_SIZE-20,(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
 		} else if(timer_on == 2)
 		{
 			uSleep(timer_seconds,0);
@@ -1029,171 +1017,6 @@ UCHAR serial_recv_task(int test)
 	}
 	return 1;
 }
-
-// client calls 'connect' to get accept call below to stop
-// blocking and return sd2 socket descriptor
-
-static struct  sockaddr_in sad;				  /* structure to hold server's address  */
-static int sock_open;
-static struct timeval tv;
-/*********************************************************************/
-int tcp_connect(void)
-{
-	static struct  sockaddr_in sad;  /* structure to hold server's address  */
-	struct  hostent  *ptrh;   /* pointer to a host table entry       */
-	struct  protoent *ptrp;   /* point to a protocol table entry     */
-	static struct timeval tv;
-	int port;
-	char host[20] = "192.168.88.146";	// TS-SERVER I'm currently using 
-
-	memset((char *)&sad,0,sizeof(sad));  /* clear sockaddr structure */
-	sad.sin_family = AF_INET;            /* set family to Internet   */
-	sad.sin_addr.s_addr = INADDR_ANY;
-	port = PROTOPORT;
-
-	if (port > 0) sad.sin_port = htons((u_short)port);
-	else
-	{
-		printf("bad port number %d\n", port);
-	}
-	ptrh = gethostbyname(host);
-	if( ((char *)ptrh) == NULL)
-	{
-		printf("invalid host:  %s\n", host);
-	}
-
-	memcpy(&sad.sin_addr, ptrh->h_addr, ptrh->h_length);
-
-	 /* Map TCP transport protocol name to protocol number */
-	//getprotobyname doesn't work on TS-7200 because there's no /etc/protocols file
-/*
-	if ( ((int)(ptrp = getprotobyname("tcp"))) == 0)
-	{
-		printf("cannot map \"tcp\" to protocol number");
-	}
-*/
-	global_socket = socket (PF_INET, SOCK_STREAM, 6);
-
-	if (global_socket < 0)
-	{
-		printf("socket creation failed\n");
-	}
-
-	//printf("host = %s global_socket = %d\n",host,global_socket);
-	//printf("trying to connect...\n");
-
-	if (connect(global_socket, (struct sockaddr *)&sad, sizeof(sad)) < 0)
-	{
-		printf("connect failed\n");
-	}
-	else
-	{
-		printf("connected\n");
-
-//#ifndef MAKE_TARGET
-		if (setsockopt (global_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0)
-			return -2;
-		if (setsockopt (global_socket, SOL_SOCKET, SO_SNDTIMEO, (char *)&tv, sizeof(struct timeval)) < 0)
-			return -3;
-//#endif
-		sock_open = 1;
-		return global_socket;
-	}
-}
-
-/*********************************************************************/
-// task to monitor for a client requesting a connection
-UCHAR tcp_monitor_task(int test)
-{
-	int s;
-	s = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
-	assign_client_table();
-
-	while (TRUE)
-	{
-		if(shutdown_all)
-		{
-			//close_tcp();
-			//printf("done tcp_mon\r\n");
-			return 0;
-		}
-		else
-		{
-			if(test_sock() != 1)
-			{
-				if(tcp_connect() < 0)
-				{
-					printf("can't connect\n");
-				}
-			}
-			uSleep(1,0);
-		}
-		uSleep(2,TIME_DELAY/2);
-	}
-	return 1;
-}
-
-/*********************************************************************/
-int test_sock(void)
-{
-	return sock_open;
-}
-
-void set_sock(int open)
-{
-	sock_open = open;
-}
-/*********************************************************************/
-void close_tcp(void)
-{
-	if(sock_open)
-	{
-		sock_open = 0;
-		//printf("closing socket...\r\n");
-		close(global_socket);
-		//printf("socket closed!\r\n");
-		global_socket = -1;
-	}else
-	{
-		//printf("socket already closed\r\n");
-	}
-}
-
-/**********************************************************************/
-void *work_routine(void *arg)
-{
-	int *my_id=(int *)arg;
-	int i;
-	UCHAR pattern = 0;
-	int not_done=1;
-	i = not_done;
-	shutdown_all = 0;
-
-	pthread_mutex_lock(&threads_ready_lock);
-	threads_ready_count++;
-	if (threads_ready_count == NUM_TASKS)
-	{
-/* I was the last thread to become ready.  Tell the rest. */
-		pthread_cond_broadcast(&threads_ready);
-	}
-	else
-	{
-/* At least one thread isn't ready.  Wait. */
-		while (threads_ready_count != NUM_TASKS)
-		{
-			pthread_cond_wait(&threads_ready, &threads_ready_lock);
-		}
-	}
-	pthread_mutex_unlock(&threads_ready_lock);
-
-	while(not_done)
-	{
-		(*fptr[*my_id])(i);
-		i--;
-		not_done--;
-	}
-	return(NULL);
-}
 /*********************************************************************/
 void add_msg_queue(UCHAR cmd)
 {
@@ -1316,42 +1139,42 @@ UCHAR basic_controls_task(int test)
 
 			case EXIT_TO_SHELL:
 				snprintf(tempx, strlen(tempx), "exit to shell");
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
+//				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
 				uSleep(0,TIME_DELAY/16);
 				printf("exit to shell\n");
 				shutdown_all = 1;
 				reboot_on_exit = 1;
-				close_tcp();
+//				close_tcp();
 				break;
 
 			case REBOOT_IOBOX:
 				snprintf(tempx, strlen(tempx), "reboot iobox");
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
+//				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
 				uSleep(0,TIME_DELAY/16);
 				printf("reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;
-				close_tcp();
+//				close_tcp();
 				break;
 
 			case SHUTDOWN_IOBOX:
 				snprintf(tempx, strlen(tempx), "shutdown iobox");
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
+//				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
 				uSleep(0,TIME_DELAY/16);
 				printf("shutdown iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 3;
-				close_tcp();
+//				close_tcp();
 				break;
 
 			case SHELL_AND_RENAME:
 				snprintf(tempx, strlen(tempx), "shell and rename");
-				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
+//				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
 				uSleep(0,TIME_DELAY/16);
 				printf("shell and rename\n");
 				shutdown_all = 1;
 				reboot_on_exit = 6;
-				close_tcp();
+//				close_tcp();
 				break;
 
 			default:

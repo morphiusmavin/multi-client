@@ -1,7 +1,8 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_TASKS           	8
+#define NUM_SOCK_TASKS			3
+#define NUM_SCHED_TASKS			7
 #define DEFAULT                 0
 #define TIME_SLICE              1
 #define FIFO                    2
@@ -13,6 +14,8 @@
 #define PROTOPORT			5193				  /* default protocol port number */
 #define QLEN				6					  /* size of request queue        */
 //#define MSG_QUEUE_SIZE		50
+#define SEND_CMD_HOST_QKEY	1234
+#define RECV_CMD_HOST_QKEY	1300
 #define BASIC_CONTROLS_QKEY	1301
 
 // params for usleep()
@@ -36,19 +39,28 @@
 
 int global_socket;
 
-enum task_types
+enum sock_task_types
 {
-	GET_HOST_CMD,
+	GET_HOST_CMD1,
+	TCP_MONITOR,
+	RECV_MSG
+} SOCK_TASK_TYPES;
+
+enum sched_task_types
+{
+	GET_HOST_CMD2,
 	MONITOR_INPUTS,
 	MONITOR_INPUTS2,
 	TIMER,
 	TIMER2,
-	TCP_MONITOR,
 	SERIAL_RECV,
 	BASIC_CONTROLS
-} TASK_TYPES;
+} SCHED_TASK_TYPES;
 
-UCHAR get_host_cmd_task(int test);
+void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest);
+UCHAR recv_msg_task(int test);
+UCHAR get_host_cmd_task1(int test);
+UCHAR get_host_cmd_task2(int test);
 UCHAR monitor_input_task(int test);
 UCHAR monitor_fake_input_task(int test);
 UCHAR timer_task(int test);
@@ -86,7 +98,7 @@ void send_status_msg(char *msg);
 void set_gps_baudrate(int baudrate);
 void print_cmd(UCHAR cmd);
 void assign_client_table(void);
-//double getDistance(double lat1, double lon1, double lat2, double lon2, int units);
+
 typedef struct
 {
 	int i;
@@ -115,6 +127,12 @@ extern UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];
 static int same_msg;
 int basic_controls_qid;
+int send_cmd_host_qid;
+int recv_cmd_host_qid;
+key_t send_cmd_host_key;
+key_t recv_cmd_host_key;
+key_t basic_controls_key;
+
 int timer_on;
 int timer_seconds;
 int next_client;

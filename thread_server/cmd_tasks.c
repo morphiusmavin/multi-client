@@ -30,10 +30,7 @@
 #include "queue/ollist_threads_rw.h"
 #include "queue/cllist_threads_rw.h"
 #include "cs_client/config_file.h"
-#include "lcd_func.h"
 
-extern pthread_mutex_t     tcp_read_lock;
-extern pthread_mutex_t     tcp_write_lock;
 extern CLIENT_TABLE client_table[];
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 

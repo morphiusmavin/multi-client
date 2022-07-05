@@ -22,7 +22,6 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <errno.h>
-#include <dirent.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
@@ -35,7 +34,6 @@
 #include "queue/cllist_threads_rw.h"
 #include "tasks.h"
 //#include "cs_client/config_file.h"
-#include "lcd_func.h"
 
 #define handle_error_en(en, msg) \
 	   do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
@@ -190,10 +188,8 @@ UCHAR get_host_cmd_task(int test)
 			}
 		}
 		cmd = msg.mtext[0];							// first byte is cmd
-		dest = (int)msg.mtext[1];					// 2nd byte is dest
-		printf("dest: %d\n",dest);
-		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
-		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
+		msg_len |= (int)(msg.mtext[2] << 4);		// 
+		msg_len = (int)msg.mtext[1];				// 
 		write_serial_buff[0] = cmd;
 		printf("msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+4,msg_len);

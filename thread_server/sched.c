@@ -48,6 +48,11 @@ extern void *work_routine(void *arg);
 char oFileName[20];
 char cFileName[20];
 
+pthread_cond_t  threads_ready;
+int threads_ready_count=0;
+pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
+pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
+
 UCHAR reboot_on_exit;
 
 //pthread_t serial_thread;	// workaround for closing serial thread (serial read is blocking)
@@ -61,6 +66,49 @@ typedef struct
 	char label[30];
 }THREADS;
 
+UCHAR (*fptr[NUM_SCHED_TASKS])(int) = { 
+	get_host_cmd_task, 
+	monitor_input_task, 
+	monitor_fake_input_task, 
+	timer_task, 
+	timer2_task, 
+	serial_recv_task, 
+	basic_controls_task};
+
+/**********************************************************************/
+void *work_routine(void *arg)
+{
+	int *my_id=(int *)arg;
+	int i;
+	UCHAR pattern = 0;
+	int not_done=1;
+	i = not_done;
+
+	pthread_mutex_lock(&threads_ready_lock);
+	threads_ready_count++;
+	if (threads_ready_count == NUM_SCHED_TASKS)
+	{
+/* I was the last thread to become ready.  Tell the rest. */
+		pthread_cond_broadcast(&threads_ready);
+	}
+	else
+	{
+/* At least one thread isn't ready.  Wait. */
+		while (threads_ready_count != NUM_SCHED_TASKS)
+		{
+			pthread_cond_wait(&threads_ready, &threads_ready_lock);
+		}
+	}
+	pthread_mutex_unlock(&threads_ready_lock);
+
+	while(not_done)
+	{
+		(*fptr[*my_id])(*my_id);
+		i--;
+		not_done--;
+	}
+	return(NULL);
+}
 /********************************************************************************************************/
 int main(int argc, char **argv)
 {
@@ -135,7 +183,6 @@ int main(int argc, char **argv)
 	_threads[TIMER2].sched = PTIME_SLICE;
 
 	_threads[SERIAL_RECV].sched = TIME_SLICE;
-//	_threads[SERIAL_RECV2].sched = TIME_SLICE;
 	_threads[BASIC_CONTROLS].sched = TIME_SLICE;
 
 	strcpy(_threads[GET_HOST_CMD2].label,"GET_HOST_CMD\0");
@@ -145,11 +192,8 @@ int main(int argc, char **argv)
 	strcpy(_threads[TIMER2].label,"TIMER2\0");
 
 	strcpy(_threads[SERIAL_RECV].label,"SERIAL_RECV\0");
-//	strcpy(_threads[SERIAL_RECV2].label,"SERIAL_RECV2\0");
 	strcpy(_threads[BASIC_CONTROLS].label,"MSG_QUEUE\0");
 
-//	strcpy(_threads[READ_TASK4].label,"READ_TASK4\0");
-//	strcpy(_threads[SEND_TASK4].label,"SEND_TASK4\0");
 /* spawn the threads */
 
 	assign_client_table();
