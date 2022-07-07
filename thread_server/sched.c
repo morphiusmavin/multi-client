@@ -53,10 +53,6 @@ int threads_ready_count=0;
 pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
 pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
 
-UCHAR reboot_on_exit;
-
-//pthread_t serial_thread;	// workaround for closing serial thread (serial read is blocking)
-
 typedef struct
 {
 	pthread_t pthread;
@@ -123,7 +119,6 @@ int main(int argc, char **argv)
 	UCHAR test2;
 	int sd;
 	int rc;
-	reboot_on_exit = 6;
 	key_t send_cmd_host_key;
 	key_t recv_cmd_host_key;
 	key_t basic_controls_key;

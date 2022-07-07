@@ -7,6 +7,7 @@ git add load_cmds.c
 git add README.md
 git add try_sched_client.sh
 git add try_sched_server.sh
+git add network.readme
 
 git add thread_server/ioports.c
 git add thread_server/Makefile

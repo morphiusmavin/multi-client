@@ -40,6 +40,7 @@ namespace EpServerEngineSampleClient
         private SetNextClient setnextclient = null;
         private Child_Scrolling_List slist = null;
         private int AvailClientCurrentSection = 0;
+        private bool player_active = false;
 
         private List<ClientParams> client_params;
         private List<ClientsAvail> clients_avail;
@@ -54,8 +55,6 @@ namespace EpServerEngineSampleClient
         private int server_up_seconds = 0;
         private bool client_connected = false;
         private bool home_svr_connected = false;
-        // initially try for 20 seconds to connect, then 
-        // give up until user hits 'Call Home' button
         private int timer_offset;
         private string sendmsgtext;
         int tick = 0;	
@@ -86,7 +85,8 @@ namespace EpServerEngineSampleClient
 
             tbReceived.Clear();
 
-            playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
+            //playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
+            playdlg = new PlayerDlg("g:\\rock\\wavefiles", m_client);
 
             garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
@@ -171,9 +171,6 @@ namespace EpServerEngineSampleClient
             {
                 AddMsg("no primary address found in xml file");
             }
-
-            timer1.Enabled = true;
-            //ListMsg("Hello!",true);
         }
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -181,7 +178,7 @@ namespace EpServerEngineSampleClient
             {
                 m_hostname = cbIPAdress.Items[selected_address].ToString();
                 m_portno = tbPort.Text;
-                //AddMsg("trying to connect to:    " + m_hostname + ":" + m_portno.ToString() + "...");
+                AddMsg("trying to connect to:    " + m_hostname + ":" + m_portno.ToString() + "...");
                 ClientOps ops = new ClientOps(this, m_hostname, m_portno);
                 // set the timeout to 5ms - by default it's 0 which causes it to wait a long time
                 // and slows down the UI
@@ -189,12 +186,24 @@ namespace EpServerEngineSampleClient
                 m_client.Connect(ops);
                 please_lets_disconnect = 0;
                 disconnect_attempts++;
-				//AddMsg(GetLocalIPAddress());
+                timer1.Enabled = true;
+                tick = 0;
+                btnConnect.Text = "Disconnect";
+                client_connected = true;
+                //AddMsg(GetLocalIPAddress());
             }
             else
             {
+                svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
                 please_lets_disconnect = 1; // let's disconnect here!
                 disconnect_attempts = 0;
+                AddMsg("disconnecting");
+                btnConnect.Text = "Connect";
+                timer1.Enabled = false;
+                client_connected = false;
+                play_aliens_clip();
+                m_client.Disconnect();
+
             }
         }
             
@@ -221,6 +230,7 @@ namespace EpServerEngineSampleClient
                     //AddMsg("server_up_seconds: " + server_up_seconds.ToString());
                     btnShowParams.Enabled = valid_cfg;
                     clients_avail[8].socket = 1;        // 8 is _SERVER (this is bad!)
+                    timer1.Enabled = true;
                 }
             }
             else AddMsg(client.HostName);
@@ -234,23 +244,24 @@ namespace EpServerEngineSampleClient
                 btnConnect.Text = "Connect";
                 tbConnected.Text = "not connected";
                 btnShutdown.Enabled = false;
+                //AddMsg("disconnected 1");
             }
         }
         
         protected override void OnClosed(EventArgs e)
         {
+            AddMsg("closing...");
             if (m_client.IsConnectionAlive)
-                please_lets_disconnect = 1;
-            else
             {
-                playdlg.Dispose();
-                garageform.Dispose();
-                testbench.Dispose();
-                //bluetoothform.Dispose();
-                clientdest.Dispose();
-                setnextclient.Dispose();
-                base.OnClosed(e);
+                please_lets_disconnect = 1;
             }
+            playdlg.Dispose();
+            garageform.Dispose();
+            testbench.Dispose();
+            //bluetoothform.Dispose();
+            clientdest.Dispose();
+            setnextclient.Dispose();
+            base.OnClosed(e);
         }
         
         public void OnReceived(INetworkClient client, Packet receivedPacket)
@@ -790,278 +801,192 @@ namespace EpServerEngineSampleClient
         {
 			SetTime(9);
         }
-
         private void myTimerTick(object sender, EventArgs e)
         {
             tick++;
             if (tick == 30)
+            {
+                AddMsg("set time");
+                SetTime(8);
+            }
+            if(tick > 3600)
 			{
-				 foreach (ClientsAvail cl in clients_avail)
-				{
-					if (cl.type == 1 && cl.socket > 0)
-					{
-						SetTime(cl.index);
-					}
-				}
+                if (!player_active)
+                {
+                    play_aliens_clip();
+                    tick = 31;
+                }
 			}
-                
-            switch (please_lets_disconnect)            // send the msg to server saying we are disconnecting
+        }
+        void play_aliens_clip()
+	{
+        System.Media.SoundPlayer player;
+        string song = "";
+        Random r = new Random();
+        int rInt = r.Next(0, 49); //for ints
+            switch (rInt)
             {
                 case 0:
-                    if (m_client.IsConnectionAlive)
-                    {
-                        if (client_connected == false)
-                        {
-                            client_connected = true;
-                            cbIPAdress.Enabled = false;
-                            tbPort.Enabled = false;
-                            btnConnect.Text = "Disconnect";
-                            btnShutdown.Enabled = true;
-                            btnRescan.Enabled = true;
-                            btnShowParams.Enabled = valid_cfg;
-                            tbServerTime.Text = "";
-                            btn_PlayList.Enabled = true;
-                            btnGetTime.Enabled = true;
-                            AddMsg("server connected");
-                            // here we should get a message from the server
-                            // data that tells us if the engine is already running
-                            // or the lights are already on,etc.
-                        }
-                        else
-                        {
-                            //AddMsg(server_up_seconds.ToString());
-                            //tbServerUpTimeSeconds.Text = "server up seconds: " + 
-                            //timer_server_up_seconds.ToString() + " " 
-                            //+ "previous up seconds: " + previous_timer_server_up_seconds.ToString();
-                        }
-                    }
-                    else // if not alive
-                    {
-                        if (client_connected == true)
-                        {
-                            client_connected = false;
-                            cbIPAdress.Enabled = true;
-                            tbPort.Enabled = true;
-                            btnConnect.Text = "Connect";
-                            btnShutdown.Enabled = false;
-                            btnRescan.Enabled = false;
-                            btnShowParams.Enabled = valid_cfg;
-                            btn_PlayList.Enabled = false;
-                            btnGetTime.Enabled = false;
-                            //Upload_New.Enabled = false;
-
-                            tbServerTime.Text = "";
-                            client_connected = false;
-                            ListMsg("server disconnected", true);
-                            //tbServerUpTimeSeconds.Text = "";
-                            server_up_seconds = 0;
-                        }
-                        else
-                        {
-                            if (disconnect_attempts > 0)
-                            {
-                                disconnect_attempts++;
-                                // this doesn't work as intended because it hangs for so long
-                                // before even going into this code
-                                //AddMsg("attempt to connect: " + disconnect_attempts.ToString());
-                                // this won't show because the app hangs while trying to connect
-                                if (disconnect_attempts > client_params[selected_address].AttemptsToConnect)
-                                {
-                                    AddMsg("too many disconnect attempts");
-                                    AddMsg("giving up trying to connect");
-                                    disconnect_attempts = 0;
-                                    please_lets_disconnect = 0;
-                                    client_connected = false;
-                                    cbIPAdress.Enabled = true;
-                                    tbPort.Enabled = true;
-                                    btnShutdown.Enabled = false;
-                                    btnRescan.Enabled = false;
-                                    btnShowParams.Enabled = valid_cfg;
-                                    btn_PlayList.Enabled = false;
-                                    btnGetTime.Enabled = false;
-                                    client_connected = false;
-                                }
-                            }
-                        }
-                    }
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\alien_kill2.wav";
                     break;
                 case 1:
-                    string cmd = "DISCONNECT";
-                    AddMsg("asking server to disconnect...");
-                    int offset = svrcmd.GetCmdIndexI(cmd);
-                    svrcmd.Send_Cmd(offset);
-                    please_lets_disconnect = 2;     // next time around disconnect anyway
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\GameOverMan.wav";
                     break;
-                case 2:         // then wait 1 second to see if it really did disconnect us
-
-                    System.Media.SoundPlayer player;
-                    string song = "";
-                    Random r = new Random();
-                    int rInt = r.Next(0, 49); //for ints
-                    switch (rInt)
-                    {
-                        case 0:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\alien_kill2.wav";
-                            break;
-                        case 1:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\GameOverMan.wav";
-                            break;
-                        case 2:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\day_on_the_farm.wav";
-                            break;
-                        case 3:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\DRAKE.wav";
-                            break;
-                        case 4:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\sweethearts.wav";
-                            break;
-                        case 5:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\illegal_aliens.wav";
-                            break;
-                        case 6:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\express_elevator.wav";
-                            break;
-                        case 7:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\knives_sharp_sticks.wav";
-                            break;
-                        case 8:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\stop_yer_grinnin.wav";
-                            break;
-                        case 9:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\comin_outa_the_gd_walls.wav";
-                            break;
-                        case 10:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\pretty_shit_now_man.wav";
-                            break;
-                        case 11:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\chicken_shit.wav";
-                            break;
-                        case 12:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\count_me_out.wav";
-                            break;
-                        case 13:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\cut_the_power.wav";
-                            break;
-                        case 14:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\grease.wav";
-                            break;
-                        case 15:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\17_hours.wav";
-                            break;
-                        case 16:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\somethin_movin.wav";
-                            break;
-                        case 17:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\dry_heat.wav";
-                            break;
-                        case 18:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\hes_comin_in.wav";
-                            break;
-                        case 19:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\cornbread.wav";
-                            break;
-                        case 20:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\RampClosing.wav";
-                            break;
-                        case 21:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\PrepareForDustOff.wav";
-                            break;
-                        case 22:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\Werspaski.wav";
-                            break;
-                        case 23:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\LetsRock.wav";
-                            break;
-                        case 24:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\CloseEncounters.wav";
-                            break;
-                        case 25:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\YouHeardTheMan.wav";
-                            break;
-                        case 26:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\FlameUnitsOnly.wav";
-                            break;
-                        case 27:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\HarshLanguage.wav";
-                            break;
-                        case 28:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\IsHeFnCrazy.wav";
-                            break;
-                        case 29:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\CantHaveAnyFiring.wav";
-                            break;
-                        case 30:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\StandardLightArmour.wav";
-                            break;
-                        case 31:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\WhatDoThoseFire.wav";
-                            break;
-                        case 32:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\BuildAFire.wav";
-                            break;
-                        case 33:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\WhatAreWeGonnaDo.wav";
-                            break;
-                        case 34:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\Explosion.wav";
-                            break;
-                        case 35:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\HesJustAGrunt.wav";
-                            break;
-                        case 36:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\CurrentEvents.wav";
-                            break;
-                        case 37:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\ArbitrarilyExterminate.wav";
-                            break;
-                        case 38:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\TheyCanBillMe.wav";
-                            break;
-                        case 39:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\SubstantialDollarValue.wav";
-                            break;
-                        case 40:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\NukeTheEntireSite.wav";
-                            break;
-                        case 41:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\WhatAreWeTalkingAboutThisFor.wav";
-                            break;
-                        case 42:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\ThisCantBeHappinen.wav";
-                            break;
-                        case 43:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\YouCantHelpThem.wav";
-                            break;
-                        case 44:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\WaitUpKillYou.wav";
-                            break;
-                        case 45:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\ShutTheGDDoor.wav";
-                            break;
-                        case 46:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\RipleyWhatTheHell.wav";
-                            break;
-                        case 47:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\SargeIsGone.wav";
-                            break;
-                        case 48:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\SpaskiCroweDown.wav";
-                            break;
-                        case 49:
-                            song = "c:\\users\\Daniel\\Music\\WavFiles2\\I_Only_Work_Here.wav";
-                            break;
-                        default:
-                            break;
-                    }
-                    if (m_client.IsConnectionAlive)
-                        m_client.Disconnect();
-                    please_lets_disconnect = 0;
-                    player = new System.Media.SoundPlayer();
-                    player.SoundLocation = song;
-                    player.Play();
-                    player.Dispose();
+                case 2:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\day_on_the_farm.wav";
+                    break;
+                case 3:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\DRAKE.wav";
+                    break;
+                case 4:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\sweethearts.wav";
+                    break;
+                case 5:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\illegal_aliens.wav";
+                    break;
+                case 6:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\express_elevator.wav";
+                    break;
+                case 7:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\knives_sharp_sticks.wav";
+                    break;
+                case 8:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\stop_yer_grinnin.wav";
+                    break;
+                case 9:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\comin_outa_the_gd_walls.wav";
+                    break;
+                case 10:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\pretty_shit_now_man.wav";
+                    break;
+                case 11:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\chicken_shit.wav";
+                    break;
+                case 12:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\count_me_out.wav";
+                    break;
+                case 13:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\cut_the_power.wav";
+                    break;
+                case 14:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\grease.wav";
+                    break;
+                case 15:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\17_hours.wav";
+                    break;
+                case 16:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\somethin_movin.wav";
+                    break;
+                case 17:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\dry_heat.wav";
+                    break;
+                case 18:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\hes_comin_in.wav";
+                    break;
+                case 19:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\cornbread.wav";
+                    break;
+                case 20:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\RampClosing.wav";
+                    break;
+                case 21:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\PrepareForDustOff.wav";
+                    break;
+                case 22:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\Werspaski.wav";
+                    break;
+                case 23:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\LetsRock.wav";
+                    break;
+                case 24:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\CloseEncounters.wav";
+                    break;
+                case 25:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\YouHeardTheMan.wav";
+                    break;
+                case 26:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\FlameUnitsOnly.wav";
+                    break;
+                case 27:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\HarshLanguage.wav";
+                    break;
+                case 28:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\IsHeFnCrazy.wav";
+                    break;
+                case 29:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\CantHaveAnyFiring.wav";
+                    break;
+                case 30:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\StandardLightArmour.wav";
+                    break;
+                case 31:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\WhatDoThoseFire.wav";
+                    break;
+                case 32:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\BuildAFire.wav";
+                    break;
+                case 33:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\WhatAreWeGonnaDo.wav";
+                    break;
+                case 34:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\Explosion.wav";
+                    break;
+                case 35:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\HesJustAGrunt.wav";
+                    break;
+                case 36:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\CurrentEvents.wav";
+                    break;
+                case 37:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\ArbitrarilyExterminate.wav";
+                    break;
+                case 38:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\TheyCanBillMe.wav";
+                    break;
+                case 39:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\SubstantialDollarValue.wav";
+                    break;
+                case 40:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\NukeTheEntireSite.wav";
+                    break;
+                case 41:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\WhatAreWeTalkingAboutThisFor.wav";
+                    break;
+                case 42:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\ThisCantBeHappinen.wav";
+                    break;
+                case 43:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\YouCantHelpThem.wav";
+                    break;
+                case 44:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\WaitUpKillYou.wav";
+                    break;
+                case 45:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\ShutTheGDDoor.wav";
+                    break;
+                case 46:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\RipleyWhatTheHell.wav";
+                    break;
+                case 47:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\SargeIsGone.wav";
+                    break;
+                case 48:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\SpaskiCroweDown.wav";
+                    break;
+                case 49:
+                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\I_Only_Work_Here.wav";
+                    break;
+                default:
                     break;
             }
+            
+            int id = song.LastIndexOf("\\");
+            string tsong = song.Substring(id + 1);
+            AddMsg(tsong);
+            player = new System.Media.SoundPlayer();
+            player.SoundLocation = song;
+            player.Play();
+            player.Dispose();
         }
         private void IPAddressChanged(object sender, EventArgs e)
         {
@@ -1081,6 +1006,7 @@ namespace EpServerEngineSampleClient
         private void Btn_PlayList_Click(object sender, EventArgs e)
         {
             playdlg.Enable_Dlg(true);
+            player_active = true;
 
             playdlg.StartPosition = FormStartPosition.Manual;
             playdlg.Location = new Point(100, 10);
@@ -1093,6 +1019,7 @@ namespace EpServerEngineSampleClient
                 //                this.txtResult.Text = "Cancelled";
             }
             playdlg.Enable_Dlg(false);
+            player_active = false;
         }
         private void SetTime(int dest)
         {
@@ -1175,12 +1102,19 @@ namespace EpServerEngineSampleClient
                 if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 {
                     AddMsg("send msg: " + cl.label + " " + cl.index);
-                    if(remove)
-					{
+                    if (remove)
+                    {
                         cl.lbindex = -1;
                         cl.socket = -1;
                     }
                     svrcmd.Send_ClCmd(msg, cl.index, param);
+                    // if cl.index == server then set disconnected flag
+                    if (cl.index == 8)
+                    { 
+                        btnConnect.Text = "Connect";
+                        timer1.Enabled = false;
+                        client_connected = false;
+                    }
                     RedrawClientListBox();
 					if(!remove)
 					{
@@ -1235,7 +1169,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnWaitReboot_Click(object sender, EventArgs e)
 		{
-            SendClientMsg(svrcmd.GetCmdIndexI("SHELL_AND_RENAME"), " ", true);
+            SendClientMsg(svrcmd.GetCmdIndexI("EXIT_TO_SHELL"), " ", true);
         }
 		private void tbSendMsg_TextChanged(object sender, EventArgs e)
 		{

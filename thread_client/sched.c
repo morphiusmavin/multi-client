@@ -98,10 +98,6 @@ char cFileName[20];
 key_t send_cmd_host_key;
 key_t recv_cmd_host_key;
 
-UCHAR reboot_on_exit;
-
-//pthread_t serial_thread;	// workaround for closing serial thread (serial read is blocking)
-
 typedef struct
 {
 	pthread_t pthread;

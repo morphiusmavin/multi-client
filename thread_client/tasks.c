@@ -1141,7 +1141,7 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "exit to shell");
 //				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
 				uSleep(0,TIME_DELAY/16);
-				printf("exit to shell\n");
+				printf("tasks: exit to shell\n");
 				shutdown_all = 1;
 				reboot_on_exit = 1;
 //				close_tcp();
@@ -1151,7 +1151,7 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "reboot iobox");
 //				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
 				uSleep(0,TIME_DELAY/16);
-				printf("reboot iobox\n");
+				printf("tasks: reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;
 //				close_tcp();
@@ -1161,7 +1161,7 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "shutdown iobox");
 //				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
 				uSleep(0,TIME_DELAY/16);
-				printf("shutdown iobox\n");
+				printf("tasks: shutdown iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 3;
 //				close_tcp();
@@ -1171,7 +1171,7 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "shell and rename");
 //				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
 				uSleep(0,TIME_DELAY/16);
-				printf("shell and rename\n");
+				printf("tasks: shell and rename\n");
 				shutdown_all = 1;
 				reboot_on_exit = 6;
 //				close_tcp();

@@ -143,7 +143,7 @@ int basic_controls_qid;
 int timer_on;
 int timer_seconds;
 
-extern UCHAR reboot_on_exit;
+UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];
 static int same_msg;
 

@@ -84,10 +84,6 @@ void *work_routine(void *arg)
 	return(NULL);
 }
 
-UCHAR reboot_on_exit;
-
-//pthread_t serial_thread;	// workaround for closing serial thread (serial read is blocking)
-
 typedef struct
 {
 	pthread_t pthread;
@@ -111,7 +107,6 @@ int main(int argc, char **argv)
 	UCHAR test2;
 	int sd;
 	int rc;
-	reboot_on_exit = 1;
 
 	//printf("starting sock_sched...\n");
 
@@ -225,7 +220,7 @@ int main(int argc, char **argv)
 			printf("exit\r\n");
 			perror("main() pthread_join failed"),exit(1);
 		}
-printf("closing task: %s\n",_threads[i].label);
+//printf("closing task: %s\n",_threads[i].label);
 /*
 		if(i == 0)
 		{
@@ -246,17 +241,17 @@ printf("closing task: %s\n",_threads[i].label);
 //	llist_show(&ll);
 	if(reboot_on_exit == 1)
 	{
-		printf("sched: exit to shell\r\n");
+		printf("sock: exit to shell\r\n");
 		return 1;
 	}
 	else if(reboot_on_exit == 2)
 	{
-		printf("sched: reboot\r\n");
+		printf("sock: reboot\r\n");
 		return 2;
 	}
 	else if(reboot_on_exit == 3)
 	{
-		printf("sched: shutdown\r\n");
+		printf("sock: shutdown\r\n");
 		return 3;
 	}
 	else if(reboot_on_exit == 4)

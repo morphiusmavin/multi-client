@@ -191,7 +191,7 @@ UCHAR get_host_cmd_task(int test)
 		msg_len |= (int)(msg.mtext[2] << 4);		// 
 		msg_len = (int)msg.mtext[1];				// 
 		write_serial_buff[0] = cmd;
-		printf("msg_len: %d\n",msg_len);
+		//printf("msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+4,msg_len);
 		//printf("msg to tcp: %s\n",tempx);
 		
@@ -205,7 +205,12 @@ UCHAR get_host_cmd_task(int test)
 			print_cmd(cmd);
 			switch(cmd)
 			{
+				case SET_TIME:
+					printf("set time\n");
+					break;
+					
 				case SEND_CLIENT_LIST:
+					printf("SEND_CLIENT_LIST from sock_mgt\n");
 					for(i = 0;i < MAX_CLIENTS;i++)
 					{
 						//printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
@@ -233,16 +238,15 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_TIMEUP:
-					if(client_table[0].socket > -1);
+					if(client_table[0].socket > 0);
 						send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
-					if(client_table[1].socket > -1);
+					if(client_table[1].socket > 0);
 						send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
 					printf("%s\n",write_serial_buff);
 					
 					break;
 
 				case SEND_MESSAGE:
-					printf("\nSEND_MSG (sock_mgt)\n");
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");
@@ -266,7 +270,7 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_STATUS:
-					printf("sock_mgt send status\n");
+					//printf("sock_mgt send status\n");
 					temp = 0;
 					temp = (int)(write_serial_buff[3] << 4);
 					temp |= (int)write_serial_buff[2];
@@ -276,10 +280,6 @@ UCHAR get_host_cmd_task(int test)
 
 				case BAD_MSG:
 //						shutdown_all = 1;
-					break;
-
-				case DISCONNECT:
-					printf("disconnected\n");
 					break;
 
 				case GET_TEMP4:
@@ -304,11 +304,11 @@ UCHAR get_host_cmd_task(int test)
 
 			}								  // end of switch
 		}									  // if rc > 0
-		uSleep(0,TIME_DELAY/8);
+		uSleep(0,TIME_DELAY/16);
 		if(shutdown_all == 1)
 		{
 			uSleep(0,TIME_DELAY/16);
-			printf("cmd_host shutdown\n");
+			//printf("cmd_host shutdown\n");
 			return 0;
 		}
 	}
@@ -350,7 +350,7 @@ startover:
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			//print_cmd(cmd);
+			print_cmd(cmd);
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
 			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
@@ -380,6 +380,7 @@ startover:
 			{
 				close(client_table[index].socket);
 				client_table[index].socket = -1;
+				printf("disconnected...\n");
 				goto startover;
 				// need a cmd that quits the server
 			}
@@ -396,7 +397,7 @@ startover:
 			if(win_client_to_client_sock == _SERVER)
 			{
 				//printf("msg to cmd_host on server: %s %d\n",msg.mtext + 3,cmd);
-				print_cmd(cmd);
+				//print_cmd(cmd);
 				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					// keep getting "Invalid Argument" - cause I didn't set the mtype
@@ -406,7 +407,7 @@ startover:
 
 				if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
 				{
-					printf("shutdown or reboot %d\n",index);
+					//printf("shutdown or reboot %d\n",index);
 					for(i = 0;i < MAX_CLIENTS;i++)
 					{
 						close(client_table[i].socket);
@@ -454,15 +455,6 @@ startover:
 				if(client_table[win_client_to_client_sock].socket > 0)
 				{
 					send_msg(client_table[win_client_to_client_sock].socket, strlen(tempx), (UCHAR*)tempx,cmd);
-
-/*
-					if (msgsnd(client_table[win_client_to_client_sock].qid, (void *) 
-							&msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
-					{
-						perror("msgsnd error");
-						exit(EXIT_FAILURE);
-					}
-*/
 				}else printf("bad socket\n");
 				//printf("sent: %s\n", msg.mtext);				
 				//printf("\n");
@@ -474,7 +466,7 @@ startover:
 		if(shutdown_all)
 		{
 			uSleep(0,TIME_DELAY/16);
-			printf("\nshutting down WinClReadTask\n");
+			//printf("\nshutting down WinClReadTask\n");
 			return 0;
 		}
 	}
@@ -526,13 +518,13 @@ UCHAR ReadTask(int test)
 startover1:
 		if(client_table[index].socket > 0)
 		{
-			printf("read task %d\n",index);
+			//printf("read task %d\n",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+2,1);
 			//printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			printf("dest: %d\n",dest);
+			//printf("dest: %d\n",dest);
 /*
 			for(i = 0;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);
@@ -548,7 +540,7 @@ startover1:
 */
 			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
 			{
-				printf("shutdown or reboot %d\n",index);
+				//printf("shutdown or reboot %d\n",index);
 				close(client_table[index].socket);
 				client_table[index].socket = -1;
 				// the break statement only goes back up to 
@@ -643,6 +635,7 @@ int get_client_sock(char *recip)
 	}
 	return sock;
 }
+/*********************************************************************/
 int get_client_index(char *recip)
 {
 	int i;

@@ -28,6 +28,12 @@ namespace EpServerEngineSampleClient
 		private int current_selection;
 		private int no_selections = 0;
 		private bool m_wait = false;
+		private int tick = 0;
+		private int timeout = 500;
+		private bool random = false;
+		Random r = new Random();
+		int rInt = 0;
+
 		ServerCmds svrcmd = new ServerCmds();
 
 		public PlayerDlg(string filePath, INetworkClient client)
@@ -59,6 +65,7 @@ namespace EpServerEngineSampleClient
                 }
 			}
 			current_selection = 0;
+			tbTimeOut.Text = "500";
 		}
 		delegate void AddMsg_Involk(string message);
 		public void AddMsg(string message)
@@ -90,10 +97,12 @@ namespace EpServerEngineSampleClient
 
 		private void Next_Click(object sender, EventArgs e)
 		{
-			current_selection++;
+			if(timer1.Enabled == false)
+				current_selection++;
 			if (current_selection > no_selections - 1)
 				current_selection = 0;
 			lbPlayList.SelectedIndex = current_selection;
+			tick = timeout;
 			//AddMsg(current_selection.ToString() + ": " + mp3file[current_selection].mp3_location.ToString());
 		}
 
@@ -175,5 +184,78 @@ namespace EpServerEngineSampleClient
             //player.
             //AddMsg(current_selection.ToString());
         }
-    }
+
+		private void btnLoop_Click(object sender, EventArgs e)
+		{
+			current_selection = lbPlayList.SelectedIndex;
+			string song = mp3file[current_selection].mp3_location;
+			AddMsg(song.ToString());
+			player.SoundLocation = song;
+			player.PlayLooping();       // plays the same damn file over and over again
+		}
+
+		private void btnStop_Click(object sender, EventArgs e)
+		{
+			player.Stop();
+			timer1.Enabled = false;
+		}
+
+		private void btnPlayAll_Click(object sender, EventArgs e)
+		{
+			if (timer1.Enabled)
+			{
+				timer1.Enabled = false;
+			}
+			else
+			{
+				timer1.Enabled = true;
+				tick = timeout;
+			}
+		}
+		void playlist()
+		{ 
+		}
+		private void myTimerTick(object sender, EventArgs e)
+		{
+			tick++;
+			if(timeout-tick > -1)
+				tbTimeLeft.Text = (timeout-tick).ToString();
+			//AddMsg(tick.ToString());
+			if (tick > timeout)
+			{
+				tick = 0;
+				if (random)
+				{
+					current_selection = r.Next(0, no_selections); //for ints
+				}
+				else
+				{
+					if (current_selection++ >= no_selections - 1)
+						current_selection = 0;
+				}
+				AddMsg(current_selection.ToString());
+				lbPlayList.SelectedIndex = current_selection;
+				string song = mp3file[current_selection].mp3_location;
+				//AddMsg(song.ToString());
+				player.SoundLocation = song;
+				player.Play();
+			}
+		}
+
+		private void timeoutChanged(object sender, EventArgs e)
+		{
+			if (tbTimeOut.Text == "")
+				tbTimeOut.Text = "1";
+			timeout = int.Parse(tbTimeOut.Text);
+			//AddMsg(timeout.ToString());
+		}
+
+		private void RandomChanged(object sender, EventArgs e)
+		{
+			if (random)
+				random = false;
+			else
+				random = true;
+		}
+	}
 }

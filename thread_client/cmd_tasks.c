@@ -72,15 +72,16 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	msg.mtext[1] = dest;
 	msg.mtext[2] = (UCHAR)msg_len;
 	msg.mtext[3] = (UCHAR)(msg_len >> 4);
+	printf("send_sock_msg\n");
 	print_cmd(cmd);
-	printf("msg_len: %d\n",msg_len);
+	//printf("msg_len: %d\n",msg_len);
 	memcpy(msg.mtext + 4,send_msg,msg_len);
 	printf("msg to cmd_host from client %d\n",dest);
-
+/*
 	for(i = 0;i < msg_len+3;i++)
 		printf("%02x ",msg.mtext[i]);
 	printf("\n");
-
+*/
 	if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 	{
 		perror("msgsnd error");
@@ -196,35 +197,11 @@ UCHAR get_host_cmd_task2(int test)
 		}
 	}
 	init_ips();
-/*
-	printf("%s\n",cFileName);
-
-	cllist_init(&cll);
-	if(access(cFileName,F_OK) != -1)
-	{
-		clLoadConfig(cFileName,&cll,csize,errmsg);
-		if(rc > 0)
-		{
-			printf("%s\r\n",errmsg);
-		}
-	}else printf("can't access %s\n",cFileName);
-	
-	cllist_show(&cll);
-	rc = cllist_find_data(4,ctpp,&cll);
-	printf("%d %d %d %s\n",ctp->index,ctp->client_no,ctp->cmd, ctp->label);
-	ctp->cmd = 2;
-	rc = cllist_find_data(4,ctpp,&cll);
-	cllist_insert_data(4,&cll,ctp);
-	printf("%d %d %d %s\n",ctp->index,ctp->client_no,ctp->cmd, ctp->label);
-	cllist_show(&cll);
-*/
 	same_msg = 0;
 
 	//printf("%s\n",version);
 	j = k = i = 0;
 	cmd = 0x21;
-
-	printf("starting cmd_host2\n");
 
 	while(TRUE)
 	{
@@ -232,13 +209,11 @@ UCHAR get_host_cmd_task2(int test)
 
 		if(shutdown_all == 1)
 		{
-			printf("shutting down cmd host\r\n");
+			//printf("shutting down cmd host\r\n");
 			return 0;
 		}
 
-if(1)
-//		if(test_sock() == 1)
-//		if(1)
+		if(1)
 		{
 			if (msgrcv(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
 	//		MSG_NOERROR | IPC_NOWAIT) == -1) 
@@ -251,9 +226,9 @@ if(1)
 					exit(EXIT_FAILURE);
 				}
 			}
-			printf("sched cmd host: ");
+			//printf("sched cmd host: ");
 			cmd = msg.mtext[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 			msg_len |= (int)(msg.mtext[2] << 4);
 			msg_len = (int)msg.mtext[1];
 			
@@ -294,8 +269,8 @@ if(1)
 
 				if(cmd == SHELL_AND_RENAME || cmd == REBOOT_IOBOX || cmd == SHUTDOWN_IOBOX || cmd == EXIT_TO_SHELL)
 				{
-					printf("sending shutdown send sock msg: ");
-					print_cmd(cmd);
+					//printf("sending shutdown send sock msg: ");
+					//print_cmd(cmd);
 					send_sock_msg(tempx, 1, cmd, 8);
 					return 1;
 				}
@@ -320,9 +295,7 @@ if(1)
 							if(++cmd > 0x7e)
 								cmd = 0x21;
 						}
-						//send_msg(200-j,(UCHAR*)&tempx[j], SEND_MESSAGE, next_client);
 						uSleep(0,TIME_DELAY/10);
-						//send_msg(1,(UCHAR*)&tempx[j], SEND_NEXT_CLIENT, next_client);
 						j++;
 						if(j > 10)
 							j = 0;
@@ -371,12 +344,6 @@ if(1)
 						printf("%s\n",tempx);
 						break;
 
-					case SEND_CLIENT_LIST:
-						for(i = 0;i < MAX_CLIENTS;i++)
-						{
-							usleep(100);
-						}
-						break;
 					case SEND_STATUS:
 						k++;
 						j += 10;

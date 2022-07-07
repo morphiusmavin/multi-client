@@ -10,6 +10,16 @@ else
  echo "using current sched" >> status.txt
 fi
 
+if [ -e /home/dan/sock_mgt ]
+then
+ mv /home/dan/sock_mgt .
+ chmod +x sched
+ echo "new sock_mgt found in ~" >> status.txt
+else
+ echo "using current sock_mgt" >> status.txt
+fi
+
+./sock_mgt &
 ./sched odata.dat
 
 OUT=$?

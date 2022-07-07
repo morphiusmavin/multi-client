@@ -1142,14 +1142,14 @@ UCHAR basic_controls_task(int test)
 				index = NORTHWEST_LIGHT;
 				rc = ollist_find_data(index,otpp,&oll);
 				//printf("%s\r\n",otp->label);
-				otp->onoff = 0;
-				set_output(otp,0);
+				otp->onoff = 1;
+				set_output(otp,1);
 				usleep(_100MS);
 				index = EAST_LIGHT;
 				rc = ollist_find_data(index,otpp,&oll);
 				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
+				otp->onoff = 0;
+				set_output(otp,0);
 				usleep(_100MS);
 				index = SOUTHEAST_LIGHT;
 				rc = ollist_find_data(index,otpp,&oll);
@@ -1192,13 +1192,13 @@ UCHAR basic_controls_task(int test)
 				usleep(_100MS);
 				index = NORTHWEST_LIGHT;
 				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+				otp->onoff = 0;
+				set_output(otp,0);
 				usleep(_100MS);
 				index = EAST_LIGHT;
 				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
+				otp->onoff = 1;
+				set_output(otp,1);
 				usleep(_100MS);
 				index = SOUTHEAST_LIGHT;
 				rc = ollist_find_data(index,otpp,&oll);
@@ -1517,8 +1517,21 @@ UCHAR basic_controls_task(int test)
 					exit(EXIT_FAILURE);
 				}
 				break;
-			case SHELL_AND_RENAME:
+			case EXIT_TO_SHELL:
 				reboot_on_exit = 1;
+				printf("exit to shell\n");
+				shutdown_all = 1;
+				msg.mtype = msgtype;
+				msg.mtext[0] = cmd;
+				if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+				break;
+
+			case SHELL_AND_RENAME:
+				reboot_on_exit = 6;
 				printf("shell and rename\n");
 				shutdown_all = 1;
 				msg.mtype = msgtype;

@@ -98,7 +98,7 @@ UCHAR recv_msg_task(int test)
 	UCHAR cmd;
 	int msg_len;
 
-	printf("starting recv_msg_task\n");
+	//printf("starting recv_msg_task\n");
 
 	while(TRUE)
 	{
@@ -121,13 +121,13 @@ UCHAR recv_msg_task(int test)
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
 		msg_buf[0] = cmd;
-		printf("msg_len: %d\n",msg_len);
+		//printf("msg_len: %d\n",msg_len);
 		memcpy(msg_buf,msg.mtext+4,msg_len);
 		msg_len = msg_len>255?255:msg_len;
 
 		send_msg(msg_len, msg_buf, cmd, dest);
 
-		if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME)
+		if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
 		{
 			printf("recv msg task shutdown 1\n");
 			return 0;
@@ -136,7 +136,7 @@ UCHAR recv_msg_task(int test)
 		if(shutdown_all == 1)
 		{
 			uSleep(0,TIME_DELAY/16);
-			printf("recv msg task shutdown 2\n");
+			//printf("recv msg task shutdown 2\n");
 			return 0;
 		}
 	}
@@ -178,19 +178,19 @@ UCHAR get_host_cmd_task1(int test)
 	shutdown_all = 0;
 
 	uSleep(1,0);
-	printf("sock_mgnt starting (cmd_host1) %d\n",test);
+	//printf("sock_mgnt starting (cmd_host1) %d\n",test);
 
 	while(TRUE)
 	{
 		cmd = 0;
 		memset(msg_buf,0,sizeof(msg_buf));
-		printf("wait for msg_len\n");
+		//printf("wait for msg_len\n");
 		msg_len = get_msg();
-		printf("msg_len: %d\n",msg_len);
-
+		//printf("msg_len: %d\n",msg_len);
+/*
 		for(i = 1;i < msg_len+1;i++)
 			printf("%02x ",tempx[i]);
-
+*/
 		if(msg_len < 0)
 		{
 			printf("bad msg\r\n");
@@ -208,7 +208,7 @@ UCHAR get_host_cmd_task1(int test)
 			cmd = ctp->cmd;
 */
 			cmd = msg_buf[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 			memset(tempx,0,sizeof(tempx));
 			memcpy(tempx,msg_buf+1,msg_len);
 
@@ -223,7 +223,7 @@ UCHAR get_host_cmd_task1(int test)
 				perror("msgsnd error");
 				exit(EXIT_FAILURE);
 			}
-			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME)
+			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
 			{
 /*
 				uSleep(0,TIME_DELAY/16);
@@ -235,27 +235,6 @@ UCHAR get_host_cmd_task1(int test)
 			}
 
 		}
-/*
-		if(cmd > 0)
-		{
-			rc = 0;
-			//print_cmd(cmd);
-			switch(cmd)
-			{
-				case SEND_CLIENT_LIST:
-					break;
-					
-				case SHUTDOWN_IOBOX:
-				case REBOOT_IOBOX:
-				case SHELL_AND_RENAME:
-				case EXIT_TO_SHELL:
-					shutdown_all = 1;
-					return 0;
-					break;
-
-			}								  // end of switch
-		}									  // if rc > 0
-*/
 		uSleep(0,TIME_DELAY/16);
 		if(shutdown_all == 1)
 		{
@@ -288,7 +267,7 @@ int tcp_connect(void)
 	sad.sin_addr.s_addr = INADDR_ANY;
 	port = PROTOPORT;
 
-	printf("trying to connect...\n");
+	//printf("trying to connect...\n");
 
 	if (port > 0) sad.sin_port = htons((u_short)port);
 	else
@@ -327,7 +306,7 @@ int tcp_connect(void)
 	}
 	else
 	{
-		printf("connected\n");
+		//printf("connected\n");
 
 //#ifndef MAKE_TARGET
 		if (setsockopt (global_socket, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof(struct timeval)) < 0)
@@ -414,7 +393,7 @@ int get_msg(void)
 
 	UCHAR preamble[10];
 	ret = recv_tcp(preamble,8,1);
-	printf("ret: %d\n",ret);
+	//printf("ret: %d\n",ret);
 	if(ret < 0)
 	{
 		printf("ret < 0");

@@ -31,7 +31,7 @@
 #include "queue/cllist_threads_rw.h"
 #include "cs_client/config_file.h"
 
-extern CLIENT_TABLE client_table[];
+CLIENT_TABLE client_table[MAX_CLIENTS];
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
 extern ollist_t oll;
@@ -104,6 +104,8 @@ UCHAR get_host_cmd_task(int test)
 	int msgtype = 1;
 	UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 	int temp;
+
+	assign_client_table();
 
 	memset(write_serial_buffer, 0, SERIAL_BUFF_SIZE);
 	// since each card only has 20 ports then the 1st 2 port access bytes
@@ -206,7 +208,7 @@ UCHAR get_host_cmd_task(int test)
 		}
 		//printf("sched cmd host: ");
 		cmd = msg.mtext[0];
-		print_cmd(cmd);
+		//print_cmd(cmd);
 		msg_len |= (int)(msg.mtext[2] << 4);
 		msg_len = (int)msg.mtext[1];
 		
@@ -268,12 +270,8 @@ UCHAR get_host_cmd_task(int test)
 					printf("timer off\n");
 					break;
 
-				case UPDATE_CLIENT_LIST:
-					printf("update client list: %d %d\n",tempx[0],tempx[1]);
-					client_table[tempx[0]].socket = tempx[1];
-					break;
-				
 				case SEND_CLIENT_LIST:
+					printf("SEND_CLIENT_LIST from cmd_task (sched)\n");
 					msg.mtext[0] = cmd;
 					msg.mtext[1] = 9;
 					msg_len = 2;
