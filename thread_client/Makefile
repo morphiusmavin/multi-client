@@ -164,8 +164,8 @@ sock_mgt.o : sock_mgt.c
 sock_sched.o : sock_sched.c 
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_sched.c
 
-sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o cconfig_file.o
-	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o -o sched -lm
+sched: tasks.o cmd_tasks.o sched.o ioports.o assign_client_table.o load_cmds.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cllist_threads_rw.o cconfig_file.o
+	${CC} -static -pthread tasks.o cmd_tasks.o sched.o ioports.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o -o sched -lm
 
 sock_mgt: sock_mgt.o sock_sched.o load_cmds.o
 	${CC} -static -pthread sock_sched.o assign_client_table.o sock_mgt.o load_cmds.o -o sock_mgt

@@ -44,7 +44,7 @@
 			this.btnOffice = new System.Windows.Forms.Button();
 			this.btnAll = new System.Windows.Forms.Button();
 			this.btnClear = new System.Windows.Forms.Button();
-			this.label8 = new System.Windows.Forms.Label();
+			this.btnClrScr = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -119,12 +119,12 @@
 			// 
 			// tbAddMsg
 			// 
-			this.tbAddMsg.Location = new System.Drawing.Point(304, 12);
+			this.tbAddMsg.Location = new System.Drawing.Point(303, 12);
 			this.tbAddMsg.Multiline = true;
 			this.tbAddMsg.Name = "tbAddMsg";
 			this.tbAddMsg.ReadOnly = true;
 			this.tbAddMsg.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbAddMsg.Size = new System.Drawing.Size(325, 424);
+			this.tbAddMsg.Size = new System.Drawing.Size(212, 424);
 			this.tbAddMsg.TabIndex = 8;
 			this.tbAddMsg.TabStop = false;
 			// 
@@ -212,27 +212,28 @@
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(118, 39);
 			this.btnClear.TabIndex = 7;
-			this.btnClear.Text = "OFF";
+			this.btnClear.Text = "Rotate";
 			this.btnClear.UseVisualStyleBackColor = true;
 			this.btnClear.Click += new System.EventHandler(this.btnClear_Click_1);
 			// 
-			// label8
+			// btnClrScr
 			// 
-			this.label8.AutoSize = true;
-			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label8.Location = new System.Drawing.Point(22, 404);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(108, 24);
-			this.label8.TabIndex = 16;
-			this.label8.Text = "Work Area";
+			this.btnClrScr.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnClrScr.Location = new System.Drawing.Point(26, 397);
+			this.btnClrScr.Name = "btnClrScr";
+			this.btnClrScr.Size = new System.Drawing.Size(118, 39);
+			this.btnClrScr.TabIndex = 16;
+			this.btnClrScr.Text = "Clr Scr";
+			this.btnClrScr.UseVisualStyleBackColor = true;
+			this.btnClrScr.Click += new System.EventHandler(this.btnClrScr_Click);
 			// 
 			// GarageForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(651, 461);
-			this.Controls.Add(this.label8);
+			this.ClientSize = new System.Drawing.Size(542, 461);
+			this.Controls.Add(this.btnClrScr);
 			this.Controls.Add(this.btnClear);
 			this.Controls.Add(this.btnAll);
 			this.Controls.Add(this.btnOffice);
@@ -273,6 +274,6 @@
 		private System.Windows.Forms.Button btnOffice;
 		private System.Windows.Forms.Button btnAll;
 		private System.Windows.Forms.Button btnClear;
-		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Button btnClrScr;
 	}
 }

@@ -107,14 +107,14 @@ enum input_types
 
 enum output_types
 {
-	DESK_LIGHT,
-	EAST_LIGHT,			// bank 0
-	NORTHWEST_LIGHT,
-	SOUTHEAST_LIGHT,
-	MIDDLE_LIGHT,
-	WEST_LIGHT,
-	NORTHEAST_LIGHT,
-	SOUTHWEST_LIGHT,
+	DESK_LIGHTa,
+	EAST_LIGHTa,			// bank 0
+	NORTHWEST_LIGHTa,
+	SOUTHEAST_LIGHTa,
+	MIDDLE_LIGHTa,
+	WEST_LIGHTa,
+	NORTHEAST_LIGHTa,
+	SOUTHWEST_LIGHTa,
 
 	TESTOUTPUT8,		// bank 1
 	TESTOUTPUT9,
@@ -124,34 +124,9 @@ enum output_types
 	TESTOUTPUT13,
 	TESTOUTPUT14,
 	TESTOUTPUT15,
-
-	TESTOUTPUT16,			// bank 2
-	TESTOUTPUT17,
-	TESTOUTPUT18,
-	TESTOUTPUT19,
-	TESTOUTPUT20,
-	TESTOUTPUT21,
-	TESTOUTPUT22,
-	TESTOUTPUT23,
-
-	TESTOUTPUT24,
-	TESTOUTPUT25,			// bank 3
-	TESTOUTPUT26,
-	TESTOUTPUT27,
-	TESTOUTPUT28,
-	TESTOUTPUT29,
-	TESTOUTPUT30,
-	TESTOUTPUT31,
-
-	TESTOUTPUT32,		// bank 4
-	TESTOUTPUT33,
-	TESTOUTPUT34,
-	TESTOUTPUT35,
-	TESTOUTPUT36,
-	TESTOUTPUT37,
-	TESTOUTPUT38,
-	TESTOUTPUT39
 }OUTPUT_TYPES;
+
+int switch_status[10];
 
 /****************************************************************************************************/
 static double curtime(void)
@@ -515,7 +490,7 @@ UCHAR monitor_input_task(int test)
 						{
 							if(onoff == ON)
 							{
-								add_msg_queue(ip[i].function);
+								add_msg_queue(ip[i].function,0);
 	//							sprintf(tempx,"-%d %d", ip[i].input, ip[i].function);
 	//							printf("msg queue: %d %d\r\n",ip[i].input, ip[i].function);
 							}
@@ -651,7 +626,7 @@ UCHAR monitor_fake_input_task(int test)
 							set_output(otp, onoff);
 						}else 
 						{
-							add_msg_queue(ip[i].function);
+							add_msg_queue(ip[i].function,0);
 						}
 					}
 				}
@@ -964,47 +939,47 @@ UCHAR serial_recv_task(int test)
 		switch(ch)
 		{
 			case 'A':
-				add_msg_queue(ALL_LIGHTS_ON);
+//				add_msg_queue(ALL_LIGHTS_ON);
 //				sprintf(tempx,"all lights on\0");
 			break;
 			case 'B':
-				add_msg_queue(ALL_LIGHTS_OFF);
+//				add_msg_queue(ALL_LIGHTS_OFF);
 //				sprintf(tempx,"all lights off\0");
 			break;
 			case 'C':
-				add_msg_queue(ALL_NORTH_ON);
+//				add_msg_queue(ALL_NORTH_ON);
 //				sprintf(tempx,"all north on\0");
 			break;
 			case 'D':
-				add_msg_queue(ALL_SOUTH_ON);
+//				add_msg_queue(ALL_SOUTH_ON);
 //				sprintf(tempx,"all lights off\0");
 			break;
 			case '0':
-				add_msg_queue(ALL_MIDDLE_ON);
+//				add_msg_queue(ALL_MIDDLE_ON);
 			break;
 			case '1':
-				add_msg_queue(ALL_NORTH_OFF);
+//				add_msg_queue(ALL_NORTH_OFF);
 			break;
 			case '2':
-				add_msg_queue(ALL_SOUTH_OFF);
+//				add_msg_queue(ALL_SOUTH_OFF);
 			break;
 			case '3':
-				add_msg_queue(ALL_MIDDLE_OFF);
+//				add_msg_queue(ALL_MIDDLE_OFF);
 			break;
 			case '4':
-				add_msg_queue(ALL_EAST_ON);
+//				add_msg_queue(ALL_EAST_ON);
 			break;
 			case '5':
-				add_msg_queue(ALL_EAST_ON);
+//				add_msg_queue(ALL_EAST_ON);
 			break;
 			case '6':
-				add_msg_queue(ALL_EAST_OFF);
+//				add_msg_queue(ALL_EAST_OFF);
 			break;
 			case '7':
-				add_msg_queue(ALL_WEST_ON);
+//				add_msg_queue(ALL_WEST_ON);
 			break;
 			case '8':
-				add_msg_queue(ALL_WEST_OFF);
+//				add_msg_queue(ALL_WEST_OFF);
 			break;
 			case '9':
 //				add_msg_queue(
@@ -1076,12 +1051,13 @@ void close_tcp(void)
 	}
 }
 /*********************************************************************/
-void add_msg_queue(UCHAR cmd)
+void add_msg_queue(UCHAR cmd, UCHAR onoff)
 {
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
 	msg.mtext[0] = cmd;
+	msg.mtext[1] = onoff;
 	pthread_mutex_lock(&msg_queue_lock);
 
 	if (msgsnd(basic_controls_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
@@ -1098,7 +1074,7 @@ void add_msg_queue(UCHAR cmd)
 UCHAR basic_controls_task(int test)
 {
 	int i,j;
-	UCHAR onoff;
+	int onoff;
 	O_DATA *otp;
 	O_DATA **otpp = &otp;
 	int rc;
@@ -1111,6 +1087,7 @@ UCHAR basic_controls_task(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
+	memset(switch_status,0,sizeof(switch_status));
 
 //printf("starting basic_controls_task\n");
 
@@ -1128,370 +1105,68 @@ UCHAR basic_controls_task(int test)
 			}
 		}
 		cmd = msg.mtext[0];
-		//print_cmd(cmd);
-
+		onoff = msg.mtext[1];
+		
 		switch(cmd)
 		{
-			case  ALL_LIGHTS_ON:
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = DESK_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case DESK_LIGHT:
+				switch_status[DESK_LIGHTa] = switch_status[DESK_LIGHTa]==1?0:1;
+				//change_output(DESK_LIGHTa,switch_status[DESK_LIGHTa]);
+				change_output(DESK_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
-			case ALL_LIGHTS_OFF:
-				index = NORTHEAST_LIGHT;
-//				printf("que cmd: %d %d\n",cmd, index);
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = DESK_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
+			case EAST_LIGHT:
+				switch_status[EAST_LIGHTa] = switch_status[EAST_LIGHTa]==1?0:1;
+				//change_output(EAST_LIGHTa,switch_status[EAST_LIGHTa]);
+				if(onoff == 0)
+					onoff = 1;
+				else onoff = 0;
+				change_output(EAST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
-			case ALL_NORTH_ON:
-				index = NORTHEAST_LIGHT;
-//				printf("que cmd: %d %d\n",cmd, index);
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-//				ollist_insert_data(index,&oll,otp);
-				set_output(otp,1);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case NORTHWEST_LIGHT:
+				switch_status[NORTHWEST_LIGHTa] = switch_status[NORTHWEST_LIGHTa]==1?0:1;
+				//change_output(NORTHWEST_LIGHTa,switch_status[NORTHWEST_LIGHTa]);
+				change_output(NORTHWEST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
-			case ALL_SOUTH_ON:
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case SOUTHEAST_LIGHT:
+				switch_status[SOUTHEAST_LIGHTa] = switch_status[SOUTHEAST_LIGHTa]==1?0:1;
+				//change_output(SOUTHEAST_LIGHTa,switch_status[SOUTHEAST_LIGHTa]);
+				change_output(SOUTHEAST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
-			case ALL_MIDDLE_ON:
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case MIDDLE_LIGHT:
+				switch_status[MIDDLE_LIGHTa] = switch_status[MIDDLE_LIGHTa]==1?0:1;
+				//change_output(MIDDLE_LIGHT,switch_status[MIDDLE_LIGHT]);
+				change_output(MIDDLE_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
-			case ALL_NORTH_OFF:
-				index = NORTHEAST_LIGHT;
-//				printf("que cmd: %d %d\n",cmd, index);
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				break;
-
-			case ALL_SOUTH_OFF:
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				break;
-
-			case ALL_MIDDLE_OFF:
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				break;
-			
-			case ALL_EAST_ON:
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				break;
-
-			case ALL_EAST_OFF:
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				break;
-
-			case ALL_WEST_ON:
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				break;
-
-			case ALL_WEST_OFF:
-				index = WEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = NORTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				break;
-
-			case ALL_OFFICE_ON:
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				break;
-			
-			case ALL_OFFICE_OFF:
-				index = NORTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				//printf("%s\r\n",otp->label);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-
-				index = EAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case WEST_LIGHT:
+				switch_status[WEST_LIGHTa] = switch_status[WEST_LIGHTa]==1?0:1;
+				//change_output(WEST_LIGHTa,switch_status[WEST_LIGHTa]);
+				change_output(WEST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 				
-			case WORK_ON:
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 1;
-				set_output(otp,1);
+			case NORTHEAST_LIGHT:
+				switch_status[NORTHEAST_LIGHTa] = switch_status[NORTHEAST_LIGHTa]==1?0:1;
+				//change_output(NORTHEAST_LIGHTa,switch_status[NORTHEAST_LIGHTa]);
+				change_output(NORTHEAST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
-			case WORK_OFF:
-				index = MIDDLE_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHWEST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
-				usleep(_100MS);
-				index = SOUTHEAST_LIGHT;
-				rc = ollist_find_data(index,otpp,&oll);
-				otp->onoff = 0;
-				set_output(otp,0);
+			case SOUTHWEST_LIGHT:
+				switch_status[SOUTHWEST_LIGHTa] = switch_status[SOUTHWEST_LIGHTa]==1?0:1;
+				//change_output(SOUTHWEST_LIGHTa,switch_status[SOUTHWEST_LIGHTa]);
+				change_output(SOUTHWEST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
-/*
-				printf("test:\r\n");		// testing all outputs
-				for(i = 0;i < 20;i++)
-				{
-					change_output(i,1);
-					usleep(_200MS);
-				}
-					usleep(_500MS);
-				for(i = 0;i < 20;i++)
-				{
-					change_output(i,0);
-					usleep(_200MS);
-				}
-
-				for(i = 0;i < 5;i++);		// this doesn't work for some reason
-				{
-					rc = ollist_find_data(index,otpp,&oll);
-					otp->onoff = 1;
-					set_output(otp,1);
-					usleep(_500MS);
-//					printf("on: %d\r\n",index);
-					index++;
-				}
-				usleep(_1SEC);
-				index = EAST_LIGHT;
-				for(i = 0;i < 5;i++);
-				{
-					rc = ollist_find_data(index,otpp,&oll);
-					otp->onoff = 0;
-					set_output(otp,0);
-					usleep(_500MS);
-//					printf("off: %d\r\n",index);
-					index++;
-				}
-
-				printf("done\r\n");
-*/				
 
 			case SHUTDOWN_IOBOX:
 				reboot_on_exit = 3;
@@ -1545,7 +1220,13 @@ UCHAR basic_controls_task(int test)
 			default:
 				break;
 		}	// end of switch
-
+/*
+		for(i = 0;i < 10;i++)
+		{
+			printf("%d ",switch_status[i]);
+		}
+		printf("\n");
+*/
 		if(shutdown_all == 1)
 		{
 			return 0;
@@ -1600,4 +1281,5 @@ float convertF(int raw_data)
 	ret = (int)T_F;
 	return ret;	// returns 257 -> -67
 }
+
 

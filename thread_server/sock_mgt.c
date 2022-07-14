@@ -350,7 +350,7 @@ startover:
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
 			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
@@ -365,8 +365,7 @@ startover:
 				tempx[k++] = msg_buf[j];
 			msg_len /= 2;
 			msg_len -= 3;
-			//printf("msg_len from win client: %d\n",msg_len);
-
+//			printf("msg_len from win client: %d\n",msg_len);
 /*
 			for(j = 0;j < msg_len;j++)
 				printf("%02x ",tempx[j]);

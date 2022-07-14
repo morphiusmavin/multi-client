@@ -13,27 +13,19 @@ namespace EpServerEngineSampleClient
 		enum Server_cmds
 		{
 			NON_CMD,
-			ALL_LIGHTS_ON,
-			ALL_LIGHTS_OFF,
-			ALL_NORTH_ON,
-			ALL_SOUTH_ON,
-			ALL_MIDDLE_ON,
-			ALL_NORTH_OFF,
-			ALL_SOUTH_OFF,
-			ALL_MIDDLE_OFF,
-			ALL_EAST_ON,
-			ALL_EAST_OFF,
-			ALL_WEST_ON,
-			ALL_WEST_OFF,
-			BLANK,
-			ALL_OFFICE_ON,
-			ALL_OFFICE_OFF,
-			WORK_ON,
-			WORK_OFF,
+			DESK_LIGHT,
+			EAST_LIGHT,
+			NORTHWEST_LIGHT,
+			SOUTHEAST_LIGHT,
+			MIDDLE_LIGHT,
+			WEST_LIGHT,
+			NORTHEAST_LIGHT,
+			SOUTHWEST_LIGHT,
 			BENCH_24V_1,
 			BENCH_24V_2,
 			BENCH_12V_1,
 			BENCH_12V_2,
+			BLANK,
 			BENCH_5V_1,
 			BENCH_5V_2,
 			BENCH_3V3_1,
@@ -158,6 +150,25 @@ namespace EpServerEngineSampleClient
 			{
 				m_client.Send(packet);
 			}
+		}
+		public void Send_ClCmd(int msg, int index, bool iparam)
+		{
+			var temp = index;
+			var temp2 = iparam?1:0;
+			byte[] atemp = BitConverter.GetBytes(temp);
+			byte[] a2temp = BitConverter.GetBytes(temp2);
+			byte[] ctemp = new byte[atemp.Count() + a2temp.Count() + 2];
+			string cmsg = GetName(msg);
+			ctemp[0] = GetCmdIndexB(cmsg);
+			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+			System.Buffer.BlockCopy(a2temp, 0, ctemp, 4, a2temp.Count());
+			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+			//AddMsg(ctemp.Count().ToString() + " " + temp.ToString());
+			if (m_client.IsConnectionAlive)
+			{
+				m_client.Send(packet);
+			}
+
 		}
 		public void Send_ClCmd(int msg, int index, int iparam)
 		{

@@ -27,13 +27,14 @@ namespace EpServerEngineSampleClient
 		private bool m_wait = false;
 		ServerCmds svrcmd = new ServerCmds();
 		private List<int> CurrentList = new List<int>();
-		public System.Collections.Generic.List<GPSlist> gps_list;
-		private byte[] recv_buff;
 		private bool m_pause = false;
 		bool[] status = new bool[8];
-		bool[] prev_status = new bool[8];
+		bool[] button_status = new bool[8];
+		bool allon = false;
+		int single_select = 0;
+
 		List<String> on_label_list = new List<String>();
-		List<String> off_label_list = new List<String>();
+		//List<String> off_label_list = new List<String>();
 		public System.Collections.Generic.List<ButtonList> button_list;
 		public GarageForm(string xml_file_location, INetworkClient client)
 		{
@@ -55,33 +56,23 @@ namespace EpServerEngineSampleClient
 			status[6] = false;
 			status[7] = false;
 
-			prev_status[0] = false;
-			prev_status[1] = false;
-			prev_status[2] = false;
-			prev_status[3] = false;
-			prev_status[4] = false;
-			prev_status[5] = false;
-			prev_status[6] = false;
-			prev_status[7] = false;
-			recv_buff = new byte[200];
+			button_status[0] = true;
+			button_status[1] = true;
+			button_status[2] = true;
+			button_status[3] = true;
+			button_status[4] = true;
+			button_status[5] = true;
+			button_status[6] = true;
+			button_status[7] = true;
 
-			on_label_list.Add("ALL_NORTH_ON");
-			on_label_list.Add("ALL_SOUTH_ON");
-			on_label_list.Add("ALL_EAST_ON");
-			on_label_list.Add("ALL_WEST_ON");
-			on_label_list.Add("ALL_MIDDLE_ON");
-			on_label_list.Add("ALL_OFFICE_ON");
-			on_label_list.Add("ALL_LIGHTS_ON");
-			on_label_list.Add("WORK_ON");
-
-			off_label_list.Add("ALL_NORTH_OFF");
-			off_label_list.Add("ALL_SOUTH_OFF");
-			off_label_list.Add("ALL_EAST_OFF");
-			off_label_list.Add("ALL_WEST_OFF");
-			off_label_list.Add("ALL_MIDDLE_OFF");
-			off_label_list.Add("ALL_OFFICE_OFF");
-			off_label_list.Add("ALL_LIGHTS_OFF");
-			off_label_list.Add("WORK_OFF");
+			on_label_list.Add("EAST_LIGHT");
+			on_label_list.Add("NORTHWEST_LIGHT");
+			on_label_list.Add("SOUTHEAST_LIGHT");
+			on_label_list.Add("MIDDLE_LIGHT");
+			on_label_list.Add("WEST_LIGHT");
+			on_label_list.Add("NORTHEAST_LIGHT");
+			on_label_list.Add("SOUTHWEST_LIGHT");
+			on_label_list.Add("asdf");
 
 			button_list = new List<ButtonList>();
 			Control sCtl = this.btnNorth;
@@ -100,18 +91,10 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-			/*
-			foreach (ButtonList btn in button_list)
-			{
-				AddMsg(btn.Name + " " + btn.TabOrder.ToString());
-			}
-			*/
 		}
 		public void Enable_Dlg(bool wait)
 		{
 			m_wait = wait;
-			//if (wait)
-				//tbAddMsg.Clear();
 		}
 		public void OnReceived(INetworkClient client, Packet receivedPacket)
 		{
@@ -252,65 +235,98 @@ namespace EpServerEngineSampleClient
 			}
 			//AddMsg("done");
 		}
-		private void SendCmd(int which, bool onoff)
+		private void SendCmd(int which)
 		{
-			string cmd = onoff ? on_label_list[which] : off_label_list[which];
-			//AddMsg(cmd);
+			string cmd = on_label_list[which];
+			AddMsg(cmd);
 			int offset = svrcmd.GetCmdIndexI(cmd);
 			//AddMsg(offset.ToString());
 			offset = svrcmd.GetCmdIndexI(cmd);
 			//AddMsg(which.ToString() + " " + cmd + " " + offset.ToString());
 			//svrcmd.Send_Cmd(offset);
-			svrcmd.Send_ClCmd(offset, 8, "test");       // TODO: set this to whatever client (in this case server) is offset 8 in assign_client_table.c
-			prev_status[which] = status[which];
 			ChangeStatus(which);
-			IfStatusChanged(which);
+			svrcmd.Send_ClCmd(offset, 8, status[which]);       // TODO: set this to whatever client (in this case server) is offset 8 in assign_client_table.c
 		}
 		private void ChangeStatus(int i)
 		{
 			status[i] = !status[i];
-			AddMsg("status changed: " + i.ToString());
+			//AddMsg("status changed: " + i.ToString());
 			//IfStatusChanged();
 		}
 		// this is actually north
+		private void ToggleButton(int which)
+		{
+			if (button_status[which])
+			{
+				button_list[which].Ctl.Text = "ON";
+				button_list[which].Ctl.BackColor = Color.Aqua;
+			}
+			else
+			{
+				button_list[which].Ctl.Text = "OFF";
+				button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			}
+			button_status[which] = !button_status[which];
+		}
+
 		private void btnNorth_Click(object sender, EventArgs e)
 		{
-			SendCmd(0, !status[0]);
+			SendCmd(1);
+			SendCmd(5);
+			ToggleButton(0);
 		}
 
 		private void btnSouth_Click(object sender, EventArgs e)
 		{
-			SendCmd(1, !status[1]);
+			SendCmd(2);
+			SendCmd(6);
+			ToggleButton(1);
 		}
 
 		private void btnEast_Click(object sender, EventArgs e)
 		{
-			SendCmd(2, !status[2]);
+			SendCmd(0);
+			SendCmd(2);
+			SendCmd(5);
+			ToggleButton(2);
 		}
 
 		private void btnWest_Click(object sender, EventArgs e)
 		{
-			SendCmd(3, !status[3]);
+			SendCmd(1);
+			SendCmd(4);
+			SendCmd(6);
+			ToggleButton(3);
 		}
 
 		private void btnMiddle_Click(object sender, EventArgs e)
 		{
-			SendCmd(4, !status[4]);
+			SendCmd(4);
+			SendCmd(3);
+			SendCmd(0);
+			ToggleButton(4);
 		}
-
 		private void btnOffice_Click(object sender, EventArgs e)
 		{
-			SendCmd(5, !status[5]);
+			SendCmd(4);
+			SendCmd(6);
+			ToggleButton(5);
 		}
 
 		private void btnAll_Click(object sender, EventArgs e)
 		{
-			SendCmd(6, !status[6]);
-			int i = 0;
-			bool st = status[6];
-			if (st)
+			int i;
+			SendCmd(0);
+			SendCmd(1);
+			SendCmd(2);
+			SendCmd(3);
+			SendCmd(4);
+			SendCmd(5);
+			SendCmd(6);
+			allon = !allon;
+			if (allon)
 			{
-				for (i = 0; i < 8; i++)
+				for (i = 0; i < 7; i++)
 				{
 					status[i] = true;
 					button_list[i].Ctl.Text = "ON";
@@ -319,7 +335,7 @@ namespace EpServerEngineSampleClient
 			}
 			else
 			{
-				for (i = 0; i < 8; i++)
+				for (i = 0; i < 7; i++)
 				{
 					status[i] = false;
 					button_list[i].Ctl.Text = "OFF";
@@ -332,12 +348,32 @@ namespace EpServerEngineSampleClient
 		{
 //			SendPollStatus();
 		}
-
-		private void btnClear_Click_1(object sender, EventArgs e)
+		/*
+			EAST_LIGHT,
+			NORTHWEST_LIGHT,
+			SOUTHEAST_LIGHT,
+			MIDDLE_LIGHT,
+			WEST_LIGHT,
+			NORTHEAST_LIGHT,
+			SOUTHWEST_LIGHT,
+		*/
+		private void btnClear_Click_1(object sender, EventArgs e)		// rotate thru all single lights
 		{
-			SendCmd(7, !status[7]);
+			int prev;
+			if (single_select > 0)
+				prev = single_select - 1;
+			else prev = 6;
+			AddMsg("on: " + single_select.ToString() + " off: " + prev.ToString());
+			string cmd = on_label_list[single_select];
+			int offset = svrcmd.GetCmdIndexI(cmd);
+			offset = svrcmd.GetCmdIndexI(cmd);
+			svrcmd.Send_ClCmd(offset, 8, true);
+			cmd = on_label_list[prev];
+			offset = svrcmd.GetCmdIndexI(cmd);
+			svrcmd.Send_ClCmd(offset, 8, false);
+			if (++single_select > 7)
+				single_select = 0;
 		}
-
 		private void SendPollStatus()
 		{
 			string cmd = "POLL_STATUS";
@@ -345,6 +381,11 @@ namespace EpServerEngineSampleClient
 			offset = svrcmd.GetCmdIndexI(cmd);
 			//AddMsg(offset.ToString());
 			svrcmd.Send_Cmd(offset);
+		}
+
+		private void btnClrScr_Click(object sender, EventArgs e)
+		{
+			tbAddMsg.Clear();
 		}
 	}
 }

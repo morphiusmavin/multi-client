@@ -82,7 +82,7 @@ void send_serialother(UCHAR cmd, UCHAR *buf);
 //void send_serialother2(UCHAR cmd, int size, UCHAR *buf);
 void send_lcd(UCHAR *buf, int size);
 void send_param_msg(void);
-void add_msg_queue(UCHAR cmd);
+void add_msg_queue(UCHAR cmd, UCHAR onoff);
 UCHAR get_client_msg_queue(void);
 void add_client_msg_queue(UCHAR cmd);
 

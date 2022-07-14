@@ -15,6 +15,10 @@ todo:
 7) take out CLIENT_RECONNECT
 8) reboot, exit to shell and shutdown all work for clients and server, except
 	exit to shell doesn't work for server (not that I would ever want to exit to shell on server tho)
+9) need some way to put each light/io port on a timer to go on/off or at least set 
+	any port to go off after a delay (e.g. leaving garage so just need to have light on 
+	long enough to see to get to cabin)
+10) input for motion sensors (use odata database?)
 
 After separating the sched program from the sockets program:
 

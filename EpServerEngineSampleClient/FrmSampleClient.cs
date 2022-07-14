@@ -809,7 +809,7 @@ namespace EpServerEngineSampleClient
                 AddMsg("set time");
                 SetTime(8);
             }
-            if(tick > 3600)
+            if(tick > 1800)
 			{
                 if (!player_active)
                 {
@@ -1109,12 +1109,15 @@ namespace EpServerEngineSampleClient
                     }
                     svrcmd.Send_ClCmd(msg, cl.index, param);
                     // if cl.index == server then set disconnected flag
-                    if (cl.index == 8)
+
+                    //if ((cl.index == 8) && (msg == REBOOT_IOBOX))
+                    if(false)
                     { 
                         btnConnect.Text = "Connect";
                         timer1.Enabled = false;
                         client_connected = false;
                     }
+
                     RedrawClientListBox();
 					if(!remove)
 					{

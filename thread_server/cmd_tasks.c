@@ -214,35 +214,28 @@ UCHAR get_host_cmd_task(int test)
 		
 		//printf("msg_len: %d\n",msg_len);
 		memcpy(tempx,msg.mtext+3,msg_len);
+		onoff = tempx[0];
 
 		if(cmd > 0)
 		{
 			rc = 0;
 			switch(cmd)
 			{
-				case ALL_LIGHTS_ON:
-				case ALL_LIGHTS_OFF:
-				case ALL_NORTH_ON:
-				case ALL_SOUTH_ON:
-				case ALL_MIDDLE_ON:
-				case ALL_NORTH_OFF:
-				case ALL_SOUTH_OFF:
-				case ALL_MIDDLE_OFF:
-				case ALL_EAST_ON:
-				case ALL_EAST_OFF:
-				case ALL_WEST_ON:
-				case ALL_WEST_OFF:
-				case ALL_OFFICE_ON:
-				case ALL_OFFICE_OFF:
-				case WORK_ON:
-				case WORK_OFF:
+				case DESK_LIGHT:
+				case EAST_LIGHT:
+				case NORTHWEST_LIGHT:
+				case SOUTHEAST_LIGHT:
+				case MIDDLE_LIGHT:
+				case WEST_LIGHT:
+				case NORTHEAST_LIGHT:
+				case SOUTHWEST_LIGHT:
 				case SHUTDOWN_IOBOX:
 				case REBOOT_IOBOX:
 				case SHELL_AND_RENAME:
 					//printf("sending que: %02x\r\n",cmd);
 					memset(tempx,0,sizeof(tempx));
 					//send_serialother(cmd,(UCHAR *)tempx);
-					add_msg_queue(cmd);
+					add_msg_queue(cmd, onoff);
 					break;
 				default:
 					break;
@@ -318,6 +311,7 @@ UCHAR get_host_cmd_task(int test)
 						exit(EXIT_FAILURE);
 					}
 					break;
+
 
 				case SEND_MESSAGE:
 					for(i = 0;i < msg_len;i++)
