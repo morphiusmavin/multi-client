@@ -697,42 +697,45 @@ UCHAR timer2_task(int test)
 	int bank = 0;
 	UCHAR mask;
 	int index = 0;
+	time_t this_time;
+	time_t T;
+	struct tm tm;
 
-	time_lapse = 0;
-/*
+	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
+	start_time = time(NULL);
+	//printf("Seconds since January 1, 1970 = %ld\n", start_time);
+
 	while(TRUE)
 	{
-		if(shutdown_all)
+		uSleep(8,0);
+		this_time = time(NULL);
+		time_lapse = this_time - start_time;
+		//printf("%ld ",time_lapse);
+		if(time_lapse >= 10)
 		{
-			//printf("done timer2\n");
-			return 0;
-		}
-		uSleep(0,TIME_DELAY/2);
-	}
-*/
-	while(TRUE)
-	{
-		uSleep(1,0);
-
-		if(++trunning_seconds > 59)
-		{
-			trunning_seconds = 0;
-			//printf("running minutes: %d\r\n",trunning_minutes);
-			if(++trunning_minutes > 59)
+			trunning_seconds += (int)time_lapse;
+			printf("seconds: %d ",trunning_seconds);
+			start_time = this_time;
+			
+			if(trunning_seconds > 59)
 			{
-				trunning_minutes = 0;
-				if(++trunning_hours > 24)
+				T = time(NULL);
+				tm = *localtime(&T);
+				printf("\n%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+				printf("minutes: %d\n", trunning_minutes);
+				trunning_seconds = 0;
+				//printf("running minutes: %d\r\n",trunning_minutes);
+				if(++trunning_minutes > 59)
 				{
-					trunning_hours = 0;
-					trunning_days++;
+					trunning_minutes = 0;
+					if(++trunning_hours > 24)
+					{
+						trunning_hours = 0;
+						trunning_days++;
+					}
 				}
-				}
+			}
 		}
-
-		time_lapse = 0;
-
-//			sprintf(tempx,"%dh %dm %ds ",trunning_hours, trunning_minutes, trunning_seconds);
-//			send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SERVER_UPTIME, _SERVER);
 
 		if(shutdown_all)
 		{
@@ -812,7 +815,7 @@ UCHAR timer_task(int test)
 				write_serial3(write_serial_buffer[i]);
 */
 			uSleep(0,TIME_DELAY/16);
-		}else uSleep(0,TIME_DELAY/16);
+		}else uSleep(1,0);
 
 		if(shutdown_all)
 		{

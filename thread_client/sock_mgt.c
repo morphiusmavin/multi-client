@@ -113,13 +113,13 @@ UCHAR recv_msg_task(int test)
 			}
 		}
 		cmd = msg.mtext[0];							// first byte is cmd
-		printf("cmd in recv msg task: ");
+		//printf("cmd in recv msg task: ");
 		print_cmd(cmd);
 		dest = (int)msg.mtext[1];
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
 		msg_buf[0] = cmd;
-		printf("msg_len: %d dest: %d\n",msg_len,dest);
+		//printf("msg_len: %d dest: %d\n",msg_len,dest);
 		memcpy(msg_buf,msg.mtext+4,msg_len);
 		msg_len = msg_len>255?255:msg_len;
 

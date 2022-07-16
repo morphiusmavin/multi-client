@@ -8,17 +8,19 @@ todo:
 	each client needs to keep track of what other clients are logged in so it
 	can set the 'next_client' to the next one logged in. If 'next_client' is 
 	set to '0' - currently, the win client sets which client sends to which.
-5)  need a way to set any lights on a timer: come on at certain time and go off 
+5)  need a way to set any lights on a timer: come on at certain time and go off (done)
 6) possibly change the lights on server to instead of XYZ_ON/OFF just go XYZ and 
 	toggle it on or off depending on state and don't mess with db like I did in 
-	the 147 client for the test bench 
-7) take out CLIENT_RECONNECT
+	the 147 client for the test bench (done)
+7) take out CLIENT_RECONNECT (done)
 8) reboot, exit to shell and shutdown all work for clients and server, except
 	exit to shell doesn't work for server (not that I would ever want to exit to shell on server tho)
 9) need some way to put each light/io port on a timer to go on/off or at least set 
 	any port to go off after a delay (e.g. leaving garage so just need to have light on 
 	long enough to see to get to cabin) (done)
 10) input for motion sensors (use odata database?)
+11) if both win clients are up one should be doing some things - have a way for win clients 
+	to talk to each other 
 
 After separating the sched program from the sockets program:
 

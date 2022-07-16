@@ -144,7 +144,6 @@ UCHAR get_host_cmd_task(int test)
 	csize = sizeof(C_DATA);
 	csize *= i;
 
-	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 /*
 	trunning_days = 1;
 	trunning_hours = 5;
@@ -207,7 +206,7 @@ UCHAR get_host_cmd_task(int test)
 		//printf("sched cmd host: ");
 		memset(tempx, 0, sizeof(tempx));
 		cmd = msg.mtext[0];
-		print_cmd(cmd);
+		//print_cmd(cmd);
 		msg_len |= (int)(msg.mtext[2] << 4);
 		msg_len = (int)msg.mtext[1];
 		
@@ -294,7 +293,7 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case UPTIME_MSG:
-					printf("uptime msg: %s\n",tempx);
+					//printf("uptime msg: %s\n",tempx);
 					msg.mtext[0] = UPTIME_MSG;
 					msg_len = strlen(tempx);
 					msg.mtext[1] = (UCHAR)msg_len;
@@ -343,7 +342,6 @@ UCHAR get_host_cmd_task(int test)
 					temp = (int)(tempx[3] << 4);
 					temp |= (int)tempx[2];
 					printf("temp: %d\n",temp);
-					//send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,SEND_STATUS);
 					break;
 
 				case SET_PARAMS:

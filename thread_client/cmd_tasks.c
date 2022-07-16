@@ -224,7 +224,7 @@ UCHAR get_host_cmd_task2(int test)
 					exit(EXIT_FAILURE);
 				}
 			}
-			printf("sched cmd host: ");
+			//printf("sched cmd host: ");
 			cmd = msg.mtext[0];
 			print_cmd(cmd);
 			msg_len |= (int)(msg.mtext[2] << 4);
@@ -385,6 +385,7 @@ UCHAR get_host_cmd_task2(int test)
 						break;
 
 					case SET_TIME:
+						printf("set time\n");
 						curtime2 = 0L;
 						j = 0;
 
