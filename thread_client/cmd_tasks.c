@@ -55,7 +55,7 @@ void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
 	
-	if(cmd >= NO_CMDS)
+	if(cmd > NO_CMDS)
 		printf("unknown cmd: %d\n",cmd);
 
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
@@ -82,7 +82,7 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 		printf("%02x ",msg.mtext[i]);
 	printf("\n");
 */
-	if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+	if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 	{
 		perror("msgsnd error");
 		exit(EXIT_FAILURE);
@@ -215,9 +215,7 @@ UCHAR get_host_cmd_task2(int test)
 
 		if(1)
 		{
-			if (msgrcv(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
-	//		MSG_NOERROR | IPC_NOWAIT) == -1) 
-			MSG_NOERROR) == -1) 
+			if (msgrcv(sched_qid, (void *) &msg, sizeof(msg.mtext), msgtype, MSG_NOERROR) == -1) 
 			{
 				if (errno != ENOMSG) 
 				{
@@ -226,9 +224,9 @@ UCHAR get_host_cmd_task2(int test)
 					exit(EXIT_FAILURE);
 				}
 			}
-			//printf("sched cmd host: ");
+			printf("sched cmd host: ");
 			cmd = msg.mtext[0];
-			//print_cmd(cmd);
+			print_cmd(cmd);
 			msg_len |= (int)(msg.mtext[2] << 4);
 			msg_len = (int)msg.mtext[1];
 			
@@ -327,17 +325,17 @@ UCHAR get_host_cmd_task2(int test)
 //						close_tcp();
 						break;
 
-					case UPDATE_CLIENT_LIST:
-						printf("tempx: %d %d\n", tempx[1], tempx[2]);
-						client_table[tempx[1]].socket = tempx[2];
+					case UPDATE_CLIENT_INFO:
+						this_client_index = tempx[0];
+						printf("this client index: %d\n",this_client_index);
 						break;
 					
 					case SEND_TIMEUP:
 						memset(tempx,0,sizeof(tempx));
-						sprintf(tempx,"%d days %dh %dm %ds",trunning_days, trunning_hours, 
-							trunning_minutes, trunning_seconds);
-						//send_msg(strlen((char*)tempx),(UCHAR*)tempx, UPTIME_MSG, _SERVER);
-						printf("%s\n",tempx);
+						sprintf(tempx,"%d %d %d %d %d",this_client_index, trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
+						printf("send timeup: %s\n",tempx);
+						msg_len = strlen(tempx);
+						send_sock_msg(tempx, msg_len, UPTIME_MSG, 8);
 						break;
 
 					case UPTIME_MSG:

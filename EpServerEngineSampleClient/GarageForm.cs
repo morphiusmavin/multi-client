@@ -32,6 +32,7 @@ namespace EpServerEngineSampleClient
 		bool[] button_status = new bool[8];
 		bool allon = false;
 		int single_select = 0;
+		int timer_tick = 0;
 
 		List<String> on_label_list = new List<String>();
 		//List<String> off_label_list = new List<String>();
@@ -386,6 +387,42 @@ namespace EpServerEngineSampleClient
 		private void btnClrScr_Click(object sender, EventArgs e)
 		{
 			tbAddMsg.Clear();
+		}
+
+		private void myTimerTick(object sender, EventArgs e)
+		{
+			int i;
+			if (++timer_tick > 20)
+			{
+				for (i = 0; i < 7; i++)
+				{
+					status[i] = true;
+				}
+				SendCmd(0);
+				SendCmd(1);
+				SendCmd(2);
+				SendCmd(3);
+				SendCmd(4);
+				SendCmd(5);
+				SendCmd(6);
+				timer1.Enabled = false;
+				timer_tick = 0;
+				for (i = 0; i < 7; i++)
+				{
+					status[i] = false;
+					button_list[i].Ctl.Text = "OFF";
+					button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+				}
+				for (i = 0; i < 7; i++)
+				{
+					status[i] = false;
+				}
+			}
+			AddMsg(timer_tick.ToString());
+		}
+		private void btnTimer_Click(object sender, EventArgs e)
+		{
+			timer1.Enabled = true;
 		}
 	}
 }

@@ -113,12 +113,12 @@ int main(int argc, char **argv)
 	id_arg = (int *)malloc(NUM_SOCK_TASKS*sizeof(int));
 
 	basic_controls_key = BASIC_CONTROLS_QKEY;
-	send_cmd_host_key = SEND_CMD_HOST_QKEY;
-	recv_cmd_host_key = RECV_CMD_HOST_QKEY;
+	sock_key = SEND_CMD_HOST_QKEY;
+	sched_key = RECV_CMD_HOST_QKEY;
 
 	basic_controls_qid = msgget(basic_controls_key, IPC_CREAT | 0666);
-	send_cmd_host_qid = msgget(send_cmd_host_key, IPC_CREAT | 0666);
-	recv_cmd_host_qid = msgget(recv_cmd_host_key, IPC_CREAT | 0666);
+	sock_qid = msgget(sock_key, IPC_CREAT | 0666);
+	sched_qid = msgget(sched_key, IPC_CREAT | 0666);
 
 	for(i = 0;i < NUM_SOCK_TASKS;i++)
 		id_arg[i] = i;

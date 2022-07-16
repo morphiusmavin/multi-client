@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -45,6 +46,8 @@
 			this.btnAll = new System.Windows.Forms.Button();
 			this.btnClear = new System.Windows.Forms.Button();
 			this.btnClrScr = new System.Windows.Forms.Button();
+			this.timer1 = new System.Windows.Forms.Timer(this.components);
+			this.btnTimer = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -124,7 +127,7 @@
 			this.tbAddMsg.Name = "tbAddMsg";
 			this.tbAddMsg.ReadOnly = true;
 			this.tbAddMsg.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbAddMsg.Size = new System.Drawing.Size(212, 424);
+			this.tbAddMsg.Size = new System.Drawing.Size(212, 369);
 			this.tbAddMsg.TabIndex = 8;
 			this.tbAddMsg.TabStop = false;
 			// 
@@ -227,12 +230,29 @@
 			this.btnClrScr.UseVisualStyleBackColor = true;
 			this.btnClrScr.Click += new System.EventHandler(this.btnClrScr_Click);
 			// 
+			// timer1
+			// 
+			this.timer1.Interval = 1000;
+			this.timer1.Tick += new System.EventHandler(this.myTimerTick);
+			// 
+			// btnTimer
+			// 
+			this.btnTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnTimer.Location = new System.Drawing.Point(303, 397);
+			this.btnTimer.Name = "btnTimer";
+			this.btnTimer.Size = new System.Drawing.Size(118, 39);
+			this.btnTimer.TabIndex = 17;
+			this.btnTimer.Text = "Timer";
+			this.btnTimer.UseVisualStyleBackColor = true;
+			this.btnTimer.Click += new System.EventHandler(this.btnTimer_Click);
+			// 
 			// GarageForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(542, 461);
+			this.Controls.Add(this.btnTimer);
 			this.Controls.Add(this.btnClrScr);
 			this.Controls.Add(this.btnClear);
 			this.Controls.Add(this.btnAll);
@@ -275,5 +295,7 @@
 		private System.Windows.Forms.Button btnAll;
 		private System.Windows.Forms.Button btnClear;
 		private System.Windows.Forms.Button btnClrScr;
+		private System.Windows.Forms.Timer timer1;
+		private System.Windows.Forms.Button btnTimer;
 	}
 }

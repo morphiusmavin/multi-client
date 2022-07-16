@@ -813,7 +813,7 @@ UCHAR timer_task(int test)
 					msg.mtext[2] = (UCHAR)msg_len;
 					msg.mtext[3] = (UCHAR)(msg_len >> 4);
 					memcpy(msg.mtext+4,write_serial_buffer,msg_len);
-					if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+					if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 					{
 						perror("msgsnd error");
 						exit(EXIT_FAILURE);
@@ -1174,7 +1174,7 @@ UCHAR basic_controls_task(int test)
 				shutdown_all = 1;
 				msg.mtype = msgtype;
 				msg.mtext[0] = cmd;
-				if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 				{
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
@@ -1186,7 +1186,7 @@ UCHAR basic_controls_task(int test)
 				shutdown_all = 1;
 				msg.mtype = msgtype;
 				msg.mtext[0] = cmd;
-				if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 				{
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
@@ -1198,7 +1198,7 @@ UCHAR basic_controls_task(int test)
 				shutdown_all = 1;
 				msg.mtype = msgtype;
 				msg.mtext[0] = cmd;
-				if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 				{
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
@@ -1211,7 +1211,7 @@ UCHAR basic_controls_task(int test)
 				shutdown_all = 1;
 				msg.mtype = msgtype;
 				msg.mtext[0] = cmd;
-				if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
 				{
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);

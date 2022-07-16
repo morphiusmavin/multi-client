@@ -47,8 +47,6 @@ git add thread_client/cs_client/config_file.h
 
 git add EpServerEngineSampleClient/*
 
-git add thread_client/Makefile.old
-git add thread_client/Makefile.txt
 git add thread_client/cs_client/cconfig_file.c
 git add thread_client/cs_client/cconfig_file.h
 git add thread_client/cs_client/cdata.csv

@@ -201,7 +201,7 @@ namespace EpServerEngineSampleClient
                 btnConnect.Text = "Connect";
                 timer1.Enabled = false;
                 client_connected = false;
-                play_aliens_clip();
+                //play_aliens_clip();
                 m_client.Disconnect();
 
             }
@@ -228,7 +228,8 @@ namespace EpServerEngineSampleClient
                     btn_PlayList.Enabled = true;
                     btnGetTime.Enabled = true;
                     //AddMsg("server_up_seconds: " + server_up_seconds.ToString());
-                    btnShowParams.Enabled = valid_cfg;
+                    //btnShowParams.Enabled = valid_cfg;
+                    btnShowParams.Enabled = true;
                     clients_avail[8].socket = 1;        // 8 is _SERVER (this is bad!)
                     timer1.Enabled = true;
                 }
@@ -332,26 +333,9 @@ namespace EpServerEngineSampleClient
             switch (str)
             {
                 case "UPTIME_MSG":
-//                    ret = ret.Substring(1);
+                    //                    ret = ret.Substring(1);
+                    AddMsg("uptime_msg");
                     AddMsg(ret);
-                    break;
-                case "ESP_CLIENT_STATUS":
-                    // later have esp client send the ip address
-                    AddMsg(ret + " " + bytes.Length);
-                    break;
-                case "ESP_CLIENT_CMD":
-                    if (ret.Length > 5)
-                    {
-                    }
-                    AddMsg("esp cmd: " + ret.ToString());
-                    break;
-              
-                case "SVR_CMD":
-                    //AddMsg("str: " + str.Length.ToString());
-                    //AddMsg(str);
-                    //AddMsg("ret: " + ret.Length.ToString());
-                    int offset = svrcmd.GetCmdIndexI(ret);
-                    svrcmd.Send_Cmd(offset);
                     break;
 
                 case "SEND_MESSAGE":
@@ -359,16 +343,6 @@ namespace EpServerEngineSampleClient
                     AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
                     AddMsg(ret);
                     ListMsg(ret, false);
-/*
-                    switch (ret)
-                    {
-                        case "START_SEQ":
-                            break;
-                        default:
-                            //AddMsg(str);
-                            break;
-                    }
-*/
                     break;
 
                 case "CURRENT_TIME":
@@ -656,6 +630,17 @@ namespace EpServerEngineSampleClient
         private void ShowParamsClick(object sender, EventArgs e)
         {
             //AddMsg(dlgsetparams.GetSet().ToString());
+            string msg = "UPDATE_CLIENT_INFO";
+            int param = 1;
+            int icmd = svrcmd.GetCmdIndexI(msg);
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    svrcmd.Send_ClCmd(icmd, cl.index, cl.index);
+                    AddMsg(icmd.ToString());
+                }
+            }
             return;
             if (m_client.IsConnectionAlive)
             {
@@ -809,11 +794,11 @@ namespace EpServerEngineSampleClient
                 AddMsg("set time");
                 SetTime(8);
             }
-            if(tick > 1800)
+            if(tick > 60)
 			{
                 if (!player_active)
                 {
-                    play_aliens_clip();
+                    //btnReportTimeUp_Click(new object(), new EventArgs());
                     tick = 31;
                 }
 			}
@@ -1001,7 +986,8 @@ namespace EpServerEngineSampleClient
         private void FrmSampleClient_Load(object sender, EventArgs e)
         {
             this.StartPosition = FormStartPosition.Manual;
-            this.Location = new Point(100, 10);
+            this.Location = new Point(0, 0);
+            //AddMsg("loaded");
         }
         private void Btn_PlayList_Click(object sender, EventArgs e)
         {
@@ -1141,33 +1127,16 @@ namespace EpServerEngineSampleClient
 				}	
 			}
 		}
-        private void GetTimeUp(int client)
-        {
-            var temp = client;
-            int temp2 = 3;  // this doesn't do anything
-            byte[] atemp = BitConverter.GetBytes(temp);
-            byte[] btemp = BitConverter.GetBytes(temp2);
-            byte[] ctemp = new byte[atemp.Count() + btemp.Count() + 2];
-            string cmsg = svrcmd.GetName(svrcmd.GetCmdIndexI("SEND_TIMEUP"));
-            ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
-            System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-            System.Buffer.BlockCopy(btemp, 0, ctemp, 4, btemp.Count());
-            Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-            AddMsg(ctemp.Count().ToString());
-            if (m_client.IsConnectionAlive)
-            {
-                m_client.Send(packet);
-            }
-        }
         private void btnReportTimeUp_Click(object sender, EventArgs e)
 		{
 			foreach (ClientsAvail cl in clients_avail)
 			{
 				if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                //  if(cl.socket > 0)   // to do all at once
 				{
-					AddMsg(cl.label);
-					GetTimeUp(cl.index);
-				}
+					AddMsg(cl.label + " " + cl.index.ToString() + " " + cl.lbindex.ToString());
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
+                }
 			}
 		}
 		private void btnWaitReboot_Click(object sender, EventArgs e)
@@ -1178,7 +1147,6 @@ namespace EpServerEngineSampleClient
 		{
             sendmsgtext = tbSendMsg.Text;
 		}
-
 		private void btnCabinLights_Click(object sender, EventArgs e)
 		{
             testbench.Enable_Dlg(true);
@@ -1193,7 +1161,6 @@ namespace EpServerEngineSampleClient
             testbench.Enable_Dlg(false);
 
         }
-
 		private void button1_Click_1(object sender, EventArgs e)
 		{
             SendClientMsg(svrcmd.GetCmdIndexI("SHELL_AND_RENAME"), " ", true);

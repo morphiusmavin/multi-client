@@ -937,47 +937,47 @@ UCHAR serial_recv_task(int test)
 		switch(ch)
 		{
 			case 'A':
-				add_msg_queue(ALL_LIGHTS_ON);
+				//add_msg_queue(ALL_LIGHTS_ON);
 //				sprintf(tempx,"all lights on\0");
 			break;
 			case 'B':
-				add_msg_queue(ALL_LIGHTS_OFF);
+				//add_msg_queue(ALL_LIGHTS_OFF);
 //				sprintf(tempx,"all lights off\0");
 			break;
 			case 'C':
-				add_msg_queue(ALL_NORTH_ON);
+				//add_msg_queue(ALL_NORTH_ON);
 //				sprintf(tempx,"all north on\0");
 			break;
 			case 'D':
-				add_msg_queue(ALL_SOUTH_ON);
+				//add_msg_queue(ALL_SOUTH_ON);
 //				sprintf(tempx,"all lights off\0");
 			break;
 			case '0':
-				add_msg_queue(ALL_MIDDLE_ON);
+				//add_msg_queue(ALL_MIDDLE_ON);
 			break;
 			case '1':
-				add_msg_queue(ALL_NORTH_OFF);
+				//add_msg_queue(ALL_NORTH_OFF);
 			break;
 			case '2':
-				add_msg_queue(ALL_SOUTH_OFF);
+				//add_msg_queue(ALL_SOUTH_OFF);
 			break;
 			case '3':
-				add_msg_queue(ALL_MIDDLE_OFF);
+				//add_msg_queue(ALL_MIDDLE_OFF);
 			break;
 			case '4':
-				add_msg_queue(ALL_EAST_ON);
+				//add_msg_queue(ALL_EAST_ON);
 			break;
 			case '5':
-				add_msg_queue(ALL_EAST_ON);
+				//add_msg_queue(ALL_EAST_ON);
 			break;
 			case '6':
-				add_msg_queue(ALL_EAST_OFF);
+				//add_msg_queue(ALL_EAST_OFF);
 			break;
 			case '7':
-				add_msg_queue(ALL_WEST_ON);
+				//add_msg_queue(ALL_WEST_ON);
 			break;
 			case '8':
-				add_msg_queue(ALL_WEST_OFF);
+				//add_msg_queue(ALL_WEST_OFF);
 			break;
 			case '9':
 //				add_msg_queue(

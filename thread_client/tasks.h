@@ -127,12 +127,12 @@ UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];
 static int same_msg;
 int basic_controls_qid;
-int send_cmd_host_qid;
-int recv_cmd_host_qid;
-key_t send_cmd_host_key;
-key_t recv_cmd_host_key;
+int sock_qid;
+int sched_qid;
+key_t sock_key;
+key_t sched_key;
 key_t basic_controls_key;
-
+int this_client_index;
 int timer_on;
 int timer_seconds;
 int next_client;

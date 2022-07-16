@@ -50,7 +50,7 @@ void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
 	
-	if(cmd >= NO_CMDS)
+	if(cmd > NO_CMDS)
 		printf("unknown cmd: %d\n",cmd);
 
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
@@ -103,9 +103,7 @@ UCHAR recv_msg_task(int test)
 	while(TRUE)
 	{
 		uSleep(0,TIME_DELAY/16);
-		if (msgrcv(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
-//		MSG_NOERROR | IPC_NOWAIT) == -1) 
-		MSG_NOERROR) == -1) 
+		if (msgrcv(sock_qid, (void *) &msg, sizeof(msg.mtext), msgtype,	MSG_NOERROR) == -1) 
 		{
 			if (errno != ENOMSG) 
 			{
@@ -121,7 +119,7 @@ UCHAR recv_msg_task(int test)
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
 		msg_buf[0] = cmd;
-		//printf("msg_len: %d\n",msg_len);
+		printf("msg_len: %d dest: %d\n",msg_len,dest);
 		memcpy(msg_buf,msg.mtext+4,msg_len);
 		msg_len = msg_len>255?255:msg_len;
 
@@ -176,10 +174,27 @@ UCHAR get_host_cmd_task1(int test)
 	int temp;
 	int dest;
 	shutdown_all = 0;
+/*
+	this_client_index = -1;
+	printf("this client index: %d\n",this_client_index);
+	printf("this label: %s\n",client_table[this_client_index].label);
 
+	memset(msg.mtext,0,sizeof(msg.mtext));
+	msg.mtext[0] = UPDATE_CLIENT_INFO;
+	msg_len = 1;
+	msg.mtext[1] = (UCHAR)msg_len;
+	msg.mtext[2] = (UCHAR)(msg_len >> 4);
+	msg.mtext[3] = (UCHAR)this_client_index;
+	memcpy(msg.mtext + 3,tempx,msg_len);
+
+	if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+	{
+		perror("msgsnd error");
+		exit(EXIT_FAILURE);
+	}
 	uSleep(1,0);
-	//printf("sock_mgnt starting (cmd_host1) %d\n",test);
-
+*/
+	uSleep(1,0);
 	while(TRUE)
 	{
 		cmd = 0;
@@ -208,7 +223,7 @@ UCHAR get_host_cmd_task1(int test)
 			cmd = ctp->cmd;
 */
 			cmd = msg_buf[0];
-			//print_cmd(cmd);
+			print_cmd(cmd);
 			memset(tempx,0,sizeof(tempx));
 			memcpy(tempx,msg_buf+1,msg_len);
 
@@ -218,7 +233,7 @@ UCHAR get_host_cmd_task1(int test)
 			msg.mtext[2] = (UCHAR)(msg_len >> 4);
 			memcpy(msg.mtext + 3,tempx,msg_len);
 
-			if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+			if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 			{
 				perror("msgsnd error");
 				exit(EXIT_FAILURE);
@@ -325,8 +340,13 @@ UCHAR tcp_monitor_task(int test)
 {
 	int s;
 	s = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
+	int i;
 	assign_client_table();
-
+/*
+	for(i = 0;i < MAX_CLIENTS;i++)
+	{
+		printf("%s %d\n",client_table[i].label,client_table[i].socket);
+*/
 	//printf("starting tcp_monitor...\n");
 
 	while (TRUE)

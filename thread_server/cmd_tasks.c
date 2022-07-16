@@ -47,7 +47,7 @@ void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
 
-	if(cmd >= NO_CMDS)
+	if(cmd > NO_CMDS)
 		printf("unknown cmd: %d\n",cmd);
 
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
@@ -192,10 +192,8 @@ UCHAR get_host_cmd_task(int test)
 	while(TRUE)
 	{
 		cmd = 0;
-//		send_cmd_host_key = SEND_CMD_HOST_QKEY;		// sched -> sock
-//		recv_cmd_host_key = RECV_CMD_HOST_QKEY;		// sock -> sched
 //		get msg from sock_mgt		
-		if (msgrcv(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
+		if (msgrcv(sched_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
 //		MSG_NOERROR | IPC_NOWAIT) == -1) 
 		MSG_NOERROR) == -1) 
 		{
@@ -207,8 +205,9 @@ UCHAR get_host_cmd_task(int test)
 			}
 		}
 		//printf("sched cmd host: ");
+		memset(tempx, 0, sizeof(tempx));
 		cmd = msg.mtext[0];
-		//print_cmd(cmd);
+		print_cmd(cmd);
 		msg_len |= (int)(msg.mtext[2] << 4);
 		msg_len = (int)msg.mtext[1];
 		
@@ -271,7 +270,7 @@ UCHAR get_host_cmd_task(int test)
 					msg.mtext[2] = (UCHAR)msg_len;
 					msg.mtext[3] = (UCHAR)(msg_len >> 4);
 
-					if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+					if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 					{
 						// keep getting "Invalid Argument" - cause I didn't set the mtype
 						perror("msgsnd error");
@@ -294,16 +293,14 @@ UCHAR get_host_cmd_task(int test)
 					}
 					break;
 
-				case SEND_TIMEUP:
-					sprintf(tempx,"%d %d %d %d",trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
-					msg.mtext[0] = cmd;
-					msg.mtext[1] = 0;	// dest don't matter
+				case UPTIME_MSG:
+					printf("uptime msg: %s\n",tempx);
+					msg.mtext[0] = UPTIME_MSG;
 					msg_len = strlen(tempx);
-					msg.mtext[2] = (UCHAR)msg_len;
-					msg.mtext[3] = (UCHAR)(msg_len >> 4);
-					memcpy(msg.mtext+4,tempx,msg_len);
-
-					if (msgsnd(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+					msg.mtext[1] = (UCHAR)msg_len;
+					msg.mtext[2] = (UCHAR)(msg_len >> 4);
+					memcpy(msg.mtext+3,tempx,msg_len);
+					if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 					{
 						// keep getting "Invalid Argument" - cause I didn't set the mtype
 						perror("msgsnd error");
@@ -312,6 +309,23 @@ UCHAR get_host_cmd_task(int test)
 					}
 					break;
 
+				case SEND_TIMEUP:
+					memset(tempx,0,sizeof(tempx));
+					sprintf(tempx,"8 %d %d %d %d",trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
+					//printf("send timeup: %s\n",tempx);
+					msg.mtext[0] = UPTIME_MSG;
+					msg_len = strlen(tempx);
+					msg.mtext[1] = (UCHAR)msg_len;
+					msg.mtext[2] = (UCHAR)(msg_len >> 4);
+					memcpy(msg.mtext+3,tempx,msg_len);
+					if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+					{
+						// keep getting "Invalid Argument" - cause I didn't set the mtype
+						perror("msgsnd error");
+						printf("exit from send client list\n");
+						exit(EXIT_FAILURE);
+					}
+					break;
 
 				case SEND_MESSAGE:
 					for(i = 0;i < msg_len;i++)

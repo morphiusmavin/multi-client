@@ -17,7 +17,7 @@ todo:
 	exit to shell doesn't work for server (not that I would ever want to exit to shell on server tho)
 9) need some way to put each light/io port on a timer to go on/off or at least set 
 	any port to go off after a delay (e.g. leaving garage so just need to have light on 
-	long enough to see to get to cabin)
+	long enough to see to get to cabin) (done)
 10) input for motion sensors (use odata database?)
 
 After separating the sched program from the sockets program:
@@ -35,8 +35,14 @@ sched:
 just gets msg's from sockets and dispatches to cmd_host_task 
 convert other tcp send's to queue msg's 
 
-send_cmd_host_key = SEND_CMD_HOST_QKEY;		// sched -> sock
-recv_cmd_host_key = RECV_CMD_HOST_QKEY;		// sock -> sched
+sock_qid sched -> sock
+sched_qid sock -> sched
+
+client gets tcp msg's in cmd task of sock_mgt 
+then uses recv_cmd_host_qid to send msg to cmd task in cmd_tasks.c 
+any of the case stmts can use msgsnd(send_cmd_host_qid... to send 
+a msg to (msgrcv(send_cmd_host_qid, in recv_msg_task() of sock_mgt 
+which forwards the msg to tcp using send_msg() 
 
 add 3 commands:
 SET_TIMER		- set the timer of one of the clients 

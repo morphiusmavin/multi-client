@@ -58,9 +58,9 @@ namespace EpServerEngineSampleClient
 			START_TIMER1,
 			START_TIMER2,
 			STOP_TIMER,
-			UPDATE_CLIENT_LIST,
 			SET_NEXT_CLIENT,
-			SEND_NEXT_CLIENT
+			SEND_NEXT_CLIENT,
+			UPDATE_CLIENT_INFO
 		}
 
 		public ServerCmds()

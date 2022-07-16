@@ -78,7 +78,7 @@ void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
 
-	if(cmd >= NO_CMDS)
+	if(cmd > NO_CMDS)
 		printf("unknown cmd: %d\n",cmd);
 	
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
@@ -173,10 +173,8 @@ UCHAR get_host_cmd_task(int test)
 	while(TRUE)
 	{
 		cmd = 0;
-//		send_cmd_host_key = SEND_CMD_HOST_QKEY;		// sched -> sock
-//		recv_cmd_host_key = RECV_CMD_HOST_QKEY;		// sock -> sched
 		// recv msg's from sched
-		if (msgrcv(send_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
+		if (msgrcv(sock_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
 //		MSG_NOERROR | IPC_NOWAIT) == -1) 
 		MSG_NOERROR) == -1) 
 		{
@@ -187,17 +185,17 @@ UCHAR get_host_cmd_task(int test)
 				exit(EXIT_FAILURE);
 			}
 		}
+		memset(write_serial_buff,0,sizeof(write_serial_buff));
 		cmd = msg.mtext[0];							// first byte is cmd
 		msg_len |= (int)(msg.mtext[2] << 4);		// 
 		msg_len = (int)msg.mtext[1];				// 
 		write_serial_buff[0] = cmd;
 		//printf("msg_len: %d\n",msg_len);
-		memcpy(write_serial_buff,msg.mtext+4,msg_len);
-		//printf("msg to tcp: %s\n",tempx);
-		
-//		for(i = 1;i < msg_len+1;i++)
-//			printf("%02x ",tempx[i]);
-
+		memcpy(write_serial_buff,msg.mtext+3,msg_len);
+/*
+		for(i = 1;i < msg_len+1;i++)
+			printf("%02x ",write_serial_buff[i]);
+*/
 //		if(cmd > 0)
 		if(1)
 		{
@@ -232,18 +230,32 @@ UCHAR get_host_cmd_task(int test)
 					break;
 				
 				case UPTIME_MSG:	// sent from client
-//					printf("%d msg_len: %d\n %s\n",windows_client_sock, msg_len,tempx);
-					// this just displays the time on the msg box in win client
-//					send_msgb(windows_client_sock, strlen(tempx)*2,(UCHAR *)tempx,UPTIME_MSG);
-					break;
-
-				case SEND_TIMEUP:
+					printf("uptime msg (sock): %s\n",write_serial_buff);
+					//printf("%d %d\n",client_table[0].socket, client_table[1].socket);
 					if(client_table[0].socket > 0);
 						send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
 					if(client_table[1].socket > 0);
 						send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
-					printf("%s\n",write_serial_buff);
-					
+//					printf("uptime: %s\n",write_serial_buff);
+					break;
+
+				case SEND_TIMEUP:
+					msg.mtype = msgtype;
+					memset(msg.mtext,0,sizeof(msg.mtext));
+/*
+					msg.mtext[0] = cmd;
+					msg.mtext[1] = (UCHAR)msg_len;
+					msg.mtext[2] = (UCHAR)(msg_len >> 4);
+*/
+					memcpy(msg.mtext,write_serial_buff,msg_len);
+//					uSleep(1,0);
+
+					if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+					{
+						// keep getting "Invalid Argument" - cause I didn't set the mtype
+						perror("msgsnd error");
+						exit(EXIT_FAILURE);
+					}
 					break;
 
 				case SEND_MESSAGE:
@@ -261,7 +273,7 @@ UCHAR get_host_cmd_task(int test)
 					memcpy(msg.mtext,write_serial_buff,msg_len);
 //					uSleep(1,0);
 
-					if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+					if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 					{
 						// keep getting "Invalid Argument" - cause I didn't set the mtype
 						perror("msgsnd error");
@@ -397,7 +409,7 @@ startover:
 			{
 				//printf("msg to cmd_host on server: %s %d\n",msg.mtext + 3,cmd);
 				//print_cmd(cmd);
-				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+				if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					// keep getting "Invalid Argument" - cause I didn't set the mtype
 					perror("msgsnd error");
@@ -413,21 +425,6 @@ startover:
 						client_table[i].socket = -1;
 						// the break statement only goes back up to 
 						// "read task 2"
-
-						// tell the sched which client was shutdown 
-/*
-						msg.mtext[0] = UPDATE_CLIENT_LIST;
-						msg.mtext[1] = 2;
-						msg.mtext[2] = 0;
-						msg.mtext[3] = (UCHAR)i;		// which client
-						msg.mtext[4] = -1;
-						if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-						{
-							// keep getting "Invalid Argument" - cause I didn't set the mtype
-							perror("msgsnd error");
-							exit(EXIT_FAILURE);
-						}
-*/
 						uSleep(0,TIME_DELAY/4);
 					}
 					shutdown_all = 1;
@@ -523,14 +520,19 @@ startover1:
 			//printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			//printf("dest: %d\n",dest);
+			printf("dest: %d\n",dest);
 /*
 			for(i = 0;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);
 			printf("\n");
+
+			for(i = 0;i < msg_len+2;i++)
+				printf("%c",tempx[i]);
+			printf("\n");
 */
 			//printf("cmd: %d\n",cmd);
-			//print_cmd(cmd);
+			printf("read task: %d\n",index);
+			print_cmd(cmd);
 			memmove(tempx,tempx+2,msg_len);
 /*
 			for(i = 0;i < msg_len;i++)
@@ -544,19 +546,8 @@ startover1:
 				client_table[index].socket = -1;
 				// the break statement only goes back up to 
 				// "read task 2"
-
 				// tell the sched which client was shutdown 
-				msg.mtext[0] = UPDATE_CLIENT_LIST;
-				msg.mtext[1] = 2;
-				msg.mtext[2] = 0;
-				msg.mtext[3] = (UCHAR)index;		// which client
-				msg.mtext[4] = -1;
-				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-				{
-					// keep getting "Invalid Argument" - cause I didn't set the mtype
-					perror("msgsnd error");
-					exit(EXIT_FAILURE);
-				}
+				// (deleted)
 				goto startover1;
 //				break;
 			}
@@ -585,13 +576,13 @@ startover1:
 				msg.mtext[1] = (UCHAR)msg_len;
 				msg.mtext[2] = (UCHAR)(msg_len >> 4);
 				memcpy(msg.mtext + 3,tempx,msg_len);
-//				printf("msg to cmd_host from client %d\n",dest);
+				//printf("msg to cmd_host from client %d\n",dest);
 /*
 				for(i = 0;i < msg_len+3;i++)
 					printf("%02x ",msg.mtext[i]);
 				printf("\n");
 */
-				if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+				if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
 					perror("msgsnd error");
 					exit(EXIT_FAILURE);
@@ -869,11 +860,9 @@ UCHAR tcp_monitor_task(int test)
 					client_table[i].socket = new_socket;
 					printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
 					memset(tempx,0,sizeof(tempx));
-
 					sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
 					printf("should be sending msg to win cl: %s\n",tempx);
 					uSleep(0,TIME_DELAY/16);
-
 /*
 					for(j = 0;j < MAX_CLIENTS;j++)
 					{
@@ -885,9 +874,9 @@ UCHAR tcp_monitor_task(int test)
 					}
 */
 					// send msg to 1st win client (149)
-					if(client_table[0].socket > -1);
+					if(client_table[0].socket > 0);
 						send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-					if(client_table[1].socket > -1);
+					if(client_table[1].socket > 0);
 						send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 
 					if(client_table[i].qid == 0)
@@ -896,18 +885,7 @@ UCHAR tcp_monitor_task(int test)
 						//printf("new connection qid: %d : %d\n",i,client_table[i].qid);
 					}
 					// tell the sched which clients have logged in/out
-					msg.mtext[0] = UPDATE_CLIENT_LIST;
-					msg.mtext[1] = 2;
-					msg.mtext[2] = 0;
-					msg.mtext[3] = (UCHAR)i;		// which client
-					msg.mtext[4] = new_socket;
-					if (msgsnd(recv_cmd_host_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-					{
-						// keep getting "Invalid Argument" - cause I didn't set the mtype
-						perror("msgsnd error");
-						exit(EXIT_FAILURE);
-					}
-
+					// deleted
 				}
 			}
 			if(shutdown_all)

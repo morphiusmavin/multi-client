@@ -119,8 +119,8 @@ int main(int argc, char **argv)
 	UCHAR test2;
 	int sd;
 	int rc;
-	key_t send_cmd_host_key;
-	key_t recv_cmd_host_key;
+	key_t sock_key;
+	key_t sched_key;
 	key_t basic_controls_key;
 
 	if(argc < 2)
@@ -153,12 +153,12 @@ int main(int argc, char **argv)
 	// get the queue id for the get_host_cmd_task
 	// CMD_HOST_QKEY
 
-	send_cmd_host_key = SEND_CMD_HOST_QKEY;
-	recv_cmd_host_key = RECV_CMD_HOST_QKEY;
+	sock_key = SEND_CMD_HOST_QKEY;
+	sched_key = RECV_CMD_HOST_QKEY;
 	basic_controls_key = BASIC_CONTROLS_QKEY;
 
-	send_cmd_host_qid = msgget(send_cmd_host_key, IPC_CREAT | 0666);
-	recv_cmd_host_qid = msgget(recv_cmd_host_key, IPC_CREAT | 0666);
+	sock_qid = msgget(sock_key, IPC_CREAT | 0666);
+	sched_qid = msgget(sched_key, IPC_CREAT | 0666);
 	basic_controls_qid = msgget(basic_controls_key, IPC_CREAT | 0666);
 
 	for(i = 0;i < NUM_SCHED_TASKS;i++)
