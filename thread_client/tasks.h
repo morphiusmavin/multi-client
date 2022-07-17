@@ -113,8 +113,7 @@ typedef struct
 }SPECIAL_CMD_ARR;
 
 // global variables
-UCHAR trunning_days, trunning_hours, trunning_minutes, trunning_seconds;
-time_t start_time;
+int trunning_days, trunning_hours, trunning_minutes, trunning_seconds;
 
 REAL_BANKS real_banks[40];
 

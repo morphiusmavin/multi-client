@@ -128,7 +128,7 @@ typedef struct
 }CLIENTS;
 */
 // global variables
-UCHAR trunning_days, trunning_hours, trunning_minutes, trunning_seconds;
+int trunning_days, trunning_hours, trunning_minutes, trunning_seconds;
 time_t start_time;
 
 REAL_BANKS real_banks[40];

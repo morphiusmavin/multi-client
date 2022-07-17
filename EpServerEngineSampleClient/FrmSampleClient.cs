@@ -57,7 +57,8 @@ namespace EpServerEngineSampleClient
         private bool home_svr_connected = false;
         private int timer_offset;
         private string sendmsgtext;
-        int tick = 0;	
+        int tick = 0;
+        int which_winclient = -1;
 
         private string xml_dialog1_location = "c:\\Users\\daniel\\dev\\uiformat1.xml";
         private string xml_dialog2_location = "c:\\Users\\daniel\\dev\\uiformat2.xml";
@@ -84,9 +85,6 @@ namespace EpServerEngineSampleClient
             btnGetTime.Enabled = false;
 
             tbReceived.Clear();
-
-            //playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
-            playdlg = new PlayerDlg("g:\\rock\\wavefiles", m_client);
 
             garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
@@ -174,37 +172,45 @@ namespace EpServerEngineSampleClient
         }
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if (!client_connected)      // let's connect here! (see timer callback at end of file)
+            if (which_winclient > -1)
             {
-                m_hostname = cbIPAdress.Items[selected_address].ToString();
-                m_portno = tbPort.Text;
-                AddMsg("trying to connect to:    " + m_hostname + ":" + m_portno.ToString() + "...");
-                ClientOps ops = new ClientOps(this, m_hostname, m_portno);
-                // set the timeout to 5ms - by default it's 0 which causes it to wait a long time
-                // and slows down the UI
-                ops.ConnectionTimeOut = 500;
-                m_client.Connect(ops);
-                please_lets_disconnect = 0;
-                disconnect_attempts++;
-                timer1.Enabled = true;
-                tick = 0;
-                btnConnect.Text = "Disconnect";
-                client_connected = true;
-                //AddMsg(GetLocalIPAddress());
+                if (which_winclient == 0)
+                    playdlg = new PlayerDlg("g:\\rock\\wavefiles", m_client);
+                else if (which_winclient == 1)
+                    playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
+                if (!client_connected)      // let's connect here! (see timer callback at end of file)
+                {
+                    m_hostname = cbIPAdress.Items[selected_address].ToString();
+                    m_portno = tbPort.Text;
+                    AddMsg("trying to connect to:    " + m_hostname + ":" + m_portno.ToString() + "...");
+                    ClientOps ops = new ClientOps(this, m_hostname, m_portno);
+                    // set the timeout to 5ms - by default it's 0 which causes it to wait a long time
+                    // and slows down the UI
+                    ops.ConnectionTimeOut = 500;
+                    m_client.Connect(ops);
+                    please_lets_disconnect = 0;
+                    disconnect_attempts++;
+                    timer1.Enabled = true;
+                    tick = 0;
+                    btnConnect.Text = "Disconnect";
+                    client_connected = true;
+                    //AddMsg(GetLocalIPAddress());
+                }
+                else
+                {
+                    playdlg.Dispose();
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
+                    please_lets_disconnect = 1; // let's disconnect here!
+                    disconnect_attempts = 0;
+                    AddMsg("disconnecting");
+                    btnConnect.Text = "Connect";
+                    timer1.Enabled = false;
+                    client_connected = false;
+                    //play_aliens_clip();
+                    m_client.Disconnect();
+                }
             }
-            else
-            {
-                svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
-                please_lets_disconnect = 1; // let's disconnect here!
-                disconnect_attempts = 0;
-                AddMsg("disconnecting");
-                btnConnect.Text = "Connect";
-                timer1.Enabled = false;
-                client_connected = false;
-                //play_aliens_clip();
-                m_client.Disconnect();
-
-            }
+            else AddMsg("chose which client this is");
         }
             
         public void OnConnected(INetworkClient client, ConnectStatus status)
@@ -318,6 +324,7 @@ namespace EpServerEngineSampleClient
             int type_msg;
             string ret = null;
             int i = 0;
+
             char[] chars = new char[bytes.Length / sizeof(char) + 2];
             char[] chars2 = new char[bytes.Length / sizeof(char)];
             // src srcoffset dest destoffset len
@@ -390,29 +397,29 @@ namespace EpServerEngineSampleClient
                     //AddMsg(ret);
 					string clmsg = " ";
 					bool avail = false;
-					AddMsg("SEND_CLIENT_LIST ");
+					//AddMsg("SEND_CLIENT_LIST ");
                     foreach (var word in words)
                     {
                         switch (i)
                         {
                             case 0:     // index into clients_avail list
                                 j = int.Parse(word);
-                               //AddMsg(j.ToString());
-								clmsg = word + "  ";
+                                //AddMsg(j.ToString());
+                                clmsg = word + "  ";
                                 break;
                             case 1:     // ip address
-                                //AddMsg(word);
-								clmsg += word + "  ";
+                                        //AddMsg(word);
+                                clmsg += word + "  ";
                                 break;
                             case 2:     // port no.
-								//if(clients_avail[i].socket < 0)
-									//avail = true;
+                                        //if(clients_avail[i].socket < 0)
+                                        //avail = true;
                                 sock = clients_avail[j].socket = int.Parse(word);
                                 //AddMsg(clients_avail[j].socket.ToString());
                                 clmsg += word + " " + sock.ToString();
-								//if(avail)
-									RedrawClientListBox();
-								AddMsg(clmsg);
+                                //if(avail)
+                                RedrawClientListBox();
+                                //AddMsg(clmsg);
                                 break;
                             default:
                                 AddMsg("?");
@@ -629,18 +636,7 @@ namespace EpServerEngineSampleClient
         // DlgSetParams dialog
         private void ShowParamsClick(object sender, EventArgs e)
         {
-            //AddMsg(dlgsetparams.GetSet().ToString());
-            string msg = "UPDATE_CLIENT_INFO";
-            int param = 1;
-            int icmd = svrcmd.GetCmdIndexI(msg);
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                {
-                    svrcmd.Send_ClCmd(icmd, cl.index, cl.index);
-                    AddMsg(icmd.ToString());
-                }
-            }
+            UpdateClientInfo();
             return;
             if (m_client.IsConnectionAlive)
             {
@@ -709,6 +705,32 @@ namespace EpServerEngineSampleClient
 					packet = new Packet(bytes, 0, bytes.Count(), false);
 					m_client.Send(packet);
 					*/
+                }
+            }
+        }
+        private void UpdateClientInfo()
+		{
+            string msg = "UPDATE_CLIENT_INFO";
+            int param = 1;
+            int icmd = svrcmd.GetCmdIndexI(msg);
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (cl.type == 1 && cl.socket > 0)
+                {
+                    svrcmd.Send_ClCmd(icmd, cl.index, cl.index);
+                }
+            }
+        }
+        private void SendTimeup()
+        {
+            string msg = "SEND_TIMEUP";
+            int icmd = svrcmd.GetCmdIndexI(msg);
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (cl.type > 0 && cl.socket > 0)
+                {
+                    svrcmd.Send_ClCmd(icmd, cl.index, cl.index);
+                    AddMsg(icmd.ToString());
                 }
             }
         }
@@ -784,22 +806,35 @@ namespace EpServerEngineSampleClient
         }
         private void Dialog1_Click(object sender, EventArgs e)
         {
-			SetTime(9);
+            //SetTime(9);
+            lbAvailClients.Items.Clear();
         }
         private void myTimerTick(object sender, EventArgs e)
         {
             tick++;
+            if (tick == 5)
+            {
+                svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
+                AddMsg("send client list");
+                RedrawClientListBox();
+                
+            }
             if (tick == 30)
             {
                 AddMsg("set time");
                 SetTime(8);
             }
-            if(tick > 60)
+            if(tick == 35)
+			{
+                UpdateClientInfo();
+			}
+            if (tick > 300)
 			{
                 if (!player_active)
                 {
+                    SendTimeup();
                     //btnReportTimeUp_Click(new object(), new EventArgs());
-                    tick = 31;
+                    tick = 36;
                 }
 			}
         }
@@ -1055,28 +1090,7 @@ namespace EpServerEngineSampleClient
         private void btnShutdownClient_Click(object sender, EventArgs e)
         {
             SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), " ", true);
-
-/*            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (cl.type == 1 && cl.socket > 0)
-                {
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), cl.index, " ");
-                    AddMsg(cl.label);
-                    cl.socket = -1;
-                }
-
-            }
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (cl.type == 2 && cl.socket > 0)
-                {
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), cl.index, " ");
-                    AddMsg(cl.label);
-                    cl.socket = -1;
-                }
-            }
-            lbAvailClients.Items.Clear();
-*/        }
+       }
         private void button1_Click(object sender, EventArgs e)		// get status
         {
             SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"), "status", false);
@@ -1085,9 +1099,10 @@ namespace EpServerEngineSampleClient
         {
             foreach (ClientsAvail cl in clients_avail)
             {
+                //AddMsg(cl.label + " " + cl.lbindex.ToString());
                 if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 {
-                    AddMsg("send msg: " + cl.label + " " + cl.index);
+                    //AddMsg("send msg: " + cl.label + " " + cl.index);
                     if (remove)
                     {
                         cl.lbindex = -1;
@@ -1103,7 +1118,6 @@ namespace EpServerEngineSampleClient
                         timer1.Enabled = false;
                         client_connected = false;
                     }
-
                     RedrawClientListBox();
 					if(!remove)
 					{
@@ -1134,7 +1148,7 @@ namespace EpServerEngineSampleClient
 				if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 //  if(cl.socket > 0)   // to do all at once
 				{
-					AddMsg(cl.label + " " + cl.index.ToString() + " " + cl.lbindex.ToString());
+					//AddMsg(cl.label + " " + cl.index.ToString() + " " + cl.lbindex.ToString());
                     svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
                 }
 			}
@@ -1165,5 +1179,11 @@ namespace EpServerEngineSampleClient
 		{
             SendClientMsg(svrcmd.GetCmdIndexI("SHELL_AND_RENAME"), " ", true);
         }
+
+		private void cbWhichWinClient_SelectedIndexChanged(object sender, EventArgs e)
+		{
+            which_winclient = cbWhichWinClient.SelectedIndex;
+            AddMsg(which_winclient.ToString());
+		}
 	}
 }

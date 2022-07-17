@@ -209,25 +209,39 @@ UCHAR get_host_cmd_task(int test)
 					
 				case SEND_CLIENT_LIST:
 					//printf("SEND_CLIENT_LIST from sock_mgt\n");
-					for(i = 0;i < MAX_CLIENTS;i++)
+					k = -1;
+					if(client_table[0].socket > 0)
 					{
-						//printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
-						if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
+						for(i = 0;i < MAX_CLIENTS;i++)
 						{
-							memset(tempx,0,sizeof(tempx));
-							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-							//printf("%s\n",tempx);
-
-							for(j = 0;j < MAX_CLIENTS;j++)
+							//printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
+							if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 							{
-								if(client_table[j].type == WINDOWS_CLIENT && client_table[j].socket > 0)
-								{
-									send_msgb(client_table[j].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-									uSleep(0,TIME_DELAY/20);
-									printf("%d\n",client_table[j].socket);
-								}
-							}
+								memset(tempx,0,sizeof(tempx));
+								sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+								//printf("%s\n",tempx);
 
+								send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+								uSleep(0,TIME_DELAY/2);
+								//printf("client sock: %d %s\n",client_table[j].socket,tempx);
+							}
+						}
+					}
+					if(client_table[1].socket > 0)
+					{
+						for(i = 0;i < MAX_CLIENTS;i++)
+						{
+							//printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
+							if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
+							{
+								memset(tempx,0,sizeof(tempx));
+								sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+								//printf("%s\n",tempx);
+
+								send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+								uSleep(0,TIME_DELAY/2);
+								//printf("client sock: %d\n",client_table[j].socket);
+							}
 						}
 					}
 					break;
@@ -236,11 +250,11 @@ UCHAR get_host_cmd_task(int test)
 					//printf("uptime msg (sock): %s\n",write_serial_buff);
 					//printf("%ld %ld\n",ttrunning_minutes, ttrunning_seconds);
 					//printf("%d %d\n",client_table[0].socket, client_table[1].socket);
-					if(client_table[0].socket > 0);
+					if(client_table[0].socket > 0)
 						send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
-					if(client_table[1].socket > 0);
+					if(client_table[1].socket > 0)
 						send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
-//					printf("uptime: %s\n",write_serial_buff);
+					//printf("uptime: %s\n",write_serial_buff);
 					break;
 
 				case SEND_TIMEUP:
@@ -850,16 +864,15 @@ UCHAR tcp_monitor_task(int test)
 				if(strncmp(client_table[i].ip,tempx,3) == 0)
 				{
 					client_table[i].socket = new_socket;
-					printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
+					//printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
 					memset(tempx,0,sizeof(tempx));
 					sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-					printf("should be sending msg to win cl: %s\n",tempx);
+					//printf("should be sending msg to win cl: %s\n",tempx);
 					uSleep(0,TIME_DELAY/16);
-
 					// send msg to 1st win client (149)
-					if(client_table[0].socket > 0);
+					if(client_table[0].socket > 0)
 						send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-					if(client_table[1].socket > 0);
+					if(client_table[1].socket > 0)
 						send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 
 					if(client_table[i].qid == 0)
@@ -1122,12 +1135,14 @@ int put_sock(int sd, UCHAR *buf,int buflen, int block, char *errmsg)
 	else
 // don't block
 		rc = send(sd,buf,buflen,MSG_DONTWAIT);
-	if(rc < 0 && errno != 11)
+	//if(rc < 0 && errno != 11)
+	if(rc < 0)
 	{
+		//printf("sd: %d\n",sd);
 		strcpy(errmsg,strerror(errno));
-		sprintf(extra_msg," %d",errno);
+		sprintf(extra_msg," %d\n",errno);
 		strcat(errmsg,extra_msg);
-		strcat(errmsg," put_sock");
+		strcat(errmsg,"\nput_sock\n");
 //		close_tcp();
 	}else strcpy(errmsg,"Success\0");
 	return rc;

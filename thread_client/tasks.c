@@ -697,42 +697,45 @@ UCHAR timer2_task(int test)
 	int bank = 0;
 	UCHAR mask;
 	int index = 0;
-	time_t this_time;
+	time_t this_time, start_time, diff_time;
 	time_t T;
 	struct tm tm;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 	start_time = time(NULL);
-	//printf("Seconds since January 1, 1970 = %ld\n", start_time);
-
+	
 	while(TRUE)
 	{
-		uSleep(8,0);
-		this_time = time(NULL);
-		time_lapse = this_time - start_time;
-		//printf("%ld ",time_lapse);
-		if(time_lapse >= 10)
+		uSleep(1,0);
+		
+		if(++trunning_seconds > 59)
 		{
-			trunning_seconds += (int)time_lapse;
-			printf("seconds: %d ",trunning_seconds);
+			this_time = time(NULL);
+			diff_time = this_time - start_time;
+			//printf("%ld\n",diff_time);
+			diff_time -= 60L;
+			//printf("%ld\n",diff_time);
 			start_time = this_time;
-			
-			if(trunning_seconds > 59)
+			trunning_seconds = diff_time;
+			//printf("sec: %d\n",trunning_seconds);
+
+			if(trunning_minutes == 15 || trunning_minutes == 30 || trunning_minutes == 45)
 			{
 				T = time(NULL);
 				tm = *localtime(&T);
-				printf("\n%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-				printf("minutes: %d\n", trunning_minutes);
-				trunning_seconds = 0;
-				//printf("running minutes: %d\r\n",trunning_minutes);
-				if(++trunning_minutes > 59)
+				printf("\n%02d:%02d\n",tm.tm_min,tm.tm_sec);
+			}
+
+			if(++trunning_minutes > 59)
+			{
+				T = time(NULL);
+				tm = *localtime(&T);
+				printf("\n%02d:%02d\n",tm.tm_min,tm.tm_sec);
+				trunning_minutes = 0;
+				if(++trunning_hours > 24)
 				{
-					trunning_minutes = 0;
-					if(++trunning_hours > 24)
-					{
-						trunning_hours = 0;
-						trunning_days++;
-					}
+					trunning_hours = 0;
+					trunning_days++;
 				}
 			}
 		}

@@ -262,9 +262,9 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_CLIENT_LIST:
-					printf("SEND_CLIENT_LIST from cmd_task (sched)\n");
+					//printf("SEND_CLIENT_LIST from cmd_task (sched)\n");
 					msg.mtext[0] = cmd;
-					msg.mtext[1] = 9;
+					msg.mtext[1] = 8;
 					msg_len = 2;
 					msg.mtext[2] = (UCHAR)msg_len;
 					msg.mtext[3] = (UCHAR)(msg_len >> 4);
@@ -293,7 +293,7 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case UPTIME_MSG:
-					//printf("uptime msg: %s\n",tempx);
+					printf("uptime msg: %s\n",tempx);
 					msg.mtext[0] = UPTIME_MSG;
 					msg_len = strlen(tempx);
 					msg.mtext[1] = (UCHAR)msg_len;

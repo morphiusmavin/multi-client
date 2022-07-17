@@ -63,6 +63,8 @@
 			this.tbSendMsg = new System.Windows.Forms.TextBox();
 			this.btnCabinLights = new System.Windows.Forms.Button();
 			this.button1 = new System.Windows.Forms.Button();
+			this.cbWhichWinClient = new System.Windows.Forms.ComboBox();
+			this.label4 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -73,12 +75,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbReceived.Location = new System.Drawing.Point(523, 254);
+			this.tbReceived.Location = new System.Drawing.Point(523, 297);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(273, 335);
+			this.tbReceived.Size = new System.Drawing.Size(300, 292);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
 			// 
@@ -111,7 +113,7 @@
 			this.tbPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tbPort.Location = new System.Drawing.Point(103, 69);
 			this.tbPort.Name = "tbPort";
-			this.tbPort.Size = new System.Drawing.Size(63, 29);
+			this.tbPort.Size = new System.Drawing.Size(90, 29);
 			this.tbPort.TabIndex = 1;
 			this.tbPort.Text = "5193";
 			// 
@@ -131,7 +133,7 @@
 			this.tbConnected.Location = new System.Drawing.Point(102, 108);
 			this.tbConnected.Name = "tbConnected";
 			this.tbConnected.ReadOnly = true;
-			this.tbConnected.Size = new System.Drawing.Size(149, 29);
+			this.tbConnected.Size = new System.Drawing.Size(171, 29);
 			this.tbConnected.TabIndex = 13;
 			this.tbConnected.TabStop = false;
 			this.tbConnected.Text = "not connected";
@@ -164,7 +166,7 @@
 			this.tbServerTime.Location = new System.Drawing.Point(103, 147);
 			this.tbServerTime.Name = "tbServerTime";
 			this.tbServerTime.ReadOnly = true;
-			this.tbServerTime.Size = new System.Drawing.Size(149, 29);
+			this.tbServerTime.Size = new System.Drawing.Size(170, 29);
 			this.tbServerTime.TabIndex = 30;
 			this.tbServerTime.TabStop = false;
 			// 
@@ -180,6 +182,8 @@
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.label4);
+			this.groupBox1.Controls.Add(this.cbWhichWinClient);
 			this.groupBox1.Controls.Add(this.cbIPAdress);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Controls.Add(this.tbServerTime);
@@ -191,7 +195,7 @@
 			this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox1.Location = new System.Drawing.Point(523, 30);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(273, 199);
+			this.groupBox1.Size = new System.Drawing.Size(300, 243);
 			this.groupBox1.TabIndex = 34;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "TCP Status";
@@ -202,7 +206,7 @@
 			this.cbIPAdress.FormattingEnabled = true;
 			this.cbIPAdress.Location = new System.Drawing.Point(102, 28);
 			this.cbIPAdress.Name = "cbIPAdress";
-			this.cbIPAdress.Size = new System.Drawing.Size(150, 28);
+			this.cbIPAdress.Size = new System.Drawing.Size(171, 28);
 			this.cbIPAdress.TabIndex = 0;
 			this.cbIPAdress.SelectedIndexChanged += new System.EventHandler(this.IPAddressChanged);
 			// 
@@ -325,9 +329,9 @@
 			this.lbAvailClients.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbAvailClients.FormattingEnabled = true;
 			this.lbAvailClients.ItemHeight = 15;
-			this.lbAvailClients.Location = new System.Drawing.Point(821, 43);
+			this.lbAvailClients.Location = new System.Drawing.Point(871, 32);
 			this.lbAvailClients.Name = "lbAvailClients";
-			this.lbAvailClients.Size = new System.Drawing.Size(245, 184);
+			this.lbAvailClients.Size = new System.Drawing.Size(245, 199);
 			this.lbAvailClients.TabIndex = 35;
 			this.lbAvailClients.SelectedIndexChanged += new System.EventHandler(this.AvailClientSelIndexChanged);
 			// 
@@ -335,7 +339,7 @@
 			// 
 			this.btnRebootClient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnRebootClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnRebootClient.Location = new System.Drawing.Point(847, 284);
+			this.btnRebootClient.Location = new System.Drawing.Point(897, 272);
 			this.btnRebootClient.Name = "btnRebootClient";
 			this.btnRebootClient.Size = new System.Drawing.Size(219, 35);
 			this.btnRebootClient.TabIndex = 36;
@@ -346,7 +350,7 @@
 			// btnShutdownClient
 			// 
 			this.btnShutdownClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnShutdownClient.Location = new System.Drawing.Point(847, 376);
+			this.btnShutdownClient.Location = new System.Drawing.Point(897, 364);
 			this.btnShutdownClient.Name = "btnShutdownClient";
 			this.btnShutdownClient.Size = new System.Drawing.Size(219, 37);
 			this.btnShutdownClient.TabIndex = 37;
@@ -357,7 +361,7 @@
 			// btnSendStatus
 			// 
 			this.btnSendStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendStatus.Location = new System.Drawing.Point(847, 471);
+			this.btnSendStatus.Location = new System.Drawing.Point(897, 459);
 			this.btnSendStatus.Name = "btnSendStatus";
 			this.btnSendStatus.Size = new System.Drawing.Size(219, 37);
 			this.btnSendStatus.TabIndex = 38;
@@ -368,7 +372,7 @@
 			// btnSendMsg
 			// 
 			this.btnSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendMsg.Location = new System.Drawing.Point(847, 519);
+			this.btnSendMsg.Location = new System.Drawing.Point(897, 507);
 			this.btnSendMsg.Name = "btnSendMsg";
 			this.btnSendMsg.Size = new System.Drawing.Size(219, 37);
 			this.btnSendMsg.TabIndex = 39;
@@ -379,7 +383,7 @@
 			// bSetClientTime
 			// 
 			this.bSetClientTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.bSetClientTime.Location = new System.Drawing.Point(847, 567);
+			this.bSetClientTime.Location = new System.Drawing.Point(897, 555);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(219, 37);
 			this.bSetClientTime.TabIndex = 41;
@@ -390,7 +394,7 @@
 			// btnReportTimeUp
 			// 
 			this.btnReportTimeUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnReportTimeUp.Location = new System.Drawing.Point(847, 615);
+			this.btnReportTimeUp.Location = new System.Drawing.Point(897, 603);
 			this.btnReportTimeUp.Name = "btnReportTimeUp";
 			this.btnReportTimeUp.Size = new System.Drawing.Size(219, 37);
 			this.btnReportTimeUp.TabIndex = 42;
@@ -402,7 +406,7 @@
 			// 
 			this.btnWaitReboot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnWaitReboot.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnWaitReboot.Location = new System.Drawing.Point(847, 330);
+			this.btnWaitReboot.Location = new System.Drawing.Point(897, 318);
 			this.btnWaitReboot.Name = "btnWaitReboot";
 			this.btnWaitReboot.Size = new System.Drawing.Size(219, 35);
 			this.btnWaitReboot.TabIndex = 43;
@@ -434,7 +438,7 @@
 			// button1
 			// 
 			this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.button1.Location = new System.Drawing.Point(847, 424);
+			this.button1.Location = new System.Drawing.Point(897, 412);
 			this.button1.Name = "button1";
 			this.button1.Size = new System.Drawing.Size(219, 37);
 			this.button1.TabIndex = 46;
@@ -442,12 +446,35 @@
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.button1_Click_1);
 			// 
+			// cbWhichWinClient
+			// 
+			this.cbWhichWinClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cbWhichWinClient.FormattingEnabled = true;
+			this.cbWhichWinClient.Items.AddRange(new object[] {
+            "Second_Windows7",
+            "Win7-x64"});
+			this.cbWhichWinClient.Location = new System.Drawing.Point(101, 192);
+			this.cbWhichWinClient.Name = "cbWhichWinClient";
+			this.cbWhichWinClient.Size = new System.Drawing.Size(172, 28);
+			this.cbWhichWinClient.TabIndex = 32;
+			this.cbWhichWinClient.SelectedIndexChanged += new System.EventHandler(this.cbWhichWinClient_SelectedIndexChanged);
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(8, 198);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(93, 20);
+			this.label4.TabIndex = 33;
+			this.label4.Text = "This Client";
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(1113, 688);
+			this.ClientSize = new System.Drawing.Size(1140, 688);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.btnCabinLights);
 			this.Controls.Add(this.tbSendMsg);
@@ -530,6 +557,8 @@
 		private System.Windows.Forms.TextBox tbSendMsg;
 		private System.Windows.Forms.Button btnCabinLights;
 		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.ComboBox cbWhichWinClient;
 	}
 }
 
