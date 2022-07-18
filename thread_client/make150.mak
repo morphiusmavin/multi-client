@@ -114,10 +114,13 @@ GNUNOANSI = -g -gnu99 -Wstrict-prototypes
 
 BULD_TARGET = $(PROJECT)
 
-all : sched sock_mgt
-#all : test_dio1
-#test_ioports test_inports # test_ports test_spi
-#llist_test_threads llist_test_threads_rw
+all : sched150
+
+cmd_tasks.o: Client150/cmd_tasks.c
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c Client150/cmd_tasks.c
+
+tasks.o: Client150/tasks.c tasks.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c Client150/tasks.c
 
 sched.o: sched.c tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
@@ -127,9 +130,6 @@ ioports.o: ioports.c ioports.h
 
 assign_client_table.o: ../assign_client_table.c
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../assign_client_table.c
-
-tasks.o: tasks.c tasks.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c tasks.c
 
 serial_io.o: serial_io.c serial_io.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c serial_io.c
@@ -146,9 +146,6 @@ config_file.o: cs_client/config_file.c  queue/ollist_threads_rw.h
 #lcd_func.o: lcd_func.c lcd_func.h
 #	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c lcd_func.c
 
-cmd_tasks.o: cmd_tasks.c
-	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cmd_tasks.c
-
 load_cmds.o: ../load_cmds.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../load_cmds.c
 
@@ -158,17 +155,8 @@ cllist_threads_rw.o: queue/cllist_threads_rw.c queue/cllist_threads_rw.h
 cconfig_file.o: cs_client/cconfig_file.c queue/cllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/cconfig_file.c
 	
-sock_mgt.o : sock_mgt.c 
-	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_mgt.c
-
-sock_sched.o : sock_sched.c 
-	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_sched.c
-
-sched: tasks.o cmd_tasks.o sched.o ioports.o assign_client_table.o load_cmds.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cllist_threads_rw.o cconfig_file.o
-	${CC} -static -pthread tasks.o cmd_tasks.o sched.o ioports.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o -o sched -lm
-
-sock_mgt: sock_mgt.o sock_sched.o load_cmds.o
-	${CC} -static -pthread sock_sched.o assign_client_table.o sock_mgt.o load_cmds.o -o sock_mgt
+sched150: tasks.o cmd_tasks.o sched.o ioports.o assign_client_table.o load_cmds.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cllist_threads_rw.o cconfig_file.o
+	${CC} -static -pthread tasks.o cmd_tasks.o sched.o ioports.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o -o sched150 -lm
 
 clean :
 	rm -f *.o *~ *# core  sched

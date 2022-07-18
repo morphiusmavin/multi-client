@@ -22,13 +22,13 @@
 #include <dirent.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "../cmd_types.h"
-#include "../mytypes.h"
-#include "ioports.h"
-#include "serial_io.h"
-#include "queue/ollist_threads_rw.h"
-#include "queue/cllist_threads_rw.h"
-#include "tasks.h"
+#include "../../cmd_types.h"
+#include "../../mytypes.h"
+#include "../ioports.h"
+#include "../serial_io.h"
+#include "../queue/ollist_threads_rw.h"
+#include "../queue/cllist_threads_rw.h"
+#include "../tasks.h"
 //#include "cs_client/config_file.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
@@ -701,6 +701,9 @@ UCHAR timer2_task(int test)
 	time_t T;
 	struct tm tm;
 
+	T = time(NULL);
+	tm = *localtime(&T);
+	printf("\n154: %02d:%02d\n",tm.tm_min,tm.tm_sec);
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 	start_time = time(NULL);
 	
