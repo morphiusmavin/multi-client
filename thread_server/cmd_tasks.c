@@ -351,14 +351,6 @@ UCHAR get_host_cmd_task(int test)
 				case SET_TIME:
 					curtime2 = 0L;
 					j = 0;
-
-/*
-					for(i = 0;i < msg_len/2+2;i++)
-					{
-						tempx[i] = msg_buf2[i];
-//							write_serial2(tempx[i]);
-					}
-*/
 					tempx[msg_len-2] = 'M';
 					memset(temp_time,0,sizeof(temp_time));
 					i = 0;
@@ -367,89 +359,62 @@ UCHAR get_host_cmd_task(int test)
 					while(*(pch++) != '/' && i < msg_len)
 					{
 						i++;
-//						printf("%c",*pch);
 					}
 					memcpy(&temp_time[0],&tempx[0],i);
 					i = atoi(temp_time);
-//					printf("mon: %d\r\n",i - 1);
 					pt->tm_mon = i - 1;
 					i = 0;
 
 					while(*(pch++) != '/' && i < msg_len)
 					{
 						i++;
-//						printf("%c",*pch);
 					}
 					memset(temp_time,0,sizeof(temp_time));
 					memcpy(temp_time,pch-i-1,i);
-//					printf("%s\n",temp_time);
 					i = atoi(temp_time);
 					pt->tm_mday = i;
-//					printf("day: %d\r\n",i);
-			//		return 0;
-
 					i = 0;
 					while(*(pch++) != ' ' && i < msg_len)
 					{
 						i++;
-//						printf("%c\r\n",*pch);
 					}
-
 					memset(temp_time,0,sizeof(temp_time));
 					memcpy(temp_time,pch-3,2);
 					i = atoi(temp_time);
 					i += 100;
 					pt->tm_year = i;
-//					printf("year: %d\r\n",i-100);
-			//		return 0;
 					i = 0;
 
 					while(*(pch++) != ':' && i < msg_len)
 						i++;
 					memset(temp_time,0,sizeof(temp_time));
 					memcpy(temp_time,pch-i-1,i);
-//					printf("%s \n",temp_time);
 					i = atoi(temp_time);
 					pt->tm_hour = i;
-//				printf("hour: %d\r\n",i);
-			//		return 0;
-
 					i = 0;
 					while(*(pch++) != ':' && i < msg_len)
 						i++;
 					memset(temp_time,0,sizeof(temp_time));
 					memcpy(temp_time,pch-3,2);
-//					printf("%s \n",temp_time);
 					i = atoi(temp_time);
 					pt->tm_min = i;
-//					printf("min: %d\r\n",i);
-
 					i = 0;
 					while(*(pch++) != ' ' && i < msg_len)
 						i++;
 					memset(temp_time,0,sizeof(temp_time));
 					memcpy(temp_time,pch-3,2);
-//					printf("%s \n",temp_time);
 					i = atoi(temp_time);
 					pt->tm_sec = i;
-//					printf("sec: %d\r\n",i);
-//					printf("%c %x\n",*pch,*pch);
 					if(*pch == 'P')
 					{
-//						printf("PM\n");
 						pt->tm_hour += 12;
 					}
-
 					curtime2 = mktime(pt);
 					stime(pcurtime2);
-
 					gettimeofday(&mtv, NULL);
 					curtime2 = mtv.tv_sec;
 					strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 					printf("time: %s\n",tempx);
-
-//						time_set = 1;
-//#endif
 					break;
 
 				case GET_TIME:
@@ -457,7 +422,6 @@ UCHAR get_host_cmd_task(int test)
 					curtime2 = mtv.tv_sec;
 					strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 					printf(tempx);
-//						send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,GET_TIME);
 					break;
 
 				case BAD_MSG:

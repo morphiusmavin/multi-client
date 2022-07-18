@@ -33,6 +33,7 @@ namespace EpServerEngineSampleClient
 		bool allon = false;
 		int single_select = 0;
 		int timer_tick = 0;
+		int no_lights = 8;
 
 		List<String> on_label_list = new List<String>();
 		//List<String> off_label_list = new List<String>();
@@ -313,7 +314,11 @@ namespace EpServerEngineSampleClient
 			SendCmd(6);
 			ToggleButton(5);
 		}
-
+		private void btnBench_Click(object sender, EventArgs e)
+		{
+			SendCmd(7);
+			ToggleButton(6);
+		}
 		private void btnAll_Click(object sender, EventArgs e)
 		{
 			int i;
@@ -324,10 +329,11 @@ namespace EpServerEngineSampleClient
 			SendCmd(4);
 			SendCmd(5);
 			SendCmd(6);
+			SendCmd(7);
 			allon = !allon;
 			if (allon)
 			{
-				for (i = 0; i < 7; i++)
+				for (i = 0; i < no_lights; i++)
 				{
 					status[i] = true;
 					button_list[i].Ctl.Text = "ON";
@@ -336,7 +342,7 @@ namespace EpServerEngineSampleClient
 			}
 			else
 			{
-				for (i = 0; i < 7; i++)
+				for (i = 0; i < no_lights; i++)
 				{
 					status[i] = false;
 					button_list[i].Ctl.Text = "OFF";
@@ -424,5 +430,7 @@ namespace EpServerEngineSampleClient
 		{
 			timer1.Enabled = true;
 		}
+
+		
 	}
 }

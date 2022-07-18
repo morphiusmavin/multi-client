@@ -35,12 +35,14 @@ namespace EpServerEngineSampleClient
         private PlayerDlg playdlg = null;
         private GarageForm garageform = null;
         private TestBench testbench = null;
+        private WinCLMsg winclmsg = null;
 //        private BluetoothForm bluetoothform = null;
         private ClientDest clientdest = null;
         private SetNextClient setnextclient = null;
         private Child_Scrolling_List slist = null;
         private int AvailClientCurrentSection = 0;
         private bool player_active = false;
+        private bool clients_inited = false;
 
         private List<ClientParams> client_params;
         private List<ClientsAvail> clients_avail;
@@ -88,11 +90,14 @@ namespace EpServerEngineSampleClient
 
             garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
+            winclmsg = new WinCLMsg();
+            winclmsg.SetClient(m_client);
             //bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
             clientdest = new ClientDest();
             clientdest.SetClient(m_client);
             setnextclient = new SetNextClient();
             setnextclient.SetClient(m_client);
+            cbWhichWinClient.SelectedIndex = 0;
 
             slist = new Child_Scrolling_List(m_client);
             slist.Enable_Dlg(false);
@@ -178,6 +183,8 @@ namespace EpServerEngineSampleClient
                     playdlg = new PlayerDlg("g:\\rock\\wavefiles", m_client);
                 else if (which_winclient == 1)
                     playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
+                if (which_winclient > 0)    // only Second_Windows does the set time in the timer callback
+                    clients_inited = true;
                 if (!client_connected)      // let's connect here! (see timer callback at end of file)
                 {
                     m_hostname = cbIPAdress.Items[selected_address].ToString();
@@ -212,7 +219,6 @@ namespace EpServerEngineSampleClient
             }
             else AddMsg("chose which client this is");
         }
-            
         public void OnConnected(INetworkClient client, ConnectStatus status)
         {
             //AddMsg(client.HostName);
@@ -238,6 +244,7 @@ namespace EpServerEngineSampleClient
                     btnShowParams.Enabled = true;
                     clients_avail[8].socket = 1;        // 8 is _SERVER (this is bad!)
                     timer1.Enabled = true;
+                    AddMsg("connected");
                 }
             }
             else AddMsg(client.HostName);
@@ -254,7 +261,6 @@ namespace EpServerEngineSampleClient
                 //AddMsg("disconnected 1");
             }
         }
-        
         protected override void OnClosed(EventArgs e)
         {
             AddMsg("closing...");
@@ -262,15 +268,16 @@ namespace EpServerEngineSampleClient
             {
                 please_lets_disconnect = 1;
             }
-            playdlg.Dispose();
+            //play_aliens_clip();
             garageform.Dispose();
             testbench.Dispose();
+            winclmsg.Dispose();
             //bluetoothform.Dispose();
             clientdest.Dispose();
             setnextclient.Dispose();
+            playdlg.Dispose();
             base.OnClosed(e);
         }
-        
         public void OnReceived(INetworkClient client, Packet receivedPacket)
         {
             // anything that gets sent here gets sent to home server if it's up
@@ -290,17 +297,10 @@ namespace EpServerEngineSampleClient
             {
                 testbench.Process_Msg(receivedPacket.PacketRaw);
             }
-/*
-            else if (bluetoothform.Visible == true)
-            {
-                bluetoothform.Process_Msg(receivedPacket.PacketRaw);
-            }
-*/
             else
                 Process_Msg(receivedPacket.PacketRaw);
         }
-        
-        private void RedrawClientListBox()
+         private void RedrawClientListBox()
         {
             lbAvailClients.Items.Clear();
             int i = 0;
@@ -544,11 +544,6 @@ namespace EpServerEngineSampleClient
                     AddMsg(ret);
                     break;
 
-                case "NEW_PASSWORD1":
-                    password = ret;
-                    AddMsg(password);
-                    break;
-
                 default:
                     break;
             }
@@ -636,7 +631,6 @@ namespace EpServerEngineSampleClient
         // DlgSetParams dialog
         private void ShowParamsClick(object sender, EventArgs e)
         {
-            UpdateClientInfo();
             return;
             if (m_client.IsConnectionAlive)
             {
@@ -806,8 +800,7 @@ namespace EpServerEngineSampleClient
         }
         private void Dialog1_Click(object sender, EventArgs e)
         {
-            //SetTime(9);
-            lbAvailClients.Items.Clear();
+            
         }
         private void myTimerTick(object sender, EventArgs e)
         {
@@ -819,15 +812,24 @@ namespace EpServerEngineSampleClient
                 RedrawClientListBox();
                 
             }
-            if (tick == 30)
+            if (clients_inited == false && tick == 30)
             {
                 AddMsg("set time");
-                SetTime(8);
+                foreach (ClientsAvail cl in clients_avail)
+                {
+                    if (cl.type == 1 && cl.socket > 0)  // set the time on any server/clients in the active list
+                    {
+                        AddMsg(cl.label);
+                        SetTime(cl.index);
+                    }
+                }
+
             }
-            if(tick == 35)
+            if (clients_inited == false && tick == 35)
 			{
                 UpdateClientInfo();
-			}
+                clients_inited = true;
+            }
             if (tick > 300)
 			{
                 if (!player_active)
@@ -1179,11 +1181,25 @@ namespace EpServerEngineSampleClient
 		{
             SendClientMsg(svrcmd.GetCmdIndexI("SHELL_AND_RENAME"), " ", true);
         }
-
 		private void cbWhichWinClient_SelectedIndexChanged(object sender, EventArgs e)
 		{
             which_winclient = cbWhichWinClient.SelectedIndex;
             AddMsg(which_winclient.ToString());
 		}
+		private void btnWinClMsg_Click(object sender, EventArgs e)
+		{
+            winclmsg.Enable_Dlg(true);
+            winclmsg.StartPosition = FormStartPosition.Manual;
+            winclmsg.Location = new Point(100, 10);
+
+            if (winclmsg.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+                //                this.txtResult.Text = "Cancelled";
+            }
+            winclmsg.Enable_Dlg(false);
+        }
 	}
 }

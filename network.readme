@@ -1,55 +1,10 @@
 todo: 
 
-1) need a cmd to shutdown server gracefully after all clients have logged off (shutdown)
-2) if win client logs in after client(s) logged in, we need a way to get the client info 
-		to the win client (done SEND_CLIENT_LIST)
-3) need some kind of protocol for what clients sends msg's to 
-4) 'next_client' in tasks.h is used for when client sends msg to other client 
-	each client needs to keep track of what other clients are logged in so it
-	can set the 'next_client' to the next one logged in. If 'next_client' is 
-	set to '0' - currently, the win client sets which client sends to which.
-5)  need a way to set any lights on a timer: come on at certain time and go off (done)
-6) possibly change the lights on server to instead of XYZ_ON/OFF just go XYZ and 
-	toggle it on or off depending on state and don't mess with db like I did in 
-	the 147 client for the test bench (done)
-7) take out CLIENT_RECONNECT (done)
-8) reboot, exit to shell and shutdown all work for clients and server, except
+1) reboot, exit to shell and shutdown all work for clients and server, except
 	exit to shell doesn't work for server (not that I would ever want to exit to shell on server tho)
-9) need some way to put each light/io port on a timer to go on/off or at least set 
-	any port to go off after a delay (e.g. leaving garage so just need to have light on 
-	long enough to see to get to cabin) (done)
-10) input for motion sensors (use odata database?)
-11) if both win clients are up one should be doing some things - have a way for win clients 
+2) input for motion sensors (use odata database?)
+3) if both win clients are up one should be doing some things - have a way for win clients 
 	to talk to each other 
-
-After separating the sched program from the sockets program:
-
-sockets:
-WinClReadTask gets a msg from windows client 
-	if to server, send queue msg to cmd_host_task of sched
-	if to client, send tcp msg to client 
-
-ReadTask gets tcp msg from client (params: cmd, dest, msg)
-	if to server send queue msg to cmd_host_task of sched 
-	if to client send tcp to other client
-
-sched:
-just gets msg's from sockets and dispatches to cmd_host_task 
-convert other tcp send's to queue msg's 
-
-sock_qid sched -> sock
-sched_qid sock -> sched
-
-client gets tcp msg's in cmd task of sock_mgt 
-then uses recv_cmd_host_qid to send msg to cmd task in cmd_tasks.c 
-any of the case stmts can use msgsnd(send_cmd_host_qid... to send 
-a msg to (msgrcv(send_cmd_host_qid, in recv_msg_task() of sock_mgt 
-which forwards the msg to tcp using send_msg() 
-
-add 3 commands:
-SET_TIMER		- set the timer of one of the clients 
-START_TIMER		- start the timer of one of the clients
-STOP_TIMER		- stop the timer of one of the clients
 
 to add new commands:
 
@@ -69,17 +24,15 @@ When changing the number or order of clients:
 3) The collection field in the combobox of clients in ClientDest.cs 
 	needs to be changed or the timer stuff won't work 
 
+'next_client' in tasks.h is used for when client sends msg to other client 
+each client needs to keep track of what other clients are logged in so it
+can set the 'next_client' to the next one logged in. If 'next_client' is 
+set to '0' - currently, the win client sets which client sends to which.
+
 can't send/recv more than 255 bytes using send_msg() or get_msg() (TCP)
 If server gets msg to shutdown, reboot, etc. then it must log off all 
 clients 
 If client(s) gets msg to shutdown, reboot, etc. then server stays up 
-
-each client has a sep. subdir so that the basic_controls_task can 
-respond to diff commands and each timer and serial port can do diff stuff.
-(or)
-have a client program which just handles the tcp and send/recv msg's 
-to/from a custom gen program for each client which runs the timers,
-serial ports and the io (basic_controls_task)
 
 In the first case all the commands would be in the cmd_types.h and would 
 be limited to 255 total commands. 

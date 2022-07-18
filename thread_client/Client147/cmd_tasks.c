@@ -335,6 +335,7 @@ UCHAR get_host_cmd_task2(int test)
 						sprintf(tempx,"%d %d %d %d %d",this_client_index, trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
 						printf("send timeup: %s\n",tempx);
 						msg_len = strlen(tempx);
+						uSleep(0,TIME_DELAY/2);
 						send_sock_msg(tempx, msg_len, UPTIME_MSG, 8);
 						break;
 
@@ -478,18 +479,13 @@ UCHAR get_host_cmd_task2(int test)
 //							printf("PM\n");
 							pt->tm_hour += 12;
 						}
-
 						curtime2 = mktime(pt);
 						stime(pcurtime2);
-/*
-uSleep(0,TIME_DELAY/3);
+						uSleep(0,TIME_DELAY/3);
 						gettimeofday(&mtv, NULL);
 						curtime2 = mtv.tv_sec;
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 						printf("%s\n",tempx);
-*/
-//						time_set = 1;
-//#endif
 						break;
 
 					case GET_TIME:

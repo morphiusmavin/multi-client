@@ -422,7 +422,18 @@ startover:
 			memcpy(msg.mtext + 3,tempx,msg_len);
 			// send msg's to sched 
 
-			if(win_client_to_client_sock == _SERVER)
+			if(win_client_to_client_sock == 0 && client_table[0].socket > 0)
+			{
+				send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,cmd);
+				//printf("%s\n",tempx);
+			}
+			else if(win_client_to_client_sock == 1 && client_table[1].socket > 0)
+			{
+				send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,cmd);
+				//printf("%s\n",tempx);
+			}
+
+			else if(win_client_to_client_sock == _SERVER)
 			{
 				//printf("msg to cmd_host on server: %s %d\n",msg.mtext + 3,cmd);
 				//print_cmd(cmd);
@@ -864,7 +875,8 @@ UCHAR tcp_monitor_task(int test)
 				if(strncmp(client_table[i].ip,tempx,3) == 0)
 				{
 					client_table[i].socket = new_socket;
-					//printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, client_table[i].label,client_table[i].socket);
+					printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, 
+							client_table[i].label,client_table[i].socket);
 					memset(tempx,0,sizeof(tempx));
 					sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
 					//printf("should be sending msg to win cl: %s\n",tempx);

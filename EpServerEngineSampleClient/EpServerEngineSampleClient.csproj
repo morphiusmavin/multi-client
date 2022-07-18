@@ -168,6 +168,12 @@
     <Compile Include="ServerCmds.cs" />
     <Compile Include="SListTypes.cs" />
     <Compile Include="UIFormat.cs" />
+    <Compile Include="WinCLMsg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinCLMsg.Designer.cs">
+      <DependentUpon>WinCLMsg.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ChangeDB.resx">
       <DependentUpon>ChangeDB.cs</DependentUpon>
     </EmbeddedResource>
@@ -219,6 +225,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="WifiIOT.resx">
       <DependentUpon>WifiIOT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinCLMsg.resx">
+      <DependentUpon>WinCLMsg.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>

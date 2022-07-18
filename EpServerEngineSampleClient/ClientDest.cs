@@ -43,7 +43,63 @@ namespace EpServerEngineSampleClient
 			m_client = client;
 			svrcmd.SetClient(m_client);
 		}
-		delegate void AddMsg_Involk(string message);
+		public void OnReceived(INetworkClient client, Packet receivedPacket)
+		{
+			Process_Msg(receivedPacket.PacketRaw);
+			//AddMsg(receivedPacket.ToString());
+		}
+        private void Process_Msg(byte[] bytes)
+        {
+            string substr;
+            int type_msg;
+            string ret = null;
+            int i = 0;
+
+            char[] chars = new char[bytes.Length / sizeof(char) + 2];
+            char[] chars2 = new char[bytes.Length / sizeof(char)];
+            // src srcoffset dest destoffset len
+            System.Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
+            type_msg = chars[0];
+            System.Buffer.BlockCopy(bytes, 2, chars2, 0, bytes.Length - 2);
+            ret = new string(chars2);
+
+            //            string str = Enum.GetName(typeof(msg_types), type_msg);
+            string str = svrcmd.GetName(type_msg);
+            //AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
+
+            switch (str)
+            {
+                case "UPTIME_MSG":
+                    //                    ret = ret.Substring(1);
+                    AddMsg("uptime_msg");
+                    AddMsg(ret);
+                    break;
+
+                case "SEND_MESSAGE":
+                    AddMsg("str: " + str + " " + str.Length.ToString());
+                    AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
+                    AddMsg(ret);
+                    break;
+
+                case "CURRENT_TIME":
+                    break;
+
+                case "SERVER_UPTIME":
+                    break;
+
+
+                case "GET_TIME":
+                    break;
+
+                case "SEND_STATUS":
+                    AddMsg(ret);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        delegate void AddMsg_Involk(string message);
 		public void AddMsg(string message)
 		{
 			if (tbReceived.InvokeRequired)

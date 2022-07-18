@@ -41,6 +41,8 @@
 			this.tbServerTime = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.label4 = new System.Windows.Forms.Label();
+			this.cbWhichWinClient = new System.Windows.Forms.ComboBox();
 			this.cbIPAdress = new System.Windows.Forms.ComboBox();
 			this.btnShutdown = new System.Windows.Forms.Button();
 			this.btnRescan = new System.Windows.Forms.Button();
@@ -63,8 +65,7 @@
 			this.tbSendMsg = new System.Windows.Forms.TextBox();
 			this.btnCabinLights = new System.Windows.Forms.Button();
 			this.button1 = new System.Windows.Forms.Button();
-			this.cbWhichWinClient = new System.Windows.Forms.ComboBox();
-			this.label4 = new System.Windows.Forms.Label();
+			this.btnWinClMsg = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -199,6 +200,29 @@
 			this.groupBox1.TabIndex = 34;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "TCP Status";
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label4.Location = new System.Drawing.Point(8, 198);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(93, 20);
+			this.label4.TabIndex = 33;
+			this.label4.Text = "This Client";
+			// 
+			// cbWhichWinClient
+			// 
+			this.cbWhichWinClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.cbWhichWinClient.FormattingEnabled = true;
+			this.cbWhichWinClient.Items.AddRange(new object[] {
+            "Second_Windows7",
+            "Win7-x64"});
+			this.cbWhichWinClient.Location = new System.Drawing.Point(101, 192);
+			this.cbWhichWinClient.Name = "cbWhichWinClient";
+			this.cbWhichWinClient.Size = new System.Drawing.Size(172, 28);
+			this.cbWhichWinClient.TabIndex = 32;
+			this.cbWhichWinClient.SelectedIndexChanged += new System.EventHandler(this.cbWhichWinClient_SelectedIndexChanged);
 			// 
 			// cbIPAdress
 			// 
@@ -446,28 +470,17 @@
 			this.button1.UseVisualStyleBackColor = true;
 			this.button1.Click += new System.EventHandler(this.button1_Click_1);
 			// 
-			// cbWhichWinClient
+			// btnWinClMsg
 			// 
-			this.cbWhichWinClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.cbWhichWinClient.FormattingEnabled = true;
-			this.cbWhichWinClient.Items.AddRange(new object[] {
-            "Second_Windows7",
-            "Win7-x64"});
-			this.cbWhichWinClient.Location = new System.Drawing.Point(101, 192);
-			this.cbWhichWinClient.Name = "cbWhichWinClient";
-			this.cbWhichWinClient.Size = new System.Drawing.Size(172, 28);
-			this.cbWhichWinClient.TabIndex = 32;
-			this.cbWhichWinClient.SelectedIndexChanged += new System.EventHandler(this.cbWhichWinClient_SelectedIndexChanged);
-			// 
-			// label4
-			// 
-			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(8, 198);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(93, 20);
-			this.label4.TabIndex = 33;
-			this.label4.Text = "This Client";
+			this.btnWinClMsg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnWinClMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnWinClMsg.Location = new System.Drawing.Point(15, 495);
+			this.btnWinClMsg.Name = "btnWinClMsg";
+			this.btnWinClMsg.Size = new System.Drawing.Size(235, 61);
+			this.btnWinClMsg.TabIndex = 47;
+			this.btnWinClMsg.Text = "Win Cl Msg";
+			this.btnWinClMsg.UseVisualStyleBackColor = false;
+			this.btnWinClMsg.Click += new System.EventHandler(this.btnWinClMsg_Click);
 			// 
 			// FrmSampleClient
 			// 
@@ -475,6 +488,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1140, 688);
+			this.Controls.Add(this.btnWinClMsg);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.btnCabinLights);
 			this.Controls.Add(this.tbSendMsg);
@@ -559,6 +573,7 @@
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.ComboBox cbWhichWinClient;
+		private System.Windows.Forms.Button btnWinClMsg;
 	}
 }
 

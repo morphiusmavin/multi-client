@@ -722,14 +722,7 @@ UCHAR timer2_task(int test)
 			start_time = this_time;
 			trunning_seconds = diff_time;
 			//printf("sec: %d\n",trunning_seconds);
-
-			if(trunning_minutes == 15 || trunning_minutes == 30 || trunning_minutes == 45)
-			{
-				T = time(NULL);
-				tm = *localtime(&T);
-				printf("\n%02d:%02d\n",tm.tm_min,tm.tm_sec);
-			}
-
+		
 			if(++trunning_minutes > 59)
 			{
 				T = time(NULL);
