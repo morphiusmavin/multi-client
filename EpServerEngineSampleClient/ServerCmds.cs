@@ -32,6 +32,10 @@ namespace EpServerEngineSampleClient
 			BENCH_3V3_2,
 			BENCH_LIGHT1,
 			BENCH_LIGHT2,
+			CHICK_WATER,
+			SET_CHICK_WATER_ON,
+			SET_CHICK_WATER_OFF,
+			CHICK_WATER_ENABLE,
 			GET_TEMP4,
 			SHUTDOWN_IOBOX,
 			REBOOT_IOBOX,
@@ -60,7 +64,9 @@ namespace EpServerEngineSampleClient
 			STOP_TIMER,
 			SET_NEXT_CLIENT,
 			SEND_NEXT_CLIENT,
-			UPDATE_CLIENT_INFO
+			UPDATE_CLIENT_INFO,
+			AREYOUTHERE,
+			YESIMHERE
 		}
 
 		public ServerCmds()
@@ -170,7 +176,31 @@ namespace EpServerEngineSampleClient
 			}
 
 		}
-		public void Send_ClCmd(int msg, int index, int iparam)
+		public int Send_ClCmd(int msg, int index, int iparam)
+		{
+			var temp = index;
+			var temp2 = iparam & 0x00FF;
+			var temp3 = iparam >> 8;
+			byte[] atemp = BitConverter.GetBytes(temp);
+			byte[] a2temp = BitConverter.GetBytes(temp2);
+			byte[] a3temp = BitConverter.GetBytes(temp3);
+			//AddMsg(atemp.Count().ToString());
+			byte[] ctemp = new byte[atemp.Count() + a2temp.Count() + a3temp.Count() + 2];
+			string cmsg = GetName(msg);
+			ctemp[0] = GetCmdIndexB(cmsg);
+			//AddMsg(ctemp.Count().ToString());
+			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+			System.Buffer.BlockCopy(a2temp, 0, ctemp, 4, a2temp.Count());
+			System.Buffer.BlockCopy(a3temp, 0, ctemp, 6, a2temp.Count());
+			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+			if (m_client.IsConnectionAlive)
+			{
+				m_client.Send(packet);
+			}
+			return ctemp.Count();
+
+		}
+		public void Send_ClCmd(int msg, int index, long iparam)
 		{
 			var temp = index;
 			var temp2 = iparam;

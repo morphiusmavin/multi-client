@@ -39,6 +39,12 @@ namespace EpServerEngineSampleClient
 			this.label3 = new System.Windows.Forms.Label();
 			this.label1 = new System.Windows.Forms.Label();
 			this.btnStartTimer2 = new System.Windows.Forms.Button();
+			this.tbWaterOffTime = new System.Windows.Forms.TextBox();
+			this.tbWaterOnTime = new System.Windows.Forms.TextBox();
+			this.btnOnTime = new System.Windows.Forms.Button();
+			this.btnClrScrn = new System.Windows.Forms.Button();
+			this.btnOffTime = new System.Windows.Forms.Button();
+			this.cbWaterEnabled = new System.Windows.Forms.CheckBox();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -63,11 +69,12 @@ namespace EpServerEngineSampleClient
 			// tbReceived
 			// 
 			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbReceived.Location = new System.Drawing.Point(206, 150);
+			this.tbReceived.Location = new System.Drawing.Point(10, 313);
 			this.tbReceived.Margin = new System.Windows.Forms.Padding(1);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
-			this.tbReceived.Size = new System.Drawing.Size(218, 335);
+			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.tbReceived.Size = new System.Drawing.Size(414, 207);
 			this.tbReceived.TabIndex = 3;
 			// 
 			// cbTimerSeconds
@@ -102,7 +109,7 @@ namespace EpServerEngineSampleClient
 			// 
 			// btnStartTimer
 			// 
-			this.btnStartTimer.Location = new System.Drawing.Point(12, 150);
+			this.btnStartTimer.Location = new System.Drawing.Point(12, 138);
 			this.btnStartTimer.Name = "btnStartTimer";
 			this.btnStartTimer.Size = new System.Drawing.Size(75, 23);
 			this.btnStartTimer.TabIndex = 6;
@@ -112,7 +119,7 @@ namespace EpServerEngineSampleClient
 			// 
 			// btnStopTimer
 			// 
-			this.btnStopTimer.Location = new System.Drawing.Point(12, 210);
+			this.btnStopTimer.Location = new System.Drawing.Point(12, 198);
 			this.btnStopTimer.Name = "btnStopTimer";
 			this.btnStopTimer.Size = new System.Drawing.Size(75, 23);
 			this.btnStopTimer.TabIndex = 7;
@@ -154,7 +161,7 @@ namespace EpServerEngineSampleClient
 			// 
 			// btnStartTimer2
 			// 
-			this.btnStartTimer2.Location = new System.Drawing.Point(12, 179);
+			this.btnStartTimer2.Location = new System.Drawing.Point(12, 167);
 			this.btnStartTimer2.Name = "btnStartTimer2";
 			this.btnStartTimer2.Size = new System.Drawing.Size(75, 23);
 			this.btnStartTimer2.TabIndex = 9;
@@ -162,12 +169,74 @@ namespace EpServerEngineSampleClient
 			this.btnStartTimer2.UseVisualStyleBackColor = true;
 			this.btnStartTimer2.Click += new System.EventHandler(this.btnStartTimer2_Click);
 			// 
+			// tbWaterOffTime
+			// 
+			this.tbWaterOffTime.Location = new System.Drawing.Point(306, 167);
+			this.tbWaterOffTime.Name = "tbWaterOffTime";
+			this.tbWaterOffTime.Size = new System.Drawing.Size(100, 20);
+			this.tbWaterOffTime.TabIndex = 10;
+			this.tbWaterOffTime.TextChanged += new System.EventHandler(this.tbWaterOffTime_TextChanged);
+			// 
+			// tbWaterOnTime
+			// 
+			this.tbWaterOnTime.Location = new System.Drawing.Point(306, 198);
+			this.tbWaterOnTime.Name = "tbWaterOnTime";
+			this.tbWaterOnTime.Size = new System.Drawing.Size(100, 20);
+			this.tbWaterOnTime.TabIndex = 11;
+			// 
+			// btnOnTime
+			// 
+			this.btnOnTime.Location = new System.Drawing.Point(181, 198);
+			this.btnOnTime.Name = "btnOnTime";
+			this.btnOnTime.Size = new System.Drawing.Size(100, 23);
+			this.btnOnTime.TabIndex = 12;
+			this.btnOnTime.Text = "On Time";
+			this.btnOnTime.UseVisualStyleBackColor = true;
+			this.btnOnTime.Click += new System.EventHandler(this.btnWaterTimer_Click);
+			// 
+			// btnClrScrn
+			// 
+			this.btnClrScrn.Location = new System.Drawing.Point(325, 275);
+			this.btnClrScrn.Name = "btnClrScrn";
+			this.btnClrScrn.Size = new System.Drawing.Size(97, 23);
+			this.btnClrScrn.TabIndex = 13;
+			this.btnClrScrn.Text = "Clear Screen";
+			this.btnClrScrn.UseVisualStyleBackColor = true;
+			this.btnClrScrn.Click += new System.EventHandler(this.btnClrScrn_Click);
+			// 
+			// btnOffTime
+			// 
+			this.btnOffTime.Location = new System.Drawing.Point(181, 167);
+			this.btnOffTime.Name = "btnOffTime";
+			this.btnOffTime.Size = new System.Drawing.Size(100, 23);
+			this.btnOffTime.TabIndex = 14;
+			this.btnOffTime.Text = "Off Time";
+			this.btnOffTime.UseVisualStyleBackColor = true;
+			this.btnOffTime.Click += new System.EventHandler(this.button1_Click);
+			// 
+			// cbWaterEnabled
+			// 
+			this.cbWaterEnabled.AutoSize = true;
+			this.cbWaterEnabled.Location = new System.Drawing.Point(181, 142);
+			this.cbWaterEnabled.Name = "cbWaterEnabled";
+			this.cbWaterEnabled.Size = new System.Drawing.Size(126, 17);
+			this.cbWaterEnabled.TabIndex = 15;
+			this.cbWaterEnabled.Text = "Water Timer Enabled";
+			this.cbWaterEnabled.UseVisualStyleBackColor = true;
+			this.cbWaterEnabled.CheckedChanged += new System.EventHandler(this.WaterEnableCheckChanged);
+			// 
 			// ClientDest
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(434, 495);
+			this.ClientSize = new System.Drawing.Size(434, 530);
+			this.Controls.Add(this.cbWaterEnabled);
+			this.Controls.Add(this.btnOffTime);
+			this.Controls.Add(this.btnClrScrn);
+			this.Controls.Add(this.btnOnTime);
+			this.Controls.Add(this.tbWaterOnTime);
+			this.Controls.Add(this.tbWaterOffTime);
 			this.Controls.Add(this.btnStartTimer2);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.btnStopTimer);
@@ -175,7 +244,7 @@ namespace EpServerEngineSampleClient
 			this.Controls.Add(this.tbReceived);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
 			this.Name = "ClientDest";
-			this.Text = "ClientDest";
+			this.Text = "Timers";
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.ResumeLayout(false);
@@ -195,5 +264,11 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button btnStartTimer2;
+		private System.Windows.Forms.TextBox tbWaterOffTime;
+		private System.Windows.Forms.TextBox tbWaterOnTime;
+		private System.Windows.Forms.Button btnOnTime;
+		private System.Windows.Forms.Button btnClrScrn;
+		private System.Windows.Forms.Button btnOffTime;
+		private System.Windows.Forms.CheckBox cbWaterEnabled;
 	}
 }

@@ -247,7 +247,7 @@ namespace EpServerEngineSampleClient
 		{
 			string cmd = on_label_list[which];
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Send_ClCmd(offset, 3, "test");		// TODO: set this to whatever client is offset 3 in assign_client_table.c
+			svrcmd.Send_ClCmd(offset, 3, !status[which]);		// TODO: set this to whatever client is offset 3 in assign_client_table.c
 			prev_status[which] = status[which];
 			ChangeStatus(which);
 			IfStatusChanged(which);

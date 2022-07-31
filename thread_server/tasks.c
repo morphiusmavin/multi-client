@@ -710,45 +710,24 @@ UCHAR timer2_task(int test)
 {
 	int i,j;
 	char tempx[20];
-	static int prev_light_sensor_value;
-	static int time_lapse;
 	O_DATA *otp;
 	O_DATA **otpp = &otp;
 	O_DATA *otp2;
 	O_DATA **otpp2 = &otp2;
 	int bank = 0;
-	UCHAR mask;
-	int index = 0;
-	time_lapse = 0;
-	time_t this_time, start_time, diff_time;
-	time_t T;
-	struct tm tm;
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 
-	start_time = time(NULL);
-	
 	while(TRUE)
 	{
 		uSleep(1,0);
-		
+		//printf("%d : %d -",trunning_minutes, trunning_seconds);
 		if(++trunning_seconds > 59)
 		{
-			this_time = time(NULL);
-			diff_time = this_time - start_time;
-			//printf("%ld\n",diff_time);
-			diff_time -= 60L;
-			//printf("%ld\n",diff_time);
-			start_time = this_time;
-			trunning_seconds = diff_time;
-			//printf("sec: %d\n",trunning_seconds);
-
+			trunning_seconds = 0;
 			if(++trunning_minutes > 59)
 			{
-				T = time(NULL);
-				tm = *localtime(&T);
-				printf("\n%02d:%02d\n",tm.tm_min,tm.tm_sec);
 				trunning_minutes = 0;
-				if(++trunning_hours > 24)
+				if(++trunning_hours > 23)
 				{
 					trunning_hours = 0;
 					trunning_days++;

@@ -30,13 +30,21 @@ namespace EpServerEngineSampleClient
 		private List<ClientsAvail> clients_avail;
 		int sindex, iparam;
 		int timer_seconds = 0;
-
+		int water_off_time = 3600;	// water off 1 hour
+		int water_on_time = 30;     // water on 30 seconds
+		bool water_enabled = false;
 		public ClientDest()
 		{
 			InitializeComponent();
 			sindex = 0;
 			cbTimerSeconds.SelectedIndex = 0;
 			iparam = 0;
+			tbWaterOffTime.Text = water_off_time.ToString();
+			tbWaterOnTime.Text = water_on_time.ToString();
+			btnOffTime.Enabled = false;
+			btnOnTime.Enabled = false;
+			tbWaterOffTime.Enabled = false;
+			tbWaterOnTime.Enabled = false;
 		}
 		public void SetClient(INetworkClient client)
 		{
@@ -162,22 +170,91 @@ namespace EpServerEngineSampleClient
 		}
 		private void SendCmd(string cmd, int sindex, int dindex)
 		{
-			AddMsg(cmd + " " + sindex.ToString() + " " + dindex.ToString());
+			//AddMsg(cmd + " " + sindex.ToString() + " " + dindex.ToString());
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Send_ClCmd(offset, sindex, dindex);
+			int ret = svrcmd.Send_ClCmd(offset, sindex, dindex);
+			//AddMsg(ret.ToString());
 		}
-
 		private void btnStartTimer2_Click(object sender, EventArgs e)
 		{
 			SendCmd("START_TIMER2", sindex, iparam);
 		}
-
+		private void btnWaterTimer_Click(object sender, EventArgs e)
+		{
+			water_on_time = Int16.Parse(tbWaterOnTime.Text);
+			//AddMsg(water_on_time.ToString());
+			string cmd = "SET_CHICK_WATER_ON";
+			SendCmd(cmd, 3, water_on_time);
+		}
+		private void tbWaterOffTime_TextChanged(object sender, EventArgs e)
+		{
+			//water_off_time = Int16.TryParse()
+		}
+		/*void test_send(int msg, int index, int iparam)
+		{
+			var temp = index;
+			var temp2 = iparam & 0x00FF;
+			AddMsg("0: " + iparam.ToString());
+			AddMsg("1: " +temp2.ToString());
+			var temp3 = iparam >> 8;
+			AddMsg("2: " + temp3.ToString());
+			byte[] atemp = BitConverter.GetBytes(temp);
+			byte[] a2temp = BitConverter.GetBytes(temp2);
+			byte[] a3temp = BitConverter.GetBytes(temp3);
+			AddMsg(atemp.Count().ToString());
+			byte[] ctemp = new byte[atemp.Count() + a2temp.Count() + a3temp.Count() + 2];
+			string cmsg = svrcmd.GetName(msg);
+			ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
+			AddMsg(ctemp.Count().ToString());
+			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+			System.Buffer.BlockCopy(a2temp, 0, ctemp, 4, a2temp.Count());
+			System.Buffer.BlockCopy(a3temp, 0, ctemp, 6, a2temp.Count());
+			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+			//AddMsg(ctemp.Count().ToString() + " " + temp.ToString());
+			if (m_client.IsConnectionAlive)
+			{
+				m_client.Send(packet);
+			}
+		}*/
+		private void btnClrScrn_Click(object sender, EventArgs e)
+		{
+			tbReceived.Clear();
+		}
+		private void button1_Click(object sender, EventArgs e)
+		{
+			water_off_time = Int16.Parse(tbWaterOffTime.Text);  // shouldn't be > 15180 (seconds in a day)
+			//AddMsg(water_off_time.ToString());
+			string cmd = "SET_CHICK_WATER_OFF";
+			SendCmd(cmd, 3, water_off_time);
+		}
+		private void WaterEnableCheckChanged(object sender, EventArgs e)
+		{
+			if(cbWaterEnabled.Checked)
+			{
+				water_enabled = true;
+				btnOffTime.Enabled = true;
+				btnOnTime.Enabled = true;
+				tbWaterOffTime.Enabled = true;
+				tbWaterOnTime.Enabled = true;
+				int offset = svrcmd.GetCmdIndexI("CHICK_WATER_ENABLE");
+				svrcmd.Send_ClCmd(offset, 3, true);
+			}
+			else
+			{
+				water_enabled = false;
+				btnOffTime.Enabled = false;
+				btnOnTime.Enabled = false;
+				tbWaterOffTime.Enabled = false;
+				tbWaterOnTime.Enabled = false;
+				int offset = svrcmd.GetCmdIndexI("CHICK_WATER_ENABLE");
+				svrcmd.Send_ClCmd(offset, 3, false);
+			}
+		}
 		private void cbSource_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			sindex = cbSource.SelectedIndex;
 			sindex += 2;
 			AddMsg("source: " + sindex.ToString());
 		}
-		
 	}
 }

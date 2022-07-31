@@ -60,7 +60,9 @@ namespace EpServerEngineSampleClient
         private int timer_offset;
         private string sendmsgtext;
         int tick = 0;
+        int connected_tick = 0;
         int which_winclient = -1;
+        Int64 alarm_tick = 0;
 
         private string xml_dialog1_location = "c:\\Users\\daniel\\dev\\uiformat1.xml";
         private string xml_dialog2_location = "c:\\Users\\daniel\\dev\\uiformat2.xml";
@@ -201,6 +203,7 @@ namespace EpServerEngineSampleClient
                     tick = 0;
                     btnConnect.Text = "Disconnect";
                     client_connected = true;
+                    connected_tick = 0;
                     //AddMsg(GetLocalIPAddress());
                 }
                 else
@@ -258,6 +261,7 @@ namespace EpServerEngineSampleClient
                 btnConnect.Text = "Connect";
                 tbConnected.Text = "not connected";
                 btnShutdown.Enabled = false;
+
                 //AddMsg("disconnected 1");
             }
         }
@@ -275,13 +279,14 @@ namespace EpServerEngineSampleClient
             //bluetoothform.Dispose();
             clientdest.Dispose();
             setnextclient.Dispose();
-            playdlg.Dispose();
+            if(player_active)
+                playdlg.Dispose();
             base.OnClosed(e);
         }
         public void OnReceived(INetworkClient client, Packet receivedPacket)
         {
             // anything that gets sent here gets sent to home server if it's up
-            if (playdlg.Visible == true)
+            if (player_active && playdlg.Visible == true)
             {
                 playdlg.Process_Msg(receivedPacket.PacketRaw);
             }
@@ -339,6 +344,12 @@ namespace EpServerEngineSampleClient
 
             switch (str)
             {
+                case "AREYOUTHERE":
+                    tbServerTime.Text = ret;
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("YESIMHERE"), 8, ret);
+                    connected_tick = 0;
+                    break;
+
                 case "UPTIME_MSG":
                     //                    ret = ret.Substring(1);
                     AddMsg("uptime_msg");
@@ -805,6 +816,36 @@ namespace EpServerEngineSampleClient
         private void myTimerTick(object sender, EventArgs e)
         {
             tick++;
+            connected_tick++;
+            if(cbAlarm.Checked == true)
+			{
+                alarm_tick--;
+                tbAlarm.Text = alarm_tick.ToString();
+                if(alarm_tick == 0)
+				{
+                    cbAlarm.Checked = false;
+                    System.Media.SoundPlayer player;
+                    string song = "c:\\users\\Daniel\\Music\\White Bird.wav";
+                    player = new System.Media.SoundPlayer();
+                    player.SoundLocation = song;
+                    player.Play();
+                    player.Dispose();
+                }
+			}
+            //AddMsg(connected_tick.ToString());
+            /*
+            if(connected_tick == 10 && clients_avail[8].socket > 0)
+			{
+                playdlg.Dispose();
+                AddMsg("disconnecting");
+                btnConnect.Text = "Connect";
+                timer1.Enabled = false;
+                client_connected = false;
+                //play_aliens_clip();
+                m_client.Disconnect();
+                tbServerTime.Text = "offline";
+            }
+            */
             if (tick == 5)
             {
                 svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
@@ -1111,6 +1152,7 @@ namespace EpServerEngineSampleClient
                         cl.socket = -1;
                     }
                     svrcmd.Send_ClCmd(msg, cl.index, param);
+                    //AddMsg(cl.index.ToString());
                     // if cl.index == server then set disconnected flag
 
                     //if ((cl.index == 8) && (msg == REBOOT_IOBOX))
@@ -1201,5 +1243,11 @@ namespace EpServerEngineSampleClient
             }
             winclmsg.Enable_Dlg(false);
         }
+
+		private void tbAlarm_TextChanged(object sender, EventArgs e)
+		{
+            alarm_tick = Int64.Parse(tbAlarm.Text);
+            //AddMsg(alarm_tick.ToString());
+		}
 	}
 }

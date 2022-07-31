@@ -160,30 +160,6 @@ UCHAR get_host_cmd_task(int test)
 		}
 	}
 	init_ips();
-//	printf("%s\n",cFileName);
-/*
-	cllist_init(&cll);
-
-	if(access(cFileName,F_OK) != -1)
-	{
-		clLoadConfig(cFileName,&cll,csize,errmsg);
-		if(rc > 0)
-		{
-			printf("%s\r\n",errmsg);
-		}
-	}else printf("can't access %s\n",cFileName);
-*/
-	printf("server starting...\n");
-
-/*
-	for(i = 0;i < 40;i ++)
-	{
-		change_output(i,1);
-		uSleep(0,TIME_DELAY/8);
-		change_output(i,0);
-		uSleep(0,TIME_DELAY/8);
-	}
-*/
 	same_msg = 0;
 	timer_on = 0;
 	timer_seconds = 2;
@@ -241,6 +217,23 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
+				case YESIMHERE:
+					msg.mtext[0] = cmd;
+					msg_len = strlen(tempx);
+					msg.mtext[1] = (UCHAR)msg_len;
+					msg.mtext[2] = (UCHAR)(msg_len >> 4);
+					strncpy(msg.mtext+3,tempx,msg_len);
+
+					if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+//					if (msgsnd(sock_qid, (void *) &msg, msg_len, MSG_NOERROR) == -1) 
+					{
+						// keep getting "Invalid Argument" - cause I didn't set the mtype
+						perror("msgsnd error");
+						printf("exit from send client list\n");
+						exit(EXIT_FAILURE);
+					}
+					break;
+
 				case SET_TIMER:
 					timer_seconds = tempx[0];
 					printf("timer set to: %d seconds\n",timer_seconds);

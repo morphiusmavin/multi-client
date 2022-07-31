@@ -48,6 +48,8 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 struct msgqbuf msg;
 int msgtype = 1;
+int water_off_time, water_on_time;
+int chick_water_enable;
 
 #endif
 
@@ -72,8 +74,8 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	msg.mtext[1] = dest;
 	msg.mtext[2] = (UCHAR)msg_len;
 	msg.mtext[3] = (UCHAR)(msg_len >> 4);
-	printf("send_sock_msg\n");
-	print_cmd(cmd);
+	//printf("send_sock_msg\n");
+	//print_cmd(cmd);
 	//printf("msg_len: %d\n",msg_len);
 	memcpy(msg.mtext + 4,send_msg,msg_len);
 	printf("msg to cmd_host from client %d\n",dest);
@@ -138,6 +140,8 @@ UCHAR get_host_cmd_task2(int test)
 	timer_on = 0;
 	timer_seconds = 2;
 	next_client = 0;
+	water_on_time = 20;
+	water_off_time = 3600;
 
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
@@ -226,12 +230,14 @@ UCHAR get_host_cmd_task2(int test)
 			}
 			//printf("sched cmd host: ");
 			cmd = msg.mtext[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 			msg_len |= (int)(msg.mtext[2] << 4);
 			msg_len = (int)msg.mtext[1];
 			
 			//printf("msg_len: %d\n",msg_len);
+			memset(tempx,0,sizeof(tempx));
 			memcpy(tempx,msg.mtext+3,msg_len);
+			onoff = tempx[0];
 
 			if(cmd > 0)
 			{
@@ -259,7 +265,7 @@ UCHAR get_host_cmd_task2(int test)
 						//printf("sending que: %02x\r\n",cmd);
 						memset(tempx,0,sizeof(tempx));
 						//send_serialother(cmd,(UCHAR *)tempx);
-						add_msg_queue(cmd);
+						add_msg_queue(cmd, onoff);
 						break;
 					default:
 						break;
@@ -275,6 +281,32 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case CHICK_WATER_ENABLE:
+						chick_water_enable = tempx[0];
+						add_msg_queue(CHICK_WATER,0);
+						//printf("chick water enable: %d\n",chick_water_enable);
+						break;
+
+					case SET_CHICK_WATER_ON:
+						water_on_time = (int)tempx[1];
+						//printf("%02x\n",water_on_time);
+						water_on_time <<= 8;
+						//printf("%02x\n",water_on_time);
+						water_on_time |= (int)tempx[0];
+						//printf("tempx: %02x %02x\n",tempx[0],tempx[1]);
+						//printf("water on time: %d\n",water_on_time);
+						break;
+
+					case SET_CHICK_WATER_OFF:
+						water_off_time = (int)tempx[1];
+						//printf("%02x\n",water_off_time);
+						water_off_time <<= 8;
+						//printf("%02x\n",water_off_time);
+						water_off_time |= (int)tempx[0];
+						//printf("tempx: %02x %02x\n",tempx[0],tempx[1]);
+						//printf("water off time: %d\n",water_off_time);
+						break;
+
 					case SET_NEXT_CLIENT:
 						next_client = tempx[0];
 						if(next_client == 8)

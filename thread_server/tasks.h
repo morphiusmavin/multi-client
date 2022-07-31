@@ -1,7 +1,7 @@
 #ifndef __TASKS_H
 #define  __TASKS_H
 
-#define NUM_SOCK_TASKS			10
+#define NUM_SOCK_TASKS			11
 #define NUM_SCHED_TASKS			7
 #define DEFAULT                 0
 #define TIME_SLICE              1
@@ -49,7 +49,8 @@ enum sock_task_types
 	READ_TASK5,
 	READ_TASK6,
 	GET_HOST_CMD1,
-	TCP_MONITOR
+	TCP_MONITOR,
+	SOCK_TIMER
 } SOCK_TASK_TYPES;
 
 enum sched_task_types
@@ -63,6 +64,7 @@ enum sched_task_types
 	BASIC_CONTROLS,
 } SCHED_TASK_TYPES;
 
+UCHAR sock_timer(int test);
 UCHAR get_host_cmd_task(int test);
 UCHAR monitor_input_task(int test);
 UCHAR monitor_fake_input_task(int test);

@@ -57,6 +57,14 @@ enum sched_task_types
 	BASIC_CONTROLS
 } SCHED_TASK_TYPES;
 
+enum water_states
+{
+	RESET_ON,
+	WATER_ON,
+	RESET_OFF,
+	WATER_OFF
+} WATER_STATES;
+
 void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest);
 UCHAR recv_msg_task(int test);
 UCHAR get_host_cmd_task1(int test);
@@ -76,7 +84,7 @@ void send_serialother(UCHAR cmd, UCHAR *buf);
 //void send_serialother2(UCHAR cmd, int size, UCHAR *buf);
 void send_lcd(UCHAR *buf, int size);
 void send_param_msg(void);
-void add_msg_queue(UCHAR cmd);
+void add_msg_queue(UCHAR cmd, UCHAR onoff);
 UCHAR get_msg_queue(void);
 void add_lcd_queue(UCHAR *item, int len);
 UCHAR get_lcd_queue(void);

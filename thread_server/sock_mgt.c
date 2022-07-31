@@ -58,7 +58,8 @@ UCHAR (*fptr[NUM_SOCK_TASKS])(int) =
 	ReadTask,
 	ReadTask,
 	get_host_cmd_task, 
-	tcp_monitor_task
+	tcp_monitor_task,
+	sock_timer
 };
 
 int threads_ready_count=0;
@@ -135,6 +136,40 @@ int uSleep(time_t sec, long nanosec)
 }
 
 #endif
+
+static int s_tick = 0;
+
+UCHAR sock_timer(int test)
+{
+	UCHAR tempx[100];
+	//printf("sock_timer starting %d\n",s_tick);
+	while(TRUE)
+	{
+		uSleep(1,0);
+//		if(client_table[0].socket > 0 && client_table[0].type != WINDOWS_CLIENT)
+		s_tick++;
+		//printf("%d \n",s_tick);
+		if(client_table[0].socket > 0)
+		{
+			sprintf(tempx,"%03d",s_tick);
+			//printf("tick: %s\n",tempx);
+			send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,AREYOUTHERE);
+		}
+/*
+		if(s_tick > 10 && client_table[0].socket > 0)
+		{
+			close(client_table[0].socket);
+			client_table[0].socket = -1;
+			printf("sock closed...\n");
+		}
+*/
+		if(shutdown_all == 1)
+		{
+			printf("sock_timer shutdown\n");
+			return 0;
+		}
+	}
+}
 /*********************************************************************/
 // task to get commands from the host
 UCHAR get_host_cmd_task(int test)
@@ -167,7 +202,12 @@ UCHAR get_host_cmd_task(int test)
 	msg.mtype = msgtype;
 	int temp;
 	int dest;
+/*
+	char filename[20] = "
+	fptr = (char *)filename;
 
+	fp = open((const char *)fptr, O_RDWR);
+*/
 	//printf("sock_mgnt starting %d\n",test);
 
 	while(TRUE)
@@ -203,6 +243,11 @@ UCHAR get_host_cmd_task(int test)
 			//print_cmd(cmd);
 			switch(cmd)
 			{
+				case YESIMHERE:
+					//s_tick = 0;
+					//printf("yes: %s\n",write_serial_buff);
+					break;
+				
 				case SET_TIME:
 					printf("set time\n");
 					break;
@@ -337,7 +382,7 @@ UCHAR get_host_cmd_task(int test)
 		if(shutdown_all == 1)
 		{
 			uSleep(0,TIME_DELAY/16);
-			//printf("cmd_host shutdown\n");
+			printf("cmd_host shutdown\n");
 			return 0;
 		}
 	}
@@ -380,7 +425,11 @@ startover:
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
 			//print_cmd(cmd);
-
+/*
+for(i = 0;i < rc;i++)
+	printf("%02x ",msg_buf[i]);
+printf("\n");
+*/
 			win_client_to_client_sock = msg_buf[2];		// offset into client table
 			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 /*
@@ -394,11 +443,15 @@ startover:
 				tempx[k++] = msg_buf[j];
 			msg_len /= 2;
 			msg_len -= 3;
-//			printf("msg_len from win client: %d\n",msg_len);
 /*
+if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
+{
+			printf("msg_len from win client: %d\n",msg_len);
+
 			for(j = 0;j < msg_len;j++)
 				printf("%02x ",tempx[j]);
 			printf("\n");
+}
 
 			for(j = 0;j < msg_len;j++)
 				printf("%c",tempx[j]);
@@ -408,7 +461,8 @@ startover:
 			{
 				close(client_table[index].socket);
 				client_table[index].socket = -1;
-				printf("disconnected...\n");
+				printf("disconnected %d\n",index);
+				cmd = 0;
 				goto startover;
 				// need a cmd that quits the server
 			}
@@ -490,7 +544,7 @@ startover:
 		if(shutdown_all)
 		{
 			uSleep(0,TIME_DELAY/16);
-			//printf("\nshutting down WinClReadTask\n");
+			printf("\nshutting down WinClReadTask\n");
 			return 0;
 		}
 	}
@@ -624,7 +678,7 @@ startover1:
 
 		if(shutdown_all)
 		{
-			//printf("leaving read task\n");
+			printf("leaving read task\n");
 			uSleep(0,TIME_DELAY/16);
 			return 0;
 		}
@@ -874,6 +928,8 @@ UCHAR tcp_monitor_task(int test)
 			{
 				if(strncmp(client_table[i].ip,tempx,3) == 0)
 				{
+//					if(i == 0)
+//						s_tick = 0;
 					client_table[i].socket = new_socket;
 					printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, 
 							client_table[i].label,client_table[i].socket);

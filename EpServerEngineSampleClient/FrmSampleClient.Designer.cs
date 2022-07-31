@@ -66,6 +66,8 @@
 			this.btnCabinLights = new System.Windows.Forms.Button();
 			this.button1 = new System.Windows.Forms.Button();
 			this.btnWinClMsg = new System.Windows.Forms.Button();
+			this.tbAlarm = new System.Windows.Forms.TextBox();
+			this.cbAlarm = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -81,7 +83,7 @@
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(300, 292);
+			this.tbReceived.Size = new System.Drawing.Size(300, 233);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
 			// 
@@ -441,9 +443,9 @@
 			// tbSendMsg
 			// 
 			this.tbSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbSendMsg.Location = new System.Drawing.Point(535, 617);
+			this.tbSendMsg.Location = new System.Drawing.Point(523, 591);
 			this.tbSendMsg.Name = "tbSendMsg";
-			this.tbSendMsg.Size = new System.Drawing.Size(261, 26);
+			this.tbSendMsg.Size = new System.Drawing.Size(300, 26);
 			this.tbSendMsg.TabIndex = 44;
 			this.tbSendMsg.TextChanged += new System.EventHandler(this.tbSendMsg_TextChanged);
 			// 
@@ -482,12 +484,34 @@
 			this.btnWinClMsg.UseVisualStyleBackColor = false;
 			this.btnWinClMsg.Click += new System.EventHandler(this.btnWinClMsg_Click);
 			// 
+			// tbAlarm
+			// 
+			this.tbAlarm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+			this.tbAlarm.Location = new System.Drawing.Point(619, 546);
+			this.tbAlarm.Name = "tbAlarm";
+			this.tbAlarm.Size = new System.Drawing.Size(202, 29);
+			this.tbAlarm.TabIndex = 48;
+			this.tbAlarm.TextChanged += new System.EventHandler(this.tbAlarm_TextChanged);
+			// 
+			// cbAlarm
+			// 
+			this.cbAlarm.AutoSize = true;
+			this.cbAlarm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+			this.cbAlarm.Location = new System.Drawing.Point(530, 546);
+			this.cbAlarm.Name = "cbAlarm";
+			this.cbAlarm.Size = new System.Drawing.Size(83, 28);
+			this.cbAlarm.TabIndex = 49;
+			this.cbAlarm.Text = "Alarm";
+			this.cbAlarm.UseVisualStyleBackColor = true;
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1140, 688);
+			this.Controls.Add(this.cbAlarm);
+			this.Controls.Add(this.tbAlarm);
 			this.Controls.Add(this.btnWinClMsg);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.btnCabinLights);
@@ -574,6 +598,8 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.ComboBox cbWhichWinClient;
 		private System.Windows.Forms.Button btnWinClMsg;
+		private System.Windows.Forms.TextBox tbAlarm;
+		private System.Windows.Forms.CheckBox cbAlarm;
 	}
 }
 

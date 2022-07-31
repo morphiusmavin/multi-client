@@ -65,6 +65,8 @@ int max_ips;
 IP ip[40];
 //static UCHAR msg_queue[MSG_QUEUE_SIZE];
 //static int msg_queue_ptr;
+extern int water_off_time, water_on_time, chick_water_enable;
+int current_water_time;
 
 #define ON 1
 #define OFF 0
@@ -108,6 +110,7 @@ enum output_types
 	BENCH_3V3_2a,
 	BENCH_LIGHT1a,
 	BENCH_LIGHT2a,
+	CHICK_WATERa,
 	TEST_OUTPUT10,
 	TEST_OUTPUT11,
 	TEST_OUTPUT12,
@@ -471,7 +474,7 @@ UCHAR monitor_input_task(int test)
 						{
 							if(onoff == ON)
 							{
-								add_msg_queue(ip[i].function);
+								add_msg_queue(ip[i].function,0);
 	//							sprintf(tempx,"-%d %d", ip[i].input, ip[i].function);
 	//							myprintf1(tempx);
 	//							printf("msg queue: %d %d\r\n",ip[i].input, ip[i].function);
@@ -606,7 +609,7 @@ UCHAR monitor_fake_input_task(int test)
 							set_output(otp, onoff);
 						}else 
 						{
-							add_msg_queue(ip[i].function);
+							add_msg_queue(ip[i].function,0);
 						}
 					}
 				}
@@ -697,39 +700,20 @@ UCHAR timer2_task(int test)
 	int bank = 0;
 	UCHAR mask;
 	int index = 0;
-	time_t this_time, start_time, diff_time;
-	time_t T;
-	struct tm tm;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
-	T = time(NULL);
-	tm = *localtime(&T);
 
-	printf("\n147: %02d:%02d\n",tm.tm_min,tm.tm_sec);
-	start_time = time(NULL);
-	
 	while(TRUE)
 	{
 		uSleep(1,0);
-		
+		//printf("%d : %d -",trunning_minutes, trunning_seconds);
 		if(++trunning_seconds > 59)
 		{
-			this_time = time(NULL);
-			diff_time = this_time - start_time;
-			//printf("%ld\n",diff_time);
-			diff_time -= 60L;
-			//printf("%ld\n",diff_time);
-			start_time = this_time;
-			trunning_seconds = diff_time;
-			//printf("sec: %d\n",trunning_seconds);
-		
+			trunning_seconds = 0;
 			if(++trunning_minutes > 59)
 			{
-				T = time(NULL);
-				tm = *localtime(&T);
-				printf("\n%02d:%02d\n",tm.tm_min,tm.tm_sec);
 				trunning_minutes = 0;
-				if(++trunning_hours > 24)
+				if(++trunning_hours > 23)
 				{
 					trunning_hours = 0;
 					trunning_days++;
@@ -762,7 +746,9 @@ UCHAR timer_task(int test)
 	UCHAR cmd = 0x21;
 	UCHAR ucbuff[6];
 	int temp;
+	int water_state = RESET_ON;
 
+	current_water_time = 0;
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 	temp = 0;
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
@@ -795,6 +781,43 @@ UCHAR timer_task(int test)
 	//uSleep(1,0);
 	while(TRUE)
 	{
+		if(chick_water_enable == 1)
+		{
+			//printf(" %d %d :",water_state,current_water_time);
+			switch(water_state)
+			{
+				case RESET_ON:
+					current_water_time = water_on_time;
+					// turn the water on 
+					//add_msg_queue(CHICK_WATER);
+					add_msg_queue(CHICK_WATER,1);
+					water_state = WATER_ON;
+					break;
+				case WATER_ON:
+					if(--current_water_time < 0)
+						water_state = RESET_OFF;
+					break;
+				case RESET_OFF:
+					current_water_time = water_off_time;
+					// turn water off 
+					//add_msg_queue(CHICK_WATER);
+					add_msg_queue(CHICK_WATER,0);
+					water_state = WATER_OFF;
+					break;
+				case WATER_OFF:
+					if(--current_water_time < 0)
+						water_state = RESET_ON;
+					break;
+				default:
+					water_state = RESET_ON;
+					break;
+			}
+
+		}else
+		{
+			if(water_state != RESET_ON)
+				water_state = RESET_ON;
+		}
 		if(timer_on == 1)
 		{
 			uSleep(timer_seconds,0);
@@ -1031,12 +1054,13 @@ UCHAR serial_recv_task(int test)
 	return 1;
 }
 /*********************************************************************/
-void add_msg_queue(UCHAR cmd)
+void add_msg_queue(UCHAR cmd, UCHAR onoff)
 {
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
 	msg.mtext[0] = cmd;
+	msg.mtext[1] = onoff;
 	pthread_mutex_lock(&msg_queue_lock);
 
 	if (msgsnd(basic_controls_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
@@ -1084,6 +1108,8 @@ UCHAR basic_controls_task(int test)
 			}
 		}
 		cmd = msg.mtext[0];
+		onoff = msg.mtext[1];
+
 		//printf("basic controls: ");
 		//print_cmd(cmd);
 		usleep(_5MS);
@@ -1092,61 +1118,79 @@ UCHAR basic_controls_task(int test)
 		{
 			case  BENCH_24V_1:
 				switch_status[BENCH_24V_1a] = switch_status[BENCH_24V_1a]==1?0:1;
-				change_output(BENCH_24V_1a,switch_status[BENCH_24V_1a]);
+				//change_output(BENCH_24V_1a,switch_status[BENCH_24V_1a]);
+				change_output(BENCH_24V_1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_24V_2:
 				switch_status[BENCH_24V_2a] = switch_status[BENCH_24V_2a]==1?0:1;
-				change_output(BENCH_24V_2a,switch_status[BENCH_24V_2a]);
+				//change_output(BENCH_24V_2a,switch_status[BENCH_24V_2a]);
+				change_output(BENCH_24V_2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_12V_1:
 				switch_status[BENCH_12V_1a] = switch_status[BENCH_12V_1a]==1?0:1;
-				change_output(BENCH_12V_1a,switch_status[BENCH_12V_1a]);
+				//change_output(BENCH_12V_1a,switch_status[BENCH_12V_1a]);
+				change_output(BENCH_12V_1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_12V_2:
 				switch_status[BENCH_12V_2a] = switch_status[BENCH_12V_2a]==1?0:1;
-				change_output(BENCH_12V_2a,switch_status[BENCH_12V_2a]);
+				//change_output(BENCH_12V_2a,switch_status[BENCH_12V_2a]);
+				change_output(BENCH_12V_2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_5V_1:
 				switch_status[BENCH_5V_1a] = switch_status[BENCH_5V_1a]==1?0:1;
-				change_output(BENCH_5V_1a,switch_status[BENCH_5V_1a]);
+				//change_output(BENCH_5V_1a,switch_status[BENCH_5V_1a]);
+				change_output(BENCH_5V_1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_5V_2:
 				switch_status[BENCH_5V_2a] = switch_status[BENCH_5V_2a]==1?0:1;
-				change_output(BENCH_5V_2a,switch_status[BENCH_5V_2a]);
+				//change_output(BENCH_5V_2a,switch_status[BENCH_5V_2a]);
+				change_output(BENCH_5V_2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_3V3_1:
 				switch_status[BENCH_3V3_1a] = switch_status[BENCH_3V3_1a]==1?0:1;
-				change_output(BENCH_3V3_1a,switch_status[BENCH_3V3_1a]);
+				//change_output(BENCH_3V3_1a,switch_status[BENCH_3V3_1a]);
+				change_output(BENCH_3V3_1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_3V3_2:
 				switch_status[BENCH_3V3_2a] = switch_status[BENCH_3V3_2a]==1?0:1;
-				change_output(BENCH_3V3_2a,switch_status[BENCH_3V3_2a]);
+				//change_output(BENCH_3V3_2a,switch_status[BENCH_3V3_2a]);
+				change_output(BENCH_3V3_2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_LIGHT1:
 				switch_status[BENCH_LIGHT1a] = switch_status[BENCH_LIGHT1a]==1?0:1;
-				change_output(BENCH_LIGHT1a,switch_status[BENCH_LIGHT1a]);
+				//change_output(BENCH_LIGHT1a,switch_status[BENCH_LIGHT1a]);
+				change_output(BENCH_LIGHT1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_LIGHT2:
 				switch_status[BENCH_LIGHT2a] = switch_status[BENCH_LIGHT2a]==1?0:1;
-				change_output(BENCH_LIGHT2a,switch_status[BENCH_LIGHT2a]);
+				//change_output(BENCH_LIGHT2a,switch_status[BENCH_LIGHT2a]);
+				change_output(BENCH_LIGHT2a,onoff);
+				usleep(_100MS);
+				break;
+
+			case  CHICK_WATER:
+				//printf("CHICK_WATER %d\n",onoff);
+				switch_status[CHICK_WATERa] = switch_status[CHICK_WATERa]==1?0:1;
+				//change_output(CHICK_WATERa,switch_status[CHICK_WATERa]);
+				change_output(CHICK_WATERa,onoff);
 				usleep(_100MS);
 				break;
 
@@ -1249,4 +1293,5 @@ float convertF(int raw_data)
 	ret = (int)T_F;
 	return ret;	// returns 257 -> -67
 }
+
 

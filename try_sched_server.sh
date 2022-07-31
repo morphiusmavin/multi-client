@@ -5,11 +5,18 @@ if [ -e /home/dan/sched ]
 then
  mv /home/dan/sched .
  chmod +x sched
- mv /home/dan/sock_mgt .
- chmod +x sock_mgt
  echo "new sched found in /root" >> status.txt
 else
  echo "using current sched" >> status.txt
+fi
+
+if [ -e /home/dan/sock_mgt ]
+then
+ mv /home/dan/sock_mgt .
+ chmod +x sock_mgt
+ echo "new sock_mgt found in /root" >> status.txt
+else
+ echo "using current sock_mgt" >> status.txt
 fi
 
 ./sock_mgt &
