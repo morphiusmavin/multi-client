@@ -794,7 +794,7 @@ UCHAR timer_task(int test)
 					water_state = WATER_ON;
 					break;
 				case WATER_ON:
-					if(--current_water_time < 0)
+					if(--current_water_time < 1)
 						water_state = RESET_OFF;
 					break;
 				case RESET_OFF:
@@ -805,7 +805,7 @@ UCHAR timer_task(int test)
 					water_state = WATER_OFF;
 					break;
 				case WATER_OFF:
-					if(--current_water_time < 0)
+					if(--current_water_time < 1)
 						water_state = RESET_ON;
 					break;
 				default:
@@ -1093,6 +1093,16 @@ UCHAR basic_controls_task(int test)
 //	memset(msg_queue,0,sizeof(msg_queue));
 	msg.mtype = msgtype;
 	memset(switch_status,0,sizeof(switch_status));
+
+/*
+	for(i = 0;i < 10;i++)	// test the 2nd relay module
+	{
+		change_output(TEST_OUTPUT10+i,1);
+		uSleep(1,0);
+		change_output(TEST_OUTPUT10+i,0);
+		uSleep(1,0);
+	}
+*/
 
 	while(TRUE)
 	{

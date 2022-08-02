@@ -443,8 +443,11 @@ printf("\n");
 				tempx[k++] = msg_buf[j];
 			msg_len /= 2;
 			msg_len -= 3;
+
+//if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
+
 /*
-if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
+if(cmd == DB_LOOKUP)
 {
 			printf("msg_len from win client: %d\n",msg_len);
 
@@ -452,10 +455,6 @@ if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
 				printf("%02x ",tempx[j]);
 			printf("\n");
 }
-
-			for(j = 0;j < msg_len;j++)
-				printf("%c",tempx[j]);
-			printf("\n");
 */
 			if(cmd == DISCONNECT)
 			{
@@ -529,7 +528,7 @@ if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
 					printf("%02x ",msg.mtext[i]);
 				printf("\n");
 */
-				// this sends a msg to the appropriate client's SendTask
+				// this sends a msg to the appropriate client's ReadTask
 				if(client_table[win_client_to_client_sock].socket > 0)
 				{
 					send_msg(client_table[win_client_to_client_sock].socket, strlen(tempx), (UCHAR*)tempx,cmd);

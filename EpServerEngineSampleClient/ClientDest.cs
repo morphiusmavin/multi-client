@@ -41,10 +41,12 @@ namespace EpServerEngineSampleClient
 			iparam = 0;
 			tbWaterOffTime.Text = water_off_time.ToString();
 			tbWaterOnTime.Text = water_on_time.ToString();
+			/*
 			btnOffTime.Enabled = false;
 			btnOnTime.Enabled = false;
 			tbWaterOffTime.Enabled = false;
 			tbWaterOnTime.Enabled = false;
+			*/
 		}
 		public void SetClient(INetworkClient client)
 		{
@@ -190,32 +192,35 @@ namespace EpServerEngineSampleClient
 		{
 			//water_off_time = Int16.TryParse()
 		}
-		/*void test_send(int msg, int index, int iparam)
+		void test_send(int msg, int index, long iparam)
 		{
 			var temp = index;
-			var temp2 = iparam & 0x00FF;
-			AddMsg("0: " + iparam.ToString());
-			AddMsg("1: " +temp2.ToString());
-			var temp3 = iparam >> 8;
-			AddMsg("2: " + temp3.ToString());
-			byte[] atemp = BitConverter.GetBytes(temp);
-			byte[] a2temp = BitConverter.GetBytes(temp2);
-			byte[] a3temp = BitConverter.GetBytes(temp3);
-			AddMsg(atemp.Count().ToString());
-			byte[] ctemp = new byte[atemp.Count() + a2temp.Count() + a3temp.Count() + 2];
+			byte[] bytes = BitConverter.GetBytes(iparam);
+			byte[] atemp = BitConverter.GetBytes(temp);     // index
+			byte[] dtemp = new byte[bytes.Count() * 2];
+			//AddMsg(dtemp.Length.ToString() + " " + dtemp.Count().ToString());
+				
+			//AddMsg(atemp[0].ToString() + " " + atemp[1].ToString() + " " + atemp[2].ToString() + " " + atemp[3].ToString());
+			int j = 0;
+			for(int i = 0;i < dtemp.Length-1;i+=2)
+			{
+				AddMsg(i.ToString());
+				dtemp[i] = bytes[j++];
+				dtemp[i + 1] = 0;
+			}
+
+			byte[] ctemp = new byte[dtemp.Count() + atemp.Count() + 2];
 			string cmsg = svrcmd.GetName(msg);
 			ctemp[0] = svrcmd.GetCmdIndexB(cmsg);
 			AddMsg(ctemp.Count().ToString());
 			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-			System.Buffer.BlockCopy(a2temp, 0, ctemp, 4, a2temp.Count());
-			System.Buffer.BlockCopy(a3temp, 0, ctemp, 6, a2temp.Count());
+			System.Buffer.BlockCopy(dtemp, 0, ctemp, 4, bytes.Count());
 			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-			//AddMsg(ctemp.Count().ToString() + " " + temp.ToString());
 			if (m_client.IsConnectionAlive)
 			{
 				m_client.Send(packet);
 			}
-		}*/
+		}
 		private void btnClrScrn_Click(object sender, EventArgs e)
 		{
 			tbReceived.Clear();
@@ -232,20 +237,24 @@ namespace EpServerEngineSampleClient
 			if(cbWaterEnabled.Checked)
 			{
 				water_enabled = true;
+/*
 				btnOffTime.Enabled = true;
 				btnOnTime.Enabled = true;
 				tbWaterOffTime.Enabled = true;
 				tbWaterOnTime.Enabled = true;
+*/
 				int offset = svrcmd.GetCmdIndexI("CHICK_WATER_ENABLE");
 				svrcmd.Send_ClCmd(offset, 3, true);
 			}
 			else
 			{
 				water_enabled = false;
+/*
 				btnOffTime.Enabled = false;
 				btnOnTime.Enabled = false;
 				tbWaterOffTime.Enabled = false;
 				tbWaterOnTime.Enabled = false;
+*/
 				int offset = svrcmd.GetCmdIndexI("CHICK_WATER_ENABLE");
 				svrcmd.Send_ClCmd(offset, 3, false);
 			}

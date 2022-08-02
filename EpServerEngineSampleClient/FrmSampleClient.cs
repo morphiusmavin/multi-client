@@ -777,12 +777,14 @@ namespace EpServerEngineSampleClient
         }
         private void GetTime(object sender, EventArgs e)
         {
+            /*
             string cmd = "GET_TIME";
             int offset = svrcmd.GetCmdIndexI(cmd);
             svrcmd.Send_Cmd(offset);
             cmd = "GET_VERSION";
             offset = svrcmd.GetCmdIndexI(cmd);
             //svrcmd.Send_Cmd(offset);
+            */
         }
         private void GarageFormClick(object sender, EventArgs e)
         {

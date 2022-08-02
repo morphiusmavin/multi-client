@@ -59,7 +59,7 @@
 			this.label1.Location = new System.Drawing.Point(22, 19);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(122, 24);
-			this.label1.TabIndex = 9;
+			this.label1.TabIndex = 12;
 			this.label1.Text = "North Lights";
 			// 
 			// label2
@@ -69,7 +69,7 @@
 			this.label2.Location = new System.Drawing.Point(22, 74);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(125, 24);
-			this.label2.TabIndex = 10;
+			this.label2.TabIndex = 13;
 			this.label2.Text = "South Lights";
 			// 
 			// label3
@@ -79,7 +79,7 @@
 			this.label3.Location = new System.Drawing.Point(22, 129);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(111, 24);
-			this.label3.TabIndex = 11;
+			this.label3.TabIndex = 14;
 			this.label3.Text = "East Lights";
 			// 
 			// label4
@@ -89,7 +89,7 @@
 			this.label4.Location = new System.Drawing.Point(22, 184);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(117, 24);
-			this.label4.TabIndex = 12;
+			this.label4.TabIndex = 15;
 			this.label4.Text = "West Lights";
 			// 
 			// label5
@@ -99,7 +99,7 @@
 			this.label5.Location = new System.Drawing.Point(22, 239);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(134, 24);
-			this.label5.TabIndex = 13;
+			this.label5.TabIndex = 16;
 			this.label5.Text = "Middle Lights";
 			// 
 			// label6
@@ -109,7 +109,7 @@
 			this.label6.Location = new System.Drawing.Point(22, 294);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(125, 24);
-			this.label6.TabIndex = 14;
+			this.label6.TabIndex = 17;
 			this.label6.Text = "Office Lights";
 			// 
 			// label7
@@ -119,7 +119,7 @@
 			this.label7.Location = new System.Drawing.Point(22, 400);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(95, 24);
-			this.label7.TabIndex = 15;
+			this.label7.TabIndex = 19;
 			this.label7.Text = "All Lights";
 			// 
 			// tbAddMsg
@@ -130,7 +130,7 @@
 			this.tbAddMsg.ReadOnly = true;
 			this.tbAddMsg.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.tbAddMsg.Size = new System.Drawing.Size(212, 412);
-			this.tbAddMsg.TabIndex = 8;
+			this.tbAddMsg.TabIndex = 11;
 			this.tbAddMsg.TabStop = false;
 			// 
 			// btnNorth
@@ -205,7 +205,7 @@
 			this.btnAll.Location = new System.Drawing.Point(162, 393);
 			this.btnAll.Name = "btnAll";
 			this.btnAll.Size = new System.Drawing.Size(118, 39);
-			this.btnAll.TabIndex = 6;
+			this.btnAll.TabIndex = 7;
 			this.btnAll.Text = "OFF";
 			this.btnAll.UseVisualStyleBackColor = true;
 			this.btnAll.Click += new System.EventHandler(this.btnAll_Click);
@@ -216,7 +216,7 @@
 			this.btnClear.Location = new System.Drawing.Point(162, 450);
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(118, 39);
-			this.btnClear.TabIndex = 7;
+			this.btnClear.TabIndex = 8;
 			this.btnClear.Text = "Rotate";
 			this.btnClear.UseVisualStyleBackColor = true;
 			this.btnClear.Click += new System.EventHandler(this.btnClear_Click_1);
@@ -227,7 +227,7 @@
 			this.btnClrScr.Location = new System.Drawing.Point(26, 450);
 			this.btnClrScr.Name = "btnClrScr";
 			this.btnClrScr.Size = new System.Drawing.Size(118, 39);
-			this.btnClrScr.TabIndex = 16;
+			this.btnClrScr.TabIndex = 10;
 			this.btnClrScr.Text = "Clr Scr";
 			this.btnClrScr.UseVisualStyleBackColor = true;
 			this.btnClrScr.Click += new System.EventHandler(this.btnClrScr_Click);
@@ -243,7 +243,7 @@
 			this.btnTimer.Location = new System.Drawing.Point(303, 450);
 			this.btnTimer.Name = "btnTimer";
 			this.btnTimer.Size = new System.Drawing.Size(118, 39);
-			this.btnTimer.TabIndex = 17;
+			this.btnTimer.TabIndex = 9;
 			this.btnTimer.Text = "Timer";
 			this.btnTimer.UseVisualStyleBackColor = true;
 			this.btnTimer.Click += new System.EventHandler(this.btnTimer_Click);
@@ -254,7 +254,7 @@
 			this.btnBench.Location = new System.Drawing.Point(162, 342);
 			this.btnBench.Name = "btnBench";
 			this.btnBench.Size = new System.Drawing.Size(118, 39);
-			this.btnBench.TabIndex = 18;
+			this.btnBench.TabIndex = 6;
 			this.btnBench.Text = "OFF";
 			this.btnBench.UseVisualStyleBackColor = true;
 			this.btnBench.Click += new System.EventHandler(this.btnBench_Click);
@@ -266,7 +266,7 @@
 			this.label8.Location = new System.Drawing.Point(22, 349);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(121, 24);
-			this.label8.TabIndex = 19;
+			this.label8.TabIndex = 18;
 			this.label8.Text = "Bench Light";
 			// 
 			// GarageForm

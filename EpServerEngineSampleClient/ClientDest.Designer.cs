@@ -69,12 +69,12 @@ namespace EpServerEngineSampleClient
 			// tbReceived
 			// 
 			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbReceived.Location = new System.Drawing.Point(10, 313);
+			this.tbReceived.Location = new System.Drawing.Point(10, 275);
 			this.tbReceived.Margin = new System.Windows.Forms.Padding(1);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(414, 207);
+			this.tbReceived.Size = new System.Drawing.Size(414, 245);
 			this.tbReceived.TabIndex = 3;
 			// 
 			// cbTimerSeconds
@@ -196,7 +196,7 @@ namespace EpServerEngineSampleClient
 			// 
 			// btnClrScrn
 			// 
-			this.btnClrScrn.Location = new System.Drawing.Point(325, 275);
+			this.btnClrScrn.Location = new System.Drawing.Point(306, 233);
 			this.btnClrScrn.Name = "btnClrScrn";
 			this.btnClrScrn.Size = new System.Drawing.Size(97, 23);
 			this.btnClrScrn.TabIndex = 13;

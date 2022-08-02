@@ -90,6 +90,7 @@ namespace EpServerEngineSampleClient
 						Enabled = sCtl.Enabled,
 						Name = sCtl.Name
 					});
+					//AddMsg(button_list[i].Name);
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
@@ -240,7 +241,7 @@ namespace EpServerEngineSampleClient
 		private void SendCmd(int which)
 		{
 			string cmd = on_label_list[which];
-			AddMsg(cmd);
+			//AddMsg(cmd);
 			int offset = svrcmd.GetCmdIndexI(cmd);
 			//AddMsg(offset.ToString());
 			offset = svrcmd.GetCmdIndexI(cmd);
@@ -248,6 +249,18 @@ namespace EpServerEngineSampleClient
 			//svrcmd.Send_Cmd(offset);
 			ChangeStatus(which);
 			svrcmd.Send_ClCmd(offset, 8, status[which]);       // TODO: set this to whatever client (in this case server) is offset 8 in assign_client_table.c
+		}
+		private void SendCmd(int which, bool onoff)
+		{
+			string cmd = on_label_list[which];
+			//AddMsg(cmd);
+			int offset = svrcmd.GetCmdIndexI(cmd);
+			//AddMsg(offset.ToString());
+			offset = svrcmd.GetCmdIndexI(cmd);
+			//AddMsg(which.ToString() + " " + cmd + " " + offset.ToString());
+			//svrcmd.Send_Cmd(offset);
+			status[which] = onoff;
+			svrcmd.Send_ClCmd(offset, 8, onoff);       // TODO: set this to whatever client (in this case server) is offset 8 in assign_client_table.c
 		}
 		private void ChangeStatus(int i)
 		{
@@ -270,21 +283,18 @@ namespace EpServerEngineSampleClient
 			}
 			button_status[which] = !button_status[which];
 		}
-
 		private void btnNorth_Click(object sender, EventArgs e)
 		{
 			SendCmd(1);
 			SendCmd(5);
 			ToggleButton(0);
 		}
-
 		private void btnSouth_Click(object sender, EventArgs e)
 		{
 			SendCmd(2);
 			SendCmd(6);
 			ToggleButton(1);
 		}
-
 		private void btnEast_Click(object sender, EventArgs e)
 		{
 			SendCmd(0);
@@ -292,7 +302,6 @@ namespace EpServerEngineSampleClient
 			SendCmd(5);
 			ToggleButton(2);
 		}
-
 		private void btnWest_Click(object sender, EventArgs e)
 		{
 			SendCmd(1);
@@ -300,7 +309,6 @@ namespace EpServerEngineSampleClient
 			SendCmd(6);
 			ToggleButton(3);
 		}
-
 		private void btnMiddle_Click(object sender, EventArgs e)
 		{
 			SendCmd(4);
@@ -322,15 +330,15 @@ namespace EpServerEngineSampleClient
 		private void btnAll_Click(object sender, EventArgs e)
 		{
 			int i;
-			SendCmd(0);
-			SendCmd(1);
-			SendCmd(2);
-			SendCmd(3);
-			SendCmd(4);
-			SendCmd(5);
-			SendCmd(6);
-			SendCmd(7);
 			allon = !allon;
+			SendCmd(0, allon);
+			SendCmd(1, allon);
+			SendCmd(2, allon);
+			SendCmd(3, allon);
+			SendCmd(4, allon);
+			SendCmd(5, allon);
+			SendCmd(6, allon);
+			SendCmd(7, allon);
 			if (allon)
 			{
 				for (i = 0; i < no_lights; i++)
@@ -350,7 +358,6 @@ namespace EpServerEngineSampleClient
 				}
 			}
 		}
-
 		private void btnPollStatus_Click(object sender, EventArgs e)
 		{
 //			SendPollStatus();
@@ -389,12 +396,10 @@ namespace EpServerEngineSampleClient
 			//AddMsg(offset.ToString());
 			svrcmd.Send_Cmd(offset);
 		}
-
 		private void btnClrScr_Click(object sender, EventArgs e)
 		{
 			tbAddMsg.Clear();
 		}
-
 		private void myTimerTick(object sender, EventArgs e)
 		{
 			int i;

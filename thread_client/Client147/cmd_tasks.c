@@ -51,6 +51,12 @@ int msgtype = 1;
 int water_off_time, water_on_time;
 int chick_water_enable;
 
+inline int pack4chars(char c1, char c2, char c3, char c4) {
+    return ((int)(((unsigned char)c1) << 24)
+            |  (int)(((unsigned char)c2) << 16)
+            |  (int)(((unsigned char)c3) << 8)
+            |  (int)((unsigned char)c4));
+}
 #endif
 
 void print_cmd(UCHAR cmd)
@@ -78,7 +84,7 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	//print_cmd(cmd);
 	//printf("msg_len: %d\n",msg_len);
 	memcpy(msg.mtext + 4,send_msg,msg_len);
-	printf("msg to cmd_host from client %d\n",dest);
+	//printf("msg to cmd_host from client %d\n",dest);
 /*
 	for(i = 0;i < msg_len+3;i++)
 		printf("%02x ",msg.mtext[i]);
@@ -286,8 +292,14 @@ UCHAR get_host_cmd_task2(int test)
 						add_msg_queue(CHICK_WATER,0);
 						//printf("chick water enable: %d\n",chick_water_enable);
 						break;
-
-					case SET_CHICK_WATER_ON:
+/*	testing how the winCl sends ints & longs 
+					case DB_LOOKUP:
+						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
+						long temp = pack4chars(tempx[3],tempx[2],tempx[1],tempx[0]);
+						printf("%d\n",temp);
+						break;
+*/
+					case SET_CHICK_WATER_ON:	// see the int version of Send_ClCmd() in ServerCmds.cs 
 						water_on_time = (int)tempx[1];
 						//printf("%02x\n",water_on_time);
 						water_on_time <<= 8;

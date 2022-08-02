@@ -198,26 +198,29 @@ namespace EpServerEngineSampleClient
 				m_client.Send(packet);
 			}
 			return ctemp.Count();
-
 		}
 		public void Send_ClCmd(int msg, int index, long iparam)
 		{
 			var temp = index;
-			var temp2 = iparam;
-			byte[] atemp = BitConverter.GetBytes(temp);
-			byte[] a2temp = BitConverter.GetBytes(temp2);
-			byte[] ctemp = new byte[atemp.Count() + a2temp.Count() + 2];
+			byte[] bytes = BitConverter.GetBytes(iparam);
+			byte[] atemp = BitConverter.GetBytes(temp);     // index
+			byte[] dtemp = new byte[bytes.Count() * 2];
+			int j = 0;
+			for (int i = 0; i < dtemp.Length - 1; i += 2)
+			{
+				dtemp[i] = bytes[j++];
+				dtemp[i + 1] = 0;
+			}
+			byte[] ctemp = new byte[dtemp.Count() + atemp.Count() + 2];
 			string cmsg = GetName(msg);
 			ctemp[0] = GetCmdIndexB(cmsg);
 			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
-			System.Buffer.BlockCopy(a2temp, 0, ctemp, 4, a2temp.Count());
+			System.Buffer.BlockCopy(dtemp, 0, ctemp, 4, bytes.Count());
 			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
-			//AddMsg(ctemp.Count().ToString() + " " + temp.ToString());
 			if (m_client.IsConnectionAlive)
 			{
 				m_client.Send(packet);
 			}
-
 		}
 		public bool connection_alive()
 		{

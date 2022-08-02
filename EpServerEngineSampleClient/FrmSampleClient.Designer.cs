@@ -305,7 +305,7 @@
 			this.btnGetTime.Name = "btnGetTime";
 			this.btnGetTime.Size = new System.Drawing.Size(235, 61);
 			this.btnGetTime.TabIndex = 6;
-			this.btnGetTime.Text = "Get Time";
+			this.btnGetTime.Text = "Unused";
 			this.btnGetTime.UseVisualStyleBackColor = false;
 			this.btnGetTime.Click += new System.EventHandler(this.GetTime);
 			// 
