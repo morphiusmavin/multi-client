@@ -777,14 +777,26 @@ namespace EpServerEngineSampleClient
         }
         private void GetTime(object sender, EventArgs e)
         {
-            /*
-            string cmd = "GET_TIME";
+
+            byte test = Convert.ToByte(tbTest.Text);
+            byte test2 = Convert.ToByte(tbTest2.Text);
+            byte test3 = Convert.ToByte(tbTest3.Text);
+            byte test4 = Convert.ToByte(tbTest4.Text);
+
+            byte[] bytes = new byte[8];
+            bytes[0] = test;
+            bytes[1] = test2;
+            bytes[2] = test3;
+            bytes[3] = test4;
+            AddMsg(test.ToString());
+            AddMsg(test2.ToString());
+            AddMsg(test3.ToString());
+            AddMsg(test4.ToString());
+            AddMsg(bytes.Length.ToString());
+
+            string cmd = "DB_LOOKUP";
             int offset = svrcmd.GetCmdIndexI(cmd);
-            svrcmd.Send_Cmd(offset);
-            cmd = "GET_VERSION";
-            offset = svrcmd.GetCmdIndexI(cmd);
-            //svrcmd.Send_Cmd(offset);
-            */
+            svrcmd.Send_ClCmd(offset, 3, bytes);
         }
         private void GarageFormClick(object sender, EventArgs e)
         {
@@ -873,7 +885,8 @@ namespace EpServerEngineSampleClient
                 UpdateClientInfo();
                 clients_inited = true;
             }
-            if (tick > 300)
+            //if (tick > 300)
+            if(tick > 60)
 			{
                 if (!player_active)
                 {

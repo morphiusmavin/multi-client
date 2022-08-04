@@ -299,6 +299,15 @@ UCHAR get_host_cmd_task2(int test)
 						printf("%d\n",temp);
 						break;
 */
+					case DB_LOOKUP:
+						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
+						trunning_days = tempx[0];
+						trunning_hours = tempx[1];
+						trunning_minutes = tempx[2];
+						trunning_seconds = tempx[3];
+						
+						break;
+
 					case SET_CHICK_WATER_ON:	// see the int version of Send_ClCmd() in ServerCmds.cs 
 						water_on_time = (int)tempx[1];
 						//printf("%02x\n",water_on_time);
@@ -379,7 +388,7 @@ UCHAR get_host_cmd_task2(int test)
 						sprintf(tempx,"%d %d %d %d %d",this_client_index, trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
 						printf("send timeup: %s\n",tempx);
 						msg_len = strlen(tempx);
-						uSleep(0,TIME_DELAY/2);
+						uSleep(0,TIME_DELAY/8);
 						send_sock_msg(tempx, msg_len, UPTIME_MSG, 8);
 						break;
 

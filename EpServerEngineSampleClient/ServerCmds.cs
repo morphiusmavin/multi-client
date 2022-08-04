@@ -222,6 +222,28 @@ namespace EpServerEngineSampleClient
 				m_client.Send(packet);
 			}
 		}
+		public void Send_ClCmd(int msg, int index, byte[] bytes)
+		{
+			// bytes should be send as 2x as what's needed
+			var temp = index;
+			byte[] atemp = BitConverter.GetBytes(temp);     // index
+			byte[] dtemp = new byte[bytes.Count() * 2];
+			byte[] ctemp = new byte[dtemp.Count() + atemp.Count() + 2];
+			int j = 0;
+			for (int i = 0; i < dtemp.Length - 1; i += 2)
+			{
+				dtemp[i] = bytes[j++];
+			}
+			string cmsg = GetName(msg);
+			ctemp[0] = GetCmdIndexB(cmsg);
+			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());
+			System.Buffer.BlockCopy(dtemp, 0, ctemp, 4, bytes.Count());
+			Packet packet = new Packet(ctemp, 0, ctemp.Count(), false);
+			if (m_client.IsConnectionAlive)
+			{
+				m_client.Send(packet);
+			}
+		}
 		public bool connection_alive()
 		{
 			return m_client.IsConnectionAlive;

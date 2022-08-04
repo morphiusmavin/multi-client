@@ -286,7 +286,7 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case UPTIME_MSG:
-					printf("uptime msg: %s\n",tempx);
+					printf("%s\n",tempx);
 					msg.mtext[0] = UPTIME_MSG;
 					msg_len = strlen(tempx);
 					msg.mtext[1] = (UCHAR)msg_len;

@@ -446,7 +446,7 @@ printf("\n");
 
 //if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
 
-/*
+
 if(cmd == DB_LOOKUP)
 {
 			printf("msg_len from win client: %d\n",msg_len);
@@ -455,7 +455,7 @@ if(cmd == DB_LOOKUP)
 				printf("%02x ",tempx[j]);
 			printf("\n");
 }
-*/
+
 			if(cmd == DISCONNECT)
 			{
 				close(client_table[index].socket);
@@ -531,7 +531,7 @@ if(cmd == DB_LOOKUP)
 				// this sends a msg to the appropriate client's ReadTask
 				if(client_table[win_client_to_client_sock].socket > 0)
 				{
-					send_msg(client_table[win_client_to_client_sock].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+					send_msg(client_table[win_client_to_client_sock].socket, msg_len, (UCHAR*)tempx,cmd);
 				}else printf("bad socket\n");
 				//printf("sent: %s\n", msg.mtext);				
 				//printf("\n");

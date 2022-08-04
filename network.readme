@@ -5,6 +5,7 @@ todo:
 2) input for motion sensors (use odata database?)
 3) if both win clients are up one should be doing some things - have a way for win clients 
 	to talk to each other 
+4) days in client gets reset from 2 to 1 
 
 to add new commands:
 
@@ -44,3 +45,22 @@ be limited to 255 total commands.
 151	"
 155	"
 145	"
+
+
+when sending array of bytes from WinCl to svr/cl 
+array must be 2x what's needed 
+
+	byte test = Convert.ToByte(tbTest.Text);
+	byte test2 = Convert.ToByte(tbTest2.Text);
+
+	byte[] bytes = new byte[8];
+	bytes[0] = test;
+	bytes[1] = test2;
+	bytes[2] = 7;
+	bytes[3] = 9;
+	AddMsg(test.ToString());
+	AddMsg(test2.ToString());
+
+	string cmd = "DB_LOOKUP";
+	int offset = svrcmd.GetCmdIndexI(cmd);
+	svrcmd.Send_ClCmd(offset, 3, bytes);

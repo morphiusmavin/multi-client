@@ -68,6 +68,10 @@
 			this.btnWinClMsg = new System.Windows.Forms.Button();
 			this.tbAlarm = new System.Windows.Forms.TextBox();
 			this.cbAlarm = new System.Windows.Forms.CheckBox();
+			this.tbTest = new System.Windows.Forms.TextBox();
+			this.tbTest2 = new System.Windows.Forms.TextBox();
+			this.tbTest3 = new System.Windows.Forms.TextBox();
+			this.tbTest4 = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -504,12 +508,44 @@
 			this.cbAlarm.Text = "Alarm";
 			this.cbAlarm.UseVisualStyleBackColor = true;
 			// 
+			// tbTest
+			// 
+			this.tbTest.Location = new System.Drawing.Point(306, 520);
+			this.tbTest.Name = "tbTest";
+			this.tbTest.Size = new System.Drawing.Size(100, 20);
+			this.tbTest.TabIndex = 50;
+			// 
+			// tbTest2
+			// 
+			this.tbTest2.Location = new System.Drawing.Point(306, 555);
+			this.tbTest2.Name = "tbTest2";
+			this.tbTest2.Size = new System.Drawing.Size(100, 20);
+			this.tbTest2.TabIndex = 51;
+			// 
+			// tbTest3
+			// 
+			this.tbTest3.Location = new System.Drawing.Point(306, 597);
+			this.tbTest3.Name = "tbTest3";
+			this.tbTest3.Size = new System.Drawing.Size(100, 20);
+			this.tbTest3.TabIndex = 52;
+			// 
+			// tbTest4
+			// 
+			this.tbTest4.Location = new System.Drawing.Point(306, 638);
+			this.tbTest4.Name = "tbTest4";
+			this.tbTest4.Size = new System.Drawing.Size(100, 20);
+			this.tbTest4.TabIndex = 53;
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1140, 688);
+			this.Controls.Add(this.tbTest4);
+			this.Controls.Add(this.tbTest3);
+			this.Controls.Add(this.tbTest2);
+			this.Controls.Add(this.tbTest);
 			this.Controls.Add(this.cbAlarm);
 			this.Controls.Add(this.tbAlarm);
 			this.Controls.Add(this.btnWinClMsg);
@@ -600,6 +636,10 @@
 		private System.Windows.Forms.Button btnWinClMsg;
 		private System.Windows.Forms.TextBox tbAlarm;
 		private System.Windows.Forms.CheckBox cbAlarm;
+		private System.Windows.Forms.TextBox tbTest;
+		private System.Windows.Forms.TextBox tbTest2;
+		private System.Windows.Forms.TextBox tbTest3;
+		private System.Windows.Forms.TextBox tbTest4;
 	}
 }
 
