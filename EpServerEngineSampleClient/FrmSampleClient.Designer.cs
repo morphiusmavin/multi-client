@@ -163,7 +163,7 @@
 			this.btn_PlayList.Name = "btn_PlayList";
 			this.btn_PlayList.Size = new System.Drawing.Size(233, 61);
 			this.btn_PlayList.TabIndex = 4;
-			this.btn_PlayList.Text = "Play List";
+			this.btn_PlayList.Text = "Unused";
 			this.btn_PlayList.UseVisualStyleBackColor = false;
 			this.btn_PlayList.Click += new System.EventHandler(this.Btn_PlayList_Click);
 			// 
@@ -345,7 +345,7 @@
 			this.DialogOne.Name = "DialogOne";
 			this.DialogOne.Size = new System.Drawing.Size(235, 61);
 			this.DialogOne.TabIndex = 9;
-			this.DialogOne.Text = "Set Time";
+			this.DialogOne.Text = "Unused";
 			this.DialogOne.UseVisualStyleBackColor = false;
 			this.DialogOne.Click += new System.EventHandler(this.Dialog1_Click);
 			// 
@@ -510,31 +510,39 @@
 			// 
 			// tbTest
 			// 
+			this.tbTest.Enabled = false;
 			this.tbTest.Location = new System.Drawing.Point(306, 520);
 			this.tbTest.Name = "tbTest";
 			this.tbTest.Size = new System.Drawing.Size(100, 20);
 			this.tbTest.TabIndex = 50;
+			this.tbTest.Visible = false;
 			// 
 			// tbTest2
 			// 
+			this.tbTest2.Enabled = false;
 			this.tbTest2.Location = new System.Drawing.Point(306, 555);
 			this.tbTest2.Name = "tbTest2";
 			this.tbTest2.Size = new System.Drawing.Size(100, 20);
 			this.tbTest2.TabIndex = 51;
+			this.tbTest2.Visible = false;
 			// 
 			// tbTest3
 			// 
+			this.tbTest3.Enabled = false;
 			this.tbTest3.Location = new System.Drawing.Point(306, 597);
 			this.tbTest3.Name = "tbTest3";
 			this.tbTest3.Size = new System.Drawing.Size(100, 20);
 			this.tbTest3.TabIndex = 52;
+			this.tbTest3.Visible = false;
 			// 
 			// tbTest4
 			// 
+			this.tbTest4.Enabled = false;
 			this.tbTest4.Location = new System.Drawing.Point(306, 638);
 			this.tbTest4.Name = "tbTest4";
 			this.tbTest4.Size = new System.Drawing.Size(100, 20);
 			this.tbTest4.TabIndex = 53;
+			this.tbTest4.Visible = false;
 			// 
 			// FrmSampleClient
 			// 

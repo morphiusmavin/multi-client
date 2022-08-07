@@ -298,14 +298,15 @@ UCHAR get_host_cmd_task2(int test)
 						long temp = pack4chars(tempx[3],tempx[2],tempx[1],tempx[0]);
 						printf("%d\n",temp);
 						break;
-*/
+
+	testing how winCl sends var. no. of bytes 
 					case DB_LOOKUP:
 						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
 						trunning_days = tempx[0];
 						trunning_hours = tempx[1];
 						trunning_minutes = tempx[2];
 						trunning_seconds = tempx[3];
-						
+*/						
 						break;
 
 					case SET_CHICK_WATER_ON:	// see the int version of Send_ClCmd() in ServerCmds.cs 
@@ -386,7 +387,7 @@ UCHAR get_host_cmd_task2(int test)
 					case SEND_TIMEUP:
 						memset(tempx,0,sizeof(tempx));
 						sprintf(tempx,"%d %d %d %d %d",this_client_index, trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
-						printf("send timeup: %s\n",tempx);
+						//printf("send timeup: %s\n",tempx);
 						msg_len = strlen(tempx);
 						uSleep(0,TIME_DELAY/8);
 						send_sock_msg(tempx, msg_len, UPTIME_MSG, 8);

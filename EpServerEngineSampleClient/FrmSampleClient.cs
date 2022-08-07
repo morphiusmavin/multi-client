@@ -32,14 +32,14 @@ namespace EpServerEngineSampleClient
         INetworkClient m_client = new IocpTcpClient();
         private string password = "";
 
-        private PlayerDlg playdlg = null;
+        //private PlayerDlg playdlg = null;
         private GarageForm garageform = null;
         private TestBench testbench = null;
         private WinCLMsg winclmsg = null;
 //        private BluetoothForm bluetoothform = null;
         private ClientDest clientdest = null;
         private SetNextClient setnextclient = null;
-        private Child_Scrolling_List slist = null;
+        //private Child_Scrolling_List slist = null;
         private int AvailClientCurrentSection = 0;
         private bool player_active = false;
         private bool clients_inited = false;
@@ -90,19 +90,13 @@ namespace EpServerEngineSampleClient
 
             tbReceived.Clear();
 
-            garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
-            testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
-            winclmsg = new WinCLMsg();
-            winclmsg.SetClient(m_client);
+            
+            
             //bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
-            clientdest = new ClientDest();
-            clientdest.SetClient(m_client);
-            setnextclient = new SetNextClient();
-            setnextclient.SetClient(m_client);
             cbWhichWinClient.SelectedIndex = 0;
 
-            slist = new Child_Scrolling_List(m_client);
-            slist.Enable_Dlg(false);
+            //slist = new Child_Scrolling_List(m_client);
+            //slist.Enable_Dlg(false);
 
             client_params = new List<ClientParams>();
             ClientParams item = null;
@@ -181,10 +175,12 @@ namespace EpServerEngineSampleClient
         {
             if (which_winclient > -1)
             {
+                /*
                 if (which_winclient == 0)
                     playdlg = new PlayerDlg("g:\\rock\\wavefiles", m_client);
                 else if (which_winclient == 1)
                     playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
+                */
                 if (which_winclient > 0)    // only Second_Windows does the set time in the timer callback
                     clients_inited = true;
                 if (!client_connected)      // let's connect here! (see timer callback at end of file)
@@ -208,7 +204,7 @@ namespace EpServerEngineSampleClient
                 }
                 else
                 {
-                    playdlg.Dispose();
+                    //playdlg.Dispose();
                     svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
                     please_lets_disconnect = 1; // let's disconnect here!
                     disconnect_attempts = 0;
@@ -273,36 +269,41 @@ namespace EpServerEngineSampleClient
                 please_lets_disconnect = 1;
             }
             //play_aliens_clip();
-            garageform.Dispose();
-            testbench.Dispose();
-            winclmsg.Dispose();
+            //garageform.Dispose();
+            //testbench.Dispose();
+            //winclmsg.Dispose();
             //bluetoothform.Dispose();
-            clientdest.Dispose();
-            setnextclient.Dispose();
-            if(player_active)
-                playdlg.Dispose();
+            
+            //setnextclient.Dispose();
+//            if(player_active)
+  //              playdlg.Dispose();
             base.OnClosed(e);
         }
         public void OnReceived(INetworkClient client, Packet receivedPacket)
         {
             // anything that gets sent here gets sent to home server if it's up
+/*
             if (player_active && playdlg.Visible == true)
             {
                 playdlg.Process_Msg(receivedPacket.PacketRaw);
             }
-            else if (slist.Visible == true)
+
+            if (slist.Visible == true)
             {
                 slist.Process_Msg(receivedPacket.PacketRaw);
             }
+
             else if (garageform.Visible == true)
             {
                 garageform.Process_Msg(receivedPacket.PacketRaw);
             }
+
             else if (testbench.Visible == true)
             {
                 testbench.Process_Msg(receivedPacket.PacketRaw);
             }
             else
+*/
                 Process_Msg(receivedPacket.PacketRaw);
         }
          private void RedrawClientListBox()
@@ -351,9 +352,43 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "UPTIME_MSG":
-                    //                    ret = ret.Substring(1);
-                    AddMsg("uptime_msg");
-                    AddMsg(ret);
+                    string[] words = ret.Split(' ');
+                    i = 0;
+                    int j = 0;
+                    foreach (var word in words)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                j = int.Parse(word);
+                                //AddMsg(word + " " + j.ToString());
+                                AddMsg(clients_avail[j].label+ " uptime:");
+                                //AddMsg(word);
+                                break;
+                            case 1:
+                                j = int.Parse(word);
+                                if(j > 0)
+                                    AddMsg("days: " + j.ToString());
+                                break;
+                            case 2:
+                                j = int.Parse(word);
+                                if(j > 0)
+                                AddMsg("hours: " + j.ToString());
+                                break;
+                            case 3:
+                                j = int.Parse(word);
+                                AddMsg("minutes: " + j.ToString());
+                                break;
+                            case 4:
+                                j = int.Parse(word);
+                                AddMsg("seconds: " + j.ToString());
+                                break;
+                            default:
+                                AddMsg("?");
+                                break;
+                        }
+                        i++;
+                    }//AddMsg("uptime_msg");
                     break;
 
                 case "SEND_MESSAGE":
@@ -401,9 +436,9 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "SEND_CLIENT_LIST":
-                    string[] words = ret.Split(' ');
+                    words = ret.Split(' ');
                     i = 0;
-                    int j = 0;
+                    j = 0;
                     int sock = -1;
                     //AddMsg(ret);
 					string clmsg = " ";
@@ -726,16 +761,16 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
-        private void SendTimeup()
+        private void SendTimeup(int which)
         {
             string msg = "SEND_TIMEUP";
             int icmd = svrcmd.GetCmdIndexI(msg);
             foreach (ClientsAvail cl in clients_avail)
             {
-                if (cl.type > 0 && cl.socket > 0)
+                if (cl.type > 0 && cl.socket > 0 && cl.index == which)
                 {
                     svrcmd.Send_ClCmd(icmd, cl.index, cl.index);
-                    AddMsg(icmd.ToString());
+                    //AddMsg(icmd.ToString());
                 }
             }
         }
@@ -762,6 +797,8 @@ namespace EpServerEngineSampleClient
         }
         private void DBMgmt(object sender, EventArgs e) // "test2"
         {
+            setnextclient = new SetNextClient();
+            setnextclient.SetClient(m_client);
             setnextclient.StartPosition = FormStartPosition.Manual;
             setnextclient.Location = new Point(100, 10);
             if (setnextclient.ShowDialog(this) == DialogResult.OK)
@@ -770,6 +807,7 @@ namespace EpServerEngineSampleClient
             else
             {
             }
+            setnextclient.Dispose();
         }
         private void ClearScreen(object sender, EventArgs e)
         {
@@ -777,7 +815,8 @@ namespace EpServerEngineSampleClient
         }
         private void GetTime(object sender, EventArgs e)
         {
-
+            // 'unused button
+/*            
             byte test = Convert.ToByte(tbTest.Text);
             byte test2 = Convert.ToByte(tbTest2.Text);
             byte test3 = Convert.ToByte(tbTest3.Text);
@@ -788,18 +827,15 @@ namespace EpServerEngineSampleClient
             bytes[1] = test2;
             bytes[2] = test3;
             bytes[3] = test4;
-            AddMsg(test.ToString());
-            AddMsg(test2.ToString());
-            AddMsg(test3.ToString());
-            AddMsg(test4.ToString());
-            AddMsg(bytes.Length.ToString());
 
             string cmd = "DB_LOOKUP";
             int offset = svrcmd.GetCmdIndexI(cmd);
             svrcmd.Send_ClCmd(offset, 3, bytes);
+  */          
         }
         private void GarageFormClick(object sender, EventArgs e)
         {
+            garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             garageform.Enable_Dlg(true);
             garageform.StartPosition = FormStartPosition.Manual;
             garageform.Location = new Point(100, 10);
@@ -810,10 +846,12 @@ namespace EpServerEngineSampleClient
             {
             }
             garageform.Enable_Dlg(false);
+            garageform.Dispose();
         }
         private void btnAVR_Click(object sender, EventArgs e)		// test3
         {
-            //clientdest.Enable_Dlg(true);
+            clientdest = new ClientDest();
+            clientdest.SetClient(m_client);
             clientdest.StartPosition = FormStartPosition.Manual;
             clientdest.Location = new Point(100, 10);
             if (clientdest.ShowDialog(this) == DialogResult.OK)
@@ -822,10 +860,11 @@ namespace EpServerEngineSampleClient
             else
             {
             }
+            clientdest.Dispose();
         }
         private void Dialog1_Click(object sender, EventArgs e)
         {
-            
+            // Unused
         }
         private void myTimerTick(object sender, EventArgs e)
         {
@@ -872,7 +911,7 @@ namespace EpServerEngineSampleClient
                 AddMsg("set time");
                 foreach (ClientsAvail cl in clients_avail)
                 {
-                    if (cl.type == 1 && cl.socket > 0)  // set the time on any server/clients in the active list
+                    if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
                     {
                         AddMsg(cl.label);
                         SetTime(cl.index);
@@ -885,16 +924,13 @@ namespace EpServerEngineSampleClient
                 UpdateClientInfo();
                 clients_inited = true;
             }
-            //if (tick > 300)
-            if(tick > 60)
-			{
-                if (!player_active)
-                {
-                    SendTimeup();
-                    //btnReportTimeUp_Click(new object(), new EventArgs());
+            //if(tick > 100)
+            if (tick > 300 && !player_active)
+            {
+                SendTimeup(tick - 300);
+                if (tick > 310)
                     tick = 36;
-                }
-			}
+            }
         }
         void play_aliens_clip()
 	{
@@ -1084,6 +1120,7 @@ namespace EpServerEngineSampleClient
         }
         private void Btn_PlayList_Click(object sender, EventArgs e)
         {
+/*
             playdlg.Enable_Dlg(true);
             player_active = true;
 
@@ -1099,6 +1136,7 @@ namespace EpServerEngineSampleClient
             }
             playdlg.Enable_Dlg(false);
             player_active = false;
+*/
         }
         private void SetTime(int dest)
         {
@@ -1222,6 +1260,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnCabinLights_Click(object sender, EventArgs e)
 		{
+            testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             testbench.Enable_Dlg(true);
             testbench.StartPosition = FormStartPosition.Manual;
             testbench.Location = new Point(100, 10);
@@ -1232,6 +1271,7 @@ namespace EpServerEngineSampleClient
             {
             }
             testbench.Enable_Dlg(false);
+            testbench.Dispose();
 
         }
 		private void button1_Click_1(object sender, EventArgs e)
@@ -1245,6 +1285,8 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnWinClMsg_Click(object sender, EventArgs e)
 		{
+            winclmsg = new WinCLMsg();
+            winclmsg.SetClient(m_client);
             winclmsg.Enable_Dlg(true);
             winclmsg.StartPosition = FormStartPosition.Manual;
             winclmsg.Location = new Point(100, 10);
@@ -1257,6 +1299,7 @@ namespace EpServerEngineSampleClient
                 //                this.txtResult.Text = "Cancelled";
             }
             winclmsg.Enable_Dlg(false);
+            winclmsg.Dispose();
         }
 
 		private void tbAlarm_TextChanged(object sender, EventArgs e)

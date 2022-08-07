@@ -446,7 +446,7 @@ printf("\n");
 
 //if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
 
-
+/*
 if(cmd == DB_LOOKUP)
 {
 			printf("msg_len from win client: %d\n",msg_len);
@@ -455,7 +455,7 @@ if(cmd == DB_LOOKUP)
 				printf("%02x ",tempx[j]);
 			printf("\n");
 }
-
+*/
 			if(cmd == DISCONNECT)
 			{
 				close(client_table[index].socket);

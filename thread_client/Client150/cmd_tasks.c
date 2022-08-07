@@ -48,7 +48,15 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 struct msgqbuf msg;
 int msgtype = 1;
+int water_off_time, water_on_time;
+int chick_water_enable;
 
+inline int pack4chars(char c1, char c2, char c3, char c4) {
+    return ((int)(((unsigned char)c1) << 24)
+            |  (int)(((unsigned char)c2) << 16)
+            |  (int)(((unsigned char)c3) << 8)
+            |  (int)((unsigned char)c4));
+}
 #endif
 
 void print_cmd(UCHAR cmd)
@@ -72,11 +80,11 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	msg.mtext[1] = dest;
 	msg.mtext[2] = (UCHAR)msg_len;
 	msg.mtext[3] = (UCHAR)(msg_len >> 4);
-	printf("send_sock_msg\n");
-	print_cmd(cmd);
+	//printf("send_sock_msg\n");
+	//print_cmd(cmd);
 	//printf("msg_len: %d\n",msg_len);
 	memcpy(msg.mtext + 4,send_msg,msg_len);
-	printf("msg to cmd_host from client %d\n",dest);
+	//printf("msg to cmd_host from client %d\n",dest);
 /*
 	for(i = 0;i < msg_len+3;i++)
 		printf("%02x ",msg.mtext[i]);
@@ -138,6 +146,8 @@ UCHAR get_host_cmd_task2(int test)
 	timer_on = 0;
 	timer_seconds = 2;
 	next_client = 0;
+	water_on_time = 20;
+	water_off_time = 3600;
 
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
@@ -226,12 +236,14 @@ UCHAR get_host_cmd_task2(int test)
 			}
 			//printf("sched cmd host: ");
 			cmd = msg.mtext[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 			msg_len |= (int)(msg.mtext[2] << 4);
 			msg_len = (int)msg.mtext[1];
 			
 			//printf("msg_len: %d\n",msg_len);
+			memset(tempx,0,sizeof(tempx));
 			memcpy(tempx,msg.mtext+3,msg_len);
+			onoff = tempx[0];
 
 			if(cmd > 0)
 			{
@@ -259,7 +271,7 @@ UCHAR get_host_cmd_task2(int test)
 						//printf("sending que: %02x\r\n",cmd);
 						memset(tempx,0,sizeof(tempx));
 						//send_serialother(cmd,(UCHAR *)tempx);
-						add_msg_queue(cmd);
+						add_msg_queue(cmd, onoff);
 						break;
 					default:
 						break;
@@ -275,6 +287,48 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case CHICK_WATER_ENABLE:
+						chick_water_enable = tempx[0];
+						add_msg_queue(CHICK_WATER,0);
+						//printf("chick water enable: %d\n",chick_water_enable);
+						break;
+/*	testing how the winCl sends ints & longs 
+					case DB_LOOKUP:
+						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
+						long temp = pack4chars(tempx[3],tempx[2],tempx[1],tempx[0]);
+						printf("%d\n",temp);
+						break;
+
+	testing how winCl sends var. no. of bytes 
+					case DB_LOOKUP:
+						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
+						trunning_days = tempx[0];
+						trunning_hours = tempx[1];
+						trunning_minutes = tempx[2];
+						trunning_seconds = tempx[3];
+*/						
+						break;
+
+					case SET_CHICK_WATER_ON:	// see the int version of Send_ClCmd() in ServerCmds.cs 
+						water_on_time = (int)tempx[1];
+						//printf("%02x\n",water_on_time);
+						water_on_time <<= 8;
+						//printf("%02x\n",water_on_time);
+						water_on_time |= (int)tempx[0];
+						//printf("tempx: %02x %02x\n",tempx[0],tempx[1]);
+						//printf("water on time: %d\n",water_on_time);
+						break;
+
+					case SET_CHICK_WATER_OFF:
+						water_off_time = (int)tempx[1];
+						//printf("%02x\n",water_off_time);
+						water_off_time <<= 8;
+						//printf("%02x\n",water_off_time);
+						water_off_time |= (int)tempx[0];
+						//printf("tempx: %02x %02x\n",tempx[0],tempx[1]);
+						//printf("water off time: %d\n",water_off_time);
+						break;
+
 					case SET_NEXT_CLIENT:
 						next_client = tempx[0];
 						if(next_client == 8)
@@ -333,8 +387,9 @@ UCHAR get_host_cmd_task2(int test)
 					case SEND_TIMEUP:
 						memset(tempx,0,sizeof(tempx));
 						sprintf(tempx,"%d %d %d %d %d",this_client_index, trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
-						printf("send timeup: %s\n",tempx);
+						//printf("send timeup: %s\n",tempx);
 						msg_len = strlen(tempx);
+						uSleep(0,TIME_DELAY/8);
 						send_sock_msg(tempx, msg_len, UPTIME_MSG, 8);
 						break;
 
@@ -478,18 +533,13 @@ UCHAR get_host_cmd_task2(int test)
 //							printf("PM\n");
 							pt->tm_hour += 12;
 						}
-
 						curtime2 = mktime(pt);
 						stime(pcurtime2);
-/*
-uSleep(0,TIME_DELAY/3);
+						uSleep(0,TIME_DELAY/3);
 						gettimeofday(&mtv, NULL);
 						curtime2 = mtv.tv_sec;
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 						printf("%s\n",tempx);
-*/
-//						time_set = 1;
-//#endif
 						break;
 
 					case GET_TIME:

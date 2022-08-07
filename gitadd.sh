@@ -85,8 +85,6 @@ git add thread_server/cs_client/cconfig_file.h
 git add thread_server/queue/cllist_threads_rw.c
 git add thread_server/queue/cllist_threads_rw.h
 
-git add update.sh
-
 git status
 
 
