@@ -5,7 +5,8 @@ todo:
 2) input for motion sensors (use odata database?)
 3) if both win clients are up one should be doing some things - have a way for win clients 
 	to talk to each other 
-4) days in client gets reset from 2 to 1 
+4) days in client gets reset from 2 to 1 (happened just once)
+5) strlen() in some msg's may not send data w/ 0's 
 
 to add new commands:
 
@@ -21,7 +22,7 @@ to add new commands:
 When changing the number or order of clients:
 1) make sure ClientAvail.xml is updated 
 2) line 240 in FrmSampleClients.cs needs to be changed:
-	clients_avail[7].socket = 1;        // 7 is _SERVER (this is bad!)	
+	clients_avail[8].socket = 1;        // 8 is _SERVER (this is bad!)	
 3) The collection field in the combobox of clients in ClientDest.cs 
 	needs to be changed or the timer stuff won't work 
 
@@ -46,7 +47,6 @@ be limited to 255 total commands.
 155	"
 145	"
 
-
 when sending array of bytes from WinCl to svr/cl 
 array must be 2x what's needed 
 
@@ -64,3 +64,35 @@ array must be 2x what's needed
 	string cmd = "DB_LOOKUP";
 	int offset = svrcmd.GetCmdIndexI(cmd);
 	svrcmd.Send_ClCmd(offset, 3, bytes);
+
+
+OUTLINE OF SERVER
+
+WinClReadTask gets msg from windows client 
+	if dest = client send tcp msg to client 
+	if dest = server send msg to sched_qid get_host_cmd_task (cmd_tasks.c) 
+
+	get_host_cmd_task of sock_mgt:
+		sock_mgt: msgrcv(sock_qid...
+		send msg to sched_qid
+	get_host_cmd_task of sched:
+		cmd_tasks: msgrcv(sched_qid...
+		send msg to sock_qid
+		
+ReadTask (1 for each client) 
+	recv_tcp(client_table[index].socket...
+	if dest = server 
+		msgsnd(sched_qid...
+	if dest = client, 
+		send_msg(client_table[dest].socket... (tcp)
+
+OUTLINE OF CLIENT
+
+get_host_cmd_task2() in cmd_tasks.c of each client waits for msg from sched:
+	msgrcv(sched_qid...
+		can send msg via send_sock_msg() which does: msgsnd(sock_qid...
+	otherwise does IO 	
+
+recv_msg_task in sock_mgt waits for msg: msgrcv(sock_qid...
+get_host_cmd_task1 in sock_mgt waits for tcp msg and sends to 
+	sched in cmd_tasks.c: msgsnd(sched_qid,

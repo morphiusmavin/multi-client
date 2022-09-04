@@ -73,6 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ButtonList.cs" />
+    <Compile Include="Cabin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Cabin.Designer.cs">
+      <DependentUpon>Cabin.cs</DependentUpon>
+    </Compile>
     <Compile Include="ChangeDB.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -174,6 +180,9 @@
     <Compile Include="WinCLMsg.Designer.cs">
       <DependentUpon>WinCLMsg.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Cabin.resx">
+      <DependentUpon>Cabin.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ChangeDB.resx">
       <DependentUpon>ChangeDB.cs</DependentUpon>
     </EmbeddedResource>

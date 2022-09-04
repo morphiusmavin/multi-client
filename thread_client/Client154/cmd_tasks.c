@@ -254,16 +254,14 @@ UCHAR get_host_cmd_task2(int test)
 
 				switch(cmd)
 				{
-					case BENCH_24V_1:
-					case BENCH_24V_2:
-					case BENCH_12V_1:
-					case BENCH_12V_2:
-					case BENCH_5V_1:
-					case BENCH_5V_2:
-					case BENCH_3V3_1:
-					case BENCH_3V3_2:
-					case BENCH_LIGHT1:
-					case BENCH_LIGHT2:
+					case CABIN1:
+					case CABIN2:
+					case CABIN3:
+					case CABIN4:
+					case CABIN5:
+					case CABIN6:
+					case CABIN7:
+					case CABIN8:
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
 					case SHELL_AND_RENAME:
@@ -287,48 +285,6 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
-					case CHICK_WATER_ENABLE:
-						chick_water_enable = tempx[0];
-						add_msg_queue(CHICK_WATER,0);
-						//printf("chick water enable: %d\n",chick_water_enable);
-						break;
-/*	testing how the winCl sends ints & longs 
-					case DB_LOOKUP:
-						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
-						long temp = pack4chars(tempx[3],tempx[2],tempx[1],tempx[0]);
-						printf("%d\n",temp);
-						break;
-
-	testing how winCl sends var. no. of bytes 
-					case DB_LOOKUP:
-						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
-						trunning_days = tempx[0];
-						trunning_hours = tempx[1];
-						trunning_minutes = tempx[2];
-						trunning_seconds = tempx[3];
-*/						
-						break;
-
-					case SET_CHICK_WATER_ON:	// see the int version of Send_ClCmd() in ServerCmds.cs 
-						water_on_time = (int)tempx[1];
-						//printf("%02x\n",water_on_time);
-						water_on_time <<= 8;
-						//printf("%02x\n",water_on_time);
-						water_on_time |= (int)tempx[0];
-						//printf("tempx: %02x %02x\n",tempx[0],tempx[1]);
-						//printf("water on time: %d\n",water_on_time);
-						break;
-
-					case SET_CHICK_WATER_OFF:
-						water_off_time = (int)tempx[1];
-						//printf("%02x\n",water_off_time);
-						water_off_time <<= 8;
-						//printf("%02x\n",water_off_time);
-						water_off_time |= (int)tempx[0];
-						//printf("tempx: %02x %02x\n",tempx[0],tempx[1]);
-						//printf("water off time: %d\n",water_off_time);
-						break;
-
 					case SET_NEXT_CLIENT:
 						next_client = tempx[0];
 						if(next_client == 8)

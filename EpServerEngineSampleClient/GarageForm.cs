@@ -26,14 +26,14 @@ namespace EpServerEngineSampleClient
 		private INetworkClient m_client;
 		private bool m_wait = false;
 		ServerCmds svrcmd = new ServerCmds();
-		private List<int> CurrentList = new List<int>();
+		//private List<int> CurrentList = new List<int>();
 		private bool m_pause = false;
-		bool[] status = new bool[8];
 		bool[] button_status = new bool[8];
 		bool allon = false;
 		int single_select = 0;
 		int timer_tick = 0;
 		int no_lights = 8;
+		bool[] status = new bool[8];
 
 		List<String> on_label_list = new List<String>();
 		//List<String> off_label_list = new List<String>();
@@ -98,6 +98,20 @@ namespace EpServerEngineSampleClient
 		public void Enable_Dlg(bool wait)
 		{
 			m_wait = wait;
+		}
+		public void SetStatus(bool[] _status)
+		{
+			status = _status;
+/*
+			for(int i = 0;i < 8;i++)
+			{
+				ToggleButton(i);
+			}
+*/
+		}
+		public bool[] GetStatus()
+		{
+			return status;
 		}
 		public void OnReceived(INetworkClient client, Packet receivedPacket)
 		{
@@ -377,7 +391,7 @@ namespace EpServerEngineSampleClient
 			if (single_select > 0)
 				prev = single_select - 1;
 			else prev = 6;
-			AddMsg("on: " + single_select.ToString() + " off: " + prev.ToString());
+			//AddMsg("on: " + single_select.ToString() + " off: " + prev.ToString());
 			string cmd = on_label_list[single_select];
 			int offset = svrcmd.GetCmdIndexI(cmd);
 			offset = svrcmd.GetCmdIndexI(cmd);

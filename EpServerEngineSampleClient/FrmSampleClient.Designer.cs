@@ -159,7 +159,7 @@
 			// 
 			this.btn_PlayList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btn_PlayList.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btn_PlayList.Location = new System.Drawing.Point(15, 272);
+			this.btn_PlayList.Location = new System.Drawing.Point(15, 266);
 			this.btn_PlayList.Name = "btn_PlayList";
 			this.btn_PlayList.Size = new System.Drawing.Size(233, 61);
 			this.btn_PlayList.TabIndex = 4;
@@ -256,7 +256,7 @@
 			// 
 			this.btnRescan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnRescan.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnRescan.Location = new System.Drawing.Point(15, 112);
+			this.btnRescan.Location = new System.Drawing.Point(15, 110);
 			this.btnRescan.Name = "btnRescan";
 			this.btnRescan.Size = new System.Drawing.Size(235, 61);
 			this.btnRescan.TabIndex = 0;
@@ -269,7 +269,7 @@
 			this.btnShowParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnShowParams.Enabled = false;
 			this.btnShowParams.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnShowParams.Location = new System.Drawing.Point(266, 112);
+			this.btnShowParams.Location = new System.Drawing.Point(266, 110);
 			this.btnShowParams.Name = "btnShowParams";
 			this.btnShowParams.Size = new System.Drawing.Size(235, 61);
 			this.btnShowParams.TabIndex = 1;
@@ -281,7 +281,7 @@
 			// 
 			this.btnDBMgmt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnDBMgmt.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnDBMgmt.Location = new System.Drawing.Point(15, 192);
+			this.btnDBMgmt.Location = new System.Drawing.Point(15, 188);
 			this.btnDBMgmt.Name = "btnDBMgmt";
 			this.btnDBMgmt.Size = new System.Drawing.Size(235, 61);
 			this.btnDBMgmt.TabIndex = 2;
@@ -293,7 +293,7 @@
 			// 
 			this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnClear.Location = new System.Drawing.Point(262, 424);
+			this.btnClear.Location = new System.Drawing.Point(262, 422);
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(235, 61);
 			this.btnClear.TabIndex = 8;
@@ -305,7 +305,7 @@
 			// 
 			this.btnGetTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnGetTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnGetTime.Location = new System.Drawing.Point(15, 352);
+			this.btnGetTime.Location = new System.Drawing.Point(15, 344);
 			this.btnGetTime.Name = "btnGetTime";
 			this.btnGetTime.Size = new System.Drawing.Size(235, 61);
 			this.btnGetTime.TabIndex = 6;
@@ -317,7 +317,7 @@
 			// 
 			this.btnGarageForm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnGarageForm.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnGarageForm.Location = new System.Drawing.Point(266, 192);
+			this.btnGarageForm.Location = new System.Drawing.Point(266, 188);
 			this.btnGarageForm.Name = "btnGarageForm";
 			this.btnGarageForm.Size = new System.Drawing.Size(235, 61);
 			this.btnGarageForm.TabIndex = 3;
@@ -329,7 +329,7 @@
 			// 
 			this.btnHomeSvr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnHomeSvr.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnHomeSvr.Location = new System.Drawing.Point(15, 424);
+			this.btnHomeSvr.Location = new System.Drawing.Point(15, 422);
 			this.btnHomeSvr.Name = "btnHomeSvr";
 			this.btnHomeSvr.Size = new System.Drawing.Size(235, 61);
 			this.btnHomeSvr.TabIndex = 10;
@@ -341,11 +341,11 @@
 			// 
 			this.DialogOne.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.DialogOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.DialogOne.Location = new System.Drawing.Point(264, 352);
+			this.DialogOne.Location = new System.Drawing.Point(264, 344);
 			this.DialogOne.Name = "DialogOne";
 			this.DialogOne.Size = new System.Drawing.Size(235, 61);
 			this.DialogOne.TabIndex = 9;
-			this.DialogOne.Text = "Unused";
+			this.DialogOne.Text = "Cabin";
 			this.DialogOne.UseVisualStyleBackColor = false;
 			this.DialogOne.Click += new System.EventHandler(this.Dialog1_Click);
 			// 
@@ -457,7 +457,7 @@
 			// 
 			this.btnCabinLights.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnCabinLights.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCabinLights.Location = new System.Drawing.Point(268, 271);
+			this.btnCabinLights.Location = new System.Drawing.Point(268, 266);
 			this.btnCabinLights.Name = "btnCabinLights";
 			this.btnCabinLights.Size = new System.Drawing.Size(233, 61);
 			this.btnCabinLights.TabIndex = 45;
@@ -480,7 +480,7 @@
 			// 
 			this.btnWinClMsg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnWinClMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWinClMsg.Location = new System.Drawing.Point(15, 495);
+			this.btnWinClMsg.Location = new System.Drawing.Point(15, 496);
 			this.btnWinClMsg.Name = "btnWinClMsg";
 			this.btnWinClMsg.Size = new System.Drawing.Size(235, 61);
 			this.btnWinClMsg.TabIndex = 47;

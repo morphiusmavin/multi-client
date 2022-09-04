@@ -430,7 +430,7 @@ for(i = 0;i < rc;i++)
 	printf("%02x ",msg_buf[i]);
 printf("\n");
 */
-			win_client_to_client_sock = msg_buf[2];		// offset into client table
+			win_client_to_client_sock = msg_buf[2];		// offset into client table (destination)
 			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 /*
 			for(i = 2;i < rc;i+=2)

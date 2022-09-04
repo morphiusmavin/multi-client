@@ -100,30 +100,29 @@ enum input_types
 
 enum output_types
 {
-	BENCH_24V_1a,
-	BENCH_24V_2a,
-	BENCH_12V_1a,
-	BENCH_12V_2a,
-	BENCH_5V_1a,
-	BENCH_5V_2a,
-	BENCH_3V3_1a,
-	BENCH_3V3_2a,
-	BENCH_LIGHT1a,
-	BENCH_LIGHT2a,
-	CHICK_WATERa,
+	TEST_OUTPUT1,
+	TEST_OUTPUT2,
+	TEST_OUTPUT3,
+	TEST_OUTPUT4,
+	TEST_OUTPUT5,
+	TEST_OUTPUT6,
+	TEST_OUTPUT7,
+	TEST_OUTPUT8,
+	TEST_OUTPUT9,
 	TEST_OUTPUT10,
-	TEST_OUTPUT11,
-	TEST_OUTPUT12,
-	TEST_OUTPUT13,
-	TEST_OUTPUT14,
-	TEST_OUTPUT15,
-	TEST_OUTPUT16,
-	TEST_OUTPUT17,
+	CABIN1a,
+	CABIN2a,
+	CABIN3a,
+	CABIN4a,
+	CABIN5a,
+	CABIN6a,
+	CABIN7a,
+	CABIN8a,
 	TEST_OUTPUT18,
 	TEST_OUTPUT19
 }OUTPUT_TYPES;
 
-int switch_status[10];
+int switch_status[20];
 
 /****************************************************************************************************/
 static double curtime(void)
@@ -646,11 +645,11 @@ int change_output(int index, int onoff)
 #endif
 
 	//printf("change output: %d %d\r\n",index,onoff);
-	pthread_mutex_lock( &io_mem_lock);
 
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
 	//printf("bank: %d\r\n",bank);
+	pthread_mutex_lock( &io_mem_lock);
 	switch(bank)
 	{
 /*
@@ -677,7 +676,7 @@ int change_output(int index, int onoff)
 			break;
 	}
 	pthread_mutex_unlock(&io_mem_lock);
-//	printf("change output: %d %d\r\n",index,onoff);
+	//printf("change output: %d %d\r\n",index,onoff);
 
 //	sprintf(tempx,"%d %d %d", bank, index, onoff);
 //	myprintf1(tempx);
@@ -1126,81 +1125,59 @@ UCHAR basic_controls_task(int test)
 
 		switch(cmd)
 		{
-			case  BENCH_24V_1:
-				switch_status[BENCH_24V_1a] = switch_status[BENCH_24V_1a]==1?0:1;
+			case  CABIN1:
+				switch_status[CABIN1a] = switch_status[CABIN1a]==1?0:1;
 				//change_output(BENCH_24V_1a,switch_status[BENCH_24V_1a]);
-				change_output(BENCH_24V_1a,onoff);
+				change_output(CABIN1a,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_24V_2:
-				switch_status[BENCH_24V_2a] = switch_status[BENCH_24V_2a]==1?0:1;
+			case  CABIN2:
+				switch_status[CABIN2a] = switch_status[CABIN2a]==1?0:1;
 				//change_output(BENCH_24V_2a,switch_status[BENCH_24V_2a]);
-				change_output(BENCH_24V_2a,onoff);
+				change_output(CABIN2a,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_12V_1:
-				switch_status[BENCH_12V_1a] = switch_status[BENCH_12V_1a]==1?0:1;
+			case  CABIN3:
+				switch_status[CABIN3a] = switch_status[CABIN3a]==1?0:1;
 				//change_output(BENCH_12V_1a,switch_status[BENCH_12V_1a]);
-				change_output(BENCH_12V_1a,onoff);
+				change_output(CABIN3a,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_12V_2:
-				switch_status[BENCH_12V_2a] = switch_status[BENCH_12V_2a]==1?0:1;
+			case  CABIN4:
+				switch_status[CABIN4a] = switch_status[CABIN4a]==1?0:1;
 				//change_output(BENCH_12V_2a,switch_status[BENCH_12V_2a]);
-				change_output(BENCH_12V_2a,onoff);
+				change_output(CABIN4a,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_5V_1:
-				switch_status[BENCH_5V_1a] = switch_status[BENCH_5V_1a]==1?0:1;
+			case  CABIN5:
+				switch_status[CABIN5a] = switch_status[CABIN5a]==1?0:1;
 				//change_output(BENCH_5V_1a,switch_status[BENCH_5V_1a]);
-				change_output(BENCH_5V_1a,onoff);
+				change_output(CABIN5a,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_5V_2:
-				switch_status[BENCH_5V_2a] = switch_status[BENCH_5V_2a]==1?0:1;
+			case  CABIN6:
+				switch_status[CABIN6a] = switch_status[CABIN6a]==1?0:1;
 				//change_output(BENCH_5V_2a,switch_status[BENCH_5V_2a]);
-				change_output(BENCH_5V_2a,onoff);
+				change_output(CABIN6a,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_3V3_1:
-				switch_status[BENCH_3V3_1a] = switch_status[BENCH_3V3_1a]==1?0:1;
+			case  CABIN7:
+				switch_status[CABIN7a] = switch_status[CABIN7a]==1?0:1;
 				//change_output(BENCH_3V3_1a,switch_status[BENCH_3V3_1a]);
-				change_output(BENCH_3V3_1a,onoff);
+				change_output(CABIN7a,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_3V3_2:
-				switch_status[BENCH_3V3_2a] = switch_status[BENCH_3V3_2a]==1?0:1;
+			case  CABIN8:
+				switch_status[CABIN8a] = switch_status[CABIN8a]==1?0:1;
 				//change_output(BENCH_3V3_2a,switch_status[BENCH_3V3_2a]);
-				change_output(BENCH_3V3_2a,onoff);
-				usleep(_100MS);
-				break;
-
-			case  BENCH_LIGHT1:
-				switch_status[BENCH_LIGHT1a] = switch_status[BENCH_LIGHT1a]==1?0:1;
-				//change_output(BENCH_LIGHT1a,switch_status[BENCH_LIGHT1a]);
-				change_output(BENCH_LIGHT1a,onoff);
-				usleep(_100MS);
-				break;
-
-			case  BENCH_LIGHT2:
-				switch_status[BENCH_LIGHT2a] = switch_status[BENCH_LIGHT2a]==1?0:1;
-				//change_output(BENCH_LIGHT2a,switch_status[BENCH_LIGHT2a]);
-				change_output(BENCH_LIGHT2a,onoff);
-				usleep(_100MS);
-				break;
-
-			case  CHICK_WATER:
-				//printf("CHICK_WATER %d\n",onoff);
-				switch_status[CHICK_WATERa] = switch_status[CHICK_WATERa]==1?0:1;
-				//change_output(CHICK_WATERa,switch_status[CHICK_WATERa]);
-				change_output(CHICK_WATERa,onoff);
+				change_output(CABIN8a,onoff);
 				usleep(_100MS);
 				break;
 

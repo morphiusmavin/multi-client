@@ -24,7 +24,7 @@ namespace EpServerEngineSampleClient
 {
     public partial class FrmSampleClient : Form, INetworkClientCallback
     {
-        
+
         ConfigParams cfg_params = new ConfigParams();
         private DlgSetParams dlgsetparams = null;
         private bool valid_cfg = false;
@@ -35,15 +35,15 @@ namespace EpServerEngineSampleClient
         //private PlayerDlg playdlg = null;
         private GarageForm garageform = null;
         private TestBench testbench = null;
+        private Cabin cabin = null;
         private WinCLMsg winclmsg = null;
-//        private BluetoothForm bluetoothform = null;
+        //        private BluetoothForm bluetoothform = null;
         private ClientDest clientdest = null;
         private SetNextClient setnextclient = null;
-        //private Child_Scrolling_List slist = null;
         private int AvailClientCurrentSection = 0;
         private bool player_active = false;
         private bool clients_inited = false;
-
+        private bool[] status = new bool[8];
         private List<ClientParams> client_params;
         private List<ClientsAvail> clients_avail;
         private int i = 0;
@@ -87,20 +87,15 @@ namespace EpServerEngineSampleClient
             btnShowParams.Enabled = false;
             btn_PlayList.Enabled = true;
             btnGetTime.Enabled = false;
-
+            for(int i = 0;i < 8;i++)
+			{
+                status[i] = false;
+			}
             tbReceived.Clear();
-
-            
-            
             //bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
             cbWhichWinClient.SelectedIndex = 0;
-
-            //slist = new Child_Scrolling_List(m_client);
-            //slist.Enable_Dlg(false);
-
             client_params = new List<ClientParams>();
             ClientParams item = null;
-            
             DataSet ds = new DataSet();
             //XmlReader xmlFile = XmlReader.Create(File.Exists(xml_file2_location_laptop) ? xml_file2_location_laptop : xml_file2_location_desktop);
             XmlReader xmlFile = XmlReader.Create(xml_params_location);
@@ -117,7 +112,6 @@ namespace EpServerEngineSampleClient
                 client_params.Add(item);
                 item = null;
             }
-
             clients_avail = new List<ClientsAvail>();
             ClientsAvail item2 = null;
             //AddMsg("adding clients avail...");
@@ -126,6 +120,12 @@ namespace EpServerEngineSampleClient
             xmlFile = XmlReader.Create(xml_clients_avail_location);
             ds2.ReadXml(xmlFile);
             int lb_index = 0;
+            garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
+            testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
+            cabin = new Cabin(m_client);
+            btnGarageForm.Enabled = false;
+            btnCabinLights.Enabled = false;
+
             foreach (DataRow dr in ds2.Tables[0].Rows)
             {
                 //string temp = "";
@@ -212,6 +212,8 @@ namespace EpServerEngineSampleClient
                     btnConnect.Text = "Connect";
                     timer1.Enabled = false;
                     client_connected = false;
+                    btnCabinLights.Enabled = false;
+                    btnGarageForm.Enabled = false;
                     //play_aliens_clip();
                     m_client.Disconnect();
                 }
@@ -244,6 +246,8 @@ namespace EpServerEngineSampleClient
                     clients_avail[8].socket = 1;        // 8 is _SERVER (this is bad!)
                     timer1.Enabled = true;
                     AddMsg("connected");
+                    btnGarageForm.Enabled = true;
+                    btnCabinLights.Enabled = true;
                 }
             }
             else AddMsg(client.HostName);
@@ -257,6 +261,7 @@ namespace EpServerEngineSampleClient
                 btnConnect.Text = "Connect";
                 tbConnected.Text = "not connected";
                 btnShutdown.Enabled = false;
+                btnGarageForm.Enabled = false;
 
                 //AddMsg("disconnected 1");
             }
@@ -269,8 +274,8 @@ namespace EpServerEngineSampleClient
                 please_lets_disconnect = 1;
             }
             //play_aliens_clip();
-            //garageform.Dispose();
-            //testbench.Dispose();
+            garageform.Dispose();
+            testbench.Dispose();
             //winclmsg.Dispose();
             //bluetoothform.Dispose();
             
@@ -292,18 +297,16 @@ namespace EpServerEngineSampleClient
             {
                 slist.Process_Msg(receivedPacket.PacketRaw);
             }
-
-            else if (garageform.Visible == true)
+*/
+            if (garageform.Visible == true)
             {
                 garageform.Process_Msg(receivedPacket.PacketRaw);
             }
-
             else if (testbench.Visible == true)
             {
                 testbench.Process_Msg(receivedPacket.PacketRaw);
             }
             else
-*/
                 Process_Msg(receivedPacket.PacketRaw);
         }
          private void RedrawClientListBox()
@@ -835,8 +838,8 @@ namespace EpServerEngineSampleClient
         }
         private void GarageFormClick(object sender, EventArgs e)
         {
-            garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             garageform.Enable_Dlg(true);
+            garageform.SetStatus(status);
             garageform.StartPosition = FormStartPosition.Manual;
             garageform.Location = new Point(100, 10);
             if (garageform.ShowDialog(this) == DialogResult.OK)
@@ -846,7 +849,7 @@ namespace EpServerEngineSampleClient
             {
             }
             garageform.Enable_Dlg(false);
-            garageform.Dispose();
+            status = garageform.GetStatus();
         }
         private void btnAVR_Click(object sender, EventArgs e)		// test3
         {
@@ -864,7 +867,14 @@ namespace EpServerEngineSampleClient
         }
         private void Dialog1_Click(object sender, EventArgs e)
         {
-            // Unused
+            cabin.StartPosition = FormStartPosition.Manual;
+            cabin.Location = new Point(100, 10);
+            if (cabin.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
         }
         private void myTimerTick(object sender, EventArgs e)
         {
@@ -925,10 +935,10 @@ namespace EpServerEngineSampleClient
                 clients_inited = true;
             }
             //if(tick > 100)
-            if (tick > 300 && !player_active)
+            if (tick > 40 && !player_active)
             {
-                SendTimeup(tick - 300);
-                if (tick > 310)
+                SendTimeup(tick - 40);
+                if (tick > 43)
                     tick = 36;
             }
         }
@@ -1260,7 +1270,6 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnCabinLights_Click(object sender, EventArgs e)
 		{
-            testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             testbench.Enable_Dlg(true);
             testbench.StartPosition = FormStartPosition.Manual;
             testbench.Location = new Point(100, 10);
@@ -1271,8 +1280,6 @@ namespace EpServerEngineSampleClient
             {
             }
             testbench.Enable_Dlg(false);
-            testbench.Dispose();
-
         }
 		private void button1_Click_1(object sender, EventArgs e)
 		{
@@ -1301,7 +1308,6 @@ namespace EpServerEngineSampleClient
             winclmsg.Enable_Dlg(false);
             winclmsg.Dispose();
         }
-
 		private void tbAlarm_TextChanged(object sender, EventArgs e)
 		{
             alarm_tick = Int64.Parse(tbAlarm.Text);

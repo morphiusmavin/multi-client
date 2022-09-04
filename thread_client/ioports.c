@@ -60,6 +60,7 @@ int init_mem(void)
 {
 	int key;
 #ifdef USE_CARDS
+	printf("starting init_mem...\n");
 	fd = open("/dev/mem", O_RDWR|O_SYNC);
 	
 	assert(fd != -1);
@@ -85,9 +86,10 @@ int init_mem(void)
 		perror("error writing to last byte of file\n");
 		//exit(1);
 		return -1;
-	}
+	}else printf("init_mem ok\n");
 	return 0;
 #else
+	printf("cards not used\n");
 	return 0;
 #endif
 }
@@ -111,7 +113,7 @@ void OutPortA(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTA_OFFSET] = state;
 	*(card_ports + ROC_1) = *pstate;
-//	printf("%2x ",state);
+	printf("%2x\n ",state);
 }
 
 
@@ -132,7 +134,7 @@ void OutPortB(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTB_OFFSET] = state;
 	*(card_ports + ROC_2) = *pstate;
-//	printf("%2x ",state);
+	printf("%2x\n ",state);
 }
 
 
@@ -153,7 +155,7 @@ void OutPortC(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTC_OFFSET] = state;
 	*(card_ports + ROC_3) = *pstate;
-//	printf("%2x ",state);
+	printf("%2x\n ",state);
 }
 
 
@@ -163,7 +165,7 @@ void OutPortD(int onoff, UCHAR bit)
 	UCHAR mask;
 	UCHAR *pstate;
 	UCHAR state = 0;
-
+//printf("out D\n");
 	state = outportstatus[OUTPORTD_OFFSET];
 	mask = 1;
 	mask <<= bit;
@@ -174,7 +176,7 @@ void OutPortD(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTD_OFFSET] = state;
 	*(card_ports + ROC_4) = *pstate;
-//	printf("%2x ",state);
+	//printf("state: %2x\n ",state);
 }
 
 
@@ -184,7 +186,7 @@ void OutPortE(int onoff, UCHAR bit)
 	UCHAR mask;
 	UCHAR *pstate;
 	UCHAR state = 0;
-
+//printf("out E\n");
 	state = outportstatus[OUTPORTE_OFFSET];
 	mask = 1;
 	mask <<= bit;
@@ -195,7 +197,7 @@ void OutPortE(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTE_OFFSET] = state;
 	*(card_ports + ROC_5) = *pstate;
-//	printf("%2x ",state);
+	//printf("state: %2x\n ",state);
 }
 
 
@@ -205,7 +207,7 @@ void OutPortF(int onoff, UCHAR bit)
 	UCHAR mask;
 	UCHAR *pstate;
 	UCHAR state = 0;
-
+//printf("out F\n");
 	state = outportstatus[OUTPORTF_OFFSET];
 	mask = 1;
 	mask <<= bit;
@@ -216,7 +218,7 @@ void OutPortF(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTF_OFFSET] = state;
 	*(card_ports + ROC_6) = *pstate;
-//	printf("%2x ",state);
+	//printf("state: %2x\n ",state);
 }
 
 
