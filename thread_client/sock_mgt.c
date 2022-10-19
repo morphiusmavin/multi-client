@@ -248,7 +248,6 @@ UCHAR get_host_cmd_task1(int test)
 				shutdown_all = 1;
 				return 0;
 			}
-
 		}
 		uSleep(0,TIME_DELAY/16);
 		if(shutdown_all == 1)

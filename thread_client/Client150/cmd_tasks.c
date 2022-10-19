@@ -287,6 +287,10 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case AREYOUTHERE:
+						printf("yes im here\n");
+						break;
+
 					case CHICK_WATER_ENABLE:
 						chick_water_enable = tempx[0];
 						add_msg_queue(CHICK_WATER,0);

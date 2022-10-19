@@ -285,6 +285,10 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case AREYOUTHERE:
+						printf("yes im here\n");
+						break;
+
 					case SET_NEXT_CLIENT:
 						next_client = tempx[0];
 						if(next_client == 8)

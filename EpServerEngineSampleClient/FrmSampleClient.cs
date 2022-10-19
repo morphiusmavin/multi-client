@@ -63,6 +63,13 @@ namespace EpServerEngineSampleClient
         int connected_tick = 0;
         int which_winclient = -1;
         Int64 alarm_tick = 0;
+        Boolean midnight_flag = false;
+        string[] sunrises;
+        string[] sunsets;
+        int sunrise_hour;
+        int sunrise_minutes;
+        bool oneoff = true;
+        bool oneoff2 = true;
 
         private string xml_dialog1_location = "c:\\Users\\daniel\\dev\\uiformat1.xml";
         private string xml_dialog2_location = "c:\\Users\\daniel\\dev\\uiformat2.xml";
@@ -72,7 +79,32 @@ namespace EpServerEngineSampleClient
         private string xml_dialog6_location = "c:\\Users\\daniel\\dev\\uiformat6.xml";
         private string xml_params_location = "c:\\Users\\daniel\\dev\\ClientParams.xml";
         private string xml_clients_avail_location = "c:\\Users\\daniel\\dev\\ClientsAvail.xml";
+        private int hour;
+        private int minute;
+        private DateTime now;
 
+        /* remove the min/max/close buttons in the 'frame' */
+        /* or you can just set 'Control Box' to false in the properties pane for the form */
+        private const int CP_NOCLOSE_BUTTON = 0x200;
+        private const int WS_CAPTION = 0x00C00000;
+
+        // Removes the close button in the caption bar
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams myCp = base.CreateParams;
+
+                // This disables the close button
+                // myCp.ClassStyle = myCp.ClassStyle | CP_NOCLOSE_BUTTON;
+
+                // this appears to completely remove the close button
+                myCp.Style &= WS_CAPTION;
+
+                return myCp;
+            }
+        }
+        
         public FrmSampleClient()
         {
             InitializeComponent();
@@ -82,15 +114,15 @@ namespace EpServerEngineSampleClient
             cbIPAdress.Enabled = true;
             tbReceived.Enabled = true;
             tbPort.Enabled = true;
-            btnShutdown.Enabled = false;
+            //btnShutdown.Enabled = false;
             //btnReboot.Enabled = false;
             btnShowParams.Enabled = false;
             btn_PlayList.Enabled = true;
             btnGetTime.Enabled = false;
-            for(int i = 0;i < 8;i++)
-			{
+            for (int i = 0; i < 8; i++)
+            {
                 status[i] = false;
-			}
+            }
             tbReceived.Clear();
             //bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
             cbWhichWinClient.SelectedIndex = 0;
@@ -131,7 +163,7 @@ namespace EpServerEngineSampleClient
                 //string temp = "";
                 item2 = new ClientsAvail();
                 item2.lbindex = -1;
-//                item2.index = Convert.ToInt16(dr.ItemArray[1]);
+                //                item2.index = Convert.ToInt16(dr.ItemArray[1]);
                 item2.index = lb_index;
                 item2.ip_addr = dr.ItemArray[0].ToString();
                 //temp += item2.ip_addr;
@@ -142,10 +174,10 @@ namespace EpServerEngineSampleClient
                 item2.socket = Convert.ToInt16(dr.ItemArray[2]);
                 //temp += item2.socket.ToString();
                 item2.type = Convert.ToInt16(dr.ItemArray[3]);  // type is: 0 - win client; 1 - TS_CLIENT; 2 - TS_SERVER (only one of these)
-				//AddMsg(item2.label.ToString() + " " + item2.ip_addr.ToString() + " " + item2.socket.ToString());
+                                                                //AddMsg(item2.label.ToString() + " " + item2.ip_addr.ToString() + " " + item2.socket.ToString());
                 clients_avail.Add(item2);
                 item2 = null;
-				lb_index++;
+                lb_index++;
             }
 
             bool found = false;
@@ -169,6 +201,35 @@ namespace EpServerEngineSampleClient
             if (!found)
             {
                 AddMsg("no primary address found in xml file");
+            }
+
+            sunrises = new string[32];
+            sunsets = new string[32];
+
+            string sunrise_list = "c:\\users\\daniel\\sunrises.txt";
+            string sunset_list = "c:\\users\\daniel\\sunsets.txt";
+
+            if (File.Exists(sunrise_list))
+            {
+                // Read a text file line by line.  
+                string[] lines = File.ReadAllLines(sunrise_list);
+                int i = 0;
+                foreach (string line in lines)
+                {
+                    //AddMsg(line);
+                    sunrises[i++] = line;
+                }
+            }
+            if (File.Exists(sunset_list))
+            {
+                // Read entire text file content in one string    
+                string[] lines = File.ReadAllLines(sunset_list);
+                int i = 0;
+                foreach (string line in lines)
+                {
+                    //AddMsg(line);
+                    sunsets[i++] = line;
+                }
             }
         }
         private void btnConnect_Click(object sender, EventArgs e)
@@ -234,7 +295,7 @@ namespace EpServerEngineSampleClient
                     cbIPAdress.Enabled = false;     /// from here to MPH should be commented out when in debugger
 					tbPort.Enabled = false;
 
-                    btnShutdown.Enabled = true;
+                    //btnShutdown.Enabled = true;
                     btnRescan.Enabled = true;
                     tbServerTime.Text = "";
 
@@ -260,7 +321,7 @@ namespace EpServerEngineSampleClient
                 tbPort.Enabled = true;
                 btnConnect.Text = "Connect";
                 tbConnected.Text = "not connected";
-                btnShutdown.Enabled = false;
+                //btnShutdown.Enabled = false;
                 btnGarageForm.Enabled = false;
 
                 //AddMsg("disconnected 1");
@@ -655,15 +716,42 @@ namespace EpServerEngineSampleClient
         // start/stop engine
         private void ShutdownServer(object sender, EventArgs e)
         {
+            DialogResult res;
             ManageServer dlg = new ManageServer(m_client);
-            if (dlg.ShowDialog(this) == DialogResult.OK)
+            res = dlg.ShowDialog(this);
+            if (res == DialogResult.OK)
             {
                 if (client_params[selected_address].AutoConn == true)
                     cfg_params = dlgsetparams.GetParams();
                 please_lets_disconnect = 1;
             }
-            else
+            else if(res == DialogResult.Abort)
             {
+                AddMsg("closing connection and exiting " + client_connected.ToString());
+                /*
+                if (client_connected)
+                    m_client.Disconnect();
+                garageform.Dispose();
+                testbench.Dispose();
+                base.OnClosed(e);
+                */
+                if (client_connected)
+                {
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
+                    please_lets_disconnect = 1; // let's disconnect here!
+                    disconnect_attempts = 0;
+                    AddMsg("disconnecting");
+                    btnConnect.Text = "Connect";
+                    timer1.Enabled = false;
+                    client_connected = false;
+                    btnCabinLights.Enabled = false;
+                    btnGarageForm.Enabled = false;
+                    //play_aliens_clip();
+                    m_client.Disconnect();
+                }
+                garageform.Dispose();
+                testbench.Dispose();
+                this.Close();
             }
         }
         private void RebootServer(object sender, EventArgs e)       // "test"
@@ -764,7 +852,7 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
-        private void SendTimeup(int which)
+        private void SendTimeup(int which)      // not used
         {
             string msg = "SEND_TIMEUP";
             int icmd = svrcmd.GetCmdIndexI(msg);
@@ -798,7 +886,7 @@ namespace EpServerEngineSampleClient
             }
             return buffer;
         }
-        private void DBMgmt(object sender, EventArgs e) // "test2"
+        private void DBMgmt(object sender, EventArgs e) 
         {
             setnextclient = new SetNextClient();
             setnextclient.SetClient(m_client);
@@ -818,23 +906,28 @@ namespace EpServerEngineSampleClient
         }
         private void GetTime(object sender, EventArgs e)
         {
+            DateTime localDate = DateTime.Now;
+            String cultureName = "en-US";
+            var culture = new CultureInfo(cultureName);
+            //AddMsg(localDate.ToString(culture));
+            AddMsg(localDate.ToString());
             // 'unused button
-/*            
-            byte test = Convert.ToByte(tbTest.Text);
-            byte test2 = Convert.ToByte(tbTest2.Text);
-            byte test3 = Convert.ToByte(tbTest3.Text);
-            byte test4 = Convert.ToByte(tbTest4.Text);
+            /*            
+                        byte test = Convert.ToByte(tbTest.Text);
+                        byte test2 = Convert.ToByte(tbTest2.Text);
+                        byte test3 = Convert.ToByte(tbTest3.Text);
+                        byte test4 = Convert.ToByte(tbTest4.Text);
 
-            byte[] bytes = new byte[8];
-            bytes[0] = test;
-            bytes[1] = test2;
-            bytes[2] = test3;
-            bytes[3] = test4;
+                        byte[] bytes = new byte[8];
+                        bytes[0] = test;
+                        bytes[1] = test2;
+                        bytes[2] = test3;
+                        bytes[3] = test4;
 
-            string cmd = "DB_LOOKUP";
-            int offset = svrcmd.GetCmdIndexI(cmd);
-            svrcmd.Send_ClCmd(offset, 3, bytes);
-  */          
+                        string cmd = "DB_LOOKUP";
+                        int offset = svrcmd.GetCmdIndexI(cmd);
+                        svrcmd.Send_ClCmd(offset, 3, bytes);
+              */
         }
         private void GarageFormClick(object sender, EventArgs e)
         {
@@ -878,9 +971,26 @@ namespace EpServerEngineSampleClient
         }
         private void myTimerTick(object sender, EventArgs e)
         {
+            now = DateTime.Now;
             tick++;
             connected_tick++;
-            if(cbAlarm.Checked == true)
+            if ((tick % 5) == 0)
+            {
+                //AddMsg(tick.ToString());
+                hour = now.Hour;
+                minute = now.Minute;
+                string tTime = now.TimeOfDay.ToString();
+                tTime = tTime.Substring(0, 8);
+                tbTime.Text = tTime;
+                if ((hour == sunrise_hour && minute == sunrise_minutes - 1) && oneoff2)
+                {
+                    play_sunrise_clip();
+                    oneoff2 = false;
+                    AddMsg(oneoff2.ToString());
+                    AddMsg("play sunrise");
+                }
+            }
+            if (cbAlarm.Checked == true)
 			{
                 alarm_tick--;
                 tbAlarm.Text = alarm_tick.ToString();
@@ -895,20 +1005,30 @@ namespace EpServerEngineSampleClient
                     player.Dispose();
                 }
 			}
-            //AddMsg(connected_tick.ToString());
-            /*
-            if(connected_tick == 10 && clients_avail[8].socket > 0)
-			{
-                playdlg.Dispose();
-                AddMsg("disconnecting");
-                btnConnect.Text = "Connect";
-                timer1.Enabled = false;
-                client_connected = false;
-                //play_aliens_clip();
-                m_client.Disconnect();
-                tbServerTime.Text = "offline";
+            if (oneoff)
+            {
+                string ts = sunrises[now.Day - 1].ToString();
+                int space = ts.IndexOf(" ");
+                ts = ts.Remove(space);
+                tbSunrise.Text = ts;
+                string ts2 = ts.Substring(0, 1);
+                sunrise_hour = int.Parse(ts2);
+                ts2 = ts.Substring(2, 2);
+                sunrise_minutes = int.Parse(ts2);
+
+                ts = sunsets[now.Day - 1].ToString();
+                space = ts.IndexOf(" ");
+                ts = ts.Remove(space);
+                tbSunset.Text = ts;
+
+                string t2date = now.Date.ToString();
+                space = t2date.IndexOf(" ");
+                t2date = t2date.Remove(space);
+                tbTodaysDate.Text = t2date;
+                oneoff = false;
+//                play_sunrise_clip();
             }
-            */
+
             if (tick == 5)
             {
                 svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
@@ -934,13 +1054,46 @@ namespace EpServerEngineSampleClient
                 UpdateClientInfo();
                 clients_inited = true;
             }
-            //if(tick > 100)
-            if (tick > 40 && !player_active)
+            if (tick > 1600)
             {
-                SendTimeup(tick - 40);
-                if (tick > 43)
-                    tick = 36;
+                //value.TimeOfDay.Ticks == 0;
+                if(hour == 0 && midnight_flag == false)
+				{
+                    //AddMsg("it is now midnight");
+                    midnight_flag = true;
+                    DateTime now2 = DateTime.Now;
+                    string t2date = now2.Date.ToString();
+                    int space = t2date.IndexOf(" ");
+                    t2date = t2date.Remove(space);
+                    AddMsg(t2date);
+                    tbTodaysDate.Text = t2date;
+                }
+                else if(hour > 0 && midnight_flag == true)
+				{
+                    midnight_flag = false;
+                    AddMsg("sunrise: " + sunrises[now.Day - 1]);
+                    AddMsg("sunset: " + sunsets[now.Day - 1]);
+                    string ts = sunrises[now.Day - 1].ToString();
+                    int space = ts.IndexOf(" ");
+                    ts = ts.Remove(space);
+                    tbSunrise.Text = ts;
+                    ts = sunsets[now.Day - 1].ToString();
+                    space = ts.IndexOf(" ");
+                    ts = ts.Remove(space);
+                    tbSunset.Text = ts;
+                }
+                tick = 36;
             }
+        }
+        void play_sunrise_clip()
+        {
+            //AddMsg("playing sunrise.wav...");
+            System.Media.SoundPlayer player;
+            string song = "c:\\users\\Daniel\\Music\\sunrise.wav";
+            player = new System.Media.SoundPlayer();
+            player.SoundLocation = song;
+            player.Play();
+            player.Dispose();
         }
         void play_aliens_clip()
 	{
@@ -1126,7 +1279,7 @@ namespace EpServerEngineSampleClient
         {
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(0, 0);
-            //AddMsg("loaded");
+            AddMsg("loaded");
         }
         private void Btn_PlayList_Click(object sender, EventArgs e)
         {

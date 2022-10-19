@@ -153,6 +153,8 @@ UCHAR sock_timer(int test)
 		{
 			sprintf(tempx,"%03d",s_tick);
 			//printf("tick: %s\n",tempx);
+			// send msg to win client (SECOND_WINDOWS7)
+			// WIN7-X64 is client_table[1] 
 			send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,AREYOUTHERE);
 		}
 /*

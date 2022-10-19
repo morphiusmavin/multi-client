@@ -37,6 +37,8 @@ namespace EpServerEngineSampleClient
 			this.btn7 = new System.Windows.Forms.Button();
 			this.btn6 = new System.Windows.Forms.Button();
 			this.btn5 = new System.Windows.Forms.Button();
+			this.btnAllOn = new System.Windows.Forms.Button();
+			this.btnAllOff = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btn1
@@ -127,12 +129,36 @@ namespace EpServerEngineSampleClient
 			this.btn5.UseVisualStyleBackColor = true;
 			this.btn5.Click += new System.EventHandler(this.btn5_Click);
 			// 
+			// btnAllOn
+			// 
+			this.btnAllOn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnAllOn.Location = new System.Drawing.Point(27, 488);
+			this.btnAllOn.Name = "btnAllOn";
+			this.btnAllOn.Size = new System.Drawing.Size(118, 39);
+			this.btnAllOn.TabIndex = 8;
+			this.btnAllOn.Text = "All On";
+			this.btnAllOn.UseVisualStyleBackColor = true;
+			this.btnAllOn.Click += new System.EventHandler(this.btnAllOn_Click);
+			// 
+			// btnAllOff
+			// 
+			this.btnAllOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnAllOff.Location = new System.Drawing.Point(27, 543);
+			this.btnAllOff.Name = "btnAllOff";
+			this.btnAllOff.Size = new System.Drawing.Size(118, 39);
+			this.btnAllOff.TabIndex = 9;
+			this.btnAllOff.Text = "All Off";
+			this.btnAllOff.UseVisualStyleBackColor = true;
+			this.btnAllOff.Click += new System.EventHandler(this.btnAllOff_Click);
+			// 
 			// Cabin
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(289, 610);
+			this.ClientSize = new System.Drawing.Size(289, 633);
+			this.Controls.Add(this.btnAllOff);
+			this.Controls.Add(this.btnAllOn);
 			this.Controls.Add(this.btn8);
 			this.Controls.Add(this.btn7);
 			this.Controls.Add(this.btn6);
@@ -157,5 +183,7 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.Button btn7;
 		private System.Windows.Forms.Button btn6;
 		private System.Windows.Forms.Button btn5;
+		private System.Windows.Forms.Button btnAllOn;
+		private System.Windows.Forms.Button btnAllOff;
 	}
 }

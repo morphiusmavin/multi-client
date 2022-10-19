@@ -778,11 +778,11 @@ UCHAR timer_task(int test)
 	}
 
 	i = 0;
-	cmd = GET_TEMP4;
+	cmd = AREYOUTHERE;
 
 	while(TRUE)
 	{
-		if(timer_on > 0)
+		if(timer_on == 1)
 		{
 			//printf("%s %d\n",client_table[i].label, client_table[i].socket);
 			for(i = 0;i < MAX_CLIENTS;i++)
@@ -805,8 +805,12 @@ UCHAR timer_task(int test)
 					uSleep(timer_seconds,0);
 				}
 			}
-		} else uSleep(1,TIME_DELAY/16);
-
+		}
+		else if(timer_on == 2)
+		{
+			
+		}else uSleep(0,TIME_DELAY/200);
+	
 		if(shutdown_all)
 		{
 			return 0;

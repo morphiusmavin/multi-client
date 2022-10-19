@@ -68,10 +68,15 @@
 			this.btnWinClMsg = new System.Windows.Forms.Button();
 			this.tbAlarm = new System.Windows.Forms.TextBox();
 			this.cbAlarm = new System.Windows.Forms.CheckBox();
-			this.tbTest = new System.Windows.Forms.TextBox();
-			this.tbTest2 = new System.Windows.Forms.TextBox();
-			this.tbTest3 = new System.Windows.Forms.TextBox();
-			this.tbTest4 = new System.Windows.Forms.TextBox();
+			this.tbTodaysDate = new System.Windows.Forms.TextBox();
+			this.tbSunrise = new System.Windows.Forms.TextBox();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label7 = new System.Windows.Forms.Label();
+			this.tbSunset = new System.Windows.Forms.TextBox();
+			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
+			this.label10 = new System.Windows.Forms.Label();
+			this.tbTime = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -82,12 +87,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbReceived.Location = new System.Drawing.Point(523, 297);
+			this.tbReceived.Location = new System.Drawing.Point(526, 412);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(300, 233);
+			this.tbReceived.Size = new System.Drawing.Size(300, 180);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
 			// 
@@ -447,7 +452,7 @@
 			// tbSendMsg
 			// 
 			this.tbSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbSendMsg.Location = new System.Drawing.Point(523, 591);
+			this.tbSendMsg.Location = new System.Drawing.Point(528, 648);
 			this.tbSendMsg.Name = "tbSendMsg";
 			this.tbSendMsg.Size = new System.Drawing.Size(300, 26);
 			this.tbSendMsg.TabIndex = 44;
@@ -491,7 +496,7 @@
 			// tbAlarm
 			// 
 			this.tbAlarm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.tbAlarm.Location = new System.Drawing.Point(619, 546);
+			this.tbAlarm.Location = new System.Drawing.Point(624, 603);
 			this.tbAlarm.Name = "tbAlarm";
 			this.tbAlarm.Size = new System.Drawing.Size(202, 29);
 			this.tbAlarm.TabIndex = 48;
@@ -501,48 +506,94 @@
 			// 
 			this.cbAlarm.AutoSize = true;
 			this.cbAlarm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.cbAlarm.Location = new System.Drawing.Point(530, 546);
+			this.cbAlarm.Location = new System.Drawing.Point(535, 603);
 			this.cbAlarm.Name = "cbAlarm";
 			this.cbAlarm.Size = new System.Drawing.Size(83, 28);
 			this.cbAlarm.TabIndex = 49;
 			this.cbAlarm.Text = "Alarm";
 			this.cbAlarm.UseVisualStyleBackColor = true;
 			// 
-			// tbTest
+			// tbTodaysDate
 			// 
-			this.tbTest.Enabled = false;
-			this.tbTest.Location = new System.Drawing.Point(306, 520);
-			this.tbTest.Name = "tbTest";
-			this.tbTest.Size = new System.Drawing.Size(100, 20);
-			this.tbTest.TabIndex = 50;
-			this.tbTest.Visible = false;
+			this.tbTodaysDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+			this.tbTodaysDate.Location = new System.Drawing.Point(613, 287);
+			this.tbTodaysDate.Name = "tbTodaysDate";
+			this.tbTodaysDate.Size = new System.Drawing.Size(103, 26);
+			this.tbTodaysDate.TabIndex = 50;
 			// 
-			// tbTest2
+			// tbSunrise
 			// 
-			this.tbTest2.Enabled = false;
-			this.tbTest2.Location = new System.Drawing.Point(306, 555);
-			this.tbTest2.Name = "tbTest2";
-			this.tbTest2.Size = new System.Drawing.Size(100, 20);
-			this.tbTest2.TabIndex = 51;
-			this.tbTest2.Visible = false;
+			this.tbSunrise.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+			this.tbSunrise.Location = new System.Drawing.Point(613, 327);
+			this.tbSunrise.Name = "tbSunrise";
+			this.tbSunrise.Size = new System.Drawing.Size(79, 26);
+			this.tbSunrise.TabIndex = 51;
 			// 
-			// tbTest3
+			// label6
 			// 
-			this.tbTest3.Enabled = false;
-			this.tbTest3.Location = new System.Drawing.Point(306, 597);
-			this.tbTest3.Name = "tbTest3";
-			this.tbTest3.Size = new System.Drawing.Size(100, 20);
-			this.tbTest3.TabIndex = 52;
-			this.tbTest3.Visible = false;
+			this.label6.AutoSize = true;
+			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label6.Location = new System.Drawing.Point(532, 330);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(75, 20);
+			this.label6.TabIndex = 52;
+			this.label6.Text = "Sunrise:";
 			// 
-			// tbTest4
+			// label7
 			// 
-			this.tbTest4.Enabled = false;
-			this.tbTest4.Location = new System.Drawing.Point(306, 638);
-			this.tbTest4.Name = "tbTest4";
-			this.tbTest4.Size = new System.Drawing.Size(100, 20);
-			this.tbTest4.TabIndex = 53;
-			this.tbTest4.Visible = false;
+			this.label7.AutoSize = true;
+			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label7.Location = new System.Drawing.Point(532, 367);
+			this.label7.Name = "label7";
+			this.label7.Size = new System.Drawing.Size(71, 20);
+			this.label7.TabIndex = 54;
+			this.label7.Text = "Sunset:";
+			// 
+			// tbSunset
+			// 
+			this.tbSunset.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+			this.tbSunset.Location = new System.Drawing.Point(613, 364);
+			this.tbSunset.Name = "tbSunset";
+			this.tbSunset.Size = new System.Drawing.Size(79, 26);
+			this.tbSunset.TabIndex = 53;
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label8.Location = new System.Drawing.Point(698, 330);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(35, 20);
+			this.label8.TabIndex = 55;
+			this.label8.Text = "AM";
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label9.Location = new System.Drawing.Point(698, 367);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(34, 20);
+			this.label9.TabIndex = 56;
+			this.label9.Text = "PM";
+			// 
+			// label10
+			// 
+			this.label10.AutoSize = true;
+			this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label10.Location = new System.Drawing.Point(531, 293);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(62, 20);
+			this.label10.TabIndex = 57;
+			this.label10.Text = "Today:";
+			// 
+			// tbTime
+			// 
+			this.tbTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+			this.tbTime.Location = new System.Drawing.Point(725, 287);
+			this.tbTime.Name = "tbTime";
+			this.tbTime.Size = new System.Drawing.Size(103, 26);
+			this.tbTime.TabIndex = 58;
 			// 
 			// FrmSampleClient
 			// 
@@ -550,10 +601,15 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1140, 688);
-			this.Controls.Add(this.tbTest4);
-			this.Controls.Add(this.tbTest3);
-			this.Controls.Add(this.tbTest2);
-			this.Controls.Add(this.tbTest);
+			this.Controls.Add(this.tbTime);
+			this.Controls.Add(this.label10);
+			this.Controls.Add(this.label9);
+			this.Controls.Add(this.label8);
+			this.Controls.Add(this.label7);
+			this.Controls.Add(this.tbSunset);
+			this.Controls.Add(this.label6);
+			this.Controls.Add(this.tbSunrise);
+			this.Controls.Add(this.tbTodaysDate);
 			this.Controls.Add(this.cbAlarm);
 			this.Controls.Add(this.tbAlarm);
 			this.Controls.Add(this.btnWinClMsg);
@@ -581,7 +637,9 @@
 			this.Controls.Add(this.btn_PlayList);
 			this.Controls.Add(this.tbReceived);
 			this.Controls.Add(this.btnConnect);
+			this.MaximizeBox = false;
 			this.Name = "FrmSampleClient";
+			this.ShowIcon = false;
 			this.Text = "SampleClient";
 			this.Load += new System.EventHandler(this.FrmSampleClient_Load);
 			((System.ComponentModel.ISupportInitialize)(this.table)).EndInit();
@@ -644,10 +702,15 @@
 		private System.Windows.Forms.Button btnWinClMsg;
 		private System.Windows.Forms.TextBox tbAlarm;
 		private System.Windows.Forms.CheckBox cbAlarm;
-		private System.Windows.Forms.TextBox tbTest;
-		private System.Windows.Forms.TextBox tbTest2;
-		private System.Windows.Forms.TextBox tbTest3;
-		private System.Windows.Forms.TextBox tbTest4;
+		private System.Windows.Forms.TextBox tbTodaysDate;
+		private System.Windows.Forms.TextBox tbSunrise;
+		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.TextBox tbSunset;
+		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.TextBox tbTime;
 	}
 }
 

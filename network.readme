@@ -96,3 +96,41 @@ get_host_cmd_task2() in cmd_tasks.c of each client waits for msg from sched:
 recv_msg_task in sock_mgt waits for msg: msgrcv(sock_qid...
 get_host_cmd_task1 in sock_mgt waits for tcp msg and sends to 
 	sched in cmd_tasks.c: msgsnd(sched_qid,
+	
+old way
+	server sends AREYOUTHERE msg to win cl 0 every second 
+	win cl puts the seconds server is up in tbServerTime edit box 
+	and sends YESIMHERE back to server but server doesn't do anything 
+	with it 
+
+new way 
+	use START_TIMER/STOP_TIMER msg's to send AREYOUTHERE msg to 
+	individual clients for specified period (1 sec, 2 sec, 5 sec) 
+	client then responds with its time stamp and server calculates 
+	how long it took to respond 
+	
+there's no lag with client in cabin using a wire across the ground 
+as opposed to using the TP-Links. 
+
+system needs to know what time it is (use system time functions) but 
+also have a list of sunrise and sunset for the entire year so e.g. it 
+can know when to turn lights on/off in chicken coop to extend laying 
+time for hens and turn on night lights at dusk. Also have a bell that 
+goes off about 30 seconds before sunrise/sunset. 
+
+have a button on the front panel of the WinCl that is configurable by 
+a script file so that it can toggle a light so you don't have to pull 
+up the menu every time. Also need a way to turn lights on from up in 
+the loft. 	
+	
+used:
+3	light green
+6	green 
+1	light orange
+2	orange 
+
+not used:
+5	light blue
+4	blue
+7	light brown
+8	brown 

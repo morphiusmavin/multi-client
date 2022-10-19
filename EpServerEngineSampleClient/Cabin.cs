@@ -182,5 +182,23 @@ namespace EpServerEngineSampleClient
 		{
 			SendCmd(7);
 		}
+
+		private void btnAllOn_Click(object sender, EventArgs e)
+		{
+			for(int i = 0;i < 8;i++)
+			{
+				SendCmd(i, true);
+				IfStatusChanged(i);
+			}
+		}
+
+		private void btnAllOff_Click(object sender, EventArgs e)
+		{
+			for (int i = 0; i < 8; i++)
+			{
+				SendCmd(i, false);
+				IfStatusChanged(i);
+			}
+		}
 	}
 }
