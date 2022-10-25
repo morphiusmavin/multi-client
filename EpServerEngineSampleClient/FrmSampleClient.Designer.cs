@@ -37,19 +37,19 @@
 			this.table = new System.Data.DataTable();
 			this.tbConnected = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.btn_PlayList = new System.Windows.Forms.Button();
+			this.btnAssignFunc = new System.Windows.Forms.Button();
 			this.tbServerTime = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.cbWhichWinClient = new System.Windows.Forms.ComboBox();
 			this.cbIPAdress = new System.Windows.Forms.ComboBox();
-			this.btnShutdown = new System.Windows.Forms.Button();
+			this.btnMngServer = new System.Windows.Forms.Button();
 			this.btnRescan = new System.Windows.Forms.Button();
-			this.btnShowParams = new System.Windows.Forms.Button();
+			this.btnFnc3 = new System.Windows.Forms.Button();
 			this.btnDBMgmt = new System.Windows.Forms.Button();
 			this.btnClear = new System.Windows.Forms.Button();
-			this.btnGetTime = new System.Windows.Forms.Button();
+			this.btnFnc1 = new System.Windows.Forms.Button();
 			this.btnGarageForm = new System.Windows.Forms.Button();
 			this.btnHomeSvr = new System.Windows.Forms.Button();
 			this.DialogOne = new System.Windows.Forms.Button();
@@ -61,10 +61,10 @@
 			this.btnSendMsg = new System.Windows.Forms.Button();
 			this.bSetClientTime = new System.Windows.Forms.Button();
 			this.btnReportTimeUp = new System.Windows.Forms.Button();
-			this.btnWaitReboot = new System.Windows.Forms.Button();
+			this.btnExit2Shell = new System.Windows.Forms.Button();
 			this.tbSendMsg = new System.Windows.Forms.TextBox();
 			this.btnCabinLights = new System.Windows.Forms.Button();
-			this.button1 = new System.Windows.Forms.Button();
+			this.btnShellandRename = new System.Windows.Forms.Button();
 			this.btnWinClMsg = new System.Windows.Forms.Button();
 			this.tbAlarm = new System.Windows.Forms.TextBox();
 			this.cbAlarm = new System.Windows.Forms.CheckBox();
@@ -73,10 +73,11 @@
 			this.label6 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.tbSunset = new System.Windows.Forms.TextBox();
-			this.label8 = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
 			this.label10 = new System.Windows.Forms.Label();
 			this.tbTime = new System.Windows.Forms.TextBox();
+			this.btnFnc2 = new System.Windows.Forms.Button();
+			this.btnMinimize = new System.Windows.Forms.Button();
+			this.btnTest = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -103,7 +104,7 @@
 			this.btnConnect.Location = new System.Drawing.Point(266, 32);
 			this.btnConnect.Name = "btnConnect";
 			this.btnConnect.Size = new System.Drawing.Size(233, 61);
-			this.btnConnect.TabIndex = 15;
+			this.btnConnect.TabIndex = 1;
 			this.btnConnect.Text = "Connect Server";
 			this.btnConnect.UseVisualStyleBackColor = false;
 			this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
@@ -160,17 +161,17 @@
 			this.label3.TabIndex = 7;
 			this.label3.Text = "Status:";
 			// 
-			// btn_PlayList
+			// btnAssignFunc
 			// 
-			this.btn_PlayList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btn_PlayList.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btn_PlayList.Location = new System.Drawing.Point(15, 266);
-			this.btn_PlayList.Name = "btn_PlayList";
-			this.btn_PlayList.Size = new System.Drawing.Size(233, 61);
-			this.btn_PlayList.TabIndex = 4;
-			this.btn_PlayList.Text = "Unused";
-			this.btn_PlayList.UseVisualStyleBackColor = false;
-			this.btn_PlayList.Click += new System.EventHandler(this.Btn_PlayList_Click);
+			this.btnAssignFunc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnAssignFunc.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnAssignFunc.Location = new System.Drawing.Point(15, 266);
+			this.btnAssignFunc.Name = "btnAssignFunc";
+			this.btnAssignFunc.Size = new System.Drawing.Size(233, 61);
+			this.btnAssignFunc.TabIndex = 6;
+			this.btnAssignFunc.Text = "Assign Func";
+			this.btnAssignFunc.UseVisualStyleBackColor = false;
+			this.btnAssignFunc.Click += new System.EventHandler(this.BtnAssignFunction);
 			// 
 			// tbServerTime
 			// 
@@ -245,17 +246,17 @@
 			this.cbIPAdress.TabIndex = 0;
 			this.cbIPAdress.SelectedIndexChanged += new System.EventHandler(this.IPAddressChanged);
 			// 
-			// btnShutdown
+			// btnMngServer
 			// 
-			this.btnShutdown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnShutdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnShutdown.Location = new System.Drawing.Point(15, 32);
-			this.btnShutdown.Name = "btnShutdown";
-			this.btnShutdown.Size = new System.Drawing.Size(235, 61);
-			this.btnShutdown.TabIndex = 14;
-			this.btnShutdown.Text = "Manage Server";
-			this.btnShutdown.UseVisualStyleBackColor = false;
-			this.btnShutdown.Click += new System.EventHandler(this.ShutdownServer);
+			this.btnMngServer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnMngServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnMngServer.Location = new System.Drawing.Point(15, 32);
+			this.btnMngServer.Name = "btnMngServer";
+			this.btnMngServer.Size = new System.Drawing.Size(235, 61);
+			this.btnMngServer.TabIndex = 0;
+			this.btnMngServer.Text = "Manage Server";
+			this.btnMngServer.UseVisualStyleBackColor = false;
+			this.btnMngServer.Click += new System.EventHandler(this.btnMngServer_Click);
 			// 
 			// btnRescan
 			// 
@@ -264,23 +265,22 @@
 			this.btnRescan.Location = new System.Drawing.Point(15, 110);
 			this.btnRescan.Name = "btnRescan";
 			this.btnRescan.Size = new System.Drawing.Size(235, 61);
-			this.btnRescan.TabIndex = 0;
+			this.btnRescan.TabIndex = 2;
 			this.btnRescan.Text = "Re-scan Clients";
 			this.btnRescan.UseVisualStyleBackColor = false;
 			this.btnRescan.Click += new System.EventHandler(this.RebootServer);
 			// 
-			// btnShowParams
+			// btnFnc3
 			// 
-			this.btnShowParams.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnShowParams.Enabled = false;
-			this.btnShowParams.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnShowParams.Location = new System.Drawing.Point(266, 110);
-			this.btnShowParams.Name = "btnShowParams";
-			this.btnShowParams.Size = new System.Drawing.Size(235, 61);
-			this.btnShowParams.TabIndex = 1;
-			this.btnShowParams.Text = "Show Params";
-			this.btnShowParams.UseVisualStyleBackColor = false;
-			this.btnShowParams.Click += new System.EventHandler(this.ShowParamsClick);
+			this.btnFnc3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnFnc3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnFnc3.Location = new System.Drawing.Point(12, 498);
+			this.btnFnc3.Name = "btnFnc3";
+			this.btnFnc3.Size = new System.Drawing.Size(235, 61);
+			this.btnFnc3.TabIndex = 12;
+			this.btnFnc3.Text = "Function 3";
+			this.btnFnc3.UseVisualStyleBackColor = false;
+			this.btnFnc3.Click += new System.EventHandler(this.Function3Click);
 			// 
 			// btnDBMgmt
 			// 
@@ -289,34 +289,34 @@
 			this.btnDBMgmt.Location = new System.Drawing.Point(15, 188);
 			this.btnDBMgmt.Name = "btnDBMgmt";
 			this.btnDBMgmt.Size = new System.Drawing.Size(235, 61);
-			this.btnDBMgmt.TabIndex = 2;
+			this.btnDBMgmt.TabIndex = 4;
 			this.btnDBMgmt.Text = "Set Next Client";
 			this.btnDBMgmt.UseVisualStyleBackColor = false;
-			this.btnDBMgmt.Click += new System.EventHandler(this.DBMgmt);
+			this.btnDBMgmt.Click += new System.EventHandler(this.btnSetNextClient_Click);
 			// 
 			// btnClear
 			// 
 			this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnClear.Location = new System.Drawing.Point(262, 422);
+			this.btnClear.Location = new System.Drawing.Point(263, 422);
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(235, 61);
-			this.btnClear.TabIndex = 8;
+			this.btnClear.TabIndex = 11;
 			this.btnClear.Text = "Clear Screen";
 			this.btnClear.UseVisualStyleBackColor = false;
 			this.btnClear.Click += new System.EventHandler(this.ClearScreen);
 			// 
-			// btnGetTime
+			// btnFnc1
 			// 
-			this.btnGetTime.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnGetTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnGetTime.Location = new System.Drawing.Point(15, 344);
-			this.btnGetTime.Name = "btnGetTime";
-			this.btnGetTime.Size = new System.Drawing.Size(235, 61);
-			this.btnGetTime.TabIndex = 6;
-			this.btnGetTime.Text = "Unused";
-			this.btnGetTime.UseVisualStyleBackColor = false;
-			this.btnGetTime.Click += new System.EventHandler(this.GetTime);
+			this.btnFnc1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnFnc1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnFnc1.Location = new System.Drawing.Point(15, 344);
+			this.btnFnc1.Name = "btnFnc1";
+			this.btnFnc1.Size = new System.Drawing.Size(235, 61);
+			this.btnFnc1.TabIndex = 8;
+			this.btnFnc1.Text = "Function 1";
+			this.btnFnc1.UseVisualStyleBackColor = false;
+			this.btnFnc1.Click += new System.EventHandler(this.Function1Click);
 			// 
 			// btnGarageForm
 			// 
@@ -325,7 +325,7 @@
 			this.btnGarageForm.Location = new System.Drawing.Point(266, 188);
 			this.btnGarageForm.Name = "btnGarageForm";
 			this.btnGarageForm.Size = new System.Drawing.Size(235, 61);
-			this.btnGarageForm.TabIndex = 3;
+			this.btnGarageForm.TabIndex = 5;
 			this.btnGarageForm.Text = "Garage Lights";
 			this.btnGarageForm.UseVisualStyleBackColor = false;
 			this.btnGarageForm.Click += new System.EventHandler(this.GarageFormClick);
@@ -334,13 +334,13 @@
 			// 
 			this.btnHomeSvr.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnHomeSvr.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnHomeSvr.Location = new System.Drawing.Point(15, 422);
+			this.btnHomeSvr.Location = new System.Drawing.Point(266, 110);
 			this.btnHomeSvr.Name = "btnHomeSvr";
 			this.btnHomeSvr.Size = new System.Drawing.Size(235, 61);
-			this.btnHomeSvr.TabIndex = 10;
+			this.btnHomeSvr.TabIndex = 3;
 			this.btnHomeSvr.Text = "Timers";
 			this.btnHomeSvr.UseVisualStyleBackColor = false;
-			this.btnHomeSvr.Click += new System.EventHandler(this.btnAVR_Click);
+			this.btnHomeSvr.Click += new System.EventHandler(this.btnTimers_Click);
 			// 
 			// DialogOne
 			// 
@@ -352,7 +352,7 @@
 			this.DialogOne.TabIndex = 9;
 			this.DialogOne.Text = "Cabin";
 			this.DialogOne.UseVisualStyleBackColor = false;
-			this.DialogOne.Click += new System.EventHandler(this.Dialog1_Click);
+			this.DialogOne.Click += new System.EventHandler(this.Cabin_Click);
 			// 
 			// timer1
 			// 
@@ -377,7 +377,7 @@
 			this.btnRebootClient.Location = new System.Drawing.Point(897, 272);
 			this.btnRebootClient.Name = "btnRebootClient";
 			this.btnRebootClient.Size = new System.Drawing.Size(219, 35);
-			this.btnRebootClient.TabIndex = 36;
+			this.btnRebootClient.TabIndex = 21;
 			this.btnRebootClient.Text = "Reboot";
 			this.btnRebootClient.UseVisualStyleBackColor = false;
 			this.btnRebootClient.Click += new System.EventHandler(this.btnRebootClient_Click);
@@ -388,7 +388,7 @@
 			this.btnShutdownClient.Location = new System.Drawing.Point(897, 364);
 			this.btnShutdownClient.Name = "btnShutdownClient";
 			this.btnShutdownClient.Size = new System.Drawing.Size(219, 37);
-			this.btnShutdownClient.TabIndex = 37;
+			this.btnShutdownClient.TabIndex = 23;
 			this.btnShutdownClient.Text = "Shutdown";
 			this.btnShutdownClient.UseVisualStyleBackColor = true;
 			this.btnShutdownClient.Click += new System.EventHandler(this.btnShutdownClient_Click);
@@ -399,10 +399,10 @@
 			this.btnSendStatus.Location = new System.Drawing.Point(897, 459);
 			this.btnSendStatus.Name = "btnSendStatus";
 			this.btnSendStatus.Size = new System.Drawing.Size(219, 37);
-			this.btnSendStatus.TabIndex = 38;
+			this.btnSendStatus.TabIndex = 25;
 			this.btnSendStatus.Text = "Get Status";
 			this.btnSendStatus.UseVisualStyleBackColor = true;
-			this.btnSendStatus.Click += new System.EventHandler(this.button1_Click);
+			this.btnSendStatus.Click += new System.EventHandler(this.btnSendStatus_Click);
 			// 
 			// btnSendMsg
 			// 
@@ -410,7 +410,7 @@
 			this.btnSendMsg.Location = new System.Drawing.Point(897, 507);
 			this.btnSendMsg.Name = "btnSendMsg";
 			this.btnSendMsg.Size = new System.Drawing.Size(219, 37);
-			this.btnSendMsg.TabIndex = 39;
+			this.btnSendMsg.TabIndex = 26;
 			this.btnSendMsg.Text = "Send Message";
 			this.btnSendMsg.UseVisualStyleBackColor = true;
 			this.btnSendMsg.Click += new System.EventHandler(this.btnSendMsg_Click);
@@ -421,7 +421,7 @@
 			this.bSetClientTime.Location = new System.Drawing.Point(897, 555);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(219, 37);
-			this.bSetClientTime.TabIndex = 41;
+			this.bSetClientTime.TabIndex = 27;
 			this.bSetClientTime.Text = "Set Time";
 			this.bSetClientTime.UseVisualStyleBackColor = true;
 			this.bSetClientTime.Click += new System.EventHandler(this.bSetClientTime_Click);
@@ -432,22 +432,22 @@
 			this.btnReportTimeUp.Location = new System.Drawing.Point(897, 603);
 			this.btnReportTimeUp.Name = "btnReportTimeUp";
 			this.btnReportTimeUp.Size = new System.Drawing.Size(219, 37);
-			this.btnReportTimeUp.TabIndex = 42;
+			this.btnReportTimeUp.TabIndex = 28;
 			this.btnReportTimeUp.Text = "Report Time Up";
 			this.btnReportTimeUp.UseVisualStyleBackColor = true;
 			this.btnReportTimeUp.Click += new System.EventHandler(this.btnReportTimeUp_Click);
 			// 
-			// btnWaitReboot
+			// btnExit2Shell
 			// 
-			this.btnWaitReboot.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnWaitReboot.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnWaitReboot.Location = new System.Drawing.Point(897, 318);
-			this.btnWaitReboot.Name = "btnWaitReboot";
-			this.btnWaitReboot.Size = new System.Drawing.Size(219, 35);
-			this.btnWaitReboot.TabIndex = 43;
-			this.btnWaitReboot.Text = "Exit to Shell";
-			this.btnWaitReboot.UseVisualStyleBackColor = false;
-			this.btnWaitReboot.Click += new System.EventHandler(this.btnWaitReboot_Click);
+			this.btnExit2Shell.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnExit2Shell.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.btnExit2Shell.Location = new System.Drawing.Point(897, 318);
+			this.btnExit2Shell.Name = "btnExit2Shell";
+			this.btnExit2Shell.Size = new System.Drawing.Size(219, 35);
+			this.btnExit2Shell.TabIndex = 22;
+			this.btnExit2Shell.Text = "Exit to Shell";
+			this.btnExit2Shell.UseVisualStyleBackColor = false;
+			this.btnExit2Shell.Click += new System.EventHandler(this.Exit2Shell_Click);
 			// 
 			// tbSendMsg
 			// 
@@ -455,7 +455,7 @@
 			this.tbSendMsg.Location = new System.Drawing.Point(528, 648);
 			this.tbSendMsg.Name = "tbSendMsg";
 			this.tbSendMsg.Size = new System.Drawing.Size(300, 26);
-			this.tbSendMsg.TabIndex = 44;
+			this.tbSendMsg.TabIndex = 20;
 			this.tbSendMsg.TextChanged += new System.EventHandler(this.tbSendMsg_TextChanged);
 			// 
 			// btnCabinLights
@@ -465,30 +465,30 @@
 			this.btnCabinLights.Location = new System.Drawing.Point(268, 266);
 			this.btnCabinLights.Name = "btnCabinLights";
 			this.btnCabinLights.Size = new System.Drawing.Size(233, 61);
-			this.btnCabinLights.TabIndex = 45;
+			this.btnCabinLights.TabIndex = 7;
 			this.btnCabinLights.Text = "Test Bench";
 			this.btnCabinLights.UseVisualStyleBackColor = false;
-			this.btnCabinLights.Click += new System.EventHandler(this.btnCabinLights_Click);
+			this.btnCabinLights.Click += new System.EventHandler(this.btnTestBench_Click);
 			// 
-			// button1
+			// btnShellandRename
 			// 
-			this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.button1.Location = new System.Drawing.Point(897, 412);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(219, 37);
-			this.button1.TabIndex = 46;
-			this.button1.Text = "Shell and Rename";
-			this.button1.UseVisualStyleBackColor = true;
-			this.button1.Click += new System.EventHandler(this.button1_Click_1);
+			this.btnShellandRename.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.btnShellandRename.Location = new System.Drawing.Point(897, 412);
+			this.btnShellandRename.Name = "btnShellandRename";
+			this.btnShellandRename.Size = new System.Drawing.Size(219, 37);
+			this.btnShellandRename.TabIndex = 24;
+			this.btnShellandRename.Text = "Shell and Rename";
+			this.btnShellandRename.UseVisualStyleBackColor = true;
+			this.btnShellandRename.Click += new System.EventHandler(this.btnShellandRename_Click);
 			// 
 			// btnWinClMsg
 			// 
 			this.btnWinClMsg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnWinClMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWinClMsg.Location = new System.Drawing.Point(15, 496);
+			this.btnWinClMsg.Location = new System.Drawing.Point(262, 498);
 			this.btnWinClMsg.Name = "btnWinClMsg";
 			this.btnWinClMsg.Size = new System.Drawing.Size(235, 61);
-			this.btnWinClMsg.TabIndex = 47;
+			this.btnWinClMsg.TabIndex = 13;
 			this.btnWinClMsg.Text = "Win Cl Msg";
 			this.btnWinClMsg.UseVisualStyleBackColor = false;
 			this.btnWinClMsg.Click += new System.EventHandler(this.btnWinClMsg_Click);
@@ -499,7 +499,7 @@
 			this.tbAlarm.Location = new System.Drawing.Point(624, 603);
 			this.tbAlarm.Name = "tbAlarm";
 			this.tbAlarm.Size = new System.Drawing.Size(202, 29);
-			this.tbAlarm.TabIndex = 48;
+			this.tbAlarm.TabIndex = 19;
 			this.tbAlarm.TextChanged += new System.EventHandler(this.tbAlarm_TextChanged);
 			// 
 			// cbAlarm
@@ -519,15 +519,15 @@
 			this.tbTodaysDate.Location = new System.Drawing.Point(613, 287);
 			this.tbTodaysDate.Name = "tbTodaysDate";
 			this.tbTodaysDate.Size = new System.Drawing.Size(103, 26);
-			this.tbTodaysDate.TabIndex = 50;
+			this.tbTodaysDate.TabIndex = 15;
 			// 
 			// tbSunrise
 			// 
 			this.tbSunrise.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
 			this.tbSunrise.Location = new System.Drawing.Point(613, 327);
 			this.tbSunrise.Name = "tbSunrise";
-			this.tbSunrise.Size = new System.Drawing.Size(79, 26);
-			this.tbSunrise.TabIndex = 51;
+			this.tbSunrise.Size = new System.Drawing.Size(64, 26);
+			this.tbSunrise.TabIndex = 17;
 			// 
 			// label6
 			// 
@@ -554,28 +554,8 @@
 			this.tbSunset.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
 			this.tbSunset.Location = new System.Drawing.Point(613, 364);
 			this.tbSunset.Name = "tbSunset";
-			this.tbSunset.Size = new System.Drawing.Size(79, 26);
-			this.tbSunset.TabIndex = 53;
-			// 
-			// label8
-			// 
-			this.label8.AutoSize = true;
-			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label8.Location = new System.Drawing.Point(698, 330);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(35, 20);
-			this.label8.TabIndex = 55;
-			this.label8.Text = "AM";
-			// 
-			// label9
-			// 
-			this.label9.AutoSize = true;
-			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label9.Location = new System.Drawing.Point(698, 367);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(34, 20);
-			this.label9.TabIndex = 56;
-			this.label9.Text = "PM";
+			this.tbSunset.Size = new System.Drawing.Size(64, 26);
+			this.tbSunset.TabIndex = 18;
 			// 
 			// label10
 			// 
@@ -593,7 +573,43 @@
 			this.tbTime.Location = new System.Drawing.Point(725, 287);
 			this.tbTime.Name = "tbTime";
 			this.tbTime.Size = new System.Drawing.Size(103, 26);
-			this.tbTime.TabIndex = 58;
+			this.tbTime.TabIndex = 16;
+			// 
+			// btnFnc2
+			// 
+			this.btnFnc2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnFnc2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnFnc2.Location = new System.Drawing.Point(13, 422);
+			this.btnFnc2.Name = "btnFnc2";
+			this.btnFnc2.Size = new System.Drawing.Size(235, 61);
+			this.btnFnc2.TabIndex = 10;
+			this.btnFnc2.Text = "Function 2";
+			this.btnFnc2.UseVisualStyleBackColor = false;
+			this.btnFnc2.Click += new System.EventHandler(this.Function2Click);
+			// 
+			// btnMinimize
+			// 
+			this.btnMinimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnMinimize.Location = new System.Drawing.Point(12, 579);
+			this.btnMinimize.Name = "btnMinimize";
+			this.btnMinimize.Size = new System.Drawing.Size(235, 61);
+			this.btnMinimize.TabIndex = 14;
+			this.btnMinimize.Text = "Minimize";
+			this.btnMinimize.UseVisualStyleBackColor = false;
+			this.btnMinimize.Click += new System.EventHandler(this.Minimize_Click);
+			// 
+			// btnTest
+			// 
+			this.btnTest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnTest.Location = new System.Drawing.Point(262, 579);
+			this.btnTest.Name = "btnTest";
+			this.btnTest.Size = new System.Drawing.Size(235, 61);
+			this.btnTest.TabIndex = 58;
+			this.btnTest.Text = "Test";
+			this.btnTest.UseVisualStyleBackColor = false;
+			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
 			// 
 			// FrmSampleClient
 			// 
@@ -601,10 +617,11 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1140, 688);
+			this.Controls.Add(this.btnTest);
+			this.Controls.Add(this.btnMinimize);
+			this.Controls.Add(this.btnFnc2);
 			this.Controls.Add(this.tbTime);
 			this.Controls.Add(this.label10);
-			this.Controls.Add(this.label9);
-			this.Controls.Add(this.label8);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.tbSunset);
 			this.Controls.Add(this.label6);
@@ -613,10 +630,10 @@
 			this.Controls.Add(this.cbAlarm);
 			this.Controls.Add(this.tbAlarm);
 			this.Controls.Add(this.btnWinClMsg);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.btnShellandRename);
 			this.Controls.Add(this.btnCabinLights);
 			this.Controls.Add(this.tbSendMsg);
-			this.Controls.Add(this.btnWaitReboot);
+			this.Controls.Add(this.btnExit2Shell);
 			this.Controls.Add(this.btnReportTimeUp);
 			this.Controls.Add(this.bSetClientTime);
 			this.Controls.Add(this.btnSendMsg);
@@ -627,14 +644,14 @@
 			this.Controls.Add(this.DialogOne);
 			this.Controls.Add(this.btnHomeSvr);
 			this.Controls.Add(this.btnGarageForm);
-			this.Controls.Add(this.btnGetTime);
+			this.Controls.Add(this.btnFnc1);
 			this.Controls.Add(this.btnClear);
 			this.Controls.Add(this.btnDBMgmt);
-			this.Controls.Add(this.btnShowParams);
+			this.Controls.Add(this.btnFnc3);
 			this.Controls.Add(this.btnRescan);
-			this.Controls.Add(this.btnShutdown);
+			this.Controls.Add(this.btnMngServer);
 			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.btn_PlayList);
+			this.Controls.Add(this.btnAssignFunc);
 			this.Controls.Add(this.tbReceived);
 			this.Controls.Add(this.btnConnect);
 			this.MaximizeBox = false;
@@ -671,16 +688,16 @@
 
         private System.Windows.Forms.TextBox tbConnected;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button btn_PlayList;
+        private System.Windows.Forms.Button btnAssignFunc;
         private System.Windows.Forms.TextBox tbServerTime;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnShutdown;
+        private System.Windows.Forms.Button btnMngServer;
         private System.Windows.Forms.Button btnRescan;
-        private System.Windows.Forms.Button btnShowParams;
+        private System.Windows.Forms.Button btnFnc3;
         private System.Windows.Forms.Button btnDBMgmt;
         private System.Windows.Forms.Button btnClear;
-        private System.Windows.Forms.Button btnGetTime;
+        private System.Windows.Forms.Button btnFnc1;
         private System.Windows.Forms.Button btnGarageForm;
         private System.Windows.Forms.Button btnHomeSvr;
 		private System.Windows.Forms.Button DialogOne;
@@ -693,10 +710,10 @@
 		private System.Windows.Forms.Button btnSendMsg;
 		private System.Windows.Forms.Button bSetClientTime;
 		private System.Windows.Forms.Button btnReportTimeUp;
-		private System.Windows.Forms.Button btnWaitReboot;
+		private System.Windows.Forms.Button btnExit2Shell;
 		private System.Windows.Forms.TextBox tbSendMsg;
 		private System.Windows.Forms.Button btnCabinLights;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button btnShellandRename;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.ComboBox cbWhichWinClient;
 		private System.Windows.Forms.Button btnWinClMsg;
@@ -707,10 +724,11 @@
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.TextBox tbSunset;
-		private System.Windows.Forms.Label label8;
-		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.TextBox tbTime;
+		private System.Windows.Forms.Button btnFnc2;
+		private System.Windows.Forms.Button btnMinimize;
+		private System.Windows.Forms.Button btnTest;
 	}
 }
 

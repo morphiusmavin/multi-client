@@ -41,7 +41,7 @@ be limited to 255 total commands.
 
 146 (server) is where the pi used to be (controlling garage lights)
 154 is cabin
-147 is other io card in garage near RE system 
+147 is other io card in garage near RE system (testbench)
 150 not used 
 151	"
 155	"
@@ -115,13 +115,16 @@ as opposed to using the TP-Links.
 system needs to know what time it is (use system time functions) but 
 also have a list of sunrise and sunset for the entire year so e.g. it 
 can know when to turn lights on/off in chicken coop to extend laying 
-time for hens and turn on night lights at dusk. Also have a bell that 
-goes off about 30 seconds before sunrise/sunset. 
+time for hens and turn on night lights at dusk. 
 
 have a button on the front panel of the WinCl that is configurable by 
 a script file so that it can toggle a light so you don't have to pull 
 up the menu every time. Also need a way to turn lights on from up in 
-the loft. 	
+the loft. 
+"Assign Func" button pulls up dialog that has: (3) combo boxes: one 
+	for the function button to assign, the other for which client 
+	the other for which port of the client. And then an "Assign" button 
+	to assign the given client/port to the function. 
 	
 used:
 3	light green
@@ -134,3 +137,4 @@ not used:
 4	blue
 7	light brown
 8	brown 
+

@@ -39,6 +39,8 @@
 			this.btnShellRename = new System.Windows.Forms.Button();
 			this.button1 = new System.Windows.Forms.Button();
 			this.button2 = new System.Windows.Forms.Button();
+			this.btnShutdown = new System.Windows.Forms.Button();
+			this.btnMinimize = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btnRebootServer
@@ -87,10 +89,10 @@
 			// 
 			// tbReceived
 			// 
-			this.tbReceived.Location = new System.Drawing.Point(195, 99);
+			this.tbReceived.Location = new System.Drawing.Point(195, 181);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
-			this.tbReceived.Size = new System.Drawing.Size(163, 244);
+			this.tbReceived.Size = new System.Drawing.Size(163, 162);
 			this.tbReceived.TabIndex = 4;
 			this.tbReceived.TextChanged += new System.EventHandler(this.tbReceived_TextChanged);
 			// 
@@ -160,12 +162,36 @@
 			this.button2.UseVisualStyleBackColor = true;
 			this.button2.Click += new System.EventHandler(this.button2_Click);
 			// 
+			// btnShutdown
+			// 
+			this.btnShutdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnShutdown.Location = new System.Drawing.Point(195, 140);
+			this.btnShutdown.Name = "btnShutdown";
+			this.btnShutdown.Size = new System.Drawing.Size(163, 35);
+			this.btnShutdown.TabIndex = 11;
+			this.btnShutdown.Text = "Exit";
+			this.btnShutdown.UseVisualStyleBackColor = true;
+			this.btnShutdown.Click += new System.EventHandler(this.btnShutdown_Click);
+			// 
+			// btnMinimize
+			// 
+			this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnMinimize.Location = new System.Drawing.Point(195, 99);
+			this.btnMinimize.Name = "btnMinimize";
+			this.btnMinimize.Size = new System.Drawing.Size(163, 35);
+			this.btnMinimize.TabIndex = 12;
+			this.btnMinimize.Text = "Minimize";
+			this.btnMinimize.UseVisualStyleBackColor = true;
+			this.btnMinimize.Click += new System.EventHandler(this.Minimize_Click);
+			// 
 			// ManageServer
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(371, 358);
+			this.ClientSize = new System.Drawing.Size(371, 357);
+			this.Controls.Add(this.btnMinimize);
+			this.Controls.Add(this.btnShutdown);
 			this.Controls.Add(this.button2);
 			this.Controls.Add(this.button1);
 			this.Controls.Add(this.btnShellRename);
@@ -197,5 +223,7 @@
 		private System.Windows.Forms.Button btnShellRename;
 		private System.Windows.Forms.Button button1;
 		private System.Windows.Forms.Button button2;
+		private System.Windows.Forms.Button btnShutdown;
+		private System.Windows.Forms.Button btnMinimize;
 	}
 }

@@ -1,0 +1,72 @@
+        private void ShowParamsClick(object sender, EventArgs e)
+        {
+            return;
+            if (m_client.IsConnectionAlive)
+            {
+                if (dlgsetparams.ShowDialog(this) == DialogResult.OK)
+                {
+                    //AddMsg("new password: " + cfg_params.password);
+                    cfg_params = dlgsetparams.GetParams();
+                    byte[] rpm_mph = BitConverter.GetBytes(cfg_params.si_rpm_mph_update_rate);
+                    byte[] fpga = BitConverter.GetBytes(cfg_params.si_FPGAXmitRate);
+                    byte[] high_rev = BitConverter.GetBytes(cfg_params.si_high_rev_limit);
+                    byte[] low_rev = BitConverter.GetBytes(cfg_params.si_low_rev_limit);
+                    byte[] fan_on = BitConverter.GetBytes(cfg_params.fan_on);
+                    byte[] fan_off = BitConverter.GetBytes(cfg_params.fan_off);
+                    byte[] ben = BitConverter.GetBytes(cfg_params.lights_on_value);
+                    byte[] b1 = BitConverter.GetBytes(cfg_params.lights_off_value);
+                    byte[] b2 = BitConverter.GetBytes(cfg_params.adc_rate);
+                    byte[] b3 = BitConverter.GetBytes(cfg_params.rt_value_select);
+                    byte[] lights = BitConverter.GetBytes(cfg_params.si_lights_on_delay);
+                    byte[] limit = BitConverter.GetBytes(cfg_params.engine_temp_limit);
+                    byte[] batt = BitConverter.GetBytes(cfg_params.battery_box_temp);
+                    byte[] test = BitConverter.GetBytes(cfg_params.si_test_bank);
+                    byte[] pswd_time = BitConverter.GetBytes(cfg_params.si_password_timeout);
+                    byte[] pswd_retries = BitConverter.GetBytes(cfg_params.si_password_retries);
+                    byte[] baudrate3 = BitConverter.GetBytes(cfg_params.si_baudrate3);
+                    //byte[] password = BytesFromString(cfg_params.password);
+
+                    byte[] bytes = new byte[rpm_mph.Count() + fpga.Count() + high_rev.Count()
+                        + low_rev.Count() + fan_on.Count() + fan_off.Count() + ben.Count() + b1.Count()
+                        + b2.Count() + b3.Count() + lights.Count() + limit.Count() + batt.Count()
+                        + test.Count() + pswd_time.Count() + pswd_retries.Count() + baudrate3.Count()/* + password.Count()*/ + 2];
+
+                    bytes[0] = svrcmd.GetCmdIndexB("UPDATE_CONFIG");
+                    //System.Buffer.BlockCopy(src, src_offset, dest, dest_offset,count)
+                    System.Buffer.BlockCopy(rpm_mph, 0, bytes, 2, rpm_mph.Count());
+                    System.Buffer.BlockCopy(fpga, 0, bytes, 4, fpga.Count());
+                    System.Buffer.BlockCopy(high_rev, 0, bytes, 6, high_rev.Count());
+                    System.Buffer.BlockCopy(low_rev, 0, bytes, 8, low_rev.Count());
+                    System.Buffer.BlockCopy(fan_on, 0, bytes, 10, fan_on.Count());
+                    System.Buffer.BlockCopy(fan_off, 0, bytes, 12, fan_off.Count());
+                    System.Buffer.BlockCopy(ben, 0, bytes, 14, ben.Count());
+                    System.Buffer.BlockCopy(b1, 0, bytes, 16, b1.Count());
+                    System.Buffer.BlockCopy(b2, 0, bytes, 18, b2.Count());
+                    System.Buffer.BlockCopy(b3, 0, bytes, 20, b3.Count());
+                    System.Buffer.BlockCopy(lights, 0, bytes, 22, lights.Count());
+                    System.Buffer.BlockCopy(limit, 0, bytes, 24, limit.Count());
+                    System.Buffer.BlockCopy(batt, 0, bytes, 26, batt.Count());
+                    System.Buffer.BlockCopy(test, 0, bytes, 28, test.Count());
+                    System.Buffer.BlockCopy(pswd_time, 0, bytes, 30, pswd_time.Count());
+                    System.Buffer.BlockCopy(pswd_retries, 0, bytes, 32, pswd_retries.Count());
+                    System.Buffer.BlockCopy(baudrate3, 0, bytes, 34, baudrate3.Count());
+
+                    //					System.Buffer.BlockCopy(password, 0, bytes, 36, password.Count());
+
+                    Packet packet = new Packet(bytes, 0, bytes.Count(), false);
+                    m_client.Send(packet);
+                    /*
+					bytes = new byte[rpm_mph.Count() + 2];
+					bytes[0] = svrcmd.GetCmdIndexB("SET_RPM_MPH_RATE");
+					System.Buffer.BlockCopy(rpm_mph, 0, bytes, 2, rpm_mph.Count());
+					packet = new Packet(bytes, 0, bytes.Count(), false);
+					m_client.Send(packet);
+
+					bytes = new byte[rpm_mph.Count() + 2];
+					bytes[0] = svrcmd.GetCmdIndexB("SET_FPGA_RATE");
+					System.Buffer.BlockCopy(rpm_mph, 0, bytes, 2, rpm_mph.Count());
+					packet = new Packet(bytes, 0, bytes.Count(), false);
+					m_client.Send(packet);
+					*/
+                }
+            }

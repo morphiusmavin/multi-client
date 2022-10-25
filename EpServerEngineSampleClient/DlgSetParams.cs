@@ -27,7 +27,6 @@ namespace EpServerEngineSampleClient
 		IDictionary<string, int> timeout_str;
 		private bool rev_limit_override = false;
 		private bool fp_override = false;
-		private List<DimmerClass> dimmers;
 		private string xml_dimmer_location = "c:\\Users\\daniel\\dev\\dimmer.xml";
 		public void SetParams(ConfigParams _cfg)
 		{
@@ -992,6 +991,7 @@ namespace EpServerEngineSampleClient
 
 		private void btnChangePassword_Clicked(object sender, EventArgs e)
 		{
+			/*
 			Password change_password = new Password(password,13);
 			if (change_password.ShowDialog(this) == DialogResult.OK)
 			{
@@ -1003,6 +1003,7 @@ namespace EpServerEngineSampleClient
 			{
 				//                this.txtResult.Text = "Cancelled";
 			}
+			*/
 
 		}
 
@@ -1201,6 +1202,7 @@ namespace EpServerEngineSampleClient
 
 		private void btnDimmer_Click(object sender, EventArgs e)
 		{
+/*
 			dimmers = new List<DimmerClass>();
 			DimmerClass item = null;
 			XmlReader xmlfile = null;
@@ -1267,6 +1269,7 @@ namespace EpServerEngineSampleClient
 			System.Buffer.BlockCopy(d7b, 0, bytes, 32, d4b.Count());
 			Packet packet = new Packet(bytes, 0, bytes.Count(), false);
 			m_client.Send(packet);
+*/
 		}
 	}
 }

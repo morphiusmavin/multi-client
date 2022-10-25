@@ -79,12 +79,6 @@
     <Compile Include="Cabin.Designer.cs">
       <DependentUpon>Cabin.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChangeDB.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ChangeDB.Designer.cs">
-      <DependentUpon>ChangeDB.cs</DependentUpon>
-    </Compile>
     <Compile Include="Child_Scrolling_List.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,12 +94,17 @@
     <Compile Include="ClientParams.cs" />
     <Compile Include="ClientsAvail.cs" />
     <Compile Include="ConfigParams.cs" />
-    <Compile Include="DimmerClass.cs" />
     <Compile Include="DlgSetParams.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DlgSetParams.Designer.cs">
       <DependentUpon>DlgSetParams.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EasyButtonForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EasyButtonForm.Designer.cs">
+      <DependentUpon>EasyButtonForm.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmSampleClient.cs">
       <SubType>Form</SubType>
@@ -119,12 +118,6 @@
     <Compile Include="TestBench.designer.cs">
       <DependentUpon>TestBench.cs</DependentUpon>
     </Compile>
-    <Compile Include="NetClients.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NetClients.Designer.cs">
-      <DependentUpon>NetClients.cs</DependentUpon>
-    </Compile>
     <Compile Include="SetNextClient.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -137,19 +130,12 @@
     <Compile Include="WifiIOT.Designer.cs">
       <DependentUpon>WifiIOT.cs</DependentUpon>
     </Compile>
-    <Compile Include="BTForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="BTForm.designer.cs">
-      <DependentUpon>BTForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="GarageForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GarageForm.designer.cs">
       <DependentUpon>GarageForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="GPSlist.cs" />
     <Compile Include="ManageServer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,18 +143,6 @@
       <DependentUpon>ManageServer.cs</DependentUpon>
     </Compile>
     <Compile Include="Mp3File.cs" />
-    <Compile Include="Password.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Password.Designer.cs">
-      <DependentUpon>Password.cs</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerDlg.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="PlayerDlg.Designer.cs">
-      <DependentUpon>PlayerDlg.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerCmds.cs" />
@@ -183,9 +157,6 @@
     <EmbeddedResource Include="Cabin.resx">
       <DependentUpon>Cabin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ChangeDB.resx">
-      <DependentUpon>ChangeDB.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Child_Scrolling_List.resx">
       <DependentUpon>Child_Scrolling_List.cs</DependentUpon>
     </EmbeddedResource>
@@ -195,11 +166,11 @@
     <EmbeddedResource Include="DlgSetParams.resx">
       <DependentUpon>DlgSetParams.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="EasyButtonForm.resx">
+      <DependentUpon>EasyButtonForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmSampleClient.resx">
       <DependentUpon>FrmSampleClient.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BTForm.resx">
-      <DependentUpon>BTForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TestBench.resx">
       <DependentUpon>TestBench.cs</DependentUpon>
@@ -209,15 +180,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ManageServer.resx">
       <DependentUpon>ManageServer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NetClients.resx">
-      <DependentUpon>NetClients.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Password.resx">
-      <DependentUpon>Password.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PlayerDlg.resx">
-      <DependentUpon>PlayerDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

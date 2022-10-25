@@ -25,8 +25,7 @@ namespace EpServerEngineSampleClient
 			BENCH_24V_2,
 			BENCH_12V_1,
 			BENCH_12V_2,
-			BLANK,
-			BENCH_5V_1,
+			BENCH_5V_1 = 14,
 			BENCH_5V_2,
 			BENCH_3V3_1,
 			BENCH_3V3_2,
@@ -135,6 +134,284 @@ namespace EpServerEngineSampleClient
 				i++;
 			} while (i != cmd);
 			return cmd2;
+		}
+		public bool Change_PortCmd(int msg, int index, bool iparam)
+		{
+			Send_ClCmd(msg, index, iparam);
+			switch(GetName(msg))
+			{
+				case "DESK_LIGHT":
+					Properties.Settings.Default["DESK_LIGHT"] = iparam;
+					break;
+				case "EAST_LIGHT":
+					Properties.Settings.Default["EAST_LIGHT"] = iparam;
+					break;
+				case "NORTHWEST_LIGHT":
+					Properties.Settings.Default["NORTHWEST_LIGHT"] = iparam;
+					break;
+				case "SOUTHEAST_LIGHT":
+					Properties.Settings.Default["SOUTHEAST_LIGHT"] = iparam;
+					break;
+				case "MIDDLE_LIGHT":
+					Properties.Settings.Default["MIDDLE_LIGHT"] = iparam;
+					break;
+				case "WEST_LIGHT":
+					Properties.Settings.Default["WEST_LIGHT"] = iparam;
+					break;
+				case "NORTHEAST_LIGHT":
+					Properties.Settings.Default["NORTHEAST_LIGHT"] = iparam;
+					break;
+				case "SOUTHWEST_LIGHT":
+					Properties.Settings.Default["SOUTHWEST_LIGHT"] = iparam;
+					break;
+				case "BENCH_24V_1":
+					Properties.Settings.Default["BENCH_24V_1"] = iparam;
+					break;
+				case "BENCH_24V_2":
+					Properties.Settings.Default["BENCH_24V_2"] = iparam;
+					break;
+				case "BENCH_12V_1":
+					Properties.Settings.Default["BENCH_12V_1"] = iparam;
+					break;
+				case "BENCH_12V_2":
+					Properties.Settings.Default["BENCH_12V_2"] = iparam;
+					break;
+				case "BENCH_5V_1":
+					Properties.Settings.Default["BENCH_5V_1"] = iparam;
+					break;
+				case "BENCH_5V_2":
+					Properties.Settings.Default["BENCH_5V_2"] = iparam;
+					break;
+				case "BENCH_3V3_1":
+					Properties.Settings.Default["BENCH_3V3_1"] = iparam;
+					break;
+				case "BENCH_3V3_2":
+					Properties.Settings.Default["BENCH_3V3_2"] = iparam;
+					break;
+				case "BENCH_LIGHT1":
+					Properties.Settings.Default["BENCH_LIGHT1"] = iparam;
+					break;
+				case "BENCH_LIGHT2":
+					Properties.Settings.Default["BENCH_LIGHT2"] = iparam;
+					break;
+				case "CHICK_WATER":
+					Properties.Settings.Default["CHICK_WATER"] = iparam;
+					break;
+				case "CABIN1":
+					Properties.Settings.Default["CABIN1"] = iparam;
+					break;
+				case "CABIN2":
+					Properties.Settings.Default["CABIN2"] = iparam;
+					break;
+				case "CABIN3":
+					Properties.Settings.Default["CABIN3"] = iparam;
+					break;
+				case "CABIN4":
+					Properties.Settings.Default["CABIN4"] = iparam;
+					break;
+				case "CABIN5":
+					Properties.Settings.Default["CABIN5"] = iparam;
+					break;
+				case "CABIN6":
+					Properties.Settings.Default["CABIN6"] = iparam;
+					break;
+				case "CABIN7":
+					Properties.Settings.Default["CABIN7"] = iparam;
+					break;
+				case "CABIN8":
+					Properties.Settings.Default["CABIN8"] = iparam;
+					break;
+					default:
+					break;
+			}
+			Properties.Settings.Default.Save();
+			return iparam;
+		}
+		public bool Change_PortCmd(int msg, int index)
+		{
+			bool current_state = GetState(msg);
+			current_state = !current_state;
+			Send_ClCmd(msg, index, current_state);
+			switch(GetName(msg))
+			{
+				case "DESK_LIGHT":
+					Properties.Settings.Default["DESK_LIGHT"] = current_state;
+					break;
+				case "EAST_LIGHT":
+					Properties.Settings.Default["EAST_LIGHT"] = current_state;
+					break;
+				case "NORTHWEST_LIGHT":
+					Properties.Settings.Default["NORTHWEST_LIGHT"] = current_state;
+					break;
+				case "SOUTHEAST_LIGHT":
+					Properties.Settings.Default["SOUTHEAST_LIGHT"] = current_state;
+					break;
+				case "MIDDLE_LIGHT":
+					Properties.Settings.Default["MIDDLE_LIGHT"] = current_state;
+					break;
+				case "WEST_LIGHT":
+					Properties.Settings.Default["WEST_LIGHT"] = current_state;
+					break;
+				case "NORTHEAST_LIGHT":
+					Properties.Settings.Default["NORTHEAST_LIGHT"] = current_state;
+					break;
+				case "SOUTHWEST_LIGHT":
+					Properties.Settings.Default["SOUTHWEST_LIGHT"] = current_state;
+					break;
+				case "BENCH_24V_1":
+					Properties.Settings.Default["BENCH_24V_1"] = current_state;
+					break;
+				case "BENCH_24V_2":
+					Properties.Settings.Default["BENCH_24V_2"] = current_state;
+					break;
+				case "BENCH_12V_1":
+					Properties.Settings.Default["BENCH_12V_1"] = current_state;
+					break;
+				case "BENCH_12V_2":
+					Properties.Settings.Default["BENCH_12V_2"] = current_state;
+					break;
+				case "BENCH_5V_1":
+					Properties.Settings.Default["BENCH_5V_1"] = current_state;
+					break;
+				case "BENCH_5V_2":
+					Properties.Settings.Default["BENCH_5V_2"] = current_state;
+					break;
+				case "BENCH_3V3_1":
+					Properties.Settings.Default["BENCH_3V3_1"] = current_state;
+					break;
+				case "BENCH_3V3_2":
+					Properties.Settings.Default["BENCH_3V3_2"] = current_state;
+					break;
+				case "BENCH_LIGHT1":
+					Properties.Settings.Default["BENCH_LIGHT1"] = current_state;
+					break;
+				case "BENCH_LIGHT2":
+					Properties.Settings.Default["BENCH_LIGHT2"] = current_state;
+					break;
+				case "CHICK_WATER":
+					Properties.Settings.Default["CHICK_WATER"] = current_state;
+					break;
+				case "CABIN1":
+					Properties.Settings.Default["CABIN1"] = current_state;
+					break;
+				case "CABIN2":
+					Properties.Settings.Default["CABIN2"] = current_state;
+					break;
+				case "CABIN3":
+					Properties.Settings.Default["CABIN3"] = current_state;
+					break;
+				case "CABIN4":
+					Properties.Settings.Default["CABIN4"] = current_state;
+					break;
+				case "CABIN5":
+					Properties.Settings.Default["CABIN5"] = current_state;
+					break;
+				case "CABIN6":
+					Properties.Settings.Default["CABIN6"] = current_state;
+					break;
+				case "CABIN7":
+					Properties.Settings.Default["CABIN7"] = current_state;
+					break;
+				case "CABIN8":
+					Properties.Settings.Default["CABIN8"] = current_state;
+					break;
+					default:
+					break;
+			}
+			Properties.Settings.Default.Save();
+			return current_state;
+		}
+		public bool GetState(int msg)
+		{
+			bool current_state = false;
+			switch(GetName(msg))
+			{
+				case "DESK_LIGHT":
+					current_state = (bool)Properties.Settings.Default["DESK_LIGHT"];
+					break;
+				case "EAST_LIGHT":
+					current_state = (bool)Properties.Settings.Default["EAST_LIGHT"];
+					break;
+				case "NORTHWEST_LIGHT":
+					current_state = (bool)Properties.Settings.Default["NORTHWEST_LIGHT"];
+					break;
+				case "SOUTHEAST_LIGHT":
+					current_state = (bool)Properties.Settings.Default["SOUTHEAST_LIGHT"];
+					break;
+				case "MIDDLE_LIGHT":
+					current_state = (bool)Properties.Settings.Default["MIDDLE_LIGHT"];
+					break;
+				case "WEST_LIGHT":
+					current_state = (bool)Properties.Settings.Default["WEST_LIGHT"];
+					break;
+				case "NORTHEAST_LIGHT":
+					current_state = (bool)Properties.Settings.Default["NORTHEAST_LIGHT"];
+					break;
+				case "SOUTHWEST_LIGHT":
+					current_state = (bool)Properties.Settings.Default["SOUTHWEST_LIGHT"];
+					break;
+				case "BENCH_24V_1":
+					current_state = (bool)Properties.Settings.Default["BENCH_24V_1"];
+					break;
+				case "BENCH_24V_2":
+					current_state = (bool)Properties.Settings.Default["BENCH_24V_2"];
+					break;
+				case "BENCH_12V_1":
+					current_state = (bool)Properties.Settings.Default["BENCH_12V_1"];
+					break;
+				case "BENCH_12V_2":
+					current_state = (bool)Properties.Settings.Default["BENCH_12V_2"];
+					break;
+				case "BENCH_5V_1":
+					current_state = (bool)Properties.Settings.Default["BENCH_5V_1"];
+					break;
+				case "BENCH_5V_2":
+					current_state = (bool)Properties.Settings.Default["BENCH_5V_2"];
+					break;
+				case "BENCH_3V3_1":
+					current_state = (bool)Properties.Settings.Default["BENCH_3V3_1"];
+					break;
+				case "BENCH_3V3_2":
+					current_state = (bool)Properties.Settings.Default["BENCH_3V3_2"];
+					break;
+				case "BENCH_LIGHT1":
+					current_state = (bool)Properties.Settings.Default["BENCH_LIGHT1"];
+					break;
+				case "BENCH_LIGHT2":
+					current_state = (bool)Properties.Settings.Default["BENCH_LIGHT2"];
+					break;
+				case "CHICK_WATER":
+					current_state = (bool)Properties.Settings.Default["CHICK_WATER"];
+					break;
+				case "CABIN1":
+					current_state = (bool)Properties.Settings.Default["CABIN1"];
+					break;
+				case "CABIN2":
+					current_state = (bool)Properties.Settings.Default["CABIN2"];
+					break;
+				case "CABIN3":
+					current_state = (bool)Properties.Settings.Default["CABIN3"];
+					break;
+				case "CABIN4":
+					current_state = (bool)Properties.Settings.Default["CABIN4"];
+					break;
+				case "CABIN5":
+					current_state = (bool)Properties.Settings.Default["CABIN5"];
+					break;
+				case "CABIN6":
+					current_state = (bool)Properties.Settings.Default["CABIN6"];
+					break;
+				case "CABIN7":
+					current_state = (bool)Properties.Settings.Default["CABIN7"];
+					break;
+				case "CABIN8":
+					current_state = (bool)Properties.Settings.Default["CABIN8"];
+					break;
+					default:
+					current_state = false;
+					break;
+			}
+			return current_state;
 		}
 		public void Send_Cmd(int sendcmd)
 		{

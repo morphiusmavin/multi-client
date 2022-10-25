@@ -17,12 +17,17 @@ namespace EpServerEngineSampleClient
         INetworkClient m_client = null;
         int reboot_code = 0;
         ServerCmds svrcmd = new ServerCmds();
+        private int iResult = 0;
         public ManageServer(INetworkClient client)
         {
             m_client = client;
             InitializeComponent();
             svrcmd.SetClient(m_client);
         }
+        public int GetResult()
+		{
+            return iResult;
+		}
         delegate void AddMsg_Involk(string message);
         public void AddMsg(string message)
         {
@@ -94,7 +99,7 @@ namespace EpServerEngineSampleClient
             if (reboot_code > 0 && reboot_code < 7)
             {
                 offset = svrcmd.GetCmdIndexI(cmd);
-                svrcmd.Send_Cmd(offset);
+                svrcmd.Send_ClCmd(offset, 8, "shell");
                 this.DialogResult = DialogResult.OK;
             }
             else this.DialogResult = DialogResult.Cancel;
@@ -135,5 +140,17 @@ namespace EpServerEngineSampleClient
 			int offset = svrcmd.GetCmdIndexI("SERVER_DOWN");
 			svrcmd.Send_Cmd(offset);
 		}
-	}
+
+		private void btnShutdown_Click(object sender, EventArgs e)
+		{
+            this.DialogResult = DialogResult.Abort;
+            this.Close();
+        }
+
+		private void Minimize_Click(object sender, EventArgs e)
+		{
+            iResult = 55;
+            this.Close();
+        }
+    }
 }

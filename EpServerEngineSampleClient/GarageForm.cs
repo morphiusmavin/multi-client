@@ -28,12 +28,10 @@ namespace EpServerEngineSampleClient
 		ServerCmds svrcmd = new ServerCmds();
 		//private List<int> CurrentList = new List<int>();
 		private bool m_pause = false;
-		bool[] button_status = new bool[8];
 		bool allon = false;
 		int single_select = 0;
 		int timer_tick = 0;
 		int no_lights = 8;
-		bool[] status = new bool[8];
 
 		List<String> on_label_list = new List<String>();
 		//List<String> off_label_list = new List<String>();
@@ -49,24 +47,8 @@ namespace EpServerEngineSampleClient
 			var filePath = xml_file_location;
 			xmlfile = XmlReader.Create(filePath, new XmlReaderSettings());
 			ds.ReadXml(xmlfile);
-			status[0] = false;
-			status[1] = false;
-			status[2] = false;
-			status[3] = false;
-			status[4] = false;
-			status[5] = false;
-			status[6] = false;
-			status[7] = false;
 
-			button_status[0] = true;
-			button_status[1] = true;
-			button_status[2] = true;
-			button_status[3] = true;
-			button_status[4] = true;
-			button_status[5] = true;
-			button_status[6] = true;
-			button_status[7] = true;
-
+			on_label_list.Add("DESK_LIGHT");
 			on_label_list.Add("EAST_LIGHT");
 			on_label_list.Add("NORTHWEST_LIGHT");
 			on_label_list.Add("SOUTHEAST_LIGHT");
@@ -74,12 +56,11 @@ namespace EpServerEngineSampleClient
 			on_label_list.Add("WEST_LIGHT");
 			on_label_list.Add("NORTHEAST_LIGHT");
 			on_label_list.Add("SOUTHWEST_LIGHT");
-			on_label_list.Add("asdf");
 
 			button_list = new List<ButtonList>();
-			Control sCtl = this.btnNorth;
+			Control sCtl = this.btnDesk;
 			//for (int i = 0; i < this.Controls.Count; i++)
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 9; i++)
 			{
 				if (sCtl.GetType() == typeof(Button))
 				{
@@ -90,28 +71,18 @@ namespace EpServerEngineSampleClient
 						Enabled = sCtl.Enabled,
 						Name = sCtl.Name
 					});
-					//AddMsg(button_list[i].Name);
+					AddMsg(button_list[i].Name);
 					sCtl = GetNextControl(sCtl, true);
 				}
+			}
+			for(int i = 0;i < 8;i++)
+			{
+				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}
 		}
 		public void Enable_Dlg(bool wait)
 		{
 			m_wait = wait;
-		}
-		public void SetStatus(bool[] _status)
-		{
-			status = _status;
-/*
-			for(int i = 0;i < 8;i++)
-			{
-				ToggleButton(i);
-			}
-*/
-		}
-		public bool[] GetStatus()
-		{
-			return status;
 		}
 		public void OnReceived(INetworkClient client, Packet receivedPacket)
 		{
@@ -176,16 +147,16 @@ namespace EpServerEngineSampleClient
 						if (o > 0)
 						{
 							res += '1';
-							status[k] = true;
+							//status[k] = true;
 						}
 						else
 						{
 							res += '0';
-							status[k] = false;
+							//status[k] = false;
 						}
 						m >>= 1;
 					}
-					IfStatusChanged(-1);
+					//IfStatusChanged(-1);
 					//AddMsg(res);
 					/*
 					for(int ix = 0;ix < 6;ix++)
@@ -203,10 +174,10 @@ namespace EpServerEngineSampleClient
 					AddMsg(which.ToString() + " " + onoff.ToString());
 					if (which > -1 && which < 8)
 					{
-						status[which] = (onoff == 1 ? status[which] = true : status[which] = false);
-						AddMsg(status[which].ToString() + " " + which.ToString() + " " + onoff.ToString());
+//						status[which] = (onoff == 1 ? status[which] = true : status[which] = false);
+//						AddMsg(status[which].ToString() + " " + which.ToString() + " " + onoff.ToString());
 					}
-					IfStatusChanged(which);
+					//IfStatusChanged(which);
 				}
 			}
 		}
@@ -215,6 +186,7 @@ namespace EpServerEngineSampleClient
 		private void IfStatusChanged(int which)
 		{
 			AddMsg(which.ToString());
+/*
 			if (which == -1)
 				for (int i = 0; i < 8; i++)
 				{
@@ -251,41 +223,23 @@ namespace EpServerEngineSampleClient
 				}
 			}
 			//AddMsg("done");
+*/
 		}
-		private void SendCmd(int which)
+		private bool SendCmd(int which)
 		{
 			string cmd = on_label_list[which];
-			//AddMsg(cmd);
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(offset.ToString());
-			offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(which.ToString() + " " + cmd + " " + offset.ToString());
-			//svrcmd.Send_Cmd(offset);
-			ChangeStatus(which);
-			svrcmd.Send_ClCmd(offset, 8, status[which]);       // TODO: set this to whatever client (in this case server) is offset 8 in assign_client_table.c
+			return svrcmd.Change_PortCmd(offset, 8);
 		}
-		private void SendCmd(int which, bool onoff)
+		private bool SendCmd(int which, bool onoff)
 		{
 			string cmd = on_label_list[which];
-			//AddMsg(cmd);
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(offset.ToString());
-			offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(which.ToString() + " " + cmd + " " + offset.ToString());
-			//svrcmd.Send_Cmd(offset);
-			status[which] = onoff;
-			svrcmd.Send_ClCmd(offset, 8, onoff);       // TODO: set this to whatever client (in this case server) is offset 8 in assign_client_table.c
+			return svrcmd.Change_PortCmd(offset, 8, onoff);
 		}
-		private void ChangeStatus(int i)
+		private void ToggleButton(int which, bool state)
 		{
-			status[i] = !status[i];
-			//AddMsg("status changed: " + i.ToString());
-			//IfStatusChanged();
-		}
-		// this is actually north
-		private void ToggleButton(int which)
-		{
-			if (button_status[which])
+			if (state)
 			{
 				button_list[which].Ctl.Text = "ON";
 				button_list[which].Ctl.BackColor = Color.Aqua;
@@ -295,53 +249,104 @@ namespace EpServerEngineSampleClient
 				button_list[which].Ctl.Text = "OFF";
 				button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			}
-			button_status[which] = !button_status[which];
 		}
-		private void btnNorth_Click(object sender, EventArgs e)
+		
+		private void btnClear_Click_1(object sender, EventArgs e)		// rotate thru all single lights
 		{
-			SendCmd(1);
-			SendCmd(5);
-			ToggleButton(0);
+			int prev;
+			if (single_select > 0)
+				prev = single_select - 1;
+			else prev = 7;
+			//AddMsg("on: " + single_select.ToString() + " off: " + prev.ToString());
+			string cmd = on_label_list[single_select];
+			int offset = svrcmd.GetCmdIndexI(cmd);
+			svrcmd.Send_ClCmd(offset, 8, true);
+			cmd = on_label_list[prev];
+			offset = svrcmd.GetCmdIndexI(cmd);
+			svrcmd.Send_ClCmd(offset, 8, false);
+			if (++single_select > 7)
+				single_select = 0;
 		}
-		private void btnSouth_Click(object sender, EventArgs e)
+		
+		private void btnClrScr_Click(object sender, EventArgs e)
 		{
-			SendCmd(2);
-			SendCmd(6);
-			ToggleButton(1);
+			tbAddMsg.Clear();
 		}
+		private void myTimerTick(object sender, EventArgs e)
+		{
+			int i;
+			if (++timer_tick > 20)
+			{
+				for (i = 0; i < 7; i++)
+				{
+					//status[i] = true;
+				}
+				SendCmd(0);
+				SendCmd(1);
+				SendCmd(2);
+				SendCmd(3);
+				SendCmd(4);
+				SendCmd(5);
+				SendCmd(6);
+				timer1.Enabled = false;
+				timer_tick = 0;
+				for (i = 0; i < 7; i++)
+				{
+					//status[i] = false;
+					button_list[i].Ctl.Text = "OFF";
+					button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+				}
+				for (i = 0; i < 7; i++)
+				{
+					//status[i] = false;
+				}
+			}
+			AddMsg(timer_tick.ToString());
+		}
+		private void btnTimer_Click(object sender, EventArgs e)
+		{
+			timer1.Enabled = true;
+		}
+
+		private void btnDesk_Click(object sender, EventArgs e)
+		{
+			ToggleButton(0, SendCmd(0));
+		}
+
 		private void btnEast_Click(object sender, EventArgs e)
 		{
-			SendCmd(0);
-			SendCmd(2);
-			SendCmd(5);
-			ToggleButton(2);
+			ToggleButton(1, SendCmd(1));
 		}
-		private void btnWest_Click(object sender, EventArgs e)
+
+		private void btnNWest_Click(object sender, EventArgs e)
 		{
-			SendCmd(1);
-			SendCmd(4);
-			SendCmd(6);
-			ToggleButton(3);
+			ToggleButton(2, SendCmd(2));
 		}
+
+		private void btnSeast_Click(object sender, EventArgs e)
+		{
+			ToggleButton(3, SendCmd(3));
+		}
+
 		private void btnMiddle_Click(object sender, EventArgs e)
 		{
-			SendCmd(4);
-			SendCmd(3);
-			SendCmd(0);
-			ToggleButton(4);
+			ToggleButton(4, SendCmd(4));
 		}
-		private void btnOffice_Click(object sender, EventArgs e)
+
+		private void btnWest_Click(object sender, EventArgs e)
 		{
-			SendCmd(4);
-			SendCmd(6);
-			ToggleButton(5);
+			ToggleButton(5, SendCmd(5));
 		}
-		private void btnBench_Click(object sender, EventArgs e)
+
+		private void btnNeast_Click(object sender, EventArgs e)
 		{
-			SendCmd(7);
-			ToggleButton(6);
+			ToggleButton(6, SendCmd(6));
 		}
-		private void btnAll_Click(object sender, EventArgs e)
+		private void btnSWest_Click(object sender, EventArgs e)
+		{
+			ToggleButton(7, SendCmd(7));
+		}
+		private void btnAll_Click_1(object sender, EventArgs e)
 		{
 			int i;
 			allon = !allon;
@@ -355,101 +360,22 @@ namespace EpServerEngineSampleClient
 			SendCmd(7, allon);
 			if (allon)
 			{
-				for (i = 0; i < no_lights; i++)
+				for (i = 0; i < no_lights+1; i++)
 				{
-					status[i] = true;
+					//status[i] = true;
 					button_list[i].Ctl.Text = "ON";
 					button_list[i].Ctl.BackColor = Color.Aqua;
 				}
 			}
 			else
 			{
-				for (i = 0; i < no_lights; i++)
+				for (i = 0; i < no_lights+1; i++)
 				{
-					status[i] = false;
+					//status[i] = false;
 					button_list[i].Ctl.Text = "OFF";
 					button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 				}
 			}
 		}
-		private void btnPollStatus_Click(object sender, EventArgs e)
-		{
-//			SendPollStatus();
-		}
-		/*
-			EAST_LIGHT,
-			NORTHWEST_LIGHT,
-			SOUTHEAST_LIGHT,
-			MIDDLE_LIGHT,
-			WEST_LIGHT,
-			NORTHEAST_LIGHT,
-			SOUTHWEST_LIGHT,
-		*/
-		private void btnClear_Click_1(object sender, EventArgs e)		// rotate thru all single lights
-		{
-			int prev;
-			if (single_select > 0)
-				prev = single_select - 1;
-			else prev = 6;
-			//AddMsg("on: " + single_select.ToString() + " off: " + prev.ToString());
-			string cmd = on_label_list[single_select];
-			int offset = svrcmd.GetCmdIndexI(cmd);
-			offset = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Send_ClCmd(offset, 8, true);
-			cmd = on_label_list[prev];
-			offset = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Send_ClCmd(offset, 8, false);
-			if (++single_select > 7)
-				single_select = 0;
-		}
-		private void SendPollStatus()
-		{
-			string cmd = "POLL_STATUS";
-			int offset = svrcmd.GetCmdIndexI(cmd);
-			offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(offset.ToString());
-			svrcmd.Send_Cmd(offset);
-		}
-		private void btnClrScr_Click(object sender, EventArgs e)
-		{
-			tbAddMsg.Clear();
-		}
-		private void myTimerTick(object sender, EventArgs e)
-		{
-			int i;
-			if (++timer_tick > 20)
-			{
-				for (i = 0; i < 7; i++)
-				{
-					status[i] = true;
-				}
-				SendCmd(0);
-				SendCmd(1);
-				SendCmd(2);
-				SendCmd(3);
-				SendCmd(4);
-				SendCmd(5);
-				SendCmd(6);
-				timer1.Enabled = false;
-				timer_tick = 0;
-				for (i = 0; i < 7; i++)
-				{
-					status[i] = false;
-					button_list[i].Ctl.Text = "OFF";
-					button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-				}
-				for (i = 0; i < 7; i++)
-				{
-					status[i] = false;
-				}
-			}
-			AddMsg(timer_tick.ToString());
-		}
-		private void btnTimer_Click(object sender, EventArgs e)
-		{
-			timer1.Enabled = true;
-		}
-
-		
 	}
 }

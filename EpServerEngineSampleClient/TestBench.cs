@@ -27,7 +27,6 @@ namespace EpServerEngineSampleClient
 		private bool m_wait = false;
 		ServerCmds svrcmd = new ServerCmds();
 		private List<int> CurrentList = new List<int>();
-		public System.Collections.Generic.List<GPSlist> gps_list;
 		private byte[] recv_buff;
 		private bool m_pause = false;
 		bool[] status = new bool[8];

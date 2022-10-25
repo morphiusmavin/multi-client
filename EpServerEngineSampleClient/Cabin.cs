@@ -26,7 +26,6 @@ namespace EpServerEngineSampleClient
 		private INetworkClient m_client;
 		private bool m_wait = false;
 		ServerCmds svrcmd = new ServerCmds();
-		bool[] status = new bool[8];
 		List<String> on_label_list = new List<String>();
 		//List<String> off_label_list = new List<String>();
 		public System.Collections.Generic.List<ButtonList> button_list;
@@ -35,14 +34,7 @@ namespace EpServerEngineSampleClient
 			InitializeComponent();
 			m_client = client;
 			svrcmd.SetClient(m_client);
-			status[0] = false;
-			status[1] = false;
-			status[2] = false;
-			status[3] = false;
-			status[4] = false;
-			status[5] = false;
-			status[6] = false;
-			status[7] = false;
+		
 			on_label_list.Add("CABIN1");
 			on_label_list.Add("CABIN2");
 			on_label_list.Add("CABIN3");
@@ -70,125 +62,85 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-
-		}
-		private void SendCmd(int which)
-		{
-			string cmd = on_label_list[which];
-			//AddMsg(cmd);
-			int offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(offset.ToString());
-			offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(which.ToString() + " " + cmd + " " + offset.ToString());
-			//svrcmd.Send_Cmd(offset);
-			ChangeStatus(which);
-			svrcmd.Send_ClCmd(offset, 2, status[which]);       // TODO: set this to whatever client (in this case server) is offset 8 in assign_client_table.c
-			IfStatusChanged(which);
-		}
-		private void ChangeStatus(int i)
-		{
-			status[i] = !status[i];
-			//AddMsg("status changed: " + i.ToString());
-			//IfStatusChanged();
-		}
-		private void IfStatusChanged(int which)
-		{
-			//AddMsg(which.ToString());
-			if (which == -1)
-				for (int i = 0; i < 8; i++)
-				{
-					//if (status[i] != prev_status[i])
-					if (true)
-					{
-						if (status[i])
-						{
-							button_list[i].Ctl.Text = "ON";
-							button_list[i].Ctl.BackColor = Color.Aqua;
-						}
-						else
-						{
-							button_list[i].Ctl.Text = "OFF";
-							button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-						}
-					}
-				}
-			else if (which > -1 && which < 8)
+			for (int i = 0; i < 8; i++)
 			{
-				//if (status[which] != prev_status[which])
-				if (true)
-				{
-					if (status[which])
-					{
-						button_list[which].Ctl.Text = "ON";
-						button_list[which].Ctl.BackColor = Color.Aqua;
-					}
-					else
-					{
-						button_list[which].Ctl.Text = "OFF";
-						button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-					}
-				}
+				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}
-			//AddMsg("done");
 		}
-		private void SendCmd(int which, bool onoff)
+		
+		private void ToggleButton(int which, bool state)
+		{
+			if (state)
+			{
+				button_list[which].Ctl.Text = "ON";
+				button_list[which].Ctl.BackColor = Color.Aqua;
+			}
+			else
+			{
+				button_list[which].Ctl.Text = "OFF";
+				button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			}
+		}
+		private bool SendCmd(int which)
 		{
 			string cmd = on_label_list[which];
-			//AddMsg(cmd);
+			//AddMsg("cmd: " + cmd);
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(offset.ToString());
-			offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(which.ToString() + " " + cmd + " " + offset.ToString());
-			//svrcmd.Send_Cmd(offset);
-			status[which] = onoff;
-			svrcmd.Send_ClCmd(offset, 2, onoff);       // TODO: set this to whatever client (in this case server) is offset 8 in assign_client_table.c
+			//AddMsg("offset: " + offset.ToString());
+			//AddMsg(svrcmd.GetState(offset).ToString());
+			return svrcmd.Change_PortCmd(offset, 2);
+		}
+		private bool SendCmd(int which, bool onoff)
+		{
+			string cmd = on_label_list[which];
+			int offset = svrcmd.GetCmdIndexI(cmd);
+			return svrcmd.Change_PortCmd(offset, 2, onoff);
 		}
 		private void btn1_Click(object sender, EventArgs e)
 		{
-			SendCmd(0);
+			ToggleButton(0, SendCmd(0));
 		}
 
 		private void btn2_Click(object sender, EventArgs e)
 		{
-			SendCmd(1);
+			ToggleButton(1, SendCmd(1));
 		}
 
 		private void btn3_Click(object sender, EventArgs e)
 		{
-			SendCmd(2);
+			ToggleButton(2, SendCmd(2));
 		}
 
 		private void btn4_Click(object sender, EventArgs e)
 		{
-			SendCmd(3);
+			ToggleButton(3, SendCmd(3));
 		}
 
 		private void btn5_Click(object sender, EventArgs e)
 		{
-			SendCmd(4);
+			ToggleButton(4, SendCmd(4));
 		}
 
 		private void btn6_Click(object sender, EventArgs e)
 		{
-			SendCmd(5);
+			ToggleButton(5, SendCmd(5));
 		}
 
 		private void btn7_Click(object sender, EventArgs e)
 		{
-			SendCmd(6);
+			ToggleButton(6, SendCmd(6));
 		}
 
 		private void btn8_Click(object sender, EventArgs e)
 		{
-			SendCmd(7);
+			ToggleButton(7, SendCmd(7));
 		}
 
 		private void btnAllOn_Click(object sender, EventArgs e)
 		{
 			for(int i = 0;i < 8;i++)
 			{
-				SendCmd(i, true);
-				IfStatusChanged(i);
+				ToggleButton(i, SendCmd(i));
 			}
 		}
 
@@ -196,8 +148,7 @@ namespace EpServerEngineSampleClient
 		{
 			for (int i = 0; i < 8; i++)
 			{
-				SendCmd(i, false);
-				IfStatusChanged(i);
+				ToggleButton(i, SendCmd(i));
 			}
 		}
 	}

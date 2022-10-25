@@ -37,7 +37,6 @@ namespace EpServerEngineSampleClient
         private TestBench testbench = null;
         private Cabin cabin = null;
         private WinCLMsg winclmsg = null;
-        //        private BluetoothForm bluetoothform = null;
         private ClientDest clientdest = null;
         private SetNextClient setnextclient = null;
         private int AvailClientCurrentSection = 0;
@@ -69,7 +68,6 @@ namespace EpServerEngineSampleClient
         int sunrise_hour;
         int sunrise_minutes;
         bool oneoff = true;
-        bool oneoff2 = true;
 
         private string xml_dialog1_location = "c:\\Users\\daniel\\dev\\uiformat1.xml";
         private string xml_dialog2_location = "c:\\Users\\daniel\\dev\\uiformat2.xml";
@@ -82,6 +80,7 @@ namespace EpServerEngineSampleClient
         private int hour;
         private int minute;
         private DateTime now;
+		string sunrise, sunset;
 
         /* remove the min/max/close buttons in the 'frame' */
         /* or you can just set 'Control Box' to false in the properties pane for the form */
@@ -104,7 +103,7 @@ namespace EpServerEngineSampleClient
                 return myCp;
             }
         }
-        
+
         public FrmSampleClient()
         {
             InitializeComponent();
@@ -114,17 +113,13 @@ namespace EpServerEngineSampleClient
             cbIPAdress.Enabled = true;
             tbReceived.Enabled = true;
             tbPort.Enabled = true;
-            //btnShutdown.Enabled = false;
-            //btnReboot.Enabled = false;
-            btnShowParams.Enabled = false;
-            btn_PlayList.Enabled = true;
-            btnGetTime.Enabled = false;
+            string sunrise_list = "c:\\users\\daniel\\sunrises.txt";
+            string sunset_list = "c:\\users\\daniel\\sunsets.txt";
             for (int i = 0; i < 8; i++)
             {
                 status[i] = false;
             }
             tbReceived.Clear();
-            //bluetoothform = new BluetoothForm("c:\\users\\daniel\\dev\\adc_list.xml");
             cbWhichWinClient.SelectedIndex = 0;
             client_params = new List<ClientParams>();
             ClientParams item = null;
@@ -205,9 +200,7 @@ namespace EpServerEngineSampleClient
 
             sunrises = new string[32];
             sunsets = new string[32];
-
-            string sunrise_list = "c:\\users\\daniel\\sunrises.txt";
-            string sunset_list = "c:\\users\\daniel\\sunsets.txt";
+            now = DateTime.Now;
 
             if (File.Exists(sunrise_list))
             {
@@ -219,6 +212,19 @@ namespace EpServerEngineSampleClient
                     //AddMsg(line);
                     sunrises[i++] = line;
                 }
+                sunrise = sunrises[now.Day - 1].ToString();
+                //AddMsg(ts);
+                int space = sunrise.IndexOf(" ");
+                sunrise = sunrise.Remove(space);
+                //AddMsg(ts);
+                tbSunrise.Text = sunrise;
+                string ts = sunrise.Substring(0, 1);
+                //AddMsg(ts2);
+                sunrise_hour = int.Parse(ts);
+                AddMsg(sunrise_hour.ToString());
+                ts = sunrise.Substring(2, 2);
+                sunrise_minutes = int.Parse(ts);
+                AddMsg(sunrise_minutes.ToString());
             }
             if (File.Exists(sunset_list))
             {
@@ -230,6 +236,15 @@ namespace EpServerEngineSampleClient
                     //AddMsg(line);
                     sunsets[i++] = line;
                 }
+                sunset = sunsets[now.Day - 1].ToString();
+                int space = sunset.IndexOf(" ");
+                sunset = sunset.Remove(space);
+                tbSunset.Text = sunset;
+
+                string t2date = now.Date.ToString();
+                space = t2date.IndexOf(" ");
+                t2date = t2date.Remove(space);
+                tbTodaysDate.Text = t2date;
             }
         }
         private void btnConnect_Click(object sender, EventArgs e)
@@ -294,16 +309,10 @@ namespace EpServerEngineSampleClient
                     btnGarageForm.Enabled = true;
                     cbIPAdress.Enabled = false;     /// from here to MPH should be commented out when in debugger
 					tbPort.Enabled = false;
-
-                    //btnShutdown.Enabled = true;
                     btnRescan.Enabled = true;
                     tbServerTime.Text = "";
-
-                    btn_PlayList.Enabled = true;
-                    btnGetTime.Enabled = true;
                     //AddMsg("server_up_seconds: " + server_up_seconds.ToString());
                     //btnShowParams.Enabled = valid_cfg;
-                    btnShowParams.Enabled = true;
                     clients_avail[8].socket = 1;        // 8 is _SERVER (this is bad!)
                     timer1.Enabled = true;
                     AddMsg("connected");
@@ -338,27 +347,26 @@ namespace EpServerEngineSampleClient
             garageform.Dispose();
             testbench.Dispose();
             //winclmsg.Dispose();
-            //bluetoothform.Dispose();
-            
+
             //setnextclient.Dispose();
-//            if(player_active)
-  //              playdlg.Dispose();
+            //            if(player_active)
+            //              playdlg.Dispose();
             base.OnClosed(e);
         }
         public void OnReceived(INetworkClient client, Packet receivedPacket)
         {
             // anything that gets sent here gets sent to home server if it's up
-/*
-            if (player_active && playdlg.Visible == true)
-            {
-                playdlg.Process_Msg(receivedPacket.PacketRaw);
-            }
+            /*
+                        if (player_active && playdlg.Visible == true)
+                        {
+                            playdlg.Process_Msg(receivedPacket.PacketRaw);
+                        }
 
-            if (slist.Visible == true)
-            {
-                slist.Process_Msg(receivedPacket.PacketRaw);
-            }
-*/
+                        if (slist.Visible == true)
+                        {
+                            slist.Process_Msg(receivedPacket.PacketRaw);
+                        }
+            */
             if (garageform.Visible == true)
             {
                 garageform.Process_Msg(receivedPacket.PacketRaw);
@@ -370,7 +378,7 @@ namespace EpServerEngineSampleClient
             else
                 Process_Msg(receivedPacket.PacketRaw);
         }
-         private void RedrawClientListBox()
+        private void RedrawClientListBox()
         {
             lbAvailClients.Items.Clear();
             int i = 0;
@@ -426,18 +434,18 @@ namespace EpServerEngineSampleClient
                             case 0:
                                 j = int.Parse(word);
                                 //AddMsg(word + " " + j.ToString());
-                                AddMsg(clients_avail[j].label+ " uptime:");
+                                AddMsg(clients_avail[j].label + " uptime:");
                                 //AddMsg(word);
                                 break;
                             case 1:
                                 j = int.Parse(word);
-                                if(j > 0)
+                                if (j > 0)
                                     AddMsg("days: " + j.ToString());
                                 break;
                             case 2:
                                 j = int.Parse(word);
-                                if(j > 0)
-                                AddMsg("hours: " + j.ToString());
+                                if (j > 0)
+                                    AddMsg("hours: " + j.ToString());
                                 break;
                             case 3:
                                 j = int.Parse(word);
@@ -494,7 +502,7 @@ namespace EpServerEngineSampleClient
                             svrcmd.Send_Cmd(timer_offset);
                             AddMsg(cfg_params.engine_temp_limit.ToString());
                             AddMsg("cfg_params in dlgsetparams set: " + dlgsetparams.GetSet());
-                            btnShowParams.Enabled = true;
+                            btnFnc3.Enabled = true;
                         }
                     }
                     break;
@@ -505,9 +513,9 @@ namespace EpServerEngineSampleClient
                     j = 0;
                     int sock = -1;
                     //AddMsg(ret);
-					string clmsg = " ";
-					bool avail = false;
-					//AddMsg("SEND_CLIENT_LIST ");
+                    string clmsg = " ";
+                    bool avail = false;
+                    //AddMsg("SEND_CLIENT_LIST ");
                     foreach (var word in words)
                     {
                         switch (i)
@@ -714,133 +722,19 @@ namespace EpServerEngineSampleClient
             btnConnect_Click(sender, e);
         }
         // start/stop engine
-        private void ShutdownServer(object sender, EventArgs e)
+        private void ShutdownServer(object sender, EventArgs e)     // manage server
         {
-            DialogResult res;
-            ManageServer dlg = new ManageServer(m_client);
-            res = dlg.ShowDialog(this);
-            if (res == DialogResult.OK)
-            {
-                if (client_params[selected_address].AutoConn == true)
-                    cfg_params = dlgsetparams.GetParams();
-                please_lets_disconnect = 1;
-            }
-            else if(res == DialogResult.Abort)
-            {
-                AddMsg("closing connection and exiting " + client_connected.ToString());
-                /*
-                if (client_connected)
-                    m_client.Disconnect();
-                garageform.Dispose();
-                testbench.Dispose();
-                base.OnClosed(e);
-                */
-                if (client_connected)
-                {
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
-                    please_lets_disconnect = 1; // let's disconnect here!
-                    disconnect_attempts = 0;
-                    AddMsg("disconnecting");
-                    btnConnect.Text = "Connect";
-                    timer1.Enabled = false;
-                    client_connected = false;
-                    btnCabinLights.Enabled = false;
-                    btnGarageForm.Enabled = false;
-                    //play_aliens_clip();
-                    m_client.Disconnect();
-                }
-                garageform.Dispose();
-                testbench.Dispose();
-                this.Close();
-            }
-        }
-        private void RebootServer(object sender, EventArgs e)       // "test"
+
+		}
+		private void RebootServer(object sender, EventArgs e)       // rescan clients
         {
             svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
             //SendClientMsg(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), "send client list", true);
             AddMsg("send client list");
         }
         // Insert logic for processing found files here.
-        public static void ProcessFile(string path)
-        {
-            //AddMsg("Processed file " + path);
-        }
-        // DlgSetParams dialog
-        private void ShowParamsClick(object sender, EventArgs e)
-        {
-            return;
-            if (m_client.IsConnectionAlive)
-            {
-                if (dlgsetparams.ShowDialog(this) == DialogResult.OK)
-                {
-                    //AddMsg("new password: " + cfg_params.password);
-                    cfg_params = dlgsetparams.GetParams();
-                    byte[] rpm_mph = BitConverter.GetBytes(cfg_params.si_rpm_mph_update_rate);
-                    byte[] fpga = BitConverter.GetBytes(cfg_params.si_FPGAXmitRate);
-                    byte[] high_rev = BitConverter.GetBytes(cfg_params.si_high_rev_limit);
-                    byte[] low_rev = BitConverter.GetBytes(cfg_params.si_low_rev_limit);
-                    byte[] fan_on = BitConverter.GetBytes(cfg_params.fan_on);
-                    byte[] fan_off = BitConverter.GetBytes(cfg_params.fan_off);
-                    byte[] ben = BitConverter.GetBytes(cfg_params.lights_on_value);
-                    byte[] b1 = BitConverter.GetBytes(cfg_params.lights_off_value);
-                    byte[] b2 = BitConverter.GetBytes(cfg_params.adc_rate);
-                    byte[] b3 = BitConverter.GetBytes(cfg_params.rt_value_select);
-                    byte[] lights = BitConverter.GetBytes(cfg_params.si_lights_on_delay);
-                    byte[] limit = BitConverter.GetBytes(cfg_params.engine_temp_limit);
-                    byte[] batt = BitConverter.GetBytes(cfg_params.battery_box_temp);
-                    byte[] test = BitConverter.GetBytes(cfg_params.si_test_bank);
-                    byte[] pswd_time = BitConverter.GetBytes(cfg_params.si_password_timeout);
-                    byte[] pswd_retries = BitConverter.GetBytes(cfg_params.si_password_retries);
-                    byte[] baudrate3 = BitConverter.GetBytes(cfg_params.si_baudrate3);
-                    //byte[] password = BytesFromString(cfg_params.password);
-
-                    byte[] bytes = new byte[rpm_mph.Count() + fpga.Count() + high_rev.Count()
-                        + low_rev.Count() + fan_on.Count() + fan_off.Count() + ben.Count() + b1.Count()
-                        + b2.Count() + b3.Count() + lights.Count() + limit.Count() + batt.Count()
-                        + test.Count() + pswd_time.Count() + pswd_retries.Count() + baudrate3.Count()/* + password.Count()*/ + 2];
-
-                    bytes[0] = svrcmd.GetCmdIndexB("UPDATE_CONFIG");
-                    //System.Buffer.BlockCopy(src, src_offset, dest, dest_offset,count)
-                    System.Buffer.BlockCopy(rpm_mph, 0, bytes, 2, rpm_mph.Count());
-                    System.Buffer.BlockCopy(fpga, 0, bytes, 4, fpga.Count());
-                    System.Buffer.BlockCopy(high_rev, 0, bytes, 6, high_rev.Count());
-                    System.Buffer.BlockCopy(low_rev, 0, bytes, 8, low_rev.Count());
-                    System.Buffer.BlockCopy(fan_on, 0, bytes, 10, fan_on.Count());
-                    System.Buffer.BlockCopy(fan_off, 0, bytes, 12, fan_off.Count());
-                    System.Buffer.BlockCopy(ben, 0, bytes, 14, ben.Count());
-                    System.Buffer.BlockCopy(b1, 0, bytes, 16, b1.Count());
-                    System.Buffer.BlockCopy(b2, 0, bytes, 18, b2.Count());
-                    System.Buffer.BlockCopy(b3, 0, bytes, 20, b3.Count());
-                    System.Buffer.BlockCopy(lights, 0, bytes, 22, lights.Count());
-                    System.Buffer.BlockCopy(limit, 0, bytes, 24, limit.Count());
-                    System.Buffer.BlockCopy(batt, 0, bytes, 26, batt.Count());
-                    System.Buffer.BlockCopy(test, 0, bytes, 28, test.Count());
-                    System.Buffer.BlockCopy(pswd_time, 0, bytes, 30, pswd_time.Count());
-                    System.Buffer.BlockCopy(pswd_retries, 0, bytes, 32, pswd_retries.Count());
-                    System.Buffer.BlockCopy(baudrate3, 0, bytes, 34, baudrate3.Count());
-
-                    //					System.Buffer.BlockCopy(password, 0, bytes, 36, password.Count());
-
-                    Packet packet = new Packet(bytes, 0, bytes.Count(), false);
-                    m_client.Send(packet);
-                    /*
-					bytes = new byte[rpm_mph.Count() + 2];
-					bytes[0] = svrcmd.GetCmdIndexB("SET_RPM_MPH_RATE");
-					System.Buffer.BlockCopy(rpm_mph, 0, bytes, 2, rpm_mph.Count());
-					packet = new Packet(bytes, 0, bytes.Count(), false);
-					m_client.Send(packet);
-
-					bytes = new byte[rpm_mph.Count() + 2];
-					bytes[0] = svrcmd.GetCmdIndexB("SET_FPGA_RATE");
-					System.Buffer.BlockCopy(rpm_mph, 0, bytes, 2, rpm_mph.Count());
-					packet = new Packet(bytes, 0, bytes.Count(), false);
-					m_client.Send(packet);
-					*/
-                }
-            }
-        }
         private void UpdateClientInfo()
-		{
+        {
             string msg = "UPDATE_CLIENT_INFO";
             int param = 1;
             int icmd = svrcmd.GetCmdIndexI(msg);
@@ -886,53 +780,14 @@ namespace EpServerEngineSampleClient
             }
             return buffer;
         }
-        private void DBMgmt(object sender, EventArgs e) 
-        {
-            setnextclient = new SetNextClient();
-            setnextclient.SetClient(m_client);
-            setnextclient.StartPosition = FormStartPosition.Manual;
-            setnextclient.Location = new Point(100, 10);
-            if (setnextclient.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-            setnextclient.Dispose();
-        }
         private void ClearScreen(object sender, EventArgs e)
         {
             tbReceived.Clear();
         }
-        private void GetTime(object sender, EventArgs e)
-        {
-            DateTime localDate = DateTime.Now;
-            String cultureName = "en-US";
-            var culture = new CultureInfo(cultureName);
-            //AddMsg(localDate.ToString(culture));
-            AddMsg(localDate.ToString());
-            // 'unused button
-            /*            
-                        byte test = Convert.ToByte(tbTest.Text);
-                        byte test2 = Convert.ToByte(tbTest2.Text);
-                        byte test3 = Convert.ToByte(tbTest3.Text);
-                        byte test4 = Convert.ToByte(tbTest4.Text);
-
-                        byte[] bytes = new byte[8];
-                        bytes[0] = test;
-                        bytes[1] = test2;
-                        bytes[2] = test3;
-                        bytes[3] = test4;
-
-                        string cmd = "DB_LOOKUP";
-                        int offset = svrcmd.GetCmdIndexI(cmd);
-                        svrcmd.Send_ClCmd(offset, 3, bytes);
-              */
-        }
         private void GarageFormClick(object sender, EventArgs e)
         {
             garageform.Enable_Dlg(true);
-            garageform.SetStatus(status);
+            //garageform.SetStatus(status);
             garageform.StartPosition = FormStartPosition.Manual;
             garageform.Location = new Point(100, 10);
             if (garageform.ShowDialog(this) == DialogResult.OK)
@@ -942,39 +797,14 @@ namespace EpServerEngineSampleClient
             {
             }
             garageform.Enable_Dlg(false);
-            status = garageform.GetStatus();
-        }
-        private void btnAVR_Click(object sender, EventArgs e)		// test3
-        {
-            clientdest = new ClientDest();
-            clientdest.SetClient(m_client);
-            clientdest.StartPosition = FormStartPosition.Manual;
-            clientdest.Location = new Point(100, 10);
-            if (clientdest.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-            clientdest.Dispose();
-        }
-        private void Dialog1_Click(object sender, EventArgs e)
-        {
-            cabin.StartPosition = FormStartPosition.Manual;
-            cabin.Location = new Point(100, 10);
-            if (cabin.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
+            //status = garageform.GetStatus();
         }
         private void myTimerTick(object sender, EventArgs e)
         {
             now = DateTime.Now;
             tick++;
             connected_tick++;
-            if ((tick % 5) == 0)
+            if ((tick % 15) == 0)
             {
                 //AddMsg(tick.ToString());
                 hour = now.Hour;
@@ -982,20 +812,19 @@ namespace EpServerEngineSampleClient
                 string tTime = now.TimeOfDay.ToString();
                 tTime = tTime.Substring(0, 8);
                 tbTime.Text = tTime;
-                if ((hour == sunrise_hour && minute == sunrise_minutes - 1) && oneoff2)
+                if ((hour == sunrise_hour && minute == (sunrise_minutes)) && oneoff)
                 {
                     play_sunrise_clip();
-                    oneoff2 = false;
-                    AddMsg(oneoff2.ToString());
+                    oneoff = false;
                     AddMsg("play sunrise");
                 }
             }
             if (cbAlarm.Checked == true)
-			{
+            {
                 alarm_tick--;
                 tbAlarm.Text = alarm_tick.ToString();
-                if(alarm_tick == 0)
-				{
+                if (alarm_tick == 0)
+                {
                     cbAlarm.Checked = false;
                     System.Media.SoundPlayer player;
                     string song = "c:\\users\\Daniel\\Music\\White Bird.wav";
@@ -1004,39 +833,15 @@ namespace EpServerEngineSampleClient
                     player.Play();
                     player.Dispose();
                 }
-			}
-            if (oneoff)
-            {
-                string ts = sunrises[now.Day - 1].ToString();
-                int space = ts.IndexOf(" ");
-                ts = ts.Remove(space);
-                tbSunrise.Text = ts;
-                string ts2 = ts.Substring(0, 1);
-                sunrise_hour = int.Parse(ts2);
-                ts2 = ts.Substring(2, 2);
-                sunrise_minutes = int.Parse(ts2);
-
-                ts = sunsets[now.Day - 1].ToString();
-                space = ts.IndexOf(" ");
-                ts = ts.Remove(space);
-                tbSunset.Text = ts;
-
-                string t2date = now.Date.ToString();
-                space = t2date.IndexOf(" ");
-                t2date = t2date.Remove(space);
-                tbTodaysDate.Text = t2date;
-                oneoff = false;
-//                play_sunrise_clip();
             }
-
-            if (tick == 5)
+            if (tick == 3)
             {
                 svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
                 AddMsg("send client list");
                 RedrawClientListBox();
-                
+
             }
-            if (clients_inited == false && tick == 30)
+            if (clients_inited == false && tick == 10)
             {
                 AddMsg("set time");
                 foreach (ClientsAvail cl in clients_avail)
@@ -1047,40 +852,32 @@ namespace EpServerEngineSampleClient
                         SetTime(cl.index);
                     }
                 }
-
             }
-            if (clients_inited == false && tick == 35)
-			{
+            if (clients_inited == false && tick == 15)
+            {
                 UpdateClientInfo();
                 clients_inited = true;
             }
             if (tick > 1600)
             {
                 //value.TimeOfDay.Ticks == 0;
-                if(hour == 0 && midnight_flag == false)
-				{
+                if (hour == 0 && midnight_flag == false)
+                {
                     //AddMsg("it is now midnight");
                     midnight_flag = true;
                     DateTime now2 = DateTime.Now;
                     string t2date = now2.Date.ToString();
                     int space = t2date.IndexOf(" ");
                     t2date = t2date.Remove(space);
-                    AddMsg(t2date);
                     tbTodaysDate.Text = t2date;
                 }
-                else if(hour > 0 && midnight_flag == true)
-				{
+                else if (hour > 0 && midnight_flag == true)
+                {
                     midnight_flag = false;
-                    AddMsg("sunrise: " + sunrises[now.Day - 1]);
-                    AddMsg("sunset: " + sunsets[now.Day - 1]);
-                    string ts = sunrises[now.Day - 1].ToString();
-                    int space = ts.IndexOf(" ");
-                    ts = ts.Remove(space);
-                    tbSunrise.Text = ts;
-                    ts = sunsets[now.Day - 1].ToString();
-                    space = ts.IndexOf(" ");
-                    ts = ts.Remove(space);
-                    tbSunset.Text = ts;
+
+                    tbSunrise.Text = sunrise;
+                    tbSunset.Text = sunset;
+                    oneoff = true;
                 }
                 tick = 36;
             }
@@ -1090,176 +887,6 @@ namespace EpServerEngineSampleClient
             //AddMsg("playing sunrise.wav...");
             System.Media.SoundPlayer player;
             string song = "c:\\users\\Daniel\\Music\\sunrise.wav";
-            player = new System.Media.SoundPlayer();
-            player.SoundLocation = song;
-            player.Play();
-            player.Dispose();
-        }
-        void play_aliens_clip()
-	{
-        System.Media.SoundPlayer player;
-        string song = "";
-        Random r = new Random();
-        int rInt = r.Next(0, 49); //for ints
-            switch (rInt)
-            {
-                case 0:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\alien_kill2.wav";
-                    break;
-                case 1:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\GameOverMan.wav";
-                    break;
-                case 2:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\day_on_the_farm.wav";
-                    break;
-                case 3:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\DRAKE.wav";
-                    break;
-                case 4:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\sweethearts.wav";
-                    break;
-                case 5:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\illegal_aliens.wav";
-                    break;
-                case 6:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\express_elevator.wav";
-                    break;
-                case 7:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\knives_sharp_sticks.wav";
-                    break;
-                case 8:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\stop_yer_grinnin.wav";
-                    break;
-                case 9:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\comin_outa_the_gd_walls.wav";
-                    break;
-                case 10:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\pretty_shit_now_man.wav";
-                    break;
-                case 11:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\chicken_shit.wav";
-                    break;
-                case 12:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\count_me_out.wav";
-                    break;
-                case 13:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\cut_the_power.wav";
-                    break;
-                case 14:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\grease.wav";
-                    break;
-                case 15:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\17_hours.wav";
-                    break;
-                case 16:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\somethin_movin.wav";
-                    break;
-                case 17:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\dry_heat.wav";
-                    break;
-                case 18:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\hes_comin_in.wav";
-                    break;
-                case 19:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\cornbread.wav";
-                    break;
-                case 20:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\RampClosing.wav";
-                    break;
-                case 21:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\PrepareForDustOff.wav";
-                    break;
-                case 22:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\Werspaski.wav";
-                    break;
-                case 23:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\LetsRock.wav";
-                    break;
-                case 24:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\CloseEncounters.wav";
-                    break;
-                case 25:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\YouHeardTheMan.wav";
-                    break;
-                case 26:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\FlameUnitsOnly.wav";
-                    break;
-                case 27:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\HarshLanguage.wav";
-                    break;
-                case 28:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\IsHeFnCrazy.wav";
-                    break;
-                case 29:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\CantHaveAnyFiring.wav";
-                    break;
-                case 30:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\StandardLightArmour.wav";
-                    break;
-                case 31:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\WhatDoThoseFire.wav";
-                    break;
-                case 32:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\BuildAFire.wav";
-                    break;
-                case 33:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\WhatAreWeGonnaDo.wav";
-                    break;
-                case 34:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\Explosion.wav";
-                    break;
-                case 35:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\HesJustAGrunt.wav";
-                    break;
-                case 36:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\CurrentEvents.wav";
-                    break;
-                case 37:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\ArbitrarilyExterminate.wav";
-                    break;
-                case 38:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\TheyCanBillMe.wav";
-                    break;
-                case 39:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\SubstantialDollarValue.wav";
-                    break;
-                case 40:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\NukeTheEntireSite.wav";
-                    break;
-                case 41:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\WhatAreWeTalkingAboutThisFor.wav";
-                    break;
-                case 42:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\ThisCantBeHappinen.wav";
-                    break;
-                case 43:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\YouCantHelpThem.wav";
-                    break;
-                case 44:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\WaitUpKillYou.wav";
-                    break;
-                case 45:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\ShutTheGDDoor.wav";
-                    break;
-                case 46:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\RipleyWhatTheHell.wav";
-                    break;
-                case 47:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\SargeIsGone.wav";
-                    break;
-                case 48:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\SpaskiCroweDown.wav";
-                    break;
-                case 49:
-                    song = "c:\\users\\Daniel\\Music\\WavFiles2\\I_Only_Work_Here.wav";
-                    break;
-                default:
-                    break;
-            }
-            
-            int id = song.LastIndexOf("\\");
-            string tsong = song.Substring(id + 1);
-            AddMsg(tsong);
             player = new System.Media.SoundPlayer();
             player.SoundLocation = song;
             player.Play();
@@ -1281,26 +908,6 @@ namespace EpServerEngineSampleClient
             this.Location = new Point(0, 0);
             AddMsg("loaded");
         }
-        private void Btn_PlayList_Click(object sender, EventArgs e)
-        {
-/*
-            playdlg.Enable_Dlg(true);
-            player_active = true;
-
-            playdlg.StartPosition = FormStartPosition.Manual;
-            playdlg.Location = new Point(100, 10);
-
-            if (playdlg.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-                //                this.txtResult.Text = "Cancelled";
-            }
-            playdlg.Enable_Dlg(false);
-            player_active = false;
-*/
-        }
         private void SetTime(int dest)
         {
             if (m_client.IsConnectionAlive)
@@ -1309,8 +916,8 @@ namespace EpServerEngineSampleClient
                 String cultureName = "en-US";
                 var culture = new CultureInfo(cultureName);
                 AddMsg(localDate.ToString(culture));
-				int temp1 = dest;
-				byte[] bytes1 = BitConverter.GetBytes(temp1);
+                int temp1 = dest;
+                byte[] bytes1 = BitConverter.GetBytes(temp1);
                 byte[] bytes2 = BytesFromString(localDate.ToString(culture));
                 byte[] bytes3 = new byte[bytes1.Count() + bytes2.Length + 2];
                 System.Buffer.BlockCopy(bytes1, 0, bytes3, 2, bytes1.Count());
@@ -1349,10 +956,6 @@ namespace EpServerEngineSampleClient
         private void btnShutdownClient_Click(object sender, EventArgs e)
         {
             SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), " ", true);
-       }
-        private void button1_Click(object sender, EventArgs e)		// get status
-        {
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"), "status", false);
         }
         private void SendClientMsg(int msg, string param, bool remove)
         {
@@ -1372,79 +975,58 @@ namespace EpServerEngineSampleClient
                     // if cl.index == server then set disconnected flag
 
                     //if ((cl.index == 8) && (msg == REBOOT_IOBOX))
-                    if(false)
-                    { 
+                    if (false)
+                    {
                         btnConnect.Text = "Connect";
                         timer1.Enabled = false;
                         client_connected = false;
                     }
                     RedrawClientListBox();
-					if(!remove)
-					{
-                        lbAvailClients.SetSelected(cl.lbindex,true);
-					}
+                    if (!remove)
+                    {
+                        lbAvailClients.SetSelected(cl.lbindex, true);
+                    }
                 }
             }
         }
-		private void btnSendMsg_Click(object sender, EventArgs e)
-		{
+        private void btnSendMsg_Click(object sender, EventArgs e)
+        {
             SendClientMsg(svrcmd.GetCmdIndexI("SEND_MESSAGE"), sendmsgtext, false);
         }
-		private void bSetClientTime_Click(object sender, EventArgs e)
-		{
+        private void bSetClientTime_Click(object sender, EventArgs e)
+        {
             foreach (ClientsAvail cl in clients_avail)
             {
                 if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 {
                     AddMsg(cl.label);
-					SetTime(cl.index);
-				}	
-			}
-		}
+                    SetTime(cl.index);
+                }
+            }
+        }
         private void btnReportTimeUp_Click(object sender, EventArgs e)
-		{
-			foreach (ClientsAvail cl in clients_avail)
-			{
-				if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+        {
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
                 //  if(cl.socket > 0)   // to do all at once
-				{
-					//AddMsg(cl.label + " " + cl.index.ToString() + " " + cl.lbindex.ToString());
+                {
+                    //AddMsg(cl.label + " " + cl.index.ToString() + " " + cl.lbindex.ToString());
                     svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
                 }
-			}
-		}
-		private void btnWaitReboot_Click(object sender, EventArgs e)
-		{
-            SendClientMsg(svrcmd.GetCmdIndexI("EXIT_TO_SHELL"), " ", true);
+            }
         }
-		private void tbSendMsg_TextChanged(object sender, EventArgs e)
-		{
+        private void tbSendMsg_TextChanged(object sender, EventArgs e)
+        {
             sendmsgtext = tbSendMsg.Text;
-		}
-		private void btnCabinLights_Click(object sender, EventArgs e)
-		{
-            testbench.Enable_Dlg(true);
-            testbench.StartPosition = FormStartPosition.Manual;
-            testbench.Location = new Point(100, 10);
-            if (testbench.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-            testbench.Enable_Dlg(false);
         }
-		private void button1_Click_1(object sender, EventArgs e)
-		{
-            SendClientMsg(svrcmd.GetCmdIndexI("SHELL_AND_RENAME"), " ", true);
-        }
-		private void cbWhichWinClient_SelectedIndexChanged(object sender, EventArgs e)
-		{
+        private void cbWhichWinClient_SelectedIndexChanged(object sender, EventArgs e)
+        {
             which_winclient = cbWhichWinClient.SelectedIndex;
             AddMsg(which_winclient.ToString());
-		}
-		private void btnWinClMsg_Click(object sender, EventArgs e)
-		{
+        }
+        private void btnWinClMsg_Click(object sender, EventArgs e)
+        {
             winclmsg = new WinCLMsg();
             winclmsg.SetClient(m_client);
             winclmsg.Enable_Dlg(true);
@@ -1461,10 +1043,202 @@ namespace EpServerEngineSampleClient
             winclmsg.Enable_Dlg(false);
             winclmsg.Dispose();
         }
-		private void tbAlarm_TextChanged(object sender, EventArgs e)
-		{
+        private void tbAlarm_TextChanged(object sender, EventArgs e)
+        {
             alarm_tick = Int64.Parse(tbAlarm.Text);
             //AddMsg(alarm_tick.ToString());
-		}
-	}
+        }
+		private void btnTestBench_Click(object sender, EventArgs e)
+		{
+            testbench.Enable_Dlg(true);
+            testbench.StartPosition = FormStartPosition.Manual;
+            testbench.Location = new Point(100, 10);
+            if (testbench.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+            testbench.Enable_Dlg(false);
+        }
+		private void Cabin_Click(object sender, EventArgs e)
+		{
+            cabin.StartPosition = FormStartPosition.Manual;
+            cabin.Location = new Point(100, 10);
+            if (cabin.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+        }
+		private void btnTimers_Click(object sender, EventArgs e)
+		{
+            clientdest = new ClientDest();
+            clientdest.SetClient(m_client);
+            clientdest.StartPosition = FormStartPosition.Manual;
+            clientdest.Location = new Point(100, 10);
+            if (clientdest.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+            clientdest.Dispose();
+        }
+		private void btnSetNextClient_Click(object sender, EventArgs e)
+		{
+            setnextclient = new SetNextClient();
+            setnextclient.SetClient(m_client);
+            setnextclient.StartPosition = FormStartPosition.Manual;
+            setnextclient.Location = new Point(100, 10);
+            if (setnextclient.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+            setnextclient.Dispose();
+        }
+        private void BtnAssignFunction(object sender, EventArgs e)
+        {
+            int func = 0;          
+            EasyButtonForm easyButton = new EasyButtonForm();
+            easyButton.StartPosition = FormStartPosition.Manual;
+            easyButton.Location = new Point(100, 0);
+            if(easyButton.ShowDialog(this) == DialogResult.OK)
+			{
+                func = easyButton.getFunc();
+                switch (func)
+                {
+                    case 1:
+                        AddMsg("func 1");
+                        Properties.Settings.Default["func1_type"] = easyButton.getType();
+                        Properties.Settings.Default["func1_port"] = easyButton.getPort();
+                        btnFnc1.Text = easyButton.getType().ToString() + " " + easyButton.getPort().ToString();
+
+                        break;
+                    case 2:
+                        AddMsg("func 2");
+                        Properties.Settings.Default["func2_type"] = easyButton.getType();
+                        Properties.Settings.Default["func2_port"] = easyButton.getPort();
+                        btnFnc2.Text = easyButton.getType().ToString() + " " + easyButton.getPort().ToString();
+                        break;
+                    case 3:
+                        AddMsg("func 2");
+                        Properties.Settings.Default["func3_type"] = easyButton.getType();
+                        Properties.Settings.Default["func3_port"] = easyButton.getPort();
+                        btnFnc3.Text = easyButton.getType().ToString() + " " + easyButton.getPort().ToString();
+                        break;
+                    default:
+                        break;
+                }
+                Properties.Settings.Default.Save();
+                AddMsg("type: " + easyButton.getType().ToString());
+                AddMsg("port: " + easyButton.getPort().ToString());
+            }
+            else
+			{
+
+			}
+            easyButton.Dispose();
+        }
+        private void Function1Click(object sender, EventArgs e)
+		{
+            int type, port;
+            AddMsg(Properties.Settings.Default["func1_type"].ToString());
+            AddMsg(Properties.Settings.Default["func1_port"].ToString());
+            type = (int)Properties.Settings.Default["func1_type"];
+            port = (int)Properties.Settings.Default["func1_port"];
+            svrcmd.Change_PortCmd(port, type);
+        }
+        private void Function2Click(object sender, EventArgs e)
+		{
+            int type, port;
+            AddMsg(Properties.Settings.Default["func2_type"].ToString());
+            AddMsg(Properties.Settings.Default["func2_port"].ToString());
+            type = (int)Properties.Settings.Default["func2_type"];
+            port = (int)Properties.Settings.Default["func2_port"];
+            svrcmd.Change_PortCmd(port, type);
+        }
+        private void Function3Click(object sender, EventArgs e)
+        {
+            int type, port;
+			AddMsg(Properties.Settings.Default["func3_type"].ToString());
+			AddMsg(Properties.Settings.Default["func3_port"].ToString());
+            type = (int)Properties.Settings.Default["func3_type"];
+            port = (int)Properties.Settings.Default["func3_port"];
+            svrcmd.Change_PortCmd(port, type);
+        }
+        private void Exit2Shell_Click(object sender, EventArgs e)
+		{
+            SendClientMsg(svrcmd.GetCmdIndexI("EXIT_TO_SHELL"), " ", true);
+        }
+		private void btnShellandRename_Click(object sender, EventArgs e)
+		{
+            SendClientMsg(svrcmd.GetCmdIndexI("SHELL_AND_RENAME"), " ", true);
+        }
+		private void btnSendStatus_Click(object sender, EventArgs e)
+		{
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"), "status", false);
+        }
+
+		private void Minimize_Click(object sender, EventArgs e)
+		{
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+		private void btnTest_Click(object sender, EventArgs e)
+		{
+            Properties.Settings.Default["EAST_LIGHT"] = true;
+            Properties.Settings.Default.Save();
+            AddMsg(Properties.Settings.Default["EAST_LIGHT"].ToString());
+        }
+
+		private void btnMngServer_Click(object sender, EventArgs e)
+		{
+            DialogResult res;
+            int iResult = 0;
+            ManageServer dlg = new ManageServer(m_client);
+            res = dlg.ShowDialog(this);
+            iResult = dlg.GetResult();
+            if (res == DialogResult.OK)
+            {
+                if (client_params[selected_address].AutoConn == true)
+                    cfg_params = dlgsetparams.GetParams();
+                please_lets_disconnect = 1;
+            }
+            else if (res == DialogResult.Abort)
+            {
+                AddMsg("closing connection and exiting " + client_connected.ToString());
+                /*
+                if (client_connected)
+                    m_client.Disconnect();
+                garageform.Dispose();
+                testbench.Dispose();
+                base.OnClosed(e);
+                */
+                if (client_connected)
+                {
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
+                    please_lets_disconnect = 1; // let's disconnect here!
+                    disconnect_attempts = 0;
+                    AddMsg("disconnecting");
+                    btnConnect.Text = "Connect";
+                    timer1.Enabled = false;
+                    client_connected = false;
+                    btnCabinLights.Enabled = false;
+                    btnGarageForm.Enabled = false;
+                    //play_aliens_clip();
+                    m_client.Disconnect();
+                }
+                garageform.Dispose();
+                testbench.Dispose();
+                this.Close();
+            }
+            if(iResult == 55)
+                this.WindowState = FormWindowState.Minimized;
+        }
+    }
+
 }
