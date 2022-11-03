@@ -322,6 +322,7 @@
 			this.Controls.Add(this.label1);
 			this.Name = "GarageForm";
 			this.Text = "Garage Lights";
+			this.Load += new System.EventHandler(this.LoadEvent);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

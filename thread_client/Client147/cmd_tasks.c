@@ -264,6 +264,11 @@ UCHAR get_host_cmd_task2(int test)
 					case BENCH_3V3_2:
 					case BENCH_LIGHT1:
 					case BENCH_LIGHT2:
+					case COOP1_LIGHT:
+					case COOP1_HEATER:
+					case COOP2_LIGHT:
+					case COOP2_HEATER:
+					case CHICK_WATER:
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
 					case SHELL_AND_RENAME:

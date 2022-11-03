@@ -29,10 +29,7 @@ namespace EpServerEngineSampleClient
 		private List<int> CurrentList = new List<int>();
 		private byte[] recv_buff;
 		private bool m_pause = false;
-		bool[] status = new bool[8];
-		bool[] prev_status = new bool[8];
 		List<String> on_label_list = new List<String>();
-		List<String> off_label_list = new List<String>();
 		public System.Collections.Generic.List<ButtonList> button_list;
 		public TestBench(string xml_file_location, INetworkClient client)
 		{
@@ -45,23 +42,6 @@ namespace EpServerEngineSampleClient
 			var filePath = xml_file_location;
 			xmlfile = XmlReader.Create(filePath, new XmlReaderSettings());
 			ds.ReadXml(xmlfile);
-			status[0] = false;
-			status[1] = false;
-			status[2] = false;
-			status[3] = false;
-			status[4] = false;
-			status[5] = false;
-			status[6] = false;
-			status[7] = false;
-
-			prev_status[0] = false;
-			prev_status[1] = false;
-			prev_status[2] = false;
-			prev_status[3] = false;
-			prev_status[4] = false;
-			prev_status[5] = false;
-			prev_status[6] = false;
-			prev_status[7] = false;
 			recv_buff = new byte[200];
 
 			on_label_list.Add("BENCH_24V_1");
@@ -72,11 +52,17 @@ namespace EpServerEngineSampleClient
 			on_label_list.Add("BENCH_5V_2");
 			on_label_list.Add("BENCH_3V3_1");
 			on_label_list.Add("BENCH_3V3_2");
-
+			on_label_list.Add("COOP1_LIGHT");
+			on_label_list.Add("COOP1_HEATER");
+			on_label_list.Add("COOP2_LIGHT");
+			on_label_list.Add("COOP2_HEATER");
+			on_label_list.Add("BENCH_LIGHT1");
+			on_label_list.Add("BENCH_LIGHT2");
+			on_label_list.Add("CHICK_WATER");
 			button_list = new List<ButtonList>();
-			Control sCtl = this.btnNorth;
+			Control sCtl = this.btn24v1;
 			//for (int i = 0; i < this.Controls.Count; i++)
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 15; i++)
 			{
 				if (sCtl.GetType() == typeof(Button))
 				{
@@ -90,12 +76,12 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-			/*
+			
 			foreach (ButtonList btn in button_list)
 			{
 				AddMsg(btn.Name + " " + btn.TabOrder.ToString());
 			}
-			*/
+			
 		}
 		public void Enable_Dlg(bool wait)
 		{
@@ -166,16 +152,16 @@ namespace EpServerEngineSampleClient
 						if (o > 0)
 						{
 							res += '1';
-							status[k] = true;
+							//status[k] = true;
 						}
 						else
 						{
 							res += '0';
-							status[k] = false;
+							//status[k] = false;
 						}
 						m >>= 1;
 					}
-					IfStatusChanged(-1);
+					//IfStatusChanged(-1);
 					//AddMsg(res);
 					/*
 					for(int ix = 0;ix < 6;ix++)
@@ -193,133 +179,122 @@ namespace EpServerEngineSampleClient
 					AddMsg(which.ToString() + " " + onoff.ToString());
 					if (which > -1 && which < 8)
 					{
-						status[which] = (onoff == 1 ? status[which] = true : status[which] = false);
-						AddMsg(status[which].ToString() + " " + which.ToString() + " " + onoff.ToString());
+						//status[which] = (onoff == 1 ? status[which] = true : status[which] = false);
+						//AddMsg(status[which].ToString() + " " + which.ToString() + " " + onoff.ToString());
 					}
-					IfStatusChanged(which);
+					//IfStatusChanged(which);
 				}
 			}
 		}
 		// pass in -1 to tell this to check all of the status array
 		// or pass in a 0->5 to set a single status item
-		private void IfStatusChanged(int which)
+		
+		private void ToggleButton(int which, bool state)
 		{
-			AddMsg(which.ToString());
-			if (which == -1)
-				for (int i = 0; i < 8; i++)
-				{
-					//if (status[i] != prev_status[i])
-					if(true)
-					{
-						if (status[i])
-						{
-							button_list[i].Ctl.Text = "ON";
-							button_list[i].Ctl.BackColor = Color.Aqua;
-						}
-						else
-						{
-							button_list[i].Ctl.Text = "OFF";
-							button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-						}
-					}
-				}
-			else if (which > -1 && which < 8)
+			if (state)
 			{
-				//if (status[which] != prev_status[which])
-				if(true)
-				{
-					if (status[which])
-					{
-						button_list[which].Ctl.Text = "ON";
-						button_list[which].Ctl.BackColor = Color.Aqua;
-					}
-					else
-					{
-						button_list[which].Ctl.Text = "OFF";
-						button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-					}
-				}
+				button_list[which].Ctl.Text = "ON";
+				button_list[which].Ctl.BackColor = Color.Aqua;
 			}
-			//AddMsg("done");
+			else
+			{
+				button_list[which].Ctl.Text = "OFF";
+				button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			}
 		}
-		private void SendCmd(int which, bool onoff)
+		private bool SendCmd(int which)
+		{
+			bool ret;
+			string cmd = on_label_list[which];
+			//AddMsg("cmd: " + cmd);
+			int offset = svrcmd.GetCmdIndexI(cmd);
+			//AddMsg("offset: " + offset.ToString());
+			//AddMsg(svrcmd.GetState(offset).ToString());
+			ret = svrcmd.Change_PortCmd(offset, 3);
+			AddMsg(ret.ToString());
+			return ret;
+		}
+		private bool SendCmd(int which, bool onoff)
 		{
 			string cmd = on_label_list[which];
+			//AddMsg("cmd: " + cmd);
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Send_ClCmd(offset, 3, !status[which]);		// TODO: set this to whatever client is offset 3 in assign_client_table.c
-			prev_status[which] = status[which];
-			ChangeStatus(which);
-			IfStatusChanged(which);
-		}
-		private void ChangeStatus(int i)
-		{
-			status[i] = !status[i];
-			AddMsg("status changed: " + i.ToString());
-			//IfStatusChanged();
-		}
-		// this is actually north
-		private void btnNorth_Click(object sender, EventArgs e)
-		{
-			SendCmd(0, !status[0]);
+			//AddMsg("offset: " + offset.ToString());
+			//AddMsg(svrcmd.GetState(offset).ToString());
+			return svrcmd.Change_PortCmd(offset, 2);
 		}
 
-		private void btnSouth_Click(object sender, EventArgs e)
+		private void btn24v1_Click(object sender, EventArgs e)
 		{
-			SendCmd(1, !status[1]);
+			ToggleButton(0, SendCmd(0));
+		}
+		private void btn24v2_Click(object sender, EventArgs e)
+		{
+			ToggleButton(1, SendCmd(1));
 		}
 
-		private void btnEast_Click(object sender, EventArgs e)
+		private void btn12v1_Click(object sender, EventArgs e)
 		{
-			SendCmd(2, !status[2]);
+			ToggleButton(2, SendCmd(2));
 		}
 
-		private void btnWest_Click(object sender, EventArgs e)
+		private void btn12v2_Click(object sender, EventArgs e)
 		{
-			SendCmd(3, !status[3]);
+			ToggleButton(3, SendCmd(3));
 		}
 
-		private void btnMiddle_Click(object sender, EventArgs e)
+		private void btn5v1_Click(object sender, EventArgs e)
 		{
-			SendCmd(4, !status[4]);
+			ToggleButton(4, SendCmd(4));
 		}
 
-		private void btnOffice_Click(object sender, EventArgs e)
+		private void btn5v2_Click(object sender, EventArgs e)
 		{
-			SendCmd(5, !status[5]);
+			ToggleButton(5, SendCmd(5));
 		}
 
-		private void btnAll_Click(object sender, EventArgs e)
+		private void btn3v31_Click(object sender, EventArgs e)
 		{
-			SendCmd(6, !status[6]);
+			ToggleButton(6, SendCmd(6));
 		}
 
-		private void btnPollStatus_Click(object sender, EventArgs e)
+		private void btn3v32_Click(object sender, EventArgs e)
 		{
-//			SendPollStatus();
+			ToggleButton(7, SendCmd(7));
+		}
+		private void Coop1Light_Click(object sender, EventArgs e)
+		{
+			ToggleButton(8, SendCmd(8));
 		}
 
-		private void btnClear_Click_1(object sender, EventArgs e)
+		private void btnCoop1Heat_Click(object sender, EventArgs e)
 		{
-			SendCmd(7, !status[7]);
+			ToggleButton(9, SendCmd(9));
 		}
 
-		private void SendPollStatus()
+		private void btnCoop2Light_Click(object sender, EventArgs e)
 		{
-			string cmd = "POLL_STATUS";
-			int offset = svrcmd.GetCmdIndexI(cmd);
-			offset = svrcmd.GetCmdIndexI(cmd);
-			//AddMsg(offset.ToString());
-			svrcmd.Send_Cmd(offset);
+			ToggleButton(10, SendCmd(10));
 		}
 
-		private void button1_Click(object sender, EventArgs e)
+		private void btnCoop2Heat_Click(object sender, EventArgs e)
 		{
-
+			ToggleButton(11, SendCmd(11));
 		}
 
-		private void button2_Click(object sender, EventArgs e)
+		private void btnBenchLight1_Click(object sender, EventArgs e)
 		{
+			ToggleButton(12, SendCmd(12));
+		}
 
+		private void btnBenchLight2_Click(object sender, EventArgs e)
+		{
+			ToggleButton(13, SendCmd(13));
+		}
+
+		private void btnWaterPump_Click(object sender, EventArgs e)
+		{
+			ToggleButton(14, SendCmd(14));
 		}
 	}
 }

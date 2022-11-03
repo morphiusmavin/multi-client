@@ -286,7 +286,8 @@ UCHAR get_host_cmd_task2(int test)
  				switch(cmd)
 				{
 					case AREYOUTHERE:
-						printf("yes im here\n");
+						sprintf(tempx,"yes im here (154)\0");
+						send_sock_msg(tempx, msg_len, YESIMHERE, 0);
 						break;
 
 					case SET_NEXT_CLIENT:

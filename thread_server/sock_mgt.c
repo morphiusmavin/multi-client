@@ -145,10 +145,11 @@ UCHAR sock_timer(int test)
 	//printf("sock_timer starting %d\n",s_tick);
 	while(TRUE)
 	{
-		uSleep(1,0);
+		uSleep(5,0);
 //		if(client_table[0].socket > 0 && client_table[0].type != WINDOWS_CLIENT)
 		s_tick++;
 		//printf("%d \n",s_tick);
+/*		
 		if(client_table[0].socket > 0)
 		{
 			sprintf(tempx,"%03d",s_tick);
@@ -157,7 +158,7 @@ UCHAR sock_timer(int test)
 			// WIN7-X64 is client_table[1] 
 			send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,AREYOUTHERE);
 		}
-/*
+
 		if(s_tick > 10 && client_table[0].socket > 0)
 		{
 			close(client_table[0].socket);
@@ -245,9 +246,12 @@ UCHAR get_host_cmd_task(int test)
 			//print_cmd(cmd);
 			switch(cmd)
 			{
-				case YESIMHERE:
-					//s_tick = 0;
-					//printf("yes: %s\n",write_serial_buff);
+
+				case AREYOUTHERE:
+					if(client_table[0].socket > 0)
+						send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,YESIMHERE);
+					if(client_table[1].socket > 0)
+						send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,YESIMHERE);
 					break;
 				
 				case SET_TIME:

@@ -108,23 +108,20 @@ enum output_types
 	BENCH_5V_2a,
 	BENCH_3V3_1a,
 	BENCH_3V3_2a,
-	TEST_OUTPUT10,
+	TEST_OUTPUT10,		// these are unused 
 	TEST_OUTPUT11,
 
 	BENCH_LIGHT1a,
 	BENCH_LIGHT2a,
 	CHICK_WATERa,
-	TEST_OUTPUT12,
-	TEST_OUTPUT13,
-	TEST_OUTPUT14,
-	TEST_OUTPUT15,
-	TEST_OUTPUT16,
+	COOP1_LIGHTa,
+	COOP1_HEATERa,
+	COOP2_LIGHTa,
+	COOP2_HEATERa,
+	TEST_OUTPUT16,		// these are unused
 	TEST_OUTPUT17,
-	TEST_OUTPUT18,
-	TEST_OUTPUT19
+	TEST_OUTPUT18
 }OUTPUT_TYPES;
-
-int switch_status[10];
 
 /****************************************************************************************************/
 static double curtime(void)
@@ -1093,7 +1090,6 @@ UCHAR basic_controls_task(int test)
 
 //	memset(msg_queue,0,sizeof(msg_queue));
 	msg.mtype = msgtype;
-	memset(switch_status,0,sizeof(switch_status));
 
 /*
 	for(i = 0;i < 10;i++)	// test the 2nd relay module
@@ -1123,85 +1119,83 @@ UCHAR basic_controls_task(int test)
 
 		//printf("basic controls: ");
 		//print_cmd(cmd);
+		//printf("%d\n",onoff);
 		usleep(_5MS);
 
 		switch(cmd)
 		{
 			case  BENCH_24V_1:
-				switch_status[BENCH_24V_1a] = switch_status[BENCH_24V_1a]==1?0:1;
-				//change_output(BENCH_24V_1a,switch_status[BENCH_24V_1a]);
 				change_output(BENCH_24V_1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_24V_2:
-				switch_status[BENCH_24V_2a] = switch_status[BENCH_24V_2a]==1?0:1;
-				//change_output(BENCH_24V_2a,switch_status[BENCH_24V_2a]);
 				change_output(BENCH_24V_2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_12V_1:
-				switch_status[BENCH_12V_1a] = switch_status[BENCH_12V_1a]==1?0:1;
-				//change_output(BENCH_12V_1a,switch_status[BENCH_12V_1a]);
 				change_output(BENCH_12V_1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_12V_2:
-				switch_status[BENCH_12V_2a] = switch_status[BENCH_12V_2a]==1?0:1;
-				//change_output(BENCH_12V_2a,switch_status[BENCH_12V_2a]);
 				change_output(BENCH_12V_2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_5V_1:
-				switch_status[BENCH_5V_1a] = switch_status[BENCH_5V_1a]==1?0:1;
-				//change_output(BENCH_5V_1a,switch_status[BENCH_5V_1a]);
 				change_output(BENCH_5V_1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_5V_2:
-				switch_status[BENCH_5V_2a] = switch_status[BENCH_5V_2a]==1?0:1;
-				//change_output(BENCH_5V_2a,switch_status[BENCH_5V_2a]);
 				change_output(BENCH_5V_2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_3V3_1:
-				switch_status[BENCH_3V3_1a] = switch_status[BENCH_3V3_1a]==1?0:1;
-				//change_output(BENCH_3V3_1a,switch_status[BENCH_3V3_1a]);
 				change_output(BENCH_3V3_1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_3V3_2:
-				switch_status[BENCH_3V3_2a] = switch_status[BENCH_3V3_2a]==1?0:1;
-				//change_output(BENCH_3V3_2a,switch_status[BENCH_3V3_2a]);
 				change_output(BENCH_3V3_2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_LIGHT1:
-				switch_status[BENCH_LIGHT1a] = switch_status[BENCH_LIGHT1a]==1?0:1;
-				//change_output(BENCH_LIGHT1a,switch_status[BENCH_LIGHT1a]);
 				change_output(BENCH_LIGHT1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  BENCH_LIGHT2:
-				switch_status[BENCH_LIGHT2a] = switch_status[BENCH_LIGHT2a]==1?0:1;
-				//change_output(BENCH_LIGHT2a,switch_status[BENCH_LIGHT2a]);
 				change_output(BENCH_LIGHT2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CHICK_WATER:
-				//printf("CHICK_WATER %d\n",onoff);
-				switch_status[CHICK_WATERa] = switch_status[CHICK_WATERa]==1?0:1;
-				//change_output(CHICK_WATERa,switch_status[CHICK_WATERa]);
 				change_output(CHICK_WATERa,onoff);
+				usleep(_100MS);
+				break;
+
+			case COOP1_LIGHT:
+				change_output(COOP1_LIGHTa,onoff);
+				usleep(_100MS);
+				break;
+
+			case COOP1_HEATER:
+				change_output(COOP1_HEATERa,onoff);
+				usleep(_100MS);
+				break;
+
+			case COOP2_LIGHT:
+				change_output(COOP2_LIGHTa,onoff);
+				usleep(_100MS);
+				break;
+				
+			case COOP2_HEATER:
+				change_output(COOP2_HEATERa,onoff);
 				usleep(_100MS);
 				break;
 

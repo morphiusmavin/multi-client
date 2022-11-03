@@ -169,6 +169,7 @@ namespace EpServerEngineSampleClient
 			this.Controls.Add(this.btn1);
 			this.Name = "Cabin";
 			this.Text = "Cabin";
+			this.Load += new System.EventHandler(this.LoadEvent);
 			this.ResumeLayout(false);
 
 		}

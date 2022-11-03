@@ -122,7 +122,7 @@ enum output_types
 	TEST_OUTPUT19
 }OUTPUT_TYPES;
 
-int switch_status[20];
+//int switch_status[20];
 
 /****************************************************************************************************/
 static double curtime(void)
@@ -1091,7 +1091,7 @@ UCHAR basic_controls_task(int test)
 
 //	memset(msg_queue,0,sizeof(msg_queue));
 	msg.mtype = msgtype;
-	memset(switch_status,0,sizeof(switch_status));
+	//memset(switch_status,0,sizeof(switch_status));
 
 /*
 	for(i = 0;i < 10;i++)	// test the 2nd relay module
@@ -1126,56 +1126,56 @@ UCHAR basic_controls_task(int test)
 		switch(cmd)
 		{
 			case  CABIN1:
-				switch_status[CABIN1a] = switch_status[CABIN1a]==1?0:1;
+				//switch_status[CABIN1a] = switch_status[CABIN1a]==1?0:1;
 				//change_output(BENCH_24V_1a,switch_status[BENCH_24V_1a]);
 				change_output(CABIN1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN2:
-				switch_status[CABIN2a] = switch_status[CABIN2a]==1?0:1;
+				//switch_status[CABIN2a] = switch_status[CABIN2a]==1?0:1;
 				//change_output(BENCH_24V_2a,switch_status[BENCH_24V_2a]);
 				change_output(CABIN2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN3:
-				switch_status[CABIN3a] = switch_status[CABIN3a]==1?0:1;
+				//switch_status[CABIN3a] = switch_status[CABIN3a]==1?0:1;
 				//change_output(BENCH_12V_1a,switch_status[BENCH_12V_1a]);
 				change_output(CABIN3a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN4:
-				switch_status[CABIN4a] = switch_status[CABIN4a]==1?0:1;
+				//switch_status[CABIN4a] = switch_status[CABIN4a]==1?0:1;
 				//change_output(BENCH_12V_2a,switch_status[BENCH_12V_2a]);
 				change_output(CABIN4a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN5:
-				switch_status[CABIN5a] = switch_status[CABIN5a]==1?0:1;
+				//switch_status[CABIN5a] = switch_status[CABIN5a]==1?0:1;
 				//change_output(BENCH_5V_1a,switch_status[BENCH_5V_1a]);
 				change_output(CABIN5a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN6:
-				switch_status[CABIN6a] = switch_status[CABIN6a]==1?0:1;
+				//switch_status[CABIN6a] = switch_status[CABIN6a]==1?0:1;
 				//change_output(BENCH_5V_2a,switch_status[BENCH_5V_2a]);
 				change_output(CABIN6a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN7:
-				switch_status[CABIN7a] = switch_status[CABIN7a]==1?0:1;
+				//switch_status[CABIN7a] = switch_status[CABIN7a]==1?0:1;
 				//change_output(BENCH_3V3_1a,switch_status[BENCH_3V3_1a]);
 				change_output(CABIN7a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN8:
-				switch_status[CABIN8a] = switch_status[CABIN8a]==1?0:1;
+				//switch_status[CABIN8a] = switch_status[CABIN8a]==1?0:1;
 				//change_output(BENCH_3V3_2a,switch_status[BENCH_3V3_2a]);
 				change_output(CABIN8a,onoff);
 				usleep(_100MS);

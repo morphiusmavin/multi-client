@@ -52,7 +52,7 @@
 			this.btnFnc1 = new System.Windows.Forms.Button();
 			this.btnGarageForm = new System.Windows.Forms.Button();
 			this.btnHomeSvr = new System.Windows.Forms.Button();
-			this.DialogOne = new System.Windows.Forms.Button();
+			this.btnCabin = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.lbAvailClients = new System.Windows.Forms.ListBox();
 			this.btnRebootClient = new System.Windows.Forms.Button();
@@ -63,7 +63,7 @@
 			this.btnReportTimeUp = new System.Windows.Forms.Button();
 			this.btnExit2Shell = new System.Windows.Forms.Button();
 			this.tbSendMsg = new System.Windows.Forms.TextBox();
-			this.btnCabinLights = new System.Windows.Forms.Button();
+			this.btnTestBench = new System.Windows.Forms.Button();
 			this.btnShellandRename = new System.Windows.Forms.Button();
 			this.btnWinClMsg = new System.Windows.Forms.Button();
 			this.tbAlarm = new System.Windows.Forms.TextBox();
@@ -268,7 +268,7 @@
 			this.btnRescan.TabIndex = 2;
 			this.btnRescan.Text = "Re-scan Clients";
 			this.btnRescan.UseVisualStyleBackColor = false;
-			this.btnRescan.Click += new System.EventHandler(this.RebootServer);
+			this.btnRescan.Click += new System.EventHandler(this.RescanClients_Click);
 			// 
 			// btnFnc3
 			// 
@@ -342,17 +342,17 @@
 			this.btnHomeSvr.UseVisualStyleBackColor = false;
 			this.btnHomeSvr.Click += new System.EventHandler(this.btnTimers_Click);
 			// 
-			// DialogOne
+			// btnCabin
 			// 
-			this.DialogOne.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.DialogOne.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.DialogOne.Location = new System.Drawing.Point(264, 344);
-			this.DialogOne.Name = "DialogOne";
-			this.DialogOne.Size = new System.Drawing.Size(235, 61);
-			this.DialogOne.TabIndex = 9;
-			this.DialogOne.Text = "Cabin";
-			this.DialogOne.UseVisualStyleBackColor = false;
-			this.DialogOne.Click += new System.EventHandler(this.Cabin_Click);
+			this.btnCabin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnCabin.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnCabin.Location = new System.Drawing.Point(264, 344);
+			this.btnCabin.Name = "btnCabin";
+			this.btnCabin.Size = new System.Drawing.Size(235, 61);
+			this.btnCabin.TabIndex = 9;
+			this.btnCabin.Text = "Cabin";
+			this.btnCabin.UseVisualStyleBackColor = false;
+			this.btnCabin.Click += new System.EventHandler(this.Cabin_Click);
 			// 
 			// timer1
 			// 
@@ -458,17 +458,17 @@
 			this.tbSendMsg.TabIndex = 20;
 			this.tbSendMsg.TextChanged += new System.EventHandler(this.tbSendMsg_TextChanged);
 			// 
-			// btnCabinLights
+			// btnTestBench
 			// 
-			this.btnCabinLights.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnCabinLights.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCabinLights.Location = new System.Drawing.Point(268, 266);
-			this.btnCabinLights.Name = "btnCabinLights";
-			this.btnCabinLights.Size = new System.Drawing.Size(233, 61);
-			this.btnCabinLights.TabIndex = 7;
-			this.btnCabinLights.Text = "Test Bench";
-			this.btnCabinLights.UseVisualStyleBackColor = false;
-			this.btnCabinLights.Click += new System.EventHandler(this.btnTestBench_Click);
+			this.btnTestBench.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnTestBench.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnTestBench.Location = new System.Drawing.Point(268, 266);
+			this.btnTestBench.Name = "btnTestBench";
+			this.btnTestBench.Size = new System.Drawing.Size(233, 61);
+			this.btnTestBench.TabIndex = 7;
+			this.btnTestBench.Text = "Test Bench";
+			this.btnTestBench.UseVisualStyleBackColor = false;
+			this.btnTestBench.Click += new System.EventHandler(this.btnTestBench_Click);
 			// 
 			// btnShellandRename
 			// 
@@ -631,7 +631,7 @@
 			this.Controls.Add(this.tbAlarm);
 			this.Controls.Add(this.btnWinClMsg);
 			this.Controls.Add(this.btnShellandRename);
-			this.Controls.Add(this.btnCabinLights);
+			this.Controls.Add(this.btnTestBench);
 			this.Controls.Add(this.tbSendMsg);
 			this.Controls.Add(this.btnExit2Shell);
 			this.Controls.Add(this.btnReportTimeUp);
@@ -641,7 +641,7 @@
 			this.Controls.Add(this.btnShutdownClient);
 			this.Controls.Add(this.btnRebootClient);
 			this.Controls.Add(this.lbAvailClients);
-			this.Controls.Add(this.DialogOne);
+			this.Controls.Add(this.btnCabin);
 			this.Controls.Add(this.btnHomeSvr);
 			this.Controls.Add(this.btnGarageForm);
 			this.Controls.Add(this.btnFnc1);
@@ -700,7 +700,7 @@
         private System.Windows.Forms.Button btnFnc1;
         private System.Windows.Forms.Button btnGarageForm;
         private System.Windows.Forms.Button btnHomeSvr;
-		private System.Windows.Forms.Button DialogOne;
+		private System.Windows.Forms.Button btnCabin;
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.ComboBox cbIPAdress;
 		private System.Windows.Forms.ListBox lbAvailClients;
@@ -712,7 +712,7 @@
 		private System.Windows.Forms.Button btnReportTimeUp;
 		private System.Windows.Forms.Button btnExit2Shell;
 		private System.Windows.Forms.TextBox tbSendMsg;
-		private System.Windows.Forms.Button btnCabinLights;
+		private System.Windows.Forms.Button btnTestBench;
 		private System.Windows.Forms.Button btnShellandRename;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.ComboBox cbWhichWinClient;

@@ -117,15 +117,12 @@ also have a list of sunrise and sunset for the entire year so e.g. it
 can know when to turn lights on/off in chicken coop to extend laying 
 time for hens and turn on night lights at dusk. 
 
-have a button on the front panel of the WinCl that is configurable by 
-a script file so that it can toggle a light so you don't have to pull 
-up the menu every time. Also need a way to turn lights on from up in 
-the loft. 
-"Assign Func" button pulls up dialog that has: (3) combo boxes: one 
-	for the function button to assign, the other for which client 
-	the other for which port of the client. And then an "Assign" button 
-	to assign the given client/port to the function. 
+Assign functions (easy button) should be able to do multiple lights.
+Show on function assign dlg what is assigned to each function, if any.
+
+Have a to-do list built in. Also maybe a git list.
 	
+ethernet wire colors 
 used:
 3	light green
 6	green 
@@ -138,3 +135,13 @@ not used:
 7	light brown
 8	brown 
 
+clients 
+get_host_cmd_task1 (sock_mgt.c) -- gets msg from tcp and passes it on to get_host_cmd_task2
+	
+	recv_tcp(&msg_buf[0],msg_len+1,1);
+	...
+	msg_snd(sched_qid...) 
+	
+get_host_cmd_task2 (cmd_tasks.c) 
+	msg_rcv(sched_qid...) 
+	

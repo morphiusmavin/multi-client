@@ -75,10 +75,7 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-			for(int i = 0;i < 8;i++)
-			{
-				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
-			}
+			
 		}
 		public void Enable_Dlg(bool wait)
 		{
@@ -250,7 +247,6 @@ namespace EpServerEngineSampleClient
 				button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			}
 		}
-		
 		private void btnClear_Click_1(object sender, EventArgs e)		// rotate thru all single lights
 		{
 			int prev;
@@ -267,7 +263,6 @@ namespace EpServerEngineSampleClient
 			if (++single_select > 7)
 				single_select = 0;
 		}
-		
 		private void btnClrScr_Click(object sender, EventArgs e)
 		{
 			tbAddMsg.Clear();
@@ -307,12 +302,10 @@ namespace EpServerEngineSampleClient
 		{
 			timer1.Enabled = true;
 		}
-
 		private void btnDesk_Click(object sender, EventArgs e)
 		{
 			ToggleButton(0, SendCmd(0));
 		}
-
 		private void btnEast_Click(object sender, EventArgs e)
 		{
 			ToggleButton(1, SendCmd(1));
@@ -375,6 +368,14 @@ namespace EpServerEngineSampleClient
 					button_list[i].Ctl.Text = "OFF";
 					button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 				}
+			}
+		}
+
+		private void LoadEvent(object sender, EventArgs e)
+		{
+			for (int i = 0; i < 8; i++)
+			{
+				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}
 		}
 	}

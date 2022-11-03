@@ -32,6 +32,10 @@ namespace EpServerEngineSampleClient
 			BENCH_LIGHT1,
 			BENCH_LIGHT2,
 			CHICK_WATER,
+			COOP1_LIGHT,
+			COOP1_HEATER,
+			COOP2_LIGHT,
+			COOP2_HEATER,
 			CABIN1,
 			CABIN2,
 			CABIN3,
@@ -221,7 +225,19 @@ namespace EpServerEngineSampleClient
 				case "CABIN8":
 					Properties.Settings.Default["CABIN8"] = iparam;
 					break;
-					default:
+				case "COOP1_LIGHT":
+					Properties.Settings.Default["COOP1_LIGHT"] = iparam;
+					break;
+				case "COOP1_HEATER":
+					Properties.Settings.Default["COOP1_HEATER"] = iparam;
+					break;
+				case "COOP2_LIGHT":
+					Properties.Settings.Default["COOP2_LIGHT"] = iparam;
+					break;
+				case "COOP2_HEATER":
+					Properties.Settings.Default["COOP2_HEATER"] = iparam;
+					break;
+				default:
 					break;
 			}
 			Properties.Settings.Default.Save();
@@ -315,7 +331,19 @@ namespace EpServerEngineSampleClient
 				case "CABIN8":
 					Properties.Settings.Default["CABIN8"] = current_state;
 					break;
-					default:
+				case "COOP1_LIGHT":
+					Properties.Settings.Default["COOP1_LIGHT"] = current_state;
+					break;
+				case "COOP1_HEATER":
+					Properties.Settings.Default["COOP1_HEATER"] = current_state;
+					break;
+				case "COOP2_LIGHT":
+					Properties.Settings.Default["COOP2_LIGHT"] = current_state;
+					break;
+				case "COOP2_HEATER":
+					Properties.Settings.Default["COOP2_HEATER"] = current_state;
+					break;
+				default:
 					break;
 			}
 			Properties.Settings.Default.Save();
@@ -406,6 +434,18 @@ namespace EpServerEngineSampleClient
 					break;
 				case "CABIN8":
 					current_state = (bool)Properties.Settings.Default["CABIN8"];
+					break;
+					case "COOP1_LIGHT":
+					current_state = (bool)Properties.Settings.Default["COOP1_LIGHT"];
+					break;
+				case "COOP1_HEATER":
+					current_state = (bool)Properties.Settings.Default["COOP1_HEATER"];
+					break;
+				case "COOP2_LIGHT":
+					current_state = (bool)Properties.Settings.Default["COOP2_LIGHT"];
+					break;
+				case "COOP2_HEATER":
+					current_state = (bool)Properties.Settings.Default["COOP2_HEATER"];
 					break;
 					default:
 					current_state = false;

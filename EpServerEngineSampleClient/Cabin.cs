@@ -62,10 +62,7 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-			for (int i = 0; i < 8; i++)
-			{
-				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
-			}
+			
 		}
 		
 		private void ToggleButton(int which, bool state)
@@ -149,6 +146,14 @@ namespace EpServerEngineSampleClient
 			for (int i = 0; i < 8; i++)
 			{
 				ToggleButton(i, SendCmd(i));
+			}
+		}
+
+		private void LoadEvent(object sender, EventArgs e)
+		{
+			for (int i = 0; i < 8; i++)
+			{
+				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}
 		}
 	}
