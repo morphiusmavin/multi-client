@@ -112,6 +112,8 @@
     <Compile Include="FrmSampleClient.Designer.cs">
       <DependentUpon>FrmSampleClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="Sunrise_lines.cs" />
+    <Compile Include="Sunrise_sunset.cs" />
     <Compile Include="TestBench.cs">
       <SubType>Form</SubType>
     </Compile>

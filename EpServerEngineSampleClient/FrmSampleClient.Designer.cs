@@ -88,12 +88,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbReceived.Location = new System.Drawing.Point(526, 412);
+			this.tbReceived.Location = new System.Drawing.Point(523, 412);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(300, 180);
+			this.tbReceived.Size = new System.Drawing.Size(305, 180);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
 			// 
@@ -607,7 +607,7 @@
 			this.btnTest.Name = "btnTest";
 			this.btnTest.Size = new System.Drawing.Size(235, 61);
 			this.btnTest.TabIndex = 58;
-			this.btnTest.Text = "Test";
+			this.btnTest.Text = "Sunrise/Sunset";
 			this.btnTest.UseVisualStyleBackColor = false;
 			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
 			// 
