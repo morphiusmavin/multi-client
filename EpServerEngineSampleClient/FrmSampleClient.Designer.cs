@@ -69,15 +69,15 @@
 			this.tbAlarm = new System.Windows.Forms.TextBox();
 			this.cbAlarm = new System.Windows.Forms.CheckBox();
 			this.tbTodaysDate = new System.Windows.Forms.TextBox();
-			this.tbSunrise = new System.Windows.Forms.TextBox();
-			this.label6 = new System.Windows.Forms.Label();
-			this.label7 = new System.Windows.Forms.Label();
-			this.tbSunset = new System.Windows.Forms.TextBox();
 			this.label10 = new System.Windows.Forms.Label();
 			this.tbTime = new System.Windows.Forms.TextBox();
 			this.btnFnc2 = new System.Windows.Forms.Button();
 			this.btnMinimize = new System.Windows.Forms.Button();
 			this.btnTest = new System.Windows.Forms.Button();
+			this.SunriseLabel = new System.Windows.Forms.Label();
+			this.SunsetLabel = new System.Windows.Forms.Label();
+			this.MoonriseLabel = new System.Windows.Forms.Label();
+			this.MoonsetLabel = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -88,12 +88,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbReceived.Location = new System.Drawing.Point(523, 412);
+			this.tbReceived.Location = new System.Drawing.Point(523, 443);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(305, 180);
+			this.tbReceived.Size = new System.Drawing.Size(305, 149);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
 			// 
@@ -521,42 +521,6 @@
 			this.tbTodaysDate.Size = new System.Drawing.Size(103, 26);
 			this.tbTodaysDate.TabIndex = 15;
 			// 
-			// tbSunrise
-			// 
-			this.tbSunrise.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.tbSunrise.Location = new System.Drawing.Point(613, 327);
-			this.tbSunrise.Name = "tbSunrise";
-			this.tbSunrise.Size = new System.Drawing.Size(64, 26);
-			this.tbSunrise.TabIndex = 17;
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label6.Location = new System.Drawing.Point(532, 330);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(75, 20);
-			this.label6.TabIndex = 52;
-			this.label6.Text = "Sunrise:";
-			// 
-			// label7
-			// 
-			this.label7.AutoSize = true;
-			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label7.Location = new System.Drawing.Point(532, 367);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(71, 20);
-			this.label7.TabIndex = 54;
-			this.label7.Text = "Sunset:";
-			// 
-			// tbSunset
-			// 
-			this.tbSunset.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.tbSunset.Location = new System.Drawing.Point(613, 364);
-			this.tbSunset.Name = "tbSunset";
-			this.tbSunset.Size = new System.Drawing.Size(64, 26);
-			this.tbSunset.TabIndex = 18;
-			// 
 			// label10
 			// 
 			this.label10.AutoSize = true;
@@ -611,21 +575,61 @@
 			this.btnTest.UseVisualStyleBackColor = false;
 			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
 			// 
+			// SunriseLabel
+			// 
+			this.SunriseLabel.AutoSize = true;
+			this.SunriseLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.SunriseLabel.Location = new System.Drawing.Point(534, 326);
+			this.SunriseLabel.Name = "SunriseLabel";
+			this.SunriseLabel.Size = new System.Drawing.Size(62, 20);
+			this.SunriseLabel.TabIndex = 59;
+			this.SunriseLabel.Text = "Today:";
+			// 
+			// SunsetLabel
+			// 
+			this.SunsetLabel.AutoSize = true;
+			this.SunsetLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.SunsetLabel.Location = new System.Drawing.Point(534, 356);
+			this.SunsetLabel.Name = "SunsetLabel";
+			this.SunsetLabel.Size = new System.Drawing.Size(62, 20);
+			this.SunsetLabel.TabIndex = 60;
+			this.SunsetLabel.Text = "Today:";
+			// 
+			// MoonriseLabel
+			// 
+			this.MoonriseLabel.AutoSize = true;
+			this.MoonriseLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.MoonriseLabel.Location = new System.Drawing.Point(534, 385);
+			this.MoonriseLabel.Name = "MoonriseLabel";
+			this.MoonriseLabel.Size = new System.Drawing.Size(62, 20);
+			this.MoonriseLabel.TabIndex = 61;
+			this.MoonriseLabel.Text = "Today:";
+			// 
+			// MoonsetLabel
+			// 
+			this.MoonsetLabel.AutoSize = true;
+			this.MoonsetLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.MoonsetLabel.Location = new System.Drawing.Point(534, 412);
+			this.MoonsetLabel.Name = "MoonsetLabel";
+			this.MoonsetLabel.Size = new System.Drawing.Size(62, 20);
+			this.MoonsetLabel.TabIndex = 62;
+			this.MoonsetLabel.Text = "Today:";
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1140, 688);
+			this.Controls.Add(this.MoonsetLabel);
+			this.Controls.Add(this.MoonriseLabel);
+			this.Controls.Add(this.SunsetLabel);
+			this.Controls.Add(this.SunriseLabel);
 			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.btnMinimize);
 			this.Controls.Add(this.btnFnc2);
 			this.Controls.Add(this.tbTime);
 			this.Controls.Add(this.label10);
-			this.Controls.Add(this.label7);
-			this.Controls.Add(this.tbSunset);
-			this.Controls.Add(this.label6);
-			this.Controls.Add(this.tbSunrise);
 			this.Controls.Add(this.tbTodaysDate);
 			this.Controls.Add(this.cbAlarm);
 			this.Controls.Add(this.tbAlarm);
@@ -720,15 +724,15 @@
 		private System.Windows.Forms.TextBox tbAlarm;
 		private System.Windows.Forms.CheckBox cbAlarm;
 		private System.Windows.Forms.TextBox tbTodaysDate;
-		private System.Windows.Forms.TextBox tbSunrise;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.TextBox tbSunset;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.TextBox tbTime;
 		private System.Windows.Forms.Button btnFnc2;
 		private System.Windows.Forms.Button btnMinimize;
 		private System.Windows.Forms.Button btnTest;
+		private System.Windows.Forms.Label SunriseLabel;
+		private System.Windows.Forms.Label SunsetLabel;
+		private System.Windows.Forms.Label MoonriseLabel;
+		private System.Windows.Forms.Label MoonsetLabel;
 	}
 }
 

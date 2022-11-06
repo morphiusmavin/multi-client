@@ -45,6 +45,7 @@ namespace EpServerEngineSampleClient
         private List<ClientsAvail> clients_avail;
         private List<Sunrise_lines> sunrise_lines;
         private List<Sunrise_sunset> sunrise_sunsets;
+        private List<SunriseSunsetHoursMinutes> sunrisesunsetHoursMinutes;
         private int i = 0;
         private int selected_address = 0;
         private int disconnect_attempts = 0;
@@ -59,8 +60,6 @@ namespace EpServerEngineSampleClient
         int which_winclient = -1;
         Int64 alarm_tick = 0;
         Boolean midnight_flag = false;
-        string[] sunrises;
-        string[] sunsets;
         int sunrise_hour;
         int sunrise_minutes;
         int sunset_hour;
@@ -82,7 +81,7 @@ namespace EpServerEngineSampleClient
         private int hour;
         private int minute;
         private DateTime now;
-		string sunrise, sunset;
+		
 
         /* remove the min/max/close buttons in the 'frame' */
         /* or you can just set 'Control Box' to false in the properties pane for the form */
@@ -115,8 +114,6 @@ namespace EpServerEngineSampleClient
             cbIPAdress.Enabled = true;
             tbReceived.Enabled = true;
             tbPort.Enabled = true;
-            string sunrise_list = "c:\\users\\daniel\\sunrises.txt";
-            string sunset_list = "c:\\users\\daniel\\sunsets.txt";
             for (int i = 0; i < 8; i++)
             {
                 status[i] = false;
@@ -204,9 +201,6 @@ namespace EpServerEngineSampleClient
             {
                 AddMsg("no primary address found in xml file");
             }
-
-            sunrises = new string[32];
-            sunsets = new string[32];
             now = DateTime.Now;
             string t2date = now.Date.ToString();
             
@@ -214,9 +208,12 @@ namespace EpServerEngineSampleClient
             t2date = t2date.Remove(space);
             tbTodaysDate.Text = t2date;
             sunrise_sunsets = new List<Sunrise_sunset>();
+            sunrisesunsetHoursMinutes = new List<SunriseSunsetHoursMinutes>();
             for (int i = 0; i < 31; i++)
                 sunrise_sunsets.Add(new Sunrise_sunset());
-            AddMsg("count: " + sunrise_sunsets.Count().ToString());
+            for(int i = 0;i < 31;i++)
+                sunrisesunsetHoursMinutes.Add(new SunriseSunsetHoursMinutes());
+
             sunrise_lines = new List<Sunrise_lines>();
             int j = 0;
             Sunrise_lines temp2;
@@ -297,67 +294,112 @@ namespace EpServerEngineSampleClient
 					}
                 }
             }
-            i = 1;
-            //foreach (Sunrise_sunset srss in sunrise_sunsets)
-                //AddMsg(i++.ToString() + "  " + srss.sunrise + "  " + srss.sunset + "  " + srss.AstTwiStart);
+            i = 0;
 
-            if (File.Exists(sunrise_list))
+            if(false)
+            foreach (Sunrise_sunset srss in sunrise_sunsets)
             {
-                // Read a text file line by line.  
-                string[] lines = File.ReadAllLines(sunrise_list);
-                int i = 0;
-                foreach (string line in lines)
+                if (srss.sunrise != null)
                 {
-                    //AddMsg(line);
-                    sunrises[i++] = line;
+                    AddMsg(srss.sunrise +  " " + srss.AstTwiStart + " " + srss.moonrise);
                 }
-				calc_sunrise();
             }
-            if (File.Exists(sunset_list))
+
+            foreach (Sunrise_sunset srss in sunrise_sunsets)
+			{
+                if (srss.sunrise != null)
+                {
+                    sunrisesunsetHoursMinutes[i].AstTwiStartHour = getHours(srss.AstTwiStart);
+                    sunrisesunsetHoursMinutes[i].AstTwiStartMinute = getMinutes(srss.AstTwiStart);
+                    sunrisesunsetHoursMinutes[i].AstTwiEndHour = getHours(srss.AstTwiEnd);
+                    sunrisesunsetHoursMinutes[i].AstTwiEndMinute = getMinutes(srss.AstTwiEnd);
+                    sunrisesunsetHoursMinutes[i].NautTwiStartHour = getHours(srss.NautTwiStart);
+                    sunrisesunsetHoursMinutes[i].NautTwiStartMinute = getMinutes(srss.NautTwiStart);
+                    sunrisesunsetHoursMinutes[i].NautTwiEndHour = getHours(srss.NautTwiEnd);
+                    sunrisesunsetHoursMinutes[i].NautTwiEndMinute = getMinutes(srss.NautTwiEnd);
+                    sunrisesunsetHoursMinutes[i].CivilTwiStartHour = getHours(srss.CivilTwiStart);
+                    sunrisesunsetHoursMinutes[i].CivilTwiStartMinute = getMinutes(srss.CivilTwiStart);
+                    sunrisesunsetHoursMinutes[i].CivilTwiEndHour = getHours(srss.CivilTwiEnd);
+                    sunrisesunsetHoursMinutes[i].CivilTwiEndMinute = getMinutes(srss.CivilTwiEnd);
+                    sunrisesunsetHoursMinutes[i].SunriseHour = getHours(srss.sunrise);
+                    sunrisesunsetHoursMinutes[i].SunriseMinute = getMinutes(srss.sunrise);
+                    sunrisesunsetHoursMinutes[i].SunsetHour = getHours(srss.sunset);
+                    sunrisesunsetHoursMinutes[i].SunsetMinute = getMinutes(srss.sunset);
+                    sunrisesunsetHoursMinutes[i].MoonriseHour = getHours(srss.moonrise);
+                    sunrisesunsetHoursMinutes[i].MoonriseMinute = getMinutes(srss.moonrise);
+                    sunrisesunsetHoursMinutes[i].MoonsetHour = getHours(srss.moonset);
+                    sunrisesunsetHoursMinutes[i].MoonsetMinute = getMinutes(srss.moonset);
+                    i++;
+                }
+            }
+            if (false)
             {
-                // Read entire text file content in one string    
-                string[] lines3 = File.ReadAllLines(sunset_list);
-                int i = 0;
-                foreach (string line in lines3)
-                {
-                    //AddMsg(line);
-                    sunsets[i++] = line;
-                }
-				calc_sunset();
+                int temp = getHours(sunrise_sunsets[2].moonset);
+                AddMsg("hours: " + temp.ToString());
+                temp = getMinutes(sunrise_sunsets[2].moonset);
+                AddMsg("minutes: " + temp.ToString());
+
+                foreach (SunriseSunsetHoursMinutes srhm in sunrisesunsetHoursMinutes)
+                    AddMsg(srhm.SunriseHour.ToString() + " " + srhm.SunriseMinute.ToString());
+                AddMsg(" ");
+                foreach (SunriseSunsetHoursMinutes srhm in sunrisesunsetHoursMinutes)
+                    AddMsg(srhm.SunsetHour.ToString() + " " + srhm.SunsetMinute.ToString());
+
+                foreach (SunriseSunsetHoursMinutes srhm in sunrisesunsetHoursMinutes)
+                    AddMsg(srhm.MoonriseHour.ToString() + " " + srhm.MoonriseMinute.ToString());
+                AddMsg(" ");
+                foreach (SunriseSunsetHoursMinutes srhm in sunrisesunsetHoursMinutes)
+                    AddMsg(srhm.MoonsetHour.ToString() + " " + srhm.MoonsetMinute.ToString());
             }
+
         }
 
-		private void calc_sunset()
+        private int getMinutes(string time)
 		{
-			sunset = sunsets[now.Day - 1].ToString();
-			int space = sunset.IndexOf(" ");
-			sunset = sunset.Remove(space);
-			tbSunset.Text = sunset;
-            string ts = sunset.Substring(0, 1);
-            //AddMsg(ts2);
-            sunset_hour = int.Parse(ts);
-            sunset_hour += 12;
-            AddMsg("sunset:" + sunset_hour.ToString());
-            ts = sunset.Substring(2, 2);
-            sunset_minutes = int.Parse(ts);
-            AddMsg("sunset: " + sunset_minutes.ToString());
+            int num;
+            string snum;
+            if (time.Contains("none"))
+                return -1;
+            int colon = time.IndexOf(':');
+            colon = time.IndexOf(':',colon+1);
+            char dig1 = time[colon + 1];
+            //AddMsg(dig1.ToString());
+            char second_char = time[colon + 2];
+            if (second_char > 47 && second_char < 58)
+            {
+                //snum = new string(dig1, second_char);
+                snum = dig1.ToString();
+                snum += second_char.ToString();
+            }
+            else snum = dig1.ToString();
+            num = int.Parse(snum);
+            //AddMsg(num.ToString());
+            return num;
         }
-
-        private void calc_sunrise()
-		{
-			sunrise = sunrises[now.Day - 1].ToString();
-            //AddMsg(sunrise);
-			int space = sunrise.IndexOf(" ");
-			sunrise = sunrise.Remove(space);
-			tbSunrise.Text = sunrise;
-			string ts = sunrise.Substring(0, 1);
-			//AddMsg(ts);
-			sunrise_hour = int.Parse(ts);
-			//AddMsg(sunrise_hour.ToString());
-			ts = sunrise.Substring(2, 2);
-			sunrise_minutes = int.Parse(ts);
-			//AddMsg(sunrise_minutes.ToString());
-		}
+        private int getHours(string time)
+        {
+            // check for double digits otherwise it will only be single
+            int num;
+            string snum;
+            if (time.Contains("none"))
+                return -1;
+            int colon = time.IndexOf(':');
+            char dig1 = time[colon + 2];
+           //AddMsg(dig1.ToString());
+            char second_char = time[colon + 3];
+            if (second_char > 47 && second_char < 58)
+            {
+                //snum = new string(dig1, second_char);
+                snum = dig1.ToString();
+                snum += second_char.ToString();
+            }
+            else snum = dig1.ToString();
+            num = int.Parse(snum);
+            //AddMsg(num.ToString());
+            if (time.Contains("pm"))
+                num += 12;
+            return num;
+        }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -1006,10 +1048,14 @@ namespace EpServerEngineSampleClient
                 else if (hour > 0 && midnight_flag == true)
                 {
                     midnight_flag = false;
-                    calc_sunrise();
-                    calc_sunset();
-                    tbSunrise.Text = sunrise;
-                    tbSunset.Text = sunset;
+                    SunriseLabel.Text = sunrise_sunsets[now.Day - 1].sunrise;
+                    SunsetLabel.Text = sunrise_sunsets[now.Day - 1].sunset;
+                    MoonriseLabel.Text = sunrise_sunsets[now.Day - 1].moonrise;
+                    MoonsetLabel.Text = sunrise_sunsets[now.Day - 1].moonset;
+                    sunrise_hour = sunrisesunsetHoursMinutes[now.Day - 1].SunriseHour;
+                    sunrise_minutes = sunrisesunsetHoursMinutes[now.Day - 1].SunriseMinute;
+
+                    //                    tbSunrise.Text = sunrisesunsetHoursMinutes[now.Day - 1].SunriseHour.ToString();
                     oneoff = oneoff2 = oneoff3 = oneoff4 = true;
                 }
                 tick = 36;
@@ -1357,6 +1403,12 @@ namespace EpServerEngineSampleClient
             AddMsg("end " + sunrise_sunsets[now.Day - 1].AstTwiEnd);
             AddMsg(sunrise_sunsets[now.Day - 1].moonrise);
             AddMsg(sunrise_sunsets[now.Day - 1].moonset);
+            SunriseLabel.Text = sunrise_sunsets[now.Day - 1].sunrise;
+            SunsetLabel.Text = sunrise_sunsets[now.Day - 1].sunset;
+            MoonriseLabel.Text = sunrise_sunsets[now.Day - 1].moonrise;
+            MoonsetLabel.Text = sunrise_sunsets[now.Day - 1].moonset;
+            sunrise_hour = sunrisesunsetHoursMinutes[now.Day - 1].SunriseHour;
+            sunrise_minutes = sunrisesunsetHoursMinutes[now.Day - 1].SunriseMinute;
             /*
             Properties.Settings.Default["EAST_LIGHT"] = true;
             Properties.Settings.Default.Save();
