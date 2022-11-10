@@ -91,7 +91,8 @@ LD_SYS_LIBS = $(SYS_LIBRARIES)
 #GNUCFLAGS = -g -ansi -Wstrict-prototypes	doesn't compile "// ..comments.."
 #CC_FLAGS = -static -g -Wstrict-prototypes -mcpu=arm920t -mapcs-32 -mthumb-interwork -DMAKE_TARGET
 #CC_FLAGS = -g -Wstrict-prototypes -mcpu=arm920t -DMAKE_TARGET
-CC_FLAGS = -g -DCONFIG_FILE -Wstrict-prototypes -mcpu=arm920t
+#CC_FLAGS = -g -DCONFIG_FILE -Wstrict-prototypes -mcpu=arm920t
+CC_FLAGS = -g -Wstrict-prototypes -mcpu=arm920t
 GNULDFLAGS_T = ${GNULDFLAGS} -pthread
 #CC_FLAGST = ${CC_FLAGS} + GNULDFLAGS_T
 GNUSFLAGS = -D_SVID_SOURCE -D_XOPEN_SOURCE

@@ -296,17 +296,14 @@ int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp)
 {
 	cllist_node_t *cur, *prev;
 	int status = -1; /* assume failure */
-
 	pthread_rdwr_wlock_np(&(llistp->rwlock));
-
 	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
 	{
 		if (cur->index == index)
 		{
+			printf("cur: %s\n",cur->datap->label);
 			cur->datap = datap;
-			prev->nextp = cur->nextp;
-//			printf("%d %s ",index,datap->label);
-			free(cur);
+			//free(cur);
 			status = 0;
 			break;
 		}
@@ -314,6 +311,7 @@ int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp)
 		{
 			break;
 		}
+
 	}
 	pthread_rdwr_wunlock_np(&(llistp->rwlock));
 	return status;
@@ -329,7 +327,17 @@ int cllist_show(cllist_t *llistp)
 	int i = 0;
 
 	printf("showing C_DATA\r\n");
-
+/*
+	char label[OLABELSIZE];
+	int port;					// which port to turn on/off
+	int type;					// 0 - short duration; 1 - long duration (on/off hours minutes)
+	int on_hour;				// use this if type 0 or 1
+	int on_minute;				//	"	"
+	int off_hour;				// use this if type 1 only
+	int off_minute;				//  "  	"
+	int duration_seconds;		// use these if type 0
+	int duration_minutes;
+*/
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 	cur=llistp->first;
 
@@ -339,10 +347,16 @@ int cllist_show(cllist_t *llistp)
 	{
 		if(cur->datap->label[0] != 0)
 		{
+			printf("%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%s\r\n",
+				(int)cur->datap->port, cur->datap->state, cur->datap->type, cur->datap->on_hour, (int)cur->datap->on_minute, 
+				 cur->datap->off_hour, cur->datap->off_minute, cur->datap->duration_seconds, 
+				 cur->datap->duration_minutes, cur->datap->label);
+
+/*
 			printf("%2d\t%2d\t%2d\t\t%2d\t%2d\t%s\r\n",
 				(int)cur->datap->index, cur->datap->client_no, (int)cur->datap->cmd, 
 				 cur->datap->dest, cur->datap->msg_len, cur->datap->label);
-/*
+
 			memset(list_buf,0,100);
 			sprintf(list_buf,"%2d  %2d  %2d  %2d  %2d  %2d  %2d  %2d   %s",(int)cur->datap->port,\
 			 (int)cur->datap->onoff, (int)cur->datap->polarity, (int)cur->datap->type,
@@ -388,17 +402,17 @@ int cllist_reorder(cllist_t *llistp)
 	{
 		if(cur->datap->label[0] != 0)
 		{
-			cur->datap->index = i++;
+//			cur->datap->index = i++;
+/*
 			printf("%2d\t%2d\t%2d\t\t%2d\t%2d\t%s\r\n",
 				(int)cur->datap->index, cur->datap->client_no, (int)cur->datap->cmd, 
 				 cur->datap->dest, cur->datap->msg_len, cur->datap->label);
+*/
 		}
 	}
 	pthread_rdwr_runlock_np(&(llistp->rwlock));
 	return 0;
 }
-
-
 int cllist_printfile(int fp, cllist_t *llistp)
 {
 	char list_buf[50];

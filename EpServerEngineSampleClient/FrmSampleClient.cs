@@ -77,7 +77,7 @@ namespace EpServerEngineSampleClient
         private string xml_dialog6_location = "c:\\Users\\daniel\\dev\\uiformat6.xml";
         private string xml_params_location = "c:\\Users\\daniel\\dev\\ClientParams.xml";
         private string xml_clients_avail_location = "c:\\Users\\daniel\\dev\\ClientsAvail.xml";
-        private string sunrisesunset_location = "c:\\Users\\daniel\\sunrisesunset_Nov.txt";
+        private string sunrisesunset_location = "c:\\Users\\daniel\\sunrises.txt";
         private int hour;
         private int minute;
         private DateTime now;
@@ -353,7 +353,6 @@ namespace EpServerEngineSampleClient
             }
 
         }
-
         private int getMinutes(string time)
 		{
             int num;
@@ -976,6 +975,7 @@ namespace EpServerEngineSampleClient
                     oneoff = false;     // have to do this because the player is synchronous
                     AddMsg("play sunrise");
                     //tbSunrise.Text = "now";
+                    SunriseLabel.Text = sunrise_sunsets[now.Day].sunrise + " tomorrow";
                 }
                 if (hour == sunrise_hour && minute == sunrise_minutes - 3 && oneoff2)
                 {
@@ -1054,8 +1054,6 @@ namespace EpServerEngineSampleClient
                     MoonsetLabel.Text = sunrise_sunsets[now.Day - 1].moonset;
                     sunrise_hour = sunrisesunsetHoursMinutes[now.Day - 1].SunriseHour;
                     sunrise_minutes = sunrisesunsetHoursMinutes[now.Day - 1].SunriseMinute;
-
-                    //                    tbSunrise.Text = sunrisesunsetHoursMinutes[now.Day - 1].SunriseHour.ToString();
                     oneoff = oneoff2 = oneoff3 = oneoff4 = true;
                 }
                 tick = 36;
@@ -1403,8 +1401,8 @@ namespace EpServerEngineSampleClient
             AddMsg("end " + sunrise_sunsets[now.Day - 1].AstTwiEnd);
             AddMsg(sunrise_sunsets[now.Day - 1].moonrise);
             AddMsg(sunrise_sunsets[now.Day - 1].moonset);
-            SunriseLabel.Text = sunrise_sunsets[now.Day - 1].sunrise;
-            SunsetLabel.Text = sunrise_sunsets[now.Day - 1].sunset;
+            SunriseLabel.Text = sunrise_sunsets[now.Day - 1].sunrise + " today";
+            SunsetLabel.Text = sunrise_sunsets[now.Day - 1].sunset + " tonite";
             MoonriseLabel.Text = sunrise_sunsets[now.Day - 1].moonrise;
             MoonsetLabel.Text = sunrise_sunsets[now.Day - 1].moonset;
             sunrise_hour = sunrisesunsetHoursMinutes[now.Day - 1].SunriseHour;

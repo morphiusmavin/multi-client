@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
 	curr_o_array = (C_DATA *)malloc(osize);
 	memset((void *)curr_o_array,0,osize);
-	
+
 	if(cLoadConfig(fptr1,curr_o_array,osize,errmsg) < 0)
 	{
 		printf("%s\n",errmsg);
@@ -79,31 +79,29 @@ int main(int argc, char *argv[])
 		{
 			if(comma_delim == 1)
 			{
-				printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%s\n",
-				pod->index,
-				pod->client_no,
-				pod->cmd,
-				pod->dest,
-				pod->msg_len, 
-				pod->fn_ptr,
-				pod->data_ptr,
-				pod->hours,
-				pod->minutes,
-				pod->seconds,
+				printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%s\n",
+				pod->port,
+				pod->state,
+				pod->type,
+				pod->on_hour,
+				pod->on_minute,
+				pod->off_hour, 
+				pod->off_minute,
+				pod->duration_seconds,
+				pod->duration_minutes,
 				pod->label);
 			}else
 			{
-				printf("%d %d %d %d %d %d %d %d %d %d %s\n",
-				pod->index,
-				pod->client_no,
-				pod->cmd,
-				pod->dest,
-				pod->msg_len, 
-				pod->fn_ptr,
-				pod->data_ptr,
-				pod->hours,
-				pod->minutes,
-				pod->seconds,
+				printf("%d %d %d %d %d %d %d %d %d %s\n",
+				pod->port,
+				pod->state,
+				pod->type,
+				pod->on_hour,
+				pod->on_minute,
+				pod->off_hour, 
+				pod->off_minute,
+				pod->duration_seconds,
+				pod->duration_minutes,
 				pod->label);
 			}
 		}
@@ -113,7 +111,7 @@ int main(int argc, char *argv[])
 	pod = curr_o_array;
 	pod++;
 	pod++;
-	pod->cmd = 9;
+//	pod->cmd = 9;
 	pod = curr_o_array;
 
 	num_valids = 0;

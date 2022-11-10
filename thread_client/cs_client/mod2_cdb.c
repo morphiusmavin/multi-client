@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	char errmsg[60];
 	C_DATA *ctp;
 	C_DATA **ctpp = &ctp;
-	
+
 	comma_delim = 0;
 	if(argc < 2)
 	{
@@ -75,34 +75,40 @@ int main(int argc, char *argv[])
 	}else printf("can't access %s\n",fptr1);
 
 	cllist_show(&cll);
-	int index = 15;
-	ret = cllist_find_data(index,ctpp,&cll);
-	ctp->index = 10;
-	ctp->cmd = 5;
-	strcpy(ctp->label,"test");
-	cllist_insert_data(index,&cll,ctp);
+	int port = 6;
+	ret = cllist_find_data(port,ctpp,&cll);
+	ctp->on_hour = 10;
+	ctp->type = 5;
+	//printf("my label: %s\n",ctp->label);
+	strcpy(ctp->label,"test lkjh");
+	//cllist_insert_data(port,&cll,ctpp);
 
-	index = 18;
+	cllist_change_data(port,ctp,&cll);
+	cllist_show(&cll);
+//	free(curr_o_array);
+	exit(0);
+/*
+	port = 18;
 	ret = cllist_find_data(index,ctpp,&cll);
-	ctp->index = 12;
-	ctp->cmd = 7;
+	ctp->port = 12;
+	ctp->type = 7;
 	strcpy(ctp->label,"test3");
 	cllist_insert_data(index,&cll,ctp);
-	index++;
+	port++;
 
 	ret = cllist_find_data(index,ctpp,&cll);
-	ctp->index = 11;
-	ctp->cmd = 8;
+	ctp->port = 11;
+	ctp->type = 8;
 	strcpy(ctp->label,"test4");
 	cllist_insert_data(index,&cll,ctp);
-//	index++;
+	port++;
 
 	ret = cllist_find_data(index,ctpp,&cll);
-	ctp->index = 10;
-	ctp->cmd = 9;
+	ctp->port = 10;
+	ctp->type = 9;
 	strcpy(ctp->label,"test5");
 	cllist_insert_data(index,&cll,ctp);
-
+*/
 	cllist_show(&cll);
 /*
 	ctp->index = 10;
@@ -110,14 +116,14 @@ int main(int argc, char *argv[])
 	strcpy(ctp->label,"test2");
 //	rc = cllist_find_data(4,ctpp,&cll);
 	cllist_insert_data(nrecs+1,&cll,ctp);
-*/
+
 	cllist_reorder(&cll);
 	cllist_show(&cll);
 //	cllist_insert_data(4,&cll,ctp);
 //	cllist_insert_data(nrecs+1, &cll, datap2);
 	osize += sizeof(C_DATA);
 	clWriteConfig(fptr1,&cll,osize,errmsg);
-
+*/
 	return 0;
 
 	pod = curr_o_array;
@@ -133,31 +139,29 @@ int main(int argc, char *argv[])
 		{
 			if(comma_delim == 1)
 			{
-				printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%s\n",
-				pod->index,
-				pod->client_no,
-				pod->cmd,
-				pod->dest,
-				pod->msg_len, 
-				pod->fn_ptr,
-				pod->data_ptr,
-				pod->hours,
-				pod->minutes,
-				pod->seconds,
+				printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%s\n",
+				pod->port,
+				pod->state,
+				pod->type,
+				pod->on_hour,
+				pod->on_minute,
+				pod->off_hour, 
+				pod->off_minute,
+				pod->duration_seconds,
+				pod->duration_minutes,
 				pod->label);
 			}else
 			{
-				printf("%d %d %d %d %d %d %d %d %d %d %s\n",
-				pod->index,
-				pod->client_no,
-				pod->cmd,
-				pod->dest,
-				pod->msg_len, 
-				pod->fn_ptr,
-				pod->data_ptr,
-				pod->hours,
-				pod->minutes,
-				pod->seconds,
+				printf("%d %d %d %d %d %d %d %d %d %s\n",
+				pod->port,
+				pod->state,
+				pod->type,
+				pod->on_hour,
+				pod->on_minute,
+				pod->off_hour, 
+				pod->off_minute,
+				pod->duration_seconds,
+				pod->duration_minutes,
 				pod->label);
 			}
 		}
@@ -167,10 +171,8 @@ int main(int argc, char *argv[])
 	pod = curr_o_array;
 	pod++;
 	pod++;
-	pod->cmd = 9;
+	pod->port = 9;
 	pod = curr_o_array;
-	
-
 
 	num_valids = 0;
 	for(i = 0;i < nrecs;i++)

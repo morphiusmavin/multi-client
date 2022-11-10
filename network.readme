@@ -145,3 +145,25 @@ get_host_cmd_task1 (sock_mgt.c) -- gets msg from tcp and passes it on to get_hos
 get_host_cmd_task2 (cmd_tasks.c) 
 	msg_rcv(sched_qid...) 
 	
+cmd sets the on/off time of certain port (or for now just 
+add it to the csv file and use init_cdb to create the dat file)
+SET_ONOFF_PORT params: port, on hour on minute, off hour, off minute 
+use the _data database in cs_client and queue directories 
+system will search for the next on_hour and set a variable 
+that when the current hour matches that variable, it will set a 
+variable to wait for the on_minute. 
+
+typedef struct
+{
+	int type;					// 0 - short duration; 1 - long duration (on/off hours minutes)
+	int port;					// which port to turn on/off
+	int on_hour;				// use this if type 0 or 1
+	int on_minute;				//	"	"
+	int off_hour;				// use this if type 1 only
+	int off_minute;				//  "  	"
+	int duration_seconds;		// use these if type 0
+	int duration_minutes;
+	char label[30];
+} CMD_STRUCT;
+
+

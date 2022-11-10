@@ -107,8 +107,8 @@ UCHAR get_host_cmd_task2(int test)
 //	I_DATA *itp;
 	O_DATA *otp;
 	O_DATA **otpp = &otp;
-//	C_DATA *ctp;
-//	C_DATA **ctpp = &ctp;
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
 	int rc = 0; 
 	int rc1 = 0;
 	UCHAR cmd = 0x21;
@@ -119,7 +119,7 @@ UCHAR get_host_cmd_task2(int test)
 	int i;
 	int j;
 	int k;
-//	size_t csize;
+	size_t csize;
 	size_t osize;
 	UCHAR tempx[SERIAL_BUFF_SIZE];
 	UCHAR tempx2[SERIAL_BUFF_SIZE];
@@ -185,8 +185,8 @@ UCHAR get_host_cmd_task2(int test)
 	//printf("osize: %d\r\n",osize);
 	i = NO_CLLIST_RECS;
 	//printf("no. port bits: %d\r\n",i);
-//	csize = sizeof(C_DATA);
-//	csize *= i;
+	csize = sizeof(C_DATA);
+	csize *= i;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 /*
@@ -206,6 +206,30 @@ UCHAR get_host_cmd_task2(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}
+
+	cllist_init(&cll);
+	if(access(cFileName,F_OK) != -1)
+	{
+		clLoadConfig(cFileName,&cll,csize,errmsg);
+		if(rc > 0)
+		{
+			printf("%s\r\n",errmsg);
+		}
+		
+		cllist_show(&cll);
+/*
+		int index = 4;
+		cllist_find_data(index, ctpp, &cll);
+		printf("%d %d %s\n",ctp->port, ctp->type, ctp->label);
+		index++;
+		cllist_find_data(index, ctpp, &cll);
+		printf("%d %d %s\n",ctp->port, ctp->type, ctp->label);
+		index++;
+		cllist_find_data(index, ctpp, &cll);
+		printf("%d %d %s\n",ctp->port, ctp->type, ctp->label);
+*/
+		}
+
 	init_ips();
 	same_msg = 0;
 

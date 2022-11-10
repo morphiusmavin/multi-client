@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <assert.h>
 #include "../queue/cllist_threads_rw.h"
+#include "cconfig_file.h"
 #include "../ioports.h"
 
 extern int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg);

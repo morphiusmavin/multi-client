@@ -92,16 +92,15 @@ int main(int argc, char *argv[])
 	pod = curr_o_array;
 	for(i = 0;i < osize/sizeof(C_DATA);i++)
 	{
-		pod->index = i;
-		pod->client_no = int_array[i][1];
-		pod->cmd = int_array[i][2];
-		pod->dest = int_array[i][3];
-		pod->msg_len = int_array[i][4];
-		pod->fn_ptr = int_array[i][5];
-		pod->data_ptr = int_array[i][6];
-		pod->hours = int_array[i][7];
-		pod->minutes = int_array[i][8];
-		pod->seconds = int_array[i][9];
+		pod->port = i;
+		pod->state = int_array[i][1];
+		pod->type = int_array[i][2];
+		pod->on_hour = int_array[i][3];
+		pod->on_minute = int_array[i][4];
+		pod->off_hour = int_array[i][5];
+		pod->off_minute = int_array[i][6];
+		pod->duration_seconds = int_array[i][7];
+		pod->duration_minutes = int_array[i][8];
 		pod++;
 	}
 
@@ -119,17 +118,16 @@ int main(int argc, char *argv[])
 //		printf("port\tonoff\tinput_port\tinput_type\ttype\ttime_delay\ttime_left\tpulse_time\treset\tlabel\n\n");
 		for(i = 0;i < osize/sizeof(C_DATA);i++)
 		{
-			printf("%d %d %d %d %d %d %d %d %d %d %s\n",
-			pod->index,
-			pod->client_no,
-			pod->cmd,
-			pod->dest,
-			pod->msg_len, 
-			pod->fn_ptr,
-			pod->data_ptr,
-			pod->hours,
-			pod->minutes,
-			pod->seconds,
+			printf("%d %d %d %d %d %d %d %d %d %s\n",
+			pod->port,
+			pod->state,
+			pod->type,
+			pod->on_hour,
+			pod->on_minute,
+			pod->off_hour, 
+			pod->off_minute,
+			pod->duration_seconds,
+			pod->duration_minutes,
 			pod->label);
 			pod++;
 		}
@@ -184,7 +182,7 @@ int copy_labels(char *filename2, C_DATA *curr_o_data)
 	}
 	fsize = lseek(fp,0,SEEK_END);
 	printf("fsize: %lu\n",fsize);
-	
+
 	i = lseek(fp,0,SEEK_SET);
 	i = read(fp,(void*)&buf[0],fsize);
 	close(fp);
@@ -193,15 +191,17 @@ int copy_labels(char *filename2, C_DATA *curr_o_data)
 	i = 0;
 	pch = &buf[0];
 	// search for 1st nl because the csv files have 1 nl at beginning
+
 	while(*pch != '\n' && i < 2000)
 	{
 		pch++;
-		j++;
+		i++;
+		printf("%d ",i);
 	}
-		
+
 	memset(int_array,0,sizeof(int_array));
 	pch2 = pch;
-	
+
 	memset(label_array,0,sizeof(label_array));
 	k = 0;
 	for(j = 0;j < NO_CLLIST_RECS;j++)

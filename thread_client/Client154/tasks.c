@@ -734,18 +734,15 @@ UCHAR timer2_task(int test)
 UCHAR timer_task(int test)
 {
 	int i;
-/*
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
-	O_DATA *otp2;
-	O_DATA **otpp2 = &otp2;
-*/
-//	static int test_ctr = 0;
-//	static int test_ctr2 = 0;
+
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
+
 	UCHAR cmd = 0x21;
 	UCHAR ucbuff[6];
 	int temp;
 	int water_state = RESET_ON;
+	int next_hour_on, next_minute_on;
 
 	current_water_time = 0;
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
@@ -780,6 +777,54 @@ UCHAR timer_task(int test)
 	//uSleep(1,0);
 	while(TRUE)
 	{
+
+		if((++temp % 5) == 0)
+		{
+			time_t T = time(NULL);
+			struct tm tm = *localtime(&T);
+
+			//printf("System Date is: %02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+			//printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+			for(i = 0;i < 20;i++)
+			{
+				cllist_find_data(i, ctpp, &cll);
+				//printf("%d ",ctp->type);
+				if(ctp->type > 0)
+				{
+					//printf("%d %d %d: ",ctp->port,ctp->state,ctp->type);
+					if(ctp->state == 1)		// if on check for next off time
+					{
+						printf("on %d %d\n",tm.tm_hour, tm.tm_min);
+						if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute)
+						{
+							printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+							printf("turn off %s\n",ctp->label);
+							ctp->state = 0;
+							cllist_change_data(i,ctp,&cll);
+							add_msg_queue(ctp->port+25,ctp->state);
+						}
+					}else if(ctp->state == 0)	// if off check for next on time
+					{
+						printf("off %d %d\n",tm.tm_hour, tm.tm_min);
+						if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute)
+						{
+							printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+							printf("turn on %s\n",ctp->label);
+							ctp->state = 1;
+							cllist_change_data(i, ctp, &cll);
+							add_msg_queue(ctp->port+25,ctp->state);
+						}
+					}
+				}
+			}
+			
+/*
+			int index = 3;
+			cllist_find_data(index, ctpp, &cll);
+			printf("%d %d %s\n",ctp->port, ctp->type, ctp->label);
+*/
+		}
+
 		if(chick_water_enable == 1)
 		{
 			//printf(" %d %d :",water_state,current_water_time);

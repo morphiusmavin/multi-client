@@ -12,6 +12,7 @@
 #include "../ioports.h"
 #include "cconfig_file.h"
 
+/* change */
 static char open_br = '<';
 static char close_br = '>';
 static char open_br_slash[2] = "</";
@@ -364,6 +365,7 @@ int cWriteConfigXML(char *filename, C_DATA *curr_o_array,size_t size,char *errms
 			write(fp,(const void*)&labels[j],strlen(labels[j]));
 			write(fp,(const void*)&close_br,1);
 
+/*
 			switch(j)
 			{
 				case 1:
@@ -395,7 +397,7 @@ int cWriteConfigXML(char *filename, C_DATA *curr_o_array,size_t size,char *errms
 				write(fp,(const void*)&temp[0],strlen(temp));
 				break;
 			}
-
+*/
 			write(fp,(const void*)&open_br_slash,2);
 			write(fp,(const void*)&labels[j],strlen(labels[j]));
 			write(fp,(const void*)&close_br,1);
