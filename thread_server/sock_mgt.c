@@ -230,8 +230,8 @@ UCHAR get_host_cmd_task(int test)
 		}
 		memset(write_serial_buff,0,sizeof(write_serial_buff));
 		cmd = msg.mtext[0];							// first byte is cmd
-		msg_len |= (int)(msg.mtext[2] << 4);		// 
-		msg_len = (int)msg.mtext[1];				// 
+		msg_len = (int)msg.mtext[1];				// 2nd is low byte of msg_len
+		msg_len |= (int)(msg.mtext[2] << 4);		// 3rd is high byte
 		write_serial_buff[0] = cmd;
 		//printf("msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+3,msg_len);
@@ -246,6 +246,10 @@ UCHAR get_host_cmd_task(int test)
 			//print_cmd(cmd);
 			switch(cmd)
 			{
+				case REPLY_CLLIST:
+					send_msgb(client_table[0].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
+					//printf("msg_len: %d\n",msg_len);
+					break;
 
 				case AREYOUTHERE:
 					if(client_table[0].socket > 0)
@@ -655,30 +659,37 @@ startover1:
 				printf("%02x ",tempx[i]);
 			}
 */
-			if(dest == _SERVER)		// from one of the clients to the server
+			switch(dest)
 			{
-				//printf("dest: server\n");
-				memset(msg.mtext,0,sizeof(msg.mtext));
-				msg.mtext[0] = cmd;
-				msg.mtext[1] = (UCHAR)msg_len;
-				msg.mtext[2] = (UCHAR)(msg_len >> 4);
-				memcpy(msg.mtext + 3,tempx,msg_len);
-				//printf("msg to cmd_host from client %d\n",dest);
-/*
-				for(i = 0;i < msg_len+3;i++)
-					printf("%02x ",msg.mtext[i]);
-				printf("\n");
-*/
-				if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-				{
-					perror("msgsnd error");
-					exit(EXIT_FAILURE);
-				}
-			}else if(dest < MAX_CLIENTS)		// from one of the clients to another client 
-			{
-				if(client_table[dest].socket > 0)
-					send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
-			}else printf("no destination\n");
+				case _SERVER:		// from one of the clients to the server
+					//printf("dest: server\n");
+					memset(msg.mtext,0,sizeof(msg.mtext));
+					msg.mtext[0] = cmd;
+					msg.mtext[1] = (UCHAR)msg_len;
+					msg.mtext[2] = (UCHAR)(msg_len >> 4);
+					memcpy(msg.mtext + 3,tempx,msg_len);
+					//printf("msg to cmd_host from client %d\n",dest);
+	/*
+					for(i = 0;i < msg_len+3;i++)
+						printf("%02x ",msg.mtext[i]);
+					printf("\n");
+	*/
+					if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+					{
+						perror("msgsnd error");
+						exit(EXIT_FAILURE);
+					}
+					break;
+				case 0:		// Second_Windows7
+				case 1:		// Win7-x64
+					if(client_table[dest].socket > 0)
+						send_msgb(client_table[dest].socket, strlen(tempx)*2,tempx,cmd);
+					break;
+				default:
+					if(client_table[dest].socket > 0)
+						send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+					break;
+			}		
 		}
 
 		if(shutdown_all)

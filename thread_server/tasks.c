@@ -754,10 +754,8 @@ UCHAR timer_task(int test)
 	int index = 3;
 	time_t t;
 	struct timeval mtv;
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
-	O_DATA *otp2;
-	O_DATA **otpp2 = &otp2;
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
 //	static int test_ctr = 0;
 //	static int test_ctr2 = 0;
 	UCHAR cmd;
@@ -780,8 +778,46 @@ UCHAR timer_task(int test)
 	i = 0;
 	cmd = AREYOUTHERE;
 
+	uSleep(5,0);
 	while(TRUE)
 	{
+		uSleep(1,0);
+		time_t T = time(NULL);
+		struct tm tm = *localtime(&T);
+
+		//printf("System Date is: %02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+		//printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+		for(i = 0;i < 20;i++)
+		{
+			cllist_find_data(i, ctpp, &cll);
+			if(ctp->port > -1)
+			{
+				if(ctp->state == 1)		// if on check for next off time
+				{
+					//printf("on %d %d\n",tm.tm_hour, tm.tm_min);
+					if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute && tm.tm_sec == ctp->off_second)
+					{
+						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+						printf("turn off %s\n",ctp->label);
+						ctp->state = 0;
+						cllist_change_data(i,ctp,&cll);
+						add_msg_queue(ctp->port+1,ctp->state);
+					}
+				}else if(ctp->state == 0)	// if off check for next on time
+				{
+					//printf("off %d %d\n",tm.tm_hour, tm.tm_min);
+					if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute && tm.tm_sec == ctp->on_second)
+					{
+						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+						printf("turn on %s\n",ctp->label);
+						ctp->state = 1;
+						cllist_change_data(i, ctp, &cll);
+						add_msg_queue(ctp->port+1,ctp->state);
+					}
+				}
+			}
+		}
+
 		if(timer_on == 1)
 		{
 			//printf("%s %d\n",client_table[i].label, client_table[i].socket);

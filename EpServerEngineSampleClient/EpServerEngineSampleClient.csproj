@@ -79,6 +79,7 @@
     <Compile Include="Cabin.Designer.cs">
       <DependentUpon>Cabin.cs</DependentUpon>
     </Compile>
+    <Compile Include="cdata.cs" />
     <Compile Include="Child_Scrolling_List.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +127,12 @@
     </Compile>
     <Compile Include="SetNextClient.Designer.cs">
       <DependentUpon>SetNextClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TimerSchedule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TimerSchedule.Designer.cs">
+      <DependentUpon>TimerSchedule.cs</DependentUpon>
     </Compile>
     <Compile Include="WifiIOT.cs">
       <SubType>Form</SubType>
@@ -196,6 +203,9 @@
     </Compile>
     <EmbeddedResource Include="SetNextClient.resx">
       <DependentUpon>SetNextClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimerSchedule.resx">
+      <DependentUpon>TimerSchedule.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WifiIOT.resx">
       <DependentUpon>WifiIOT.cs</DependentUpon>

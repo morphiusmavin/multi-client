@@ -73,11 +73,12 @@
 			this.tbTime = new System.Windows.Forms.TextBox();
 			this.btnFnc2 = new System.Windows.Forms.Button();
 			this.btnMinimize = new System.Windows.Forms.Button();
-			this.btnTest = new System.Windows.Forms.Button();
+			this.btnSunriseSunset = new System.Windows.Forms.Button();
 			this.SunriseLabel = new System.Windows.Forms.Label();
 			this.SunsetLabel = new System.Windows.Forms.Label();
 			this.MoonriseLabel = new System.Windows.Forms.Label();
 			this.MoonsetLabel = new System.Windows.Forms.Label();
+			this.btnTimerSchedules = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -93,7 +94,7 @@
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(305, 149);
+			this.tbReceived.Size = new System.Drawing.Size(305, 179);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
 			// 
@@ -452,7 +453,7 @@
 			// tbSendMsg
 			// 
 			this.tbSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbSendMsg.Location = new System.Drawing.Point(528, 648);
+			this.tbSendMsg.Location = new System.Drawing.Point(525, 690);
 			this.tbSendMsg.Name = "tbSendMsg";
 			this.tbSendMsg.Size = new System.Drawing.Size(300, 26);
 			this.tbSendMsg.TabIndex = 20;
@@ -496,7 +497,7 @@
 			// tbAlarm
 			// 
 			this.tbAlarm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.tbAlarm.Location = new System.Drawing.Point(624, 603);
+			this.tbAlarm.Location = new System.Drawing.Point(621, 645);
 			this.tbAlarm.Name = "tbAlarm";
 			this.tbAlarm.Size = new System.Drawing.Size(202, 29);
 			this.tbAlarm.TabIndex = 19;
@@ -506,7 +507,7 @@
 			// 
 			this.cbAlarm.AutoSize = true;
 			this.cbAlarm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.cbAlarm.Location = new System.Drawing.Point(535, 603);
+			this.cbAlarm.Location = new System.Drawing.Point(532, 645);
 			this.cbAlarm.Name = "cbAlarm";
 			this.cbAlarm.Size = new System.Drawing.Size(83, 28);
 			this.cbAlarm.TabIndex = 49;
@@ -563,17 +564,17 @@
 			this.btnMinimize.UseVisualStyleBackColor = false;
 			this.btnMinimize.Click += new System.EventHandler(this.Minimize_Click);
 			// 
-			// btnTest
+			// btnSunriseSunset
 			// 
-			this.btnTest.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnTest.Location = new System.Drawing.Point(262, 579);
-			this.btnTest.Name = "btnTest";
-			this.btnTest.Size = new System.Drawing.Size(235, 61);
-			this.btnTest.TabIndex = 58;
-			this.btnTest.Text = "Sunrise/Sunset";
-			this.btnTest.UseVisualStyleBackColor = false;
-			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+			this.btnSunriseSunset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnSunriseSunset.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnSunriseSunset.Location = new System.Drawing.Point(262, 579);
+			this.btnSunriseSunset.Name = "btnSunriseSunset";
+			this.btnSunriseSunset.Size = new System.Drawing.Size(235, 61);
+			this.btnSunriseSunset.TabIndex = 58;
+			this.btnSunriseSunset.Text = "Sunrise/Sunset";
+			this.btnSunriseSunset.UseVisualStyleBackColor = false;
+			this.btnSunriseSunset.Click += new System.EventHandler(this.btnSunriseSunset_Click);
 			// 
 			// SunriseLabel
 			// 
@@ -615,17 +616,30 @@
 			this.MoonsetLabel.TabIndex = 62;
 			this.MoonsetLabel.Text = "Today:";
 			// 
+			// btnTimerSchedules
+			// 
+			this.btnTimerSchedules.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnTimerSchedules.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnTimerSchedules.Location = new System.Drawing.Point(12, 657);
+			this.btnTimerSchedules.Name = "btnTimerSchedules";
+			this.btnTimerSchedules.Size = new System.Drawing.Size(235, 61);
+			this.btnTimerSchedules.TabIndex = 63;
+			this.btnTimerSchedules.Text = "Timer Schedules";
+			this.btnTimerSchedules.UseVisualStyleBackColor = false;
+			this.btnTimerSchedules.Click += new System.EventHandler(this.btnTimer_Click);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(1140, 688);
+			this.ClientSize = new System.Drawing.Size(1140, 735);
+			this.Controls.Add(this.btnTimerSchedules);
 			this.Controls.Add(this.MoonsetLabel);
 			this.Controls.Add(this.MoonriseLabel);
 			this.Controls.Add(this.SunsetLabel);
 			this.Controls.Add(this.SunriseLabel);
-			this.Controls.Add(this.btnTest);
+			this.Controls.Add(this.btnSunriseSunset);
 			this.Controls.Add(this.btnMinimize);
 			this.Controls.Add(this.btnFnc2);
 			this.Controls.Add(this.tbTime);
@@ -728,11 +742,12 @@
 		private System.Windows.Forms.TextBox tbTime;
 		private System.Windows.Forms.Button btnFnc2;
 		private System.Windows.Forms.Button btnMinimize;
-		private System.Windows.Forms.Button btnTest;
+		private System.Windows.Forms.Button btnSunriseSunset;
 		private System.Windows.Forms.Label SunriseLabel;
 		private System.Windows.Forms.Label SunsetLabel;
 		private System.Windows.Forms.Label MoonriseLabel;
 		private System.Windows.Forms.Label MoonsetLabel;
+		private System.Windows.Forms.Button btnTimerSchedules;
 	}
 }
 

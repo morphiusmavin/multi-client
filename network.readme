@@ -7,6 +7,7 @@ todo:
 	to talk to each other 
 4) days in client gets reset from 2 to 1 (happened just once)
 5) strlen() in some msg's may not send data w/ 0's 
+6) SEND_CLIENT_LIST from cmd_tasks to sock_mgt shouldn't need any params (line 306 in cmd_tasks.c) 
 
 to add new commands:
 
@@ -39,9 +40,9 @@ If client(s) gets msg to shutdown, reboot, etc. then server stays up
 In the first case all the commands would be in the cmd_types.h and would 
 be limited to 255 total commands. 
 
-146 (server) is where the pi used to be (controlling garage lights)
-154 is cabin
-147 is other io card in garage near RE system (testbench)
+146 (server) is where the pi used to be (controlling garage lights)	(offset 8 in client_table[])
+154 is cabin	(offset 2 in client_table)
+147 is other io card in garage near RE system (testbench)	(offset 3 in client_table)
 150 not used 
 151	"
 155	"
@@ -145,14 +146,26 @@ get_host_cmd_task1 (sock_mgt.c) -- gets msg from tcp and passes it on to get_hos
 get_host_cmd_task2 (cmd_tasks.c) 
 	msg_rcv(sched_qid...) 
 	
-cmd sets the on/off time of certain port (or for now just 
-add it to the csv file and use init_cdb to create the dat file)
-SET_ONOFF_PORT params: port, on hour on minute, off hour, off minute 
-use the _data database in cs_client and queue directories 
-system will search for the next on_hour and set a variable 
-that when the current hour matches that variable, it will set a 
-variable to wait for the on_minute. 
+a) turn ports on/off over a 24 hour schedule with multiple on/off times 
+b) turn ports on/off depending on a temp reading 
+c) turn ports on/off depending on 24 hour sched but with sunrise/sunset data 
 
+
+new way:
+typedef struct
+{
+	int index;	// key for each record
+	int type;	// 0 - not used; 1 - a; 2 - b; 3 - c (above)
+	int port;	// which port (0 - 19)
+	int var1;	// the meanings of these depends on the type 
+	int var2;	// type 1: on_hour, on_minute, off_hour, off_minute
+	int var3;	// type 2: on_hour, on_minute, seconds to stay on, minutes to stay on
+	int var4;	// type 3: turn on temp, turn off temp (only var1&2 are used)
+				// type 4: time to turn on before sunset, on after sunset, off before sunrise, off after sunrise
+	char label[30];
+} CMD_STRUCT;
+
+old way:
 typedef struct
 {
 	int type;					// 0 - short duration; 1 - long duration (on/off hours minutes)
@@ -165,5 +178,3 @@ typedef struct
 	int duration_minutes;
 	char label[30];
 } CMD_STRUCT;
-
-

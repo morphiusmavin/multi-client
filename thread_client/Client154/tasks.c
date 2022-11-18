@@ -774,55 +774,44 @@ UCHAR timer_task(int test)
 		printf("can't open comm port 3\n");
 	}else printf("com port3: %d\n",fp);
 */
-	//uSleep(1,0);
+	uSleep(5,0);
 	while(TRUE)
 	{
 
-		if((++temp % 5) == 0)
-		{
-			time_t T = time(NULL);
-			struct tm tm = *localtime(&T);
+		time_t T = time(NULL);
+		struct tm tm = *localtime(&T);
 
-			//printf("System Date is: %02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
-			//printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-			for(i = 0;i < 20;i++)
+		//printf("System Date is: %02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+		//printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+		for(i = 0;i < 20;i++)
+		{
+			cllist_find_data(i, ctpp, &cll);
+			if(ctp->port > -1)
 			{
-				cllist_find_data(i, ctpp, &cll);
-				//printf("%d ",ctp->type);
-				if(ctp->type > 0)
+				if(ctp->state == 1)		// if on check for next off time
 				{
-					//printf("%d %d %d: ",ctp->port,ctp->state,ctp->type);
-					if(ctp->state == 1)		// if on check for next off time
+					//printf("on %d %d\n",tm.tm_hour, tm.tm_min);
+					if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute && tm.tm_sec == ctp->off_second)
 					{
-						printf("on %d %d\n",tm.tm_hour, tm.tm_min);
-						if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute)
-						{
-							printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-							printf("turn off %s\n",ctp->label);
-							ctp->state = 0;
-							cllist_change_data(i,ctp,&cll);
-							add_msg_queue(ctp->port+25,ctp->state);
-						}
-					}else if(ctp->state == 0)	// if off check for next on time
+						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+						printf("turn off %s\n",ctp->label);
+						ctp->state = 0;
+						cllist_change_data(i,ctp,&cll);
+						add_msg_queue(ctp->port+25,ctp->state);
+					}
+				}else if(ctp->state == 0)	// if off check for next on time
+				{
+					//printf("off %d %d\n",tm.tm_hour, tm.tm_min);
+					if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute && tm.tm_sec == ctp->on_second)
 					{
-						printf("off %d %d\n",tm.tm_hour, tm.tm_min);
-						if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute)
-						{
-							printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-							printf("turn on %s\n",ctp->label);
-							ctp->state = 1;
-							cllist_change_data(i, ctp, &cll);
-							add_msg_queue(ctp->port+25,ctp->state);
-						}
+						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+						printf("turn on %s\n",ctp->label);
+						ctp->state = 1;
+						cllist_change_data(i, ctp, &cll);
+						add_msg_queue(ctp->port+25,ctp->state);
 					}
 				}
 			}
-			
-/*
-			int index = 3;
-			cllist_find_data(index, ctpp, &cll);
-			printf("%d %d %s\n",ctp->port, ctp->type, ctp->label);
-*/
 		}
 
 		if(chick_water_enable == 1)

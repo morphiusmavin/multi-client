@@ -27,15 +27,15 @@
 typedef struct c_data
 {
 	char label[OLABELSIZE];
+	int index;
 	int port;					// which port to turn on/off
 	int state;					// 0 - off; 1 - on
-	int type;					// 0 - short duration; 1 - long duration (on/off hours minutes)
-	int on_hour;				// use this if type 0 or 1
-	int on_minute;				//	"	"
-	int off_hour;				// use this if type 1 only
-	int off_minute;				//  "  	"
-	int duration_seconds;		// use these if type 0
-	int duration_minutes;
+	int on_hour;
+	int on_minute;
+	int on_second;
+	int off_hour;
+	int off_minute;
+	int off_second;
 } C_DATA;
 
 typedef struct cllist_node {

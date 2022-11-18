@@ -90,6 +90,8 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 		printf("%02x ",msg.mtext[i]);
 	printf("\n");
 */
+	// this sends to recv_msg_task in sock_mgt.c which then sends 
+	// the msg to the server via tcp socket
 	if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 	{
 		perror("msgsnd error");
@@ -128,6 +130,7 @@ UCHAR get_host_cmd_task2(int test)
 	int fname_index;
 	UCHAR uch_fname_index;
 	UCHAR mask;
+	UCHAR port;
 	time_t curtime2;
 	time_t *pcurtime2 = &curtime2;
 	int fp;
@@ -309,6 +312,51 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case GET_ALL_CLLIST:
+						for(i = 0;i < 20;i++)
+						{
+							cllist_find_data(i, ctpp, &cll);
+							if(ctp->port > -1)
+							{
+								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+										ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
+								printf("%s\n",tempx);
+								cmd = REPLY_CLLIST;
+								msg_len = strlen(tempx);
+								send_sock_msg(tempx, msg_len, cmd, 8);
+								/*
+								msg.mtext[0] = cmd;
+								msg_len = strlen(tempx);
+								msg.mtext[1] = (UCHAR)msg_len;
+								msg.mtext[2] = (UCHAR)(msg_len >> 4);
+								strncpy(msg.mtext+3,tempx,msg_len);
+
+								if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+								{
+									perror("msgsnd error");
+									printf("exit from send client list\n");
+									exit(EXIT_FAILURE);
+								}
+								*/
+								uSleep(0,TIME_DELAY/8);
+							}
+						}
+						break;
+
+					case GET_CLLIST:
+						port = tempx[0];
+						printf("port: %d\n",port);
+						cllist_find_data((int)port, ctpp, &cll);
+						if(ctp->port > -1)
+						{
+							sprintf(tempx,"%d %d %d %d %d %d %d %d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+									ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
+							printf("%s\n",tempx);
+							cmd = REPLY_CLLIST;
+							send_sock_msg(tempx, msg_len, cmd, 8);
+						}
+						break;
+
 					case AREYOUTHERE:
 						sprintf(tempx,"yes im here (154)\0");
 						send_sock_msg(tempx, msg_len, YESIMHERE, 0);
@@ -438,7 +486,7 @@ UCHAR get_host_cmd_task2(int test)
 //							write_serial2(tempx[i]);
 						}
 */
-						tempx[msg_len-2] = 'M';
+						//tempx[msg_len-2] = 'M';
 						memset(temp_time,0,sizeof(temp_time));
 						i = 0;
 						pch = &tempx[0];

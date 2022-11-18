@@ -78,7 +78,6 @@ int main(int argc, char *argv[])
 	int port = 6;
 	ret = cllist_find_data(port,ctpp,&cll);
 	ctp->on_hour = 10;
-	ctp->type = 5;
 	//printf("my label: %s\n",ctp->label);
 	strcpy(ctp->label,"test lkjh");
 	//cllist_insert_data(port,&cll,ctpp);
@@ -140,28 +139,28 @@ int main(int argc, char *argv[])
 			if(comma_delim == 1)
 			{
 				printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%s\n",
+				pod->index,
 				pod->port,
 				pod->state,
-				pod->type,
 				pod->on_hour,
 				pod->on_minute,
+				pod->on_second,
 				pod->off_hour, 
 				pod->off_minute,
-				pod->duration_seconds,
-				pod->duration_minutes,
+				pod->off_second,
 				pod->label);
 			}else
 			{
 				printf("%d %d %d %d %d %d %d %d %d %s\n",
+				pod->index,
 				pod->port,
 				pod->state,
-				pod->type,
 				pod->on_hour,
 				pod->on_minute,
+				pod->on_second,
 				pod->off_hour, 
 				pod->off_minute,
-				pod->duration_seconds,
-				pod->duration_minutes,
+				pod->off_second,
 				pod->label);
 			}
 		}

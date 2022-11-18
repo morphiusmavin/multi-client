@@ -27,16 +27,15 @@
 typedef struct c_data
 {
 	char label[OLABELSIZE];
-	int index;				// just the key 
-	int client_no;			// the client this msg applies to (could just as well be the index)
-	UCHAR cmd;				// command to send
-	int dest;				// destination (any other client or server in the client_table list)
-	int msg_len;			// length of attached message if any
-	int fn_ptr;				// a ptr into an array of functions on the client (depends on cmd)
-	int data_ptr;			// a length into a huge array where data is stored for each client.
-	int hours;				// time interval if to send anything on a predermined interval.
-	int minutes;			// if all '0's then one-shot 
-	int seconds;
+	int index;
+	int port;					// which port to turn on/off
+	int state;					// 0 - off; 1 - on
+	int on_hour;
+	int on_minute;
+	int on_second;
+	int off_hour;
+	int off_minute;
+	int off_second;
 } C_DATA;
 
 typedef struct cllist_node {
@@ -62,4 +61,5 @@ int cllist_change_output(int index, cllist_t *llistp, int onoff);
 int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp);
 int cllist_show(cllist_t *llistp);
 int cllist_printfile(int fp, cllist_t *llistp);
+int cllist_reorder(cllist_t *llistp);
 

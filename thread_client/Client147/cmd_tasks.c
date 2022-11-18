@@ -206,6 +206,19 @@ UCHAR get_host_cmd_task2(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}
+	cllist_init(&cll);
+
+	if(access(cFileName,F_OK) != -1)
+	{
+		clLoadConfig(cFileName,&cll,csize,errmsg);
+		if(rc > 0)
+		{
+			printf("%s\r\n",errmsg);
+		}
+		
+		cllist_show(&cll);
+	}
+
 	init_ips();
 	same_msg = 0;
 

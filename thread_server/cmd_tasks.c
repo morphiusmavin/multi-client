@@ -64,12 +64,15 @@ UCHAR get_host_cmd_task(int test)
 	O_DATA tempo1;
 //	RI_DATA tempr1;
 //	I_DATA *itp;
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
+//	O_DATA *otp;
+//	O_DATA **otpp = &otp;
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
+	C_DATA *cdata_temp;
 	int rc = 0; 
 	int rc1 = 0;
 	UCHAR cmd = 0x21;
-	UCHAR onoff;
+	UCHAR onoff, port;
 	char errmsg[50];
 	char filename[15];
 	char *fptr;
@@ -81,6 +84,7 @@ UCHAR get_host_cmd_task(int test)
 	size_t csize;
 
 	UCHAR tempx[UPLOAD_BUFF_SIZE];
+	char tempy[30];
 	char temp_time[5];
 	char *pch;
 	int fname_index;
@@ -159,18 +163,30 @@ UCHAR get_host_cmd_task(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}
+	
+	cllist_init(&cll);
+	if(access(cFileName,F_OK) != -1)
+	{
+		clLoadConfig(cFileName,&cll,csize,errmsg);
+		if(rc > 0)
+		{
+			printf("%s\r\n",errmsg);
+		}
+		cllist_show(&cll);
+	}else printf("can't find %s\n",cFileName);
+
 	init_ips();
 	same_msg = 0;
 	timer_on = 0;
 	timer_seconds = 2;
+	cdata_temp = (C_DATA *)malloc(sizeof(C_DATA));
+	memset(cdata_temp, 0, sizeof(C_DATA));
 
 	while(TRUE)
 	{
 		cmd = 0;
-//		get msg from sock_mgt		
-		if (msgrcv(sched_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
-//		MSG_NOERROR | IPC_NOWAIT) == -1) 
-		MSG_NOERROR) == -1) 
+//		get msg from sock_mgt or WinClReadTask
+		if (msgrcv(sched_qid, (void *) &msg, sizeof(msg.mtext), msgtype, MSG_NOERROR) == -1)
 		{
 			if (errno != ENOMSG) 
 			{
@@ -217,6 +233,88 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
+				case REPLY_CLLIST:
+						printf("msg_len: %d\n",msg_len);
+						for(i = 0;i < msg_len;i++)
+							printf("%c",tempx[i]);
+						printf("\n");
+						cmd = REPLY_CLLIST;
+						msg.mtext[0] = cmd;
+						msg_len = strlen(tempx);
+						msg.mtext[1] = (UCHAR)msg_len;
+						msg.mtext[2] = (UCHAR)(msg_len >> 4);
+						strncpy(msg.mtext+3,tempx,msg_len);
+
+						if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+						{
+							perror("msgsnd error");
+							printf("exit from send client list\n");
+							exit(EXIT_FAILURE);
+						}
+						uSleep(0,TIME_DELAY/16);
+					break;
+
+				case GET_ALL_CLLIST:
+					for(i = 0;i < 20;i++)
+					{
+						cllist_find_data(i, ctpp, &cll);
+						if(ctp->port > -1)
+						{
+							sprintf(tempx,"%d %d %d %d %d %d %d %d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+									ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
+							printf("%s\n",tempx);
+							cmd = REPLY_CLLIST;
+							msg.mtext[0] = cmd;
+							msg_len = strlen(tempx);
+							msg.mtext[1] = (UCHAR)msg_len;
+							msg.mtext[2] = (UCHAR)(msg_len >> 4);
+							strncpy(msg.mtext+3,tempx,msg_len);
+
+							if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+							{
+								perror("msgsnd error");
+								printf("exit from send client list\n");
+								exit(EXIT_FAILURE);
+							}
+							uSleep(0,TIME_DELAY/16);
+						}
+					}
+					break;
+
+				case GET_CLLIST:
+					port = tempx[0];
+					cllist_find_data((int)port, ctpp, &cll);
+					if(ctp->port > -1)
+					{
+						sprintf(tempx,"%d %d %d %d %d %d %d %d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+								ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
+						printf("%s\n",tempx);
+						cmd = REPLY_CLLIST;
+						msg.mtext[0] = cmd;
+						msg_len = strlen(tempx);
+						msg.mtext[1] = (UCHAR)msg_len;
+						msg.mtext[2] = (UCHAR)(msg_len >> 4);
+						strncpy(msg.mtext+3,tempx,msg_len);
+
+						if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+						{
+							perror("msgsnd error");
+							printf("exit from send client list\n");
+							exit(EXIT_FAILURE);
+						}
+					}
+					break;
+
+				case SET_CLLIST:
+					for(i = 0;i < msg_len;i++)
+						printf("%d: %d\n",i,tempx[i]);
+					//cllist_change_data(i,ctp,&cll);
+					//cllist_find_data(i, ctpp, &cll);
+					break;
+
+				case SAVE_CLLIST:
+					break;
+
 				case YESIMHERE:
 					msg.mtext[0] = cmd;
 					msg_len = strlen(tempx);
@@ -344,7 +442,12 @@ UCHAR get_host_cmd_task(int test)
 				case SET_TIME:
 					curtime2 = 0L;
 					j = 0;
-					tempx[msg_len-2] = 'M';
+/*
+printf("set time %d\n",msg_len);
+for(i = 0;i < msg_len+2;i++)
+	printf("%c",tempx[i]);
+*/
+//					tempx[msg_len-2] = 'M';
 					memset(temp_time,0,sizeof(temp_time));
 					i = 0;
 					pch = &tempx[0];
@@ -356,6 +459,7 @@ UCHAR get_host_cmd_task(int test)
 					memcpy(&temp_time[0],&tempx[0],i);
 					i = atoi(temp_time);
 					pt->tm_mon = i - 1;
+//printf("month: %d\n",pt->tm_mon);
 					i = 0;
 
 					while(*(pch++) != '/' && i < msg_len)
@@ -365,6 +469,7 @@ UCHAR get_host_cmd_task(int test)
 					memset(temp_time,0,sizeof(temp_time));
 					memcpy(temp_time,pch-i-1,i);
 					i = atoi(temp_time);
+//printf("day: %d\n",pt->tm_mday);
 					pt->tm_mday = i;
 					i = 0;
 					while(*(pch++) != ' ' && i < msg_len)
@@ -376,6 +481,7 @@ UCHAR get_host_cmd_task(int test)
 					i = atoi(temp_time);
 					i += 100;
 					pt->tm_year = i;
+//printf("year: %d\n",pt->tm_year);
 					i = 0;
 
 					while(*(pch++) != ':' && i < msg_len)
@@ -384,6 +490,7 @@ UCHAR get_host_cmd_task(int test)
 					memcpy(temp_time,pch-i-1,i);
 					i = atoi(temp_time);
 					pt->tm_hour = i;
+//printf("hour: %d\n",pt->tm_hour);
 					i = 0;
 					while(*(pch++) != ':' && i < msg_len)
 						i++;
@@ -391,6 +498,7 @@ UCHAR get_host_cmd_task(int test)
 					memcpy(temp_time,pch-3,2);
 					i = atoi(temp_time);
 					pt->tm_min = i;
+//printf("minute: %d\n",pt->tm_min);
 					i = 0;
 					while(*(pch++) != ' ' && i < msg_len)
 						i++;
@@ -398,9 +506,12 @@ UCHAR get_host_cmd_task(int test)
 					memcpy(temp_time,pch-3,2);
 					i = atoi(temp_time);
 					pt->tm_sec = i;
+//printf("second: %d\n",pt->tm_sec);
+//printf("*%c %c\n",*(pch-1),*pch);
 					if(*pch == 'P')
 					{
 						pt->tm_hour += 12;
+//printf("hour: %d\n",pt->tm_hour);
 					}
 					curtime2 = mktime(pt);
 					stime(pcurtime2);

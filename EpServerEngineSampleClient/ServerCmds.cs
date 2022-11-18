@@ -77,7 +77,13 @@ namespace EpServerEngineSampleClient
 			SEND_NEXT_CLIENT,
 			UPDATE_CLIENT_INFO,
 			AREYOUTHERE,
-			YESIMHERE
+			YESIMHERE,
+			GET_CLLIST,
+			GET_ALL_CLLIST,
+			REPLY_CLLIST,
+			SET_CLLIST,
+			SAVE_CLLIST,
+			NO_CLLIST_REC
 		}
 
 		public ServerCmds()
@@ -467,7 +473,7 @@ namespace EpServerEngineSampleClient
 		}
 		public void Send_ClCmd(int msg, int index, string param)
 		{
-			var temp = index;
+			int temp = index;
 			byte[] atemp = BitConverter.GetBytes(temp);
 			byte[] btemp = BytesFromString(param);
 			byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];

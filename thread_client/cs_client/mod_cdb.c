@@ -80,28 +80,28 @@ int main(int argc, char *argv[])
 			if(comma_delim == 1)
 			{
 				printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%s\n",
+				pod->index,
 				pod->port,
 				pod->state,
-				pod->type,
 				pod->on_hour,
 				pod->on_minute,
+				pod->on_second,
 				pod->off_hour, 
 				pod->off_minute,
-				pod->duration_seconds,
-				pod->duration_minutes,
+				pod->off_second,
 				pod->label);
 			}else
 			{
 				printf("%d %d %d %d %d %d %d %d %d %s\n",
+				pod->index,
 				pod->port,
 				pod->state,
-				pod->type,
 				pod->on_hour,
 				pod->on_minute,
+				pod->on_second,
 				pod->off_hour, 
 				pod->off_minute,
-				pod->duration_seconds,
-				pod->duration_minutes,
+				pod->off_second,
 				pod->label);
 			}
 		}

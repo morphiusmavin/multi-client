@@ -136,7 +136,8 @@ int cllist_find_data(int index, C_DATA **datapp, cllist_t *llistp)
 {
 	cllist_node_t *cur, *prev;
 	int status = -1;
-
+	if(index > 19)
+		return -1;
 	/* Initialize to "not found" */
 	*datapp = (C_DATA *)NULL;
 
@@ -348,9 +349,9 @@ int cllist_show(cllist_t *llistp)
 		if(cur->datap->label[0] != 0)
 		{
 			printf("%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%s\r\n",
-				(int)cur->datap->port, cur->datap->state, cur->datap->type, cur->datap->on_hour, (int)cur->datap->on_minute, 
-				 cur->datap->off_hour, cur->datap->off_minute, cur->datap->duration_seconds, 
-				 cur->datap->duration_minutes, cur->datap->label);
+				cur->datap->index, cur->datap->port, cur->datap->state, cur->datap->on_hour, cur->datap->on_minute, 
+				 cur->datap->on_second, cur->datap->off_hour, cur->datap->off_minute, 
+				 cur->datap->off_second, cur->datap->label);
 
 /*
 			printf("%2d\t%2d\t%2d\t\t%2d\t%2d\t%s\r\n",

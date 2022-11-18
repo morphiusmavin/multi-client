@@ -776,9 +776,41 @@ UCHAR timer_task(int test)
 		printf("can't open comm port 3\n");
 	}else printf("com port3: %d\n",fp);
 */
-	//uSleep(1,0);
+	uSleep(5,0);
 	while(TRUE)
 	{
+		time_t T = time(NULL);
+		struct tm tm = *localtime(&T);
+
+		//printf("System Date is: %02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+		//printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+		for(i = 0;i < 20;i++)
+		{
+			cllist_find_data(i, ctpp, &cll);
+			if(ctp->state == 1)		// if on check for next off time
+			{
+				//printf("on %d %d\n",tm.tm_hour, tm.tm_min);
+				if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute && tm.tm_sec == ctp->off_second)
+				{
+					printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+					printf("turn off %s\n",ctp->label);
+					ctp->state = 0;
+					cllist_change_data(i,ctp,&cll);
+					add_msg_queue(ctp->port+25,ctp->state);
+				}
+			}else if(ctp->state == 0)	// if off check for next on time
+			{
+				//printf("off %d %d\n",tm.tm_hour, tm.tm_min);
+				if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute && tm.tm_sec == ctp->on_second)
+				{
+					printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+					printf("turn on %s\n",ctp->label);
+					ctp->state = 1;
+					cllist_change_data(i, ctp, &cll);
+					add_msg_queue(ctp->port+25,ctp->state);
+				}
+			}
+		}
 		if(chick_water_enable == 1)
 		{
 			//printf(" %d %d :",water_state,current_water_time);

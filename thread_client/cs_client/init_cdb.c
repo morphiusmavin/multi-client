@@ -92,15 +92,15 @@ int main(int argc, char *argv[])
 	pod = curr_o_array;
 	for(i = 0;i < osize/sizeof(C_DATA);i++)
 	{
-		pod->port = i;
-		pod->state = int_array[i][1];
-		pod->type = int_array[i][2];
+		pod->index = i;
+		pod->port = int_array[i][1];
+		pod->state = int_array[i][2];
 		pod->on_hour = int_array[i][3];
 		pod->on_minute = int_array[i][4];
-		pod->off_hour = int_array[i][5];
-		pod->off_minute = int_array[i][6];
-		pod->duration_seconds = int_array[i][7];
-		pod->duration_minutes = int_array[i][8];
+		pod->on_second = int_array[i][5];
+		pod->off_hour = int_array[i][6];
+		pod->off_minute = int_array[i][7];
+		pod->off_second = int_array[i][8];
 		pod++;
 	}
 
@@ -119,15 +119,15 @@ int main(int argc, char *argv[])
 		for(i = 0;i < osize/sizeof(C_DATA);i++)
 		{
 			printf("%d %d %d %d %d %d %d %d %d %s\n",
+			pod->index,
 			pod->port,
 			pod->state,
-			pod->type,
 			pod->on_hour,
 			pod->on_minute,
+			pod->on_second,
 			pod->off_hour, 
 			pod->off_minute,
-			pod->duration_seconds,
-			pod->duration_minutes,
+			pod->off_second,
 			pod->label);
 			pod++;
 		}
