@@ -48,8 +48,6 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 struct msgqbuf msg;
 int msgtype = 1;
-int water_off_time, water_on_time;
-int chick_water_enable;
 
 inline int pack4chars(char c1, char c2, char c3, char c4) {
     return ((int)(((unsigned char)c1) << 24)
@@ -119,7 +117,7 @@ UCHAR get_host_cmd_task2(int test)
 	int i;
 	int j;
 	int k;
-//	size_t csize;
+	size_t csize;
 	size_t osize;
 	UCHAR tempx[SERIAL_BUFF_SIZE];
 	UCHAR tempx2[SERIAL_BUFF_SIZE];
@@ -146,8 +144,6 @@ UCHAR get_host_cmd_task2(int test)
 	timer_on = 0;
 	timer_seconds = 2;
 	next_client = 0;
-	water_on_time = 20;
-	water_off_time = 3600;
 
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
@@ -277,11 +273,12 @@ UCHAR get_host_cmd_task2(int test)
 					case BENCH_3V3_2:
 					case BENCH_LIGHT1:
 					case BENCH_LIGHT2:
-					case COOP1_LIGHT:
-					case COOP1_HEATER:
-					case COOP2_LIGHT:
-					case COOP2_HEATER:
-					case CHICK_WATER:
+					case WATER_HEATER:
+					case BATTERY_HEATER:
+					case WATER_PUMP:
+					case WATER_VALVE1:
+					case WATER_VALVE2:
+					case WATER_VALVE3:
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
 					case SHELL_AND_RENAME:
@@ -305,11 +302,6 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
-					case CHICK_WATER_ENABLE:
-						chick_water_enable = tempx[0];
-						add_msg_queue(CHICK_WATER,0);
-						//printf("chick water enable: %d\n",chick_water_enable);
-						break;
 /*	testing how the winCl sends ints & longs 
 					case DB_LOOKUP:
 						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
@@ -325,26 +317,6 @@ UCHAR get_host_cmd_task2(int test)
 						trunning_minutes = tempx[2];
 						trunning_seconds = tempx[3];
 */						
-						break;
-
-					case SET_CHICK_WATER_ON:	// see the int version of Send_ClCmd() in ServerCmds.cs 
-						water_on_time = (int)tempx[1];
-						//printf("%02x\n",water_on_time);
-						water_on_time <<= 8;
-						//printf("%02x\n",water_on_time);
-						water_on_time |= (int)tempx[0];
-						//printf("tempx: %02x %02x\n",tempx[0],tempx[1]);
-						//printf("water on time: %d\n",water_on_time);
-						break;
-
-					case SET_CHICK_WATER_OFF:
-						water_off_time = (int)tempx[1];
-						//printf("%02x\n",water_off_time);
-						water_off_time <<= 8;
-						//printf("%02x\n",water_off_time);
-						water_off_time |= (int)tempx[0];
-						//printf("tempx: %02x %02x\n",tempx[0],tempx[1]);
-						//printf("water off time: %d\n",water_off_time);
 						break;
 
 					case SET_NEXT_CLIENT:

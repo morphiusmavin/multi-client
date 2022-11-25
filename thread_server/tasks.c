@@ -798,7 +798,7 @@ UCHAR timer_task(int test)
 					if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute && tm.tm_sec == ctp->off_second)
 					{
 						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-						printf("turn off %s\n",ctp->label);
+						printf("turn off %d %s\n",ctp->port, ctp->label);
 						ctp->state = 0;
 						cllist_change_data(i,ctp,&cll);
 						add_msg_queue(ctp->port+1,ctp->state);
@@ -809,7 +809,7 @@ UCHAR timer_task(int test)
 					if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute && tm.tm_sec == ctp->on_second)
 					{
 						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-						printf("turn on %s\n",ctp->label);
+						printf("turn on %d %s\n",ctp->port, ctp->label);
 						ctp->state = 1;
 						cllist_change_data(i, ctp, &cll);
 						add_msg_queue(ctp->port+1,ctp->state);

@@ -85,6 +85,16 @@ git add thread_server/cs_client/cconfig_file.h
 git add thread_server/queue/cllist_threads_rw.c
 git add thread_server/queue/cllist_threads_rw.h
 
+git add CDBMgmt/App.config
+git add CDBMgmt/CDBMgmt.sln
+git add CDBMgmt/Program.cs
+git add CDBMgmt/Tdata.cs
+git add CDBMgmt/CDBMgmt.csproj
+git add CDBMgmt/Form1.cs
+git add CDBMgmt/Form1.Designer.cs
+git add CDBMgmt/Form1.resx
+git add CDBMgmt/Properties/*
+
 git status
 
 

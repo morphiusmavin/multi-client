@@ -1,0 +1,111 @@
+DataTable dt;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        if (!IsPostBack)
+        {
+            dt = new DataTable();
+            MakeTable();
+        }
+        else
+        {
+            dt = (DataTable)ViewState["dt"];
+        }
+        ViewState["dt"] = dt;
+    }
+    protected void MakeTable()
+    {
+        dt.Columns.Add("ID").AutoIncrement=true;
+        dt.Columns.Add("Qalification");
+        dt.Columns.Add("Year");
+    }
+    protected void AddRows()
+    {
+        DataRow dr = dt.NewRow();
+        dr["Qalification"] = txtdata.Text; //Qualification textbox
+        dr["Year"] = txtyear.Text;//Year textbox
+        dt.Rows.Add(dr);
+        
+    }
+    protected void btnadd_Click(object sender, EventArgs e)
+    {       
+        AddRows();
+        gvdynamic.DataSource = dt;
+        gvdynamic.DataBind();
+    }
+    protected void gvdynamic_RowEditing(object sender, GridViewEditEventArgs e)
+    {
+        gvdynamic.EditIndex = e.NewEditIndex;
+        gvdynamic.DataSource = dt;
+        gvdynamic.DataBind();
+    }
+    protected void gvdynamic_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        gvdynamic.EditIndex = -1;
+        gvdynamic.DataSource = dt;
+        gvdynamic.DataBind();
+    }
+    protected void gvdynamic_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        GridViewRow row = (GridViewRow)gvdynamic.Rows[e.RowIndex];
+        int Id = Convert.ToInt32(((TextBox)row.Cells[1].Controls[0]).Text);
+        string Qualification = ((TextBox)row.Cells[2].Controls[0]).Text;
+        string year = ((TextBox)row.Cells[3].Controls[0]).Text;
+
+        DataRow[] datarow=dt.Select("ID='"+Id+"'");
+        dt.Rows[Id].BeginEdit();
+        dt.Rows[Id]["Qalification"] = Qualification;
+        dt.Rows[Id]["Year"] = year;
+        dt.Rows[Id].EndEdit();
+        dt.AcceptChanges();
+        gvdynamic.EditIndex = -1;
+        gvdynamic.DataSource = dt;
+        gvdynamic.DataBind();
+     }
+	 
+	 protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+{
+GridView1.EditIndex = e.NewEditIndex;
+GridView1.DataSource = dt;
+GridView1.DataBind();
+
+
+}
+protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+{
+GridView1.EditIndex = -1;
+GridView1.DataSource = dt;
+GridView1.DataBind();
+
+}
+
+protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
+{
+GridViewRow row = (GridViewRow)GridView1.Rows[e.RowIndex];
+TextBox tname = (TextBox)row.FindControl("txtcountry");
+TextBox1.Text = tname.Text;
+GridView1.EditIndex = -1;
+GridView1.DataSource = dt;
+GridView1.DataBind();
+
+
+DataTable dt = new DataTable();
+        DataRow dr;
+        dt.Columns.Add(new System.Data.DataColumn("BookName", typeof(String)));
+        dt.Columns.Add(new System.Data.DataColumn("BookQty", typeof(String)));
+        dt.Columns.Add(new System.Data.DataColumn("BookImg", typeof(String)));
+    foreach (GridViewRow row in gvShoppingCart.Rows)
+        {
+            Image Bookimg = (Image)row.FindControl("BookImg");
+            Label Booknames = (Label)row.FindControl("lblBookName");
+            TextBox Bookqty = (TextBox)row.FindControl("TXTQty");
+            Label TotalPrice = (Label)row.FindControl("LBLTotal");
+            dr = dt.NewRow();
+            dr[0] = Booknames.Text;
+            dr[1] = Bookqty.Text;
+            dr[2] = Bookimg.ImageUrl.ToString();
+            dt.Rows.Add(dr);
+        }
+
+        Session["QtyTable"] = dt;
+		
+		

@@ -65,8 +65,6 @@ int max_ips;
 IP ip[40];
 //static UCHAR msg_queue[MSG_QUEUE_SIZE];
 //static int msg_queue_ptr;
-extern int water_off_time, water_on_time, chick_water_enable;
-int current_water_time;
 
 #define ON 1
 #define OFF 0
@@ -741,10 +739,8 @@ UCHAR timer_task(int test)
 	UCHAR cmd = 0x21;
 	UCHAR ucbuff[6];
 	int temp;
-	int water_state = RESET_ON;
 	int next_hour_on, next_minute_on;
 
-	current_water_time = 0;
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 	temp = 0;
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
@@ -794,7 +790,7 @@ UCHAR timer_task(int test)
 					if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute && tm.tm_sec == ctp->off_second)
 					{
 						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-						printf("turn off %s\n",ctp->label);
+						printf("turn off %d %s\n",ctp->port, ctp->label);
 						ctp->state = 0;
 						cllist_change_data(i,ctp,&cll);
 						add_msg_queue(ctp->port+25,ctp->state);
@@ -805,73 +801,15 @@ UCHAR timer_task(int test)
 					if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute && tm.tm_sec == ctp->on_second)
 					{
 						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-						printf("turn on %s\n",ctp->label);
+						printf("turn on %d %s\n",ctp->port, ctp->label);
 						ctp->state = 1;
 						cllist_change_data(i, ctp, &cll);
 						add_msg_queue(ctp->port+25,ctp->state);
 					}
 				}
 			}
+			uSleep(0,TIME_DELAY/16);
 		}
-
-		if(chick_water_enable == 1)
-		{
-			//printf(" %d %d :",water_state,current_water_time);
-			switch(water_state)
-			{
-				case RESET_ON:
-					current_water_time = water_on_time;
-					// turn the water on 
-					//add_msg_queue(CHICK_WATER);
-					add_msg_queue(CHICK_WATER,1);
-					water_state = WATER_ON;
-					break;
-				case WATER_ON:
-					if(--current_water_time < 1)
-						water_state = RESET_OFF;
-					break;
-				case RESET_OFF:
-					current_water_time = water_off_time;
-					// turn water off 
-					//add_msg_queue(CHICK_WATER);
-					add_msg_queue(CHICK_WATER,0);
-					water_state = WATER_OFF;
-					break;
-				case WATER_OFF:
-					if(--current_water_time < 1)
-						water_state = RESET_ON;
-					break;
-				default:
-					water_state = RESET_ON;
-					break;
-			}
-
-		}else
-		{
-			if(water_state != RESET_ON)
-				water_state = RESET_ON;
-		}
-		if(timer_on == 1)
-		{
-			uSleep(timer_seconds,0);
-			printf("timer 1: %d\n",timer_seconds);
-			//send_msg(strlen((char*)write_serial_buffer),(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
-//			send_msg(SERIAL_BUFF_SIZE-20,(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
-		} else if(timer_on == 2)
-		{
-			uSleep(timer_seconds,0);
-/*			
-			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
-				write_serial(write_serial_buffer[i]);
-			uSleep(0,TIME_DELAY/16);
-			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
-				write_serial2(write_serial_buffer[i]);
-			uSleep(0,TIME_DELAY/16);
-			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
-				write_serial3(write_serial_buffer[i]);
-*/
-			uSleep(0,TIME_DELAY/16);
-		}else uSleep(1,0);
 
 		if(shutdown_all)
 		{

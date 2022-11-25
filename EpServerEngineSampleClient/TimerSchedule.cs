@@ -27,7 +27,7 @@ namespace EpServerEngineSampleClient
 		List<String> garage_list;
 		List<String> cabin_list;
 		List<String> testbench_list;
-		List<cdata> cdata;
+		private List<Cdata> mycdata;
 		int type, port;
 		ServerCmds svrcmd;
 		INetworkClient m_client = null;
@@ -36,7 +36,7 @@ namespace EpServerEngineSampleClient
 		{
 			return iResult;
 		}
-		public TimerSchedule(INetworkClient client)
+		public TimerSchedule(string xml_file_location, INetworkClient client)
 		{
 			InitializeComponent();
 			m_client = client;
@@ -46,8 +46,45 @@ namespace EpServerEngineSampleClient
 
 			svrcmd = new ServerCmds();
 			svrcmd.SetClient(m_client);
-			cdata = new List<cdata>();
-
+			//cdata = new List<cdata>();
+			Cdata item = null;
+			mycdata = new List<Cdata>();
+			XmlReader xmlfile = null;
+			int lbindex = 0;
+			DataSet ds = new DataSet();
+			var filePath = xml_file_location;
+			xmlfile = XmlReader.Create(filePath, new XmlReaderSettings());
+			ds.ReadXml(xmlfile);
+			foreach (DataRow dr in ds.Tables[0].Rows)
+			{
+				//string temp = "";
+				item = new Cdata();
+				item.label = dr.ItemArray[0].ToString();
+				//item.index = lbindex;
+				item.index = Convert.ToInt16(dr.ItemArray[1]);
+				item.port = Convert.ToInt16(dr.ItemArray[2]);
+				item.state = Convert.ToInt16(dr.ItemArray[3]);
+				item.on_hour = Convert.ToInt16(dr.ItemArray[4]);
+				item.on_minute = Convert.ToInt16(dr.ItemArray[5]);
+				item.on_second = Convert.ToInt16(dr.ItemArray[6]);
+				item.off_hour = Convert.ToInt16(dr.ItemArray[7]);
+				item.off_minute = Convert.ToInt16(dr.ItemArray[8]);
+				//item.off_second = Convert.ToInt16(dr.ItemArray[9]);
+				mycdata.Add(item);
+				item = null;
+				lbindex++;
+			}
+			CGridView.DataSource = ds.Tables[0];
+			foreach(DataColumn dc in ds.Tables[0].Columns)
+			{
+				dc.MaxLength = 10;
+			}
+			
+			if(false)
+			foreach(Cdata cd in mycdata)
+			{
+				AddMsg(cd.label + " " + cd.index.ToString() + " " + cd.port.ToString() + " " + cd.on_hour.ToString() + " " + cd.on_minute.ToString());
+			}
 			garage_list.Add("DESK_LIGHT");
 			garage_list.Add("EAST_LIGHT");
 			garage_list.Add("NORTHWEST_LIGHT");
@@ -147,7 +184,7 @@ namespace EpServerEngineSampleClient
 					string[] words = ret.Split(' ');
 					i = 0;
 					int j;
-				cdata cdata_temp = new cdata();
+				Cdata cdata_temp = new Cdata();
 				foreach (var word in words)
 				{
 					switch (i)
@@ -195,7 +232,7 @@ namespace EpServerEngineSampleClient
 					}
 					i++;
 				}
-				cdata.Add(cdata_temp);
+				//cdata.Add(cdata_temp);
 				cdata_temp = null;
 				break;
 
@@ -203,7 +240,7 @@ namespace EpServerEngineSampleClient
 					break;
 
 			}
-			AddMsg(cdata.Count().ToString());
+			//AddMsg(cdata.Count().ToString());
 		}
 		// pass in -1 to tell this to check all of the status array
 		// or pass in a 0->5 to set a single status item
@@ -279,7 +316,8 @@ namespace EpServerEngineSampleClient
 		private void btnShow_Click(object sender, EventArgs e)
 		{
 			tbReceived.Clear();
-			foreach(cdata cd in cdata)
+			/*
+			foreach(Cdata cd in cdata)
 			{
 				AddMsg(cd.label);
 				AddMsg("");
@@ -290,6 +328,7 @@ namespace EpServerEngineSampleClient
 					" " + cd.off_hour.ToString() + " " + cd.off_minute.ToString() + " " + cd.off_second.ToString());
 			}
 			cdata.Clear();
+			*/
 		}
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{

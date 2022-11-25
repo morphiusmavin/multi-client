@@ -65,8 +65,6 @@ int max_ips;
 IP ip[40];
 //static UCHAR msg_queue[MSG_QUEUE_SIZE];
 //static int msg_queue_ptr;
-extern int water_off_time, water_on_time, chick_water_enable;
-int current_water_time;
 
 #define ON 1
 #define OFF 0
@@ -100,27 +98,16 @@ enum input_types
 
 enum output_types
 {
-	BENCH_24V_1a,
-	BENCH_24V_2a,
-	BENCH_12V_1a,
-	BENCH_12V_2a,
-	BENCH_5V_1a,
-	BENCH_5V_2a,
-	BENCH_3V3_1a,
-	BENCH_3V3_2a,
-	BENCH_LIGHT1a,
-	BENCH_LIGHT2a,
-	CHICK_WATERa,
+	COOP1_LIGHTa,
+	COOP1_HEATERa,
+	COOP2_LIGHTa,
+	COOP2_HEATERa,
+	OUTDOOR_LIGHT1a,
+	OUTDOOR_LIGHT2a,
 	TEST_OUTPUT10,
 	TEST_OUTPUT11,
 	TEST_OUTPUT12,
-	TEST_OUTPUT13,
-	TEST_OUTPUT14,
-	TEST_OUTPUT15,
-	TEST_OUTPUT16,
-	TEST_OUTPUT17,
-	TEST_OUTPUT18,
-	TEST_OUTPUT19
+	TEST_OUTPUT13
 }OUTPUT_TYPES;
 
 int switch_status[10];
@@ -735,20 +722,12 @@ UCHAR timer2_task(int test)
 UCHAR timer_task(int test)
 {
 	int i;
-/*
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
-	O_DATA *otp2;
-	O_DATA **otpp2 = &otp2;
-*/
-//	static int test_ctr = 0;
-//	static int test_ctr2 = 0;
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
 	UCHAR cmd = 0x21;
 	UCHAR ucbuff[6];
 	int temp;
-	int water_state = RESET_ON;
 
-	current_water_time = 0;
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 	temp = 0;
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
@@ -759,86 +738,43 @@ UCHAR timer_task(int test)
 	}
 	write_serial_buffer[SERIAL_BUFF_SIZE - 20] = 0;
 	i = 0;
-/*
-	fp = init_serial();
-	if(fp < 0)
-	{
-		printf("can't open comm port 1\n");
-	}else printf("com port1: %d\n",fp);
-
-	fp = init_serial2();
-	if(fp < 0)
-	{
-		printf("can't open comm port 2\n");
-	}else printf("com port2: %d\n",fp);
-
-	fp = init_serial3(5);
-	if(fp < 0)
-	{
-		printf("can't open comm port 3\n");
-	}else printf("com port3: %d\n",fp);
-*/
-	//uSleep(1,0);
+	uSleep(5,0);
+	printf("starting timer_task\n");
 	while(TRUE)
 	{
-		if(chick_water_enable == 1)
-		{
-			//printf(" %d %d :",water_state,current_water_time);
-			switch(water_state)
-			{
-				case RESET_ON:
-					current_water_time = water_on_time;
-					// turn the water on 
-					//add_msg_queue(CHICK_WATER);
-					add_msg_queue(CHICK_WATER,1);
-					water_state = WATER_ON;
-					break;
-				case WATER_ON:
-					if(--current_water_time < 1)
-						water_state = RESET_OFF;
-					break;
-				case RESET_OFF:
-					current_water_time = water_off_time;
-					// turn water off 
-					//add_msg_queue(CHICK_WATER);
-					add_msg_queue(CHICK_WATER,0);
-					water_state = WATER_OFF;
-					break;
-				case WATER_OFF:
-					if(--current_water_time < 1)
-						water_state = RESET_ON;
-					break;
-				default:
-					water_state = RESET_ON;
-					break;
-			}
+		time_t T = time(NULL);
+		struct tm tm = *localtime(&T);
 
-		}else
+		//printf("System Date is: %02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+		//printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+		for(i = 0;i < 20;i++)
 		{
-			if(water_state != RESET_ON)
-				water_state = RESET_ON;
+			cllist_find_data(i, ctpp, &cll);
+			if(ctp->state == 1)		// if on check for next off time
+			{
+				//printf("on %d %d\n",tm.tm_hour, tm.tm_min);
+				if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute && tm.tm_sec == ctp->off_second)
+				{
+					printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+					printf("turn off %s\n",ctp->label);
+					ctp->state = 0;
+					cllist_change_data(i,ctp,&cll);
+					add_msg_queue(ctp->port+34,ctp->state);
+				}
+			}else if(ctp->state == 0)	// if off check for next on time
+			{
+				//printf("off %d %d\n",tm.tm_hour, tm.tm_min);
+				if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute && tm.tm_sec == ctp->on_second)
+				{
+					printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+					printf("turn on %s\n",ctp->label);
+					ctp->state = 1;
+					cllist_change_data(i, ctp, &cll);
+					add_msg_queue(ctp->port+34,ctp->state);
+				}
+			}
+			uSleep(0,TIME_DELAY/16);
 		}
-		if(timer_on == 1)
-		{
-			uSleep(timer_seconds,0);
-			printf("timer 1: %d\n",timer_seconds);
-			//send_msg(strlen((char*)write_serial_buffer),(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
-//			send_msg(SERIAL_BUFF_SIZE-20,(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
-		} else if(timer_on == 2)
-		{
-			uSleep(timer_seconds,0);
-/*			
-			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
-				write_serial(write_serial_buffer[i]);
-			uSleep(0,TIME_DELAY/16);
-			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
-				write_serial2(write_serial_buffer[i]);
-			uSleep(0,TIME_DELAY/16);
-			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
-				write_serial3(write_serial_buffer[i]);
-*/
-			uSleep(0,TIME_DELAY/16);
-		}else uSleep(1,0);
 
 		if(shutdown_all)
 		{
@@ -1126,81 +1062,33 @@ UCHAR basic_controls_task(int test)
 
 		switch(cmd)
 		{
-			case  BENCH_24V_1:
-				switch_status[BENCH_24V_1a] = switch_status[BENCH_24V_1a]==1?0:1;
-				//change_output(BENCH_24V_1a,switch_status[BENCH_24V_1a]);
-				change_output(BENCH_24V_1a,onoff);
+			case  COOP1_LIGHT:
+				change_output(COOP1_LIGHTa,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_24V_2:
-				switch_status[BENCH_24V_2a] = switch_status[BENCH_24V_2a]==1?0:1;
-				//change_output(BENCH_24V_2a,switch_status[BENCH_24V_2a]);
-				change_output(BENCH_24V_2a,onoff);
+			case COOP1_HEATER:
+				change_output(COOP1_HEATERa,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_12V_1:
-				switch_status[BENCH_12V_1a] = switch_status[BENCH_12V_1a]==1?0:1;
-				//change_output(BENCH_12V_1a,switch_status[BENCH_12V_1a]);
-				change_output(BENCH_12V_1a,onoff);
+			case COOP2_LIGHT:
+				change_output(COOP2_LIGHTa,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_12V_2:
-				switch_status[BENCH_12V_2a] = switch_status[BENCH_12V_2a]==1?0:1;
-				//change_output(BENCH_12V_2a,switch_status[BENCH_12V_2a]);
-				change_output(BENCH_12V_2a,onoff);
+			case COOP2_HEATER:
+				change_output(COOP2_HEATERa,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_5V_1:
-				switch_status[BENCH_5V_1a] = switch_status[BENCH_5V_1a]==1?0:1;
-				//change_output(BENCH_5V_1a,switch_status[BENCH_5V_1a]);
-				change_output(BENCH_5V_1a,onoff);
+			case OUTDOOR_LIGHT1:
+				change_output(OUTDOOR_LIGHT1a,onoff);
 				usleep(_100MS);
 				break;
 
-			case  BENCH_5V_2:
-				switch_status[BENCH_5V_2a] = switch_status[BENCH_5V_2a]==1?0:1;
-				//change_output(BENCH_5V_2a,switch_status[BENCH_5V_2a]);
-				change_output(BENCH_5V_2a,onoff);
-				usleep(_100MS);
-				break;
-
-			case  BENCH_3V3_1:
-				switch_status[BENCH_3V3_1a] = switch_status[BENCH_3V3_1a]==1?0:1;
-				//change_output(BENCH_3V3_1a,switch_status[BENCH_3V3_1a]);
-				change_output(BENCH_3V3_1a,onoff);
-				usleep(_100MS);
-				break;
-
-			case  BENCH_3V3_2:
-				switch_status[BENCH_3V3_2a] = switch_status[BENCH_3V3_2a]==1?0:1;
-				//change_output(BENCH_3V3_2a,switch_status[BENCH_3V3_2a]);
-				change_output(BENCH_3V3_2a,onoff);
-				usleep(_100MS);
-				break;
-
-			case  BENCH_LIGHT1:
-				switch_status[BENCH_LIGHT1a] = switch_status[BENCH_LIGHT1a]==1?0:1;
-				//change_output(BENCH_LIGHT1a,switch_status[BENCH_LIGHT1a]);
-				change_output(BENCH_LIGHT1a,onoff);
-				usleep(_100MS);
-				break;
-
-			case  BENCH_LIGHT2:
-				switch_status[BENCH_LIGHT2a] = switch_status[BENCH_LIGHT2a]==1?0:1;
-				//change_output(BENCH_LIGHT2a,switch_status[BENCH_LIGHT2a]);
-				change_output(BENCH_LIGHT2a,onoff);
-				usleep(_100MS);
-				break;
-
-			case  CHICK_WATER:
-				//printf("CHICK_WATER %d\n",onoff);
-				switch_status[CHICK_WATERa] = switch_status[CHICK_WATERa]==1?0:1;
-				//change_output(CHICK_WATERa,switch_status[CHICK_WATERa]);
-				change_output(CHICK_WATERa,onoff);
+			case OUTDOOR_LIGHT2:
+				change_output(OUTDOOR_LIGHT2a,onoff);
 				usleep(_100MS);
 				break;
 

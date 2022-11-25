@@ -79,6 +79,7 @@
 			this.MoonriseLabel = new System.Windows.Forms.Label();
 			this.MoonsetLabel = new System.Windows.Forms.Label();
 			this.btnTimerSchedules = new System.Windows.Forms.Button();
+			this.btnOutdoor = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -299,7 +300,7 @@
 			// 
 			this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnClear.Location = new System.Drawing.Point(263, 422);
+			this.btnClear.Location = new System.Drawing.Point(266, 498);
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(235, 61);
 			this.btnClear.TabIndex = 11;
@@ -486,7 +487,7 @@
 			// 
 			this.btnWinClMsg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnWinClMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWinClMsg.Location = new System.Drawing.Point(262, 498);
+			this.btnWinClMsg.Location = new System.Drawing.Point(265, 574);
 			this.btnWinClMsg.Name = "btnWinClMsg";
 			this.btnWinClMsg.Size = new System.Drawing.Size(235, 61);
 			this.btnWinClMsg.TabIndex = 13;
@@ -568,7 +569,7 @@
 			// 
 			this.btnSunriseSunset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnSunriseSunset.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSunriseSunset.Location = new System.Drawing.Point(262, 579);
+			this.btnSunriseSunset.Location = new System.Drawing.Point(265, 655);
 			this.btnSunriseSunset.Name = "btnSunriseSunset";
 			this.btnSunriseSunset.Size = new System.Drawing.Size(235, 61);
 			this.btnSunriseSunset.TabIndex = 58;
@@ -628,12 +629,26 @@
 			this.btnTimerSchedules.UseVisualStyleBackColor = false;
 			this.btnTimerSchedules.Click += new System.EventHandler(this.btnTimer_Click);
 			// 
+			// btnOutdoor
+			// 
+			this.btnOutdoor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnOutdoor.Enabled = false;
+			this.btnOutdoor.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnOutdoor.Location = new System.Drawing.Point(268, 420);
+			this.btnOutdoor.Name = "btnOutdoor";
+			this.btnOutdoor.Size = new System.Drawing.Size(235, 61);
+			this.btnOutdoor.TabIndex = 64;
+			this.btnOutdoor.Text = "Outdoor";
+			this.btnOutdoor.UseVisualStyleBackColor = false;
+			this.btnOutdoor.Click += new System.EventHandler(this.btnOutdoor_Click);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1140, 735);
+			this.Controls.Add(this.btnOutdoor);
 			this.Controls.Add(this.btnTimerSchedules);
 			this.Controls.Add(this.MoonsetLabel);
 			this.Controls.Add(this.MoonriseLabel);
@@ -748,6 +763,7 @@
 		private System.Windows.Forms.Label MoonriseLabel;
 		private System.Windows.Forms.Label MoonsetLabel;
 		private System.Windows.Forms.Button btnTimerSchedules;
+		private System.Windows.Forms.Button btnOutdoor;
 	}
 }
 

@@ -48,8 +48,6 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 struct msgqbuf msg;
 int msgtype = 1;
-int water_off_time, water_on_time;
-int chick_water_enable;
 
 inline int pack4chars(char c1, char c2, char c3, char c4) {
     return ((int)(((unsigned char)c1) << 24)
@@ -149,8 +147,6 @@ UCHAR get_host_cmd_task2(int test)
 	timer_on = 0;
 	timer_seconds = 2;
 	next_client = 0;
-	water_on_time = 20;
-	water_off_time = 3600;
 
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the

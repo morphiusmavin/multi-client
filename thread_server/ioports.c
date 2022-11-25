@@ -77,6 +77,7 @@ int init_mem(void)
 		return -1;
 	}
 	key = write(fd,"",1);
+
 	if(key != 1)
 	{
 		close(fd);
@@ -84,6 +85,7 @@ int init_mem(void)
 		//exit(1);
 		return -1;
 	}
+
 	return 0;
 #else
 	return 0;

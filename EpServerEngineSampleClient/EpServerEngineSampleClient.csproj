@@ -79,7 +79,7 @@
     <Compile Include="Cabin.Designer.cs">
       <DependentUpon>Cabin.cs</DependentUpon>
     </Compile>
-    <Compile Include="cdata.cs" />
+    <Compile Include="Cdata.cs" />
     <Compile Include="Child_Scrolling_List.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +112,12 @@
     </Compile>
     <Compile Include="FrmSampleClient.Designer.cs">
       <DependentUpon>FrmSampleClient.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Outdoor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Outdoor.Designer.cs">
+      <DependentUpon>Outdoor.cs</DependentUpon>
     </Compile>
     <Compile Include="SunriseSunsetHoursMinutes.cs" />
     <Compile Include="Sunrise_lines.cs" />
@@ -181,6 +187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSampleClient.resx">
       <DependentUpon>FrmSampleClient.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Outdoor.resx">
+      <DependentUpon>Outdoor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TestBench.resx">
       <DependentUpon>TestBench.cs</DependentUpon>

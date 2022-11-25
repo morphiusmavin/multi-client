@@ -178,3 +178,39 @@ typedef struct
 	int duration_minutes;
 	char label[30];
 } CMD_STRUCT;
+
+
+to get sunrise/sunset info into program:
+
+1) goto https://www.timeanddate.com/sun/@43,-104.803?month=10&year=2022 (for Oct 2022)
+	and scrape the spreadsheet starting with '1' to the left of the first sunrise date 
+2) paste it to a text file called: tdata.csv in C:\Users\Daniel\dev 
+3) run the app: "CreateXML" and use the lower button: "Create T_DATA XML" 
+4) The following XML file gets created for each day of the month 
+
+<T_DATA>
+    <Index>1</Index>						0
+    <Sunrise>7:33 am</Sunrise>				1
+    <Sunset>5:51 pm</Sunset>				2
+    <Length>10:17:12 AM</Length>			3	(not used)
+    <Diff>2:35</Diff>						4	(not used)
+    <AstStart>05:57:00 AM</AstStart>		5
+    <AstEnd>07:27:00 PM</AstEnd>			6
+    <NautStart>06:30:00 AM</NautStart>		7
+    <NautEnd>06:54:00 PM</NautEnd>			8
+    <CivilStart>07:04:00 AM</CivilStart>	9
+    <CivilEnd>06:20:00 PM</CivilEnd>		10
+    <Time>12:42 pm </Time>					11	(not used)
+    <MilMiles>92.258</MilMiles>				12	(not used)
+</T_DATA>
+
+5) goto sunrisesunset.com -> 'Selected U.S. Cities more' -> Wyoming -> 
+	chose Manville as location -> choose month/year -> 
+	check 'moonrise' & 'moonset' -> 'Make Calendar'
+	
+6) scrape webpage of calendar and save to text file called: 
+	C:\Users\Daniel\dev\moonset.txt 
+	
+then program will work for that month 
+	
+	

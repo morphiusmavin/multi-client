@@ -65,8 +65,6 @@ int max_ips;
 IP ip[40];
 //static UCHAR msg_queue[MSG_QUEUE_SIZE];
 //static int msg_queue_ptr;
-extern int water_off_time, water_on_time, chick_water_enable;
-int current_water_time;
 
 #define ON 1
 #define OFF 0
@@ -113,14 +111,14 @@ enum output_types
 
 	BENCH_LIGHT1a,
 	BENCH_LIGHT2a,
-	CHICK_WATERa,
-	COOP1_LIGHTa,
-	COOP1_HEATERa,
-	COOP2_LIGHTa,
-	COOP2_HEATERa,
-	TEST_OUTPUT16,		// these are unused
-	TEST_OUTPUT17,
-	TEST_OUTPUT18
+	WATER_HEATERa,		// these are unused
+	BATTERY_HEATERa,
+	WATER_PUMPa,
+	WATER_VALVE1a,
+	WATER_VALVE2a,
+	WATER_VALVE3a,
+	TEST_OUTPUT3
+
 }OUTPUT_TYPES;
 
 /****************************************************************************************************/
@@ -733,20 +731,12 @@ UCHAR timer2_task(int test)
 UCHAR timer_task(int test)
 {
 	int i;
-/*
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
-	O_DATA *otp2;
-	O_DATA **otpp2 = &otp2;
-*/
-//	static int test_ctr = 0;
-//	static int test_ctr2 = 0;
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
+
 	UCHAR cmd = 0x21;
 	UCHAR ucbuff[6];
 	int temp;
-	int water_state = RESET_ON;
-
-	current_water_time = 0;
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 	temp = 0;
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
@@ -810,65 +800,8 @@ UCHAR timer_task(int test)
 					add_msg_queue(ctp->port+25,ctp->state);
 				}
 			}
+			uSleep(0,TIME_DELAY/16);
 		}
-		if(chick_water_enable == 1)
-		{
-			//printf(" %d %d :",water_state,current_water_time);
-			switch(water_state)
-			{
-				case RESET_ON:
-					current_water_time = water_on_time;
-					// turn the water on 
-					//add_msg_queue(CHICK_WATER);
-					add_msg_queue(CHICK_WATER,1);
-					water_state = WATER_ON;
-					break;
-				case WATER_ON:
-					if(--current_water_time < 1)
-						water_state = RESET_OFF;
-					break;
-				case RESET_OFF:
-					current_water_time = water_off_time;
-					// turn water off 
-					//add_msg_queue(CHICK_WATER);
-					add_msg_queue(CHICK_WATER,0);
-					water_state = WATER_OFF;
-					break;
-				case WATER_OFF:
-					if(--current_water_time < 1)
-						water_state = RESET_ON;
-					break;
-				default:
-					water_state = RESET_ON;
-					break;
-			}
-
-		}else
-		{
-			if(water_state != RESET_ON)
-				water_state = RESET_ON;
-		}
-		if(timer_on == 1)
-		{
-			uSleep(timer_seconds,0);
-			printf("timer 1: %d\n",timer_seconds);
-			//send_msg(strlen((char*)write_serial_buffer),(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
-//			send_msg(SERIAL_BUFF_SIZE-20,(UCHAR*)write_serial_buffer, SEND_MESSAGE, _SERVER);
-		} else if(timer_on == 2)
-		{
-			uSleep(timer_seconds,0);
-/*			
-			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
-				write_serial(write_serial_buffer[i]);
-			uSleep(0,TIME_DELAY/16);
-			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
-				write_serial2(write_serial_buffer[i]);
-			uSleep(0,TIME_DELAY/16);
-			for(i = 0;i < SERIAL_BUFF_SIZE;i++)
-				write_serial3(write_serial_buffer[i]);
-*/
-			uSleep(0,TIME_DELAY/16);
-		}else uSleep(1,0);
 
 		if(shutdown_all)
 		{
@@ -1206,28 +1139,33 @@ UCHAR basic_controls_task(int test)
 				usleep(_100MS);
 				break;
 
-			case  CHICK_WATER:
-				change_output(CHICK_WATERa,onoff);
+			case WATER_HEATER:
+				change_output(WATER_HEATERa,onoff);
 				usleep(_100MS);
 				break;
 
-			case COOP1_LIGHT:
-				change_output(COOP1_LIGHTa,onoff);
+			case BATTERY_HEATER:
+				change_output(BATTERY_HEATERa,onoff);
 				usleep(_100MS);
 				break;
 
-			case COOP1_HEATER:
-				change_output(COOP1_HEATERa,onoff);
+			case WATER_PUMP:
+				change_output(WATER_PUMPa,onoff);
 				usleep(_100MS);
 				break;
 
-			case COOP2_LIGHT:
-				change_output(COOP2_LIGHTa,onoff);
+			case WATER_VALVE1:
+				change_output(WATER_VALVE1a,onoff);
 				usleep(_100MS);
 				break;
-				
-			case COOP2_HEATER:
-				change_output(COOP2_HEATERa,onoff);
+
+			case WATER_VALVE2:
+				change_output(WATER_VALVE2a,onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_VALVE3:
+				change_output(WATER_VALVE3a,onoff);
 				usleep(_100MS);
 				break;
 

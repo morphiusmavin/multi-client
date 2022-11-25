@@ -80,6 +80,8 @@ int init_mem(void)
 		return -1;
 	}
 	key = write(fd,"",1);
+	//printf("key: %d\n",key);
+	
 	if(key != 1)
 	{
 		close(fd);
@@ -87,6 +89,41 @@ int init_mem(void)
 		//exit(1);
 		return -1;
 	}else printf("init_mem ok\n");
+/*
+	int i, onoff;		// using this to test the memory access of 4600
+	UCHAR mask = 1;
+	onoff = 1;
+	for(i = 0;i < 8;i++)
+	{
+		OutPortD(onoff,mask);
+		mask <<= 1;
+		usleep(10000);
+	}
+	onoff = 0;
+	mask = 1;
+	for(i = 0;i < 8;i++)
+	{
+		OutPortD(onoff,mask);
+		mask <<= 1;
+		usleep(10000);
+	}
+	onoff = 1;
+	mask = 1;
+	for(i = 0;i < 8;i++)
+	{
+		OutPortE(onoff,mask);
+		mask <<= 1;
+		usleep(10000);
+	}
+	onoff = 0;
+	mask = 1;
+	for(i = 0;i < 8;i++)
+	{
+		OutPortE(onoff,mask);
+		mask <<= 1;
+		usleep(10000);
+	}
+*/
 	return 0;
 #else
 	printf("cards not used\n");
@@ -116,7 +153,6 @@ void OutPortA(int onoff, UCHAR bit)
 	printf("%2x\n ",state);
 }
 
-
 /**********************************************************************************************************/
 void OutPortB(int onoff, UCHAR bit)
 {
@@ -136,8 +172,6 @@ void OutPortB(int onoff, UCHAR bit)
 	*(card_ports + ROC_2) = *pstate;
 	printf("%2x\n ",state);
 }
-
-
 /**********************************************************************************************************/
 void OutPortC(int onoff, UCHAR bit)
 {
@@ -157,8 +191,6 @@ void OutPortC(int onoff, UCHAR bit)
 	*(card_ports + ROC_3) = *pstate;
 	printf("%2x\n ",state);
 }
-
-
 /**********************************************************************************************************/
 void OutPortD(int onoff, UCHAR bit)
 {
@@ -178,8 +210,6 @@ void OutPortD(int onoff, UCHAR bit)
 	*(card_ports + ROC_4) = *pstate;
 	//printf("state: %2x\n ",state);
 }
-
-
 /**********************************************************************************************************/
 void OutPortE(int onoff, UCHAR bit)
 {
@@ -199,8 +229,6 @@ void OutPortE(int onoff, UCHAR bit)
 	*(card_ports + ROC_5) = *pstate;
 	//printf("state: %2x\n ",state);
 }
-
-
 /**********************************************************************************************************/
 void OutPortF(int onoff, UCHAR bit)
 {
@@ -220,8 +248,6 @@ void OutPortF(int onoff, UCHAR bit)
 	*(card_ports + ROC_6) = *pstate;
 	//printf("state: %2x\n ",state);
 }
-
-
 /**********************************************************************************************************/
 #if 0
 void TurnOffAllOutputs(void)
@@ -314,8 +340,6 @@ UCHAR InPortByte(int bank)
 		state = *(card_ports + DIR_1 + bank);
 	return state;
 }
-
-
 /***********************************************************************************************************/
 UCHAR InPortByteA(void)
 {

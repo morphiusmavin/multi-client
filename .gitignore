@@ -6,4 +6,21 @@ oneline.txt
 sd_card_TS-7800.txt
 thread_client/boot_flash.txt
 thread_client/temp.txt
+CDBMgmt/.vs/
+CDBMgmt/bin/
+CDBMgmt/obj/
+CreateXML.zip
+README2.md
+STM32/
+client diagram.jpg
+client server diagram.jpg
+conv_ulong.cs
+datatable_example.txt
+newclass.txt
+old_tasks.c
+tdata_example.txt
+thread_client/cs_client/cdata.csv.154
+thread_client/cs_client/cdata.xml
+thread_client/gettime.c
+thread_server/cs_client/cdata146.csv
 

@@ -316,8 +316,7 @@ int cWriteConfigXML(char *filename, C_DATA *curr_o_array,size_t size,char *errms
 	C_DATA io;
 	C_DATA *pio = &io;
 	C_DATA *curr_o_array2 = curr_o_array;
-	char labels[11][20] = {"C_DATA","label","port","onoff","input_port",
-			"input_type","type","time_delay","time_left","pulse_time","reset"};
+	char labels[11][20] = {"C_DATA","label","index","port","state","on_hour","on_minute","on_second","off_hour","off_minute","off_second"};
 	char temp[5];
 	char tempx[30];
 
@@ -365,7 +364,6 @@ int cWriteConfigXML(char *filename, C_DATA *curr_o_array,size_t size,char *errms
 			write(fp,(const void*)&labels[j],strlen(labels[j]));
 			write(fp,(const void*)&close_br,1);
 
-/*
 			switch(j)
 			{
 				case 1:
@@ -373,31 +371,43 @@ int cWriteConfigXML(char *filename, C_DATA *curr_o_array,size_t size,char *errms
 				write(fp,(const void*)&tempx[0],strlen(tempx));
 				break;
 				case 2:
-				sprintf(temp,"%d",pio->cmd);
+				sprintf(temp,"%d",pio->index);
 				write(fp,(const void*)&temp[0],strlen(temp));
 				break;
 				case 3:
-				sprintf(temp,"%d",pio->dest);
+				sprintf(temp,"%d",pio->port);
 				write(fp,(const void*)&temp[0],strlen(temp));
 				break;
 				case 4:
-				sprintf(temp,"%d",pio->msg_len);
+				sprintf(temp,"%d",pio->state);
 				write(fp,(const void*)&temp[0],strlen(temp));
 				break;
 				case 5:
-				sprintf(temp,"%d",pio->hours);
+				sprintf(temp,"%d",pio->on_hour);
 				write(fp,(const void*)&temp[0],strlen(temp));
 				break;
 				case 6:
-				sprintf(temp,"%d",pio->minutes);
+				sprintf(temp,"%d",pio->on_minute);
 				write(fp,(const void*)&temp[0],strlen(temp));
 				break;
 				case 7:
-				sprintf(temp,"%d",pio->seconds);
+				sprintf(temp,"%d",pio->on_second);
+				write(fp,(const void*)&temp[0],strlen(temp));
+				break;
+				case 8:
+				sprintf(temp,"%d",pio->off_hour);
+				write(fp,(const void*)&temp[0],strlen(temp));
+				break;
+				case 9:
+				sprintf(temp,"%d",pio->off_minute);
+				write(fp,(const void*)&temp[0],strlen(temp));
+				break;
+				case 10:
+				sprintf(temp,"%d",pio->off_second);
 				write(fp,(const void*)&temp[0],strlen(temp));
 				break;
 			}
-*/
+
 			write(fp,(const void*)&open_br_slash,2);
 			write(fp,(const void*)&labels[j],strlen(labels[j]));
 			write(fp,(const void*)&close_br,1);

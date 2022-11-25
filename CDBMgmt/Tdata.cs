@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EpServerEngineSampleClient
+﻿namespace CDBMgmt
 {
-	class Cdata
+	internal class Tdata
 	{
 		public string label { get; set; }
 		public int index { get; set; }

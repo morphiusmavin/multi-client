@@ -25,17 +25,19 @@ namespace EpServerEngineSampleClient
 			BENCH_24V_2,
 			BENCH_12V_1,
 			BENCH_12V_2,
-			BENCH_5V_1 = 14,
+			BLANK,
+			BENCH_5V_1,
 			BENCH_5V_2,
 			BENCH_3V3_1,
 			BENCH_3V3_2,
 			BENCH_LIGHT1,
 			BENCH_LIGHT2,
-			CHICK_WATER,
-			COOP1_LIGHT,
-			COOP1_HEATER,
-			COOP2_LIGHT,
-			COOP2_HEATER,
+			WATER_HEATER,
+			BATTERY_HEATER,
+			WATER_PUMP,
+			WATER_VALVE1,
+			WATER_VALVE2,
+			WATER_VALVE3,
 			CABIN1,
 			CABIN2,
 			CABIN3,
@@ -44,9 +46,12 @@ namespace EpServerEngineSampleClient
 			CABIN6,
 			CABIN7,
 			CABIN8,
-			SET_CHICK_WATER_ON,
-			SET_CHICK_WATER_OFF,
-			CHICK_WATER_ENABLE,
+			COOP1_LIGHT,
+			COOP1_HEATER,
+			COOP2_LIGHT,
+			COOP2_HEATER,
+			OUTDOOR_LIGHT1,
+			OUTDOOR_LIGHT2,
 			GET_TEMP4,
 			SHUTDOWN_IOBOX,
 			REBOOT_IOBOX,
@@ -84,7 +89,7 @@ namespace EpServerEngineSampleClient
 			SET_CLLIST,
 			SAVE_CLLIST,
 			NO_CLLIST_REC
-		}
+}
 
 		public ServerCmds()
 		{
@@ -243,6 +248,30 @@ namespace EpServerEngineSampleClient
 				case "COOP2_HEATER":
 					Properties.Settings.Default["COOP2_HEATER"] = iparam;
 					break;
+				case "WATER_HEATER":
+					Properties.Settings.Default["WATER_HEATER"] = iparam;
+					break;
+				case "BATTERY_HEATER":
+					Properties.Settings.Default["BATTERY_HEATER"] = iparam;
+					break;
+				case "WATER_PUMP":
+					Properties.Settings.Default["WATER_PUMP"] = iparam;
+					break;
+				case "WATER_VALVE1":
+					Properties.Settings.Default["WATER_VALVE1"] = iparam;
+					break;
+				case "WATER_VALVE2":
+					Properties.Settings.Default["WATER_VALVE2"] = iparam;
+					break;
+				case "WATER_VALVE3":
+					Properties.Settings.Default["WATER_VALVE3"] = iparam;
+					break;
+				case "OUTDOOR_LIGHT1":
+					Properties.Settings.Default["OUTDOOR_LIGHT1"] = iparam;
+					break;
+				case "OUTDOOR_LIGHT2":
+					Properties.Settings.Default["OUTDOOR_LIGHT2"] = iparam;
+					break;
 				default:
 					break;
 			}
@@ -349,6 +378,30 @@ namespace EpServerEngineSampleClient
 				case "COOP2_HEATER":
 					Properties.Settings.Default["COOP2_HEATER"] = current_state;
 					break;
+				case "WATER_HEATER":
+					Properties.Settings.Default["WATER_HEATER"] = current_state;
+					break;
+				case "BATTERY_HEATER":
+					Properties.Settings.Default["BATTERY_HEATER"] = current_state;
+					break;
+				case "WATER_PUMP":
+					Properties.Settings.Default["WATER_PUMP"] = current_state;
+					break;
+				case "WATER_VALVE1":
+					Properties.Settings.Default["WATER_VALVE1"] = current_state;
+					break;
+				case "WATER_VALVE2":
+					Properties.Settings.Default["WATER_VALVE2"] = current_state;
+					break;
+				case "WATER_VALVE3":
+					Properties.Settings.Default["WATER_VALVE3"] = current_state;
+					break;
+				case "OUTDOOR_LIGHT1":
+					Properties.Settings.Default["OUTDOOR_LIGHT1"] = current_state;
+					break;
+				case "OUTDOOR_LIGHT2":
+					Properties.Settings.Default["OUTDOOR_LIGHT2"] = current_state;
+					break;
 				default:
 					break;
 			}
@@ -453,7 +506,31 @@ namespace EpServerEngineSampleClient
 				case "COOP2_HEATER":
 					current_state = (bool)Properties.Settings.Default["COOP2_HEATER"];
 					break;
-					default:
+				case "WATER_HEATER":
+					current_state = (bool)Properties.Settings.Default["WATER_HEATER"];
+					break;
+				case "BATTERY_HEATER":
+					current_state = (bool)Properties.Settings.Default["BATTERY_HEATER"];
+					break;
+				case "WATER_PUMP":
+					current_state = (bool)Properties.Settings.Default["WATER_PUMP"];
+					break;
+				case "WATER_VALVE1":
+					current_state = (bool)Properties.Settings.Default["WATER_VALVE1"];
+					break;
+				case "WATER_VALVE2":
+					current_state = (bool)Properties.Settings.Default["WATER_VALVE2"];
+					break;
+				case "WATER_VALVE3":
+					current_state = (bool)Properties.Settings.Default["WATER_VALVE3"];
+					break;
+				case "OUTDOOR_LIGHT1":
+					current_state = (bool)Properties.Settings.Default["OUTDOOR_LIGHT1"];
+					break;
+				case "OUTDOOR_LIGHT2":
+					current_state = (bool)Properties.Settings.Default["OUTDOOR_LIGHT2"];
+					break;
+				default:
 					current_state = false;
 					break;
 			}

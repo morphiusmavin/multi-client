@@ -35,6 +35,7 @@ namespace EpServerEngineSampleClient
         private GarageForm garageform = null;
         private TestBench testbench = null;
         private Cabin cabin = null;
+        private Outdoor outdoor = null;
         private TimerSchedule timer_schedule = null;
         private WinCLMsg winclmsg = null;
         private ClientDest clientdest = null;
@@ -74,7 +75,8 @@ namespace EpServerEngineSampleClient
         private string xml_dialog6_location = "c:\\Users\\daniel\\dev\\uiformat6.xml";
         private string xml_params_location = "c:\\Users\\daniel\\dev\\ClientParams.xml";
         private string xml_clients_avail_location = "c:\\Users\\daniel\\dev\\ClientsAvail.xml";
-        private string sunrisesunset_location = "c:\\Users\\daniel\\sunrises.txt";
+        private string sunrisesunset_location = "c:\\Users\\daniel\\dev\\tdata.xml";
+        private string moonset_location = "c:\\Users\\daniel\\dev\\moonset.txt";
         private int hour;
         private int minute;
         private DateTime now;
@@ -117,10 +119,33 @@ namespace EpServerEngineSampleClient
             }
             tbReceived.Clear();
             cbWhichWinClient.SelectedIndex = 0;
+            sunrisesunsetHoursMinutes = new List<SunriseSunsetHoursMinutes>();
+            for (i = 0; i < 31; i++)
+                sunrisesunsetHoursMinutes.Add(new SunriseSunsetHoursMinutes());
+            Sunrise_sunset item2 = null;
+            XmlReader xmlFile2 = XmlReader.Create(sunrisesunset_location);
+            DataSet ds3 = new DataSet();
+            ds3.ReadXml(xmlFile2);
+
+            sunrise_sunsets = new List<Sunrise_sunset>();
+
+            foreach (DataRow dr in ds3.Tables[0].Rows)
+            {
+                item2 = new Sunrise_sunset();
+                item2.sunrise = dr.ItemArray[1].ToString();
+                item2.sunset = dr.ItemArray[2].ToString();
+                item2.AstTwiStart = dr.ItemArray[5].ToString();
+                item2.AstTwiEnd = dr.ItemArray[6].ToString();
+                item2.NautTwiStart = dr.ItemArray[7].ToString();
+                item2.NautTwiEnd = dr.ItemArray[8].ToString();
+                item2.CivilTwiStart = dr.ItemArray[9].ToString();
+                item2.CivilTwiEnd = dr.ItemArray[10].ToString();
+                sunrise_sunsets.Add(item2);
+                item2 = null;
+            }
             client_params = new List<ClientParams>();
             ClientParams item = null;
             DataSet ds = new DataSet();
-            //XmlReader xmlFile = XmlReader.Create(File.Exists(xml_file2_location_laptop) ? xml_file2_location_laptop : xml_file2_location_desktop);
             XmlReader xmlFile = XmlReader.Create(xml_params_location);
             ds.ReadXml(xmlFile);
             foreach (DataRow dr in ds.Tables[0].Rows)
@@ -140,14 +165,14 @@ namespace EpServerEngineSampleClient
             ClientsAvail item3 = null;
             //AddMsg("adding clients avail...");
             DataSet ds2 = new DataSet();
-            //XmlReader xmlFile = XmlReader.Create(File.Exists(xml_file2_location_laptop) ? xml_file2_location_laptop : xml_file2_location_desktop);
             xmlFile = XmlReader.Create(xml_clients_avail_location);
             ds2.ReadXml(xmlFile);
             int lb_index = 0;
             garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
             cabin = new Cabin(m_client);
-            timer_schedule = new TimerSchedule(m_client);
+            outdoor = new Outdoor(m_client);
+            timer_schedule = new TimerSchedule("c:\\users\\daniel\\dev\\cdata.xml", m_client);
             btnGarageForm.Enabled = false;
             btnTestBench.Enabled = false;
             btnCabin.Enabled = false;
@@ -206,20 +231,14 @@ namespace EpServerEngineSampleClient
             int space = t2date.IndexOf(" ");
             t2date = t2date.Remove(space);
             tbTodaysDate.Text = t2date;
-            sunrise_sunsets = new List<Sunrise_sunset>();
-            sunrisesunsetHoursMinutes = new List<SunriseSunsetHoursMinutes>();
-            for (int i = 0; i < 31; i++)
-                sunrise_sunsets.Add(new Sunrise_sunset());
-            for(int i = 0;i < 31;i++)
-                sunrisesunsetHoursMinutes.Add(new SunriseSunsetHoursMinutes());
 
             sunrise_lines = new List<Sunrise_lines>();
             int j = 0;
             Sunrise_lines temp2;
 
-            if (File.Exists(sunrisesunset_location))
+            if (File.Exists(moonset_location))
 			{
-                string[] lines = File.ReadAllLines(sunrisesunset_location);
+                string[] lines = File.ReadAllLines(moonset_location);
                 //AddMsg(lines.Length.ToString());
                 int no_days = 0;
              
@@ -247,62 +266,26 @@ namespace EpServerEngineSampleClient
                     }
 				}
               
-                //AddMsg("no days: " + no_days.ToString());
-
                 foreach (Sunrise_lines srl in sunrise_lines)
                 {
-					if (srl.line.Contains("Twi A: "))
-					{
-						if (srl.line.Contains("pm"))
-						{
-							sunrise_sunsets[srl.date-1].AstTwiEnd = srl.line;
-						}
-						else sunrise_sunsets[srl.date-1].AstTwiStart = srl.line;
-					}
-					else if (srl.line.Contains("Twi N: "))
-					{
-						if (srl.line.Contains("pm"))
-						{
-							sunrise_sunsets[srl.date-1].NautTwiEnd = srl.line;
-						}
-						else sunrise_sunsets[srl.date-1].NautTwiStart = srl.line;
-					}
-					else if (srl.line.Contains("Twi: "))
-					{
-						if (srl.line.Contains("pm"))
-						{
-							sunrise_sunsets[srl.date-1].CivilTwiEnd = srl.line;
-						}
-						else sunrise_sunsets[srl.date-1].CivilTwiStart = srl.line;
-					}
-					else if (srl.line.Contains("Sunrise: "))
-					{
-						sunrise_sunsets[srl.date-1].sunrise = srl.line;
-					}
-					else if (srl.line.Contains("Moonrise: "))
-					{
-						sunrise_sunsets[srl.date-1].moonrise = srl.line;
-					}
-					else if (srl.line.Contains("Moonset: "))
-					{
-						sunrise_sunsets[srl.date-1].moonset = srl.line;
-					}
-					else if (srl.line.Contains("Sunset: "))
-					{
-						sunrise_sunsets[srl.date-1].sunset = srl.line;
-					}
+                    int index;
+                    if (srl.line.Contains("Moonrise: "))
+                    {
+                        index = srl.line.IndexOf(":");
+                        index += 2;
+                        srl.line = srl.line.Remove(0, index);
+                        sunrise_sunsets[srl.date - 1].moonrise = srl.line;
+                    }
+                    else if (srl.line.Contains("Moonset: "))
+                    {
+                        index = srl.line.IndexOf(":");
+                        index += 2;
+                        srl.line = srl.line.Remove(0, index);
+                        sunrise_sunsets[srl.date - 1].moonset = srl.line;
+                    }
                 }
             }
             i = 0;
-
-            if(false)
-            foreach (Sunrise_sunset srss in sunrise_sunsets)
-            {
-                if (srss.sunrise != null)
-                {
-                    AddMsg(srss.sunrise +  " " + srss.AstTwiStart + " " + srss.moonrise);
-                }
-            }
 
             foreach (Sunrise_sunset srss in sunrise_sunsets)
 			{
@@ -350,6 +333,7 @@ namespace EpServerEngineSampleClient
                 foreach (SunriseSunsetHoursMinutes srhm in sunrisesunsetHoursMinutes)
                     AddMsg(srhm.MoonsetHour.ToString() + " " + srhm.MoonsetMinute.ToString());
             }
+            btnSunriseSunset_Click(new object(), new EventArgs());
         }
         private int getMinutes(string time)
 		{
@@ -358,15 +342,15 @@ namespace EpServerEngineSampleClient
             if (time.Contains("none"))
                 return -1;
             int colon = time.IndexOf(':');
-            colon = time.IndexOf(':',colon+1);
+            //colon = time.IndexOf(':',colon+1);
             char dig1 = time[colon + 1];
             //AddMsg(dig1.ToString());
-            char second_char = time[colon + 2];
-            if (second_char > 47 && second_char < 58)
+            char dig2 = time[colon + 2];
+            if (dig2 > 47 && dig2 < 58)
             {
-                //snum = new string(dig1, second_char);
+                //snum = new string(dig1, dig1);
                 snum = dig1.ToString();
-                snum += second_char.ToString();
+                snum += dig2.ToString();
             }
             else snum = dig1.ToString();
             num = int.Parse(snum);
@@ -378,22 +362,27 @@ namespace EpServerEngineSampleClient
             // check for double digits otherwise it will only be single
             int num;
             string snum;
+            char dig1;
+            int colon;
             if (time.Contains("none"))
                 return -1;
-            int colon = time.IndexOf(':');
-            char dig1 = time[colon + 2];
-           //AddMsg(dig1.ToString());
-            char second_char = time[colon + 3];
-            if (second_char > 47 && second_char < 58)
+            colon = time.IndexOf(':');
+            char dig2 = time[colon - 1];
+            //AddMsg(dig1.ToString());
+            if (time[1] == ':')
+                dig1 = '0';
+            else 
+                dig1 = time[colon - 2];
+            if (dig1 > 47 && dig1 < 58)
             {
-                //snum = new string(dig1, second_char);
+                //snum = new string(dig1, dig1);
                 snum = dig1.ToString();
-                snum += second_char.ToString();
+                snum += dig2.ToString();
             }
             else snum = dig1.ToString();
             num = int.Parse(snum);
             //AddMsg(num.ToString());
-            if (time.Contains("pm"))
+            if (time.Contains("PM") || time.Contains("pm"))
                 num += 12;
             return num;
         }
@@ -475,6 +464,7 @@ namespace EpServerEngineSampleClient
             btnFnc1.Enabled = btnstate;
             btnFnc2.Enabled = btnstate;
             btnFnc3.Enabled = btnstate;
+            btnOutdoor.Enabled = btnstate;
         }
         public void OnDisconnect(INetworkClient client)
         {
@@ -959,8 +949,13 @@ namespace EpServerEngineSampleClient
                 string tTime = now.TimeOfDay.ToString();
                 tTime = tTime.Substring(0, 8);
                 tbTime.Text = tTime;
-
-                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].SunriseHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].SunriseMinute + 1 && oneoff)
+                /*
+                AddMsg("hour: " + hour.ToString());
+                AddMsg("minute: " + minute.ToString());
+                AddMsg(sunrisesunsetHoursMinutes[now.Day - 1].SunriseHour.ToString());
+                AddMsg(sunrisesunsetHoursMinutes[now.Day - 1].SunriseMinute.ToString());
+                */
+                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].SunriseHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].SunriseMinute && oneoff)
                     // because of the lay of the land the actual sunrise happens about a minute after the official sunrise
                 {
                     play_sunrise_clip();
@@ -1043,10 +1038,13 @@ namespace EpServerEngineSampleClient
                 else if (hour > 0 && midnight_flag == true)
                 {
                     midnight_flag = false;
+                    btnSunriseSunset_Click(new object(), new EventArgs());
+/*
                     SunriseLabel.Text = sunrise_sunsets[now.Day - 1].sunrise;
                     SunsetLabel.Text = sunrise_sunsets[now.Day - 1].sunset;
                     MoonriseLabel.Text = sunrise_sunsets[now.Day - 1].moonrise;
                     MoonsetLabel.Text = sunrise_sunsets[now.Day - 1].moonset;
+*/
                     oneoff = oneoff2 = oneoff3 = oneoff4 = true;
                 }
                 tick = 36;
@@ -1438,26 +1436,37 @@ namespace EpServerEngineSampleClient
             // TODO: if after sunrise then show tomorrow's stats for sunrise (Ast, Naut & Civil)
             // if after sunset then show tomorrow's stats for sunset
             now = DateTime.Now;
-            AddMsg("start " + sunrise_sunsets[now.Day - 1].AstTwiStart);
-            AddMsg("start " + sunrise_sunsets[now.Day - 1].NautTwiStart);
-            AddMsg("start " + sunrise_sunsets[now.Day - 1].CivilTwiStart);
-            AddMsg(sunrise_sunsets[now.Day - 1].sunrise);
-            AddMsg(sunrise_sunsets[now.Day - 1].sunset);
-            AddMsg("end " + sunrise_sunsets[now.Day - 1].CivilTwiEnd);
-            AddMsg("end " + sunrise_sunsets[now.Day - 1].NautTwiEnd);
-            AddMsg("end " + sunrise_sunsets[now.Day - 1].AstTwiEnd);
-            AddMsg(sunrise_sunsets[now.Day - 1].moonrise);
-            AddMsg(sunrise_sunsets[now.Day - 1].moonset);
-            SunriseLabel.Text = sunrise_sunsets[now.Day - 1].sunrise + " today";
-            SunsetLabel.Text = sunrise_sunsets[now.Day - 1].sunset + " tonite";
-            MoonriseLabel.Text = sunrise_sunsets[now.Day - 1].moonrise;
-            MoonsetLabel.Text = sunrise_sunsets[now.Day - 1].moonset;
+            AddMsg("Ast start " + sunrise_sunsets[now.Day - 1].AstTwiStart);
+            AddMsg("Naut start " + sunrise_sunsets[now.Day - 1].NautTwiStart);
+            AddMsg("Civil start " + sunrise_sunsets[now.Day - 1].CivilTwiStart);
+            AddMsg("sunrise: " + sunrise_sunsets[now.Day - 1].sunrise);
+            AddMsg("sunset: " + sunrise_sunsets[now.Day - 1].sunset);
+            AddMsg("Civil end " + sunrise_sunsets[now.Day - 1].CivilTwiEnd);
+            AddMsg("Naut end " + sunrise_sunsets[now.Day - 1].NautTwiEnd);
+            AddMsg("Ast end " + sunrise_sunsets[now.Day - 1].AstTwiEnd);
+            AddMsg("moonrise: " + sunrise_sunsets[now.Day - 1].moonrise);
+            AddMsg("moonset: " + sunrise_sunsets[now.Day - 1].moonset);
+            SunriseLabel.Text = "sunrise: " + sunrise_sunsets[now.Day - 1].sunrise + " today";
+            SunsetLabel.Text = "sunset: " + sunrise_sunsets[now.Day - 1].sunset + " tonite";
+            MoonriseLabel.Text = "moonrise: " + sunrise_sunsets[now.Day - 1].moonrise;
+            MoonsetLabel.Text = "moonset: " + sunrise_sunsets[now.Day - 1].moonset;
         }
 		private void btnTimer_Click(object sender, EventArgs e)
 		{
             timer_schedule.StartPosition = FormStartPosition.Manual;
             timer_schedule.Location = new Point(100, 10);
             if (timer_schedule.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+        }
+		private void btnOutdoor_Click(object sender, EventArgs e)
+		{
+            outdoor.StartPosition = FormStartPosition.Manual;
+            outdoor.Location = new Point(100, 10);
+            if (outdoor.ShowDialog(this) == DialogResult.OK)
             {
             }
             else

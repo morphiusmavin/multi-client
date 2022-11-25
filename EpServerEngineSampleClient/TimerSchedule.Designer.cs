@@ -51,8 +51,10 @@ namespace EpServerEngineSampleClient
 			this.cbHourOff = new System.Windows.Forms.ComboBox();
 			this.btnShow = new System.Windows.Forms.Button();
 			this.btnSingle = new System.Windows.Forms.Button();
+			this.CGridView = new System.Windows.Forms.DataGridView();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.CGridView)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btnRefresh
@@ -289,12 +291,21 @@ namespace EpServerEngineSampleClient
 			this.btnSingle.UseVisualStyleBackColor = false;
 			this.btnSingle.Click += new System.EventHandler(this.btnSingle_Click);
 			// 
+			// CGridView
+			// 
+			this.CGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.CGridView.Location = new System.Drawing.Point(797, 40);
+			this.CGridView.Name = "CGridView";
+			this.CGridView.Size = new System.Drawing.Size(647, 553);
+			this.CGridView.TabIndex = 13;
+			// 
 			// TimerSchedule
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(800, 620);
+			this.ClientSize = new System.Drawing.Size(1466, 620);
+			this.Controls.Add(this.CGridView);
 			this.Controls.Add(this.btnSingle);
 			this.Controls.Add(this.btnShow);
 			this.Controls.Add(this.groupBox2);
@@ -311,6 +322,7 @@ namespace EpServerEngineSampleClient
 			this.groupBox1.PerformLayout();
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.CGridView)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -340,5 +352,6 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.ComboBox cbHourOff;
 		private System.Windows.Forms.Button btnShow;
 		private System.Windows.Forms.Button btnSingle;
+		private System.Windows.Forms.DataGridView CGridView;
 	}
 }
