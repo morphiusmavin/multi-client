@@ -8,6 +8,11 @@ todo:
 4) days in client gets reset from 2 to 1 (happened just once)
 5) strlen() in some msg's may not send data w/ 0's 
 6) SEND_CLIENT_LIST from cmd_tasks to sock_mgt shouldn't need any params (line 306 in cmd_tasks.c) 
+7) CDBMgmt program needs things added:
+	a) file dialog picker for file to load from (csv dat xml) and file to create (csv dat or xm) 
+	b) button that hides unused records (port = -1) 
+	c) button to delete records 
+	d) button to add new records 
 
 to add new commands:
 
@@ -43,7 +48,7 @@ be limited to 255 total commands.
 146 (server) is where the pi used to be (controlling garage lights)	(offset 8 in client_table[])
 154 is cabin	(offset 2 in client_table)
 147 is other io card in garage near RE system (testbench)	(offset 3 in client_table)
-150 not used 
+150 is io card outside garage mounted on back of chicken coop 
 151	"
 155	"
 145	"
@@ -213,4 +218,7 @@ to get sunrise/sunset info into program:
 	
 then program will work for that month 
 	
-	
+relay modules:
+middle: common 
+left: no 
+right: nc  

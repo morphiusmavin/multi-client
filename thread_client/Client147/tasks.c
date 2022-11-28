@@ -106,18 +106,17 @@ enum output_types
 	BENCH_5V_2a,
 	BENCH_3V3_1a,
 	BENCH_3V3_2a,
-	TEST_OUTPUT10,		// these are unused 
-	TEST_OUTPUT11,
+	TEST_OUTPUT1,		// these are unused 
+	TEST_OUTPUT2,		// these are unused 
 
 	BENCH_LIGHT1a,
 	BENCH_LIGHT2a,
-	WATER_HEATERa,		// these are unused
 	BATTERY_HEATERa,
-	WATER_PUMPa,
-	WATER_VALVE1a,
-	WATER_VALVE2a,
-	WATER_VALVE3a,
-	TEST_OUTPUT3
+	TEST_OUTPUT3,		// these all have the wires
+	TEST_OUTPUT4,		// from io card to relay 
+	TEST_OUTPUT5,		// but that's it
+	TEST_OUTPUT6,
+	TEST_OUTPUT7
 
 }OUTPUT_TYPES;
 
@@ -1139,33 +1138,8 @@ UCHAR basic_controls_task(int test)
 				usleep(_100MS);
 				break;
 
-			case WATER_HEATER:
-				change_output(WATER_HEATERa,onoff);
-				usleep(_100MS);
-				break;
-
-			case BATTERY_HEATER:
+			case  BATTERY_HEATER:
 				change_output(BATTERY_HEATERa,onoff);
-				usleep(_100MS);
-				break;
-
-			case WATER_PUMP:
-				change_output(WATER_PUMPa,onoff);
-				usleep(_100MS);
-				break;
-
-			case WATER_VALVE1:
-				change_output(WATER_VALVE1a,onoff);
-				usleep(_100MS);
-				break;
-
-			case WATER_VALVE2:
-				change_output(WATER_VALVE2a,onoff);
-				usleep(_100MS);
-				break;
-
-			case WATER_VALVE3:
-				change_output(WATER_VALVE3a,onoff);
 				usleep(_100MS);
 				break;
 

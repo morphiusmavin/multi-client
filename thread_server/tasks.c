@@ -115,18 +115,19 @@ enum output_types
 	WEST_LIGHTa,
 	NORTHEAST_LIGHTa,
 	SOUTHWEST_LIGHTa,
-
-	TESTOUTPUT8,		// bank 1
+	TESTOUTPUT8,			// these are unused
 	TESTOUTPUT9,
-	TESTOUTPUT10,
-	TESTOUTPUT11,
+	
+	WATER_HEATERa,			// bank 1
+	WATER_PUMPa,
+	WATER_VALVE1a,
+	WATER_VALVE2a,			// these are unused
+	WATER_VALVE3a,			// but the relay 
+	TESTOUTPUT10,			// has wires to the
+	TESTOUTPUT11,			// <- io card up to here
 	TESTOUTPUT12,
-	TESTOUTPUT13,
-	TESTOUTPUT14,
-	TESTOUTPUT15,
+	TESTOUTPUT13
 }OUTPUT_TYPES;
-
-int switch_status[10];
 
 /****************************************************************************************************/
 static double curtime(void)
@@ -1111,7 +1112,6 @@ UCHAR basic_controls_task(int test)
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	memset(switch_status,0,sizeof(switch_status));
 
 //printf("starting basic_controls_task\n");
 
@@ -1134,15 +1134,11 @@ UCHAR basic_controls_task(int test)
 		switch(cmd)
 		{
 			case DESK_LIGHT:
-				switch_status[DESK_LIGHTa] = switch_status[DESK_LIGHTa]==1?0:1;
-				//change_output(DESK_LIGHTa,switch_status[DESK_LIGHTa]);
 				change_output(DESK_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
 			case EAST_LIGHT:
-				switch_status[EAST_LIGHTa] = switch_status[EAST_LIGHTa]==1?0:1;
-				//change_output(EAST_LIGHTa,switch_status[EAST_LIGHTa]);
 				if(onoff == 0)
 					onoff = 1;
 				else onoff = 0;
@@ -1151,44 +1147,57 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case NORTHWEST_LIGHT:
-				switch_status[NORTHWEST_LIGHTa] = switch_status[NORTHWEST_LIGHTa]==1?0:1;
-				//change_output(NORTHWEST_LIGHTa,switch_status[NORTHWEST_LIGHTa]);
 				change_output(NORTHWEST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
 			case SOUTHEAST_LIGHT:
-				switch_status[SOUTHEAST_LIGHTa] = switch_status[SOUTHEAST_LIGHTa]==1?0:1;
-				//change_output(SOUTHEAST_LIGHTa,switch_status[SOUTHEAST_LIGHTa]);
 				change_output(SOUTHEAST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
 			case MIDDLE_LIGHT:
-				switch_status[MIDDLE_LIGHTa] = switch_status[MIDDLE_LIGHTa]==1?0:1;
-				//change_output(MIDDLE_LIGHT,switch_status[MIDDLE_LIGHT]);
 				change_output(MIDDLE_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
 			case WEST_LIGHT:
-				switch_status[WEST_LIGHTa] = switch_status[WEST_LIGHTa]==1?0:1;
-				//change_output(WEST_LIGHTa,switch_status[WEST_LIGHTa]);
 				change_output(WEST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 				
 			case NORTHEAST_LIGHT:
-				switch_status[NORTHEAST_LIGHTa] = switch_status[NORTHEAST_LIGHTa]==1?0:1;
-				//change_output(NORTHEAST_LIGHTa,switch_status[NORTHEAST_LIGHTa]);
 				change_output(NORTHEAST_LIGHTa,(int)onoff);
 				usleep(_100MS);
 				break;
 
 			case SOUTHWEST_LIGHT:
-				switch_status[SOUTHWEST_LIGHTa] = switch_status[SOUTHWEST_LIGHTa]==1?0:1;
-				//change_output(SOUTHWEST_LIGHTa,switch_status[SOUTHWEST_LIGHTa]);
 				change_output(SOUTHWEST_LIGHTa,(int)onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_HEATER:
+				change_output(WATER_HEATERa,onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_PUMP:
+				change_output(WATER_PUMPa,onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_VALVE1:
+				change_output(WATER_VALVE1a,onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_VALVE2:
+				change_output(WATER_VALVE2a,onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_VALVE3:
+				change_output(WATER_VALVE3a,onoff);
 				usleep(_100MS);
 				break;
 

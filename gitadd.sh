@@ -93,6 +93,12 @@ git add CDBMgmt/CDBMgmt.csproj
 git add CDBMgmt/Form1.cs
 git add CDBMgmt/Form1.Designer.cs
 git add CDBMgmt/Form1.resx
+git add CDBMgmt/AddRecord.cs
+git add CDBMgmt/AddRecord.Designer.cs
+git add CDBMgmt/AddRecord.resx
+git add CDBMgmt/Filenamer.cs
+git add CDBMgmt/Filenamer.Designer.cs
+git add CDBMgmt/Filenamer.resx
 git add CDBMgmt/Properties/*
 
 git status

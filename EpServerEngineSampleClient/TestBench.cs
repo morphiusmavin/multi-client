@@ -52,17 +52,14 @@ namespace EpServerEngineSampleClient
 			on_label_list.Add("BENCH_5V_2");
 			on_label_list.Add("BENCH_3V3_1");
 			on_label_list.Add("BENCH_3V3_2");
-			on_label_list.Add("COOP1_LIGHT");
-			on_label_list.Add("COOP1_HEATER");
-			on_label_list.Add("COOP2_LIGHT");
-			on_label_list.Add("COOP2_HEATER");
 			on_label_list.Add("BENCH_LIGHT1");
 			on_label_list.Add("BENCH_LIGHT2");
-			on_label_list.Add("CHICK_WATER");
+			on_label_list.Add("BATTERY_HEATER");
+
 			button_list = new List<ButtonList>();
 			Control sCtl = this.btn24v1;
 			//for (int i = 0; i < this.Controls.Count; i++)
-			for (int i = 0; i < 15; i++)
+			for (int i = 0; i < 11; i++)
 			{
 				if (sCtl.GetType() == typeof(Button))
 				{
@@ -76,12 +73,12 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-			
+		
+			if(false)
 			foreach (ButtonList btn in button_list)
 			{
 				AddMsg(btn.Name + " " + btn.TabOrder.ToString());
 			}
-			
 		}
 		public void Enable_Dlg(bool wait)
 		{
@@ -211,7 +208,7 @@ namespace EpServerEngineSampleClient
 			//AddMsg("offset: " + offset.ToString());
 			//AddMsg(svrcmd.GetState(offset).ToString());
 			ret = svrcmd.Change_PortCmd(offset, 3);
-			AddMsg(ret.ToString());
+			//AddMsg(ret.ToString());
 			return ret;
 		}
 		private bool SendCmd(int which, bool onoff)
@@ -223,7 +220,6 @@ namespace EpServerEngineSampleClient
 			//AddMsg(svrcmd.GetState(offset).ToString());
 			return svrcmd.Change_PortCmd(offset, 2);
 		}
-
 		private void btn24v1_Click(object sender, EventArgs e)
 		{
 			ToggleButton(0, SendCmd(0));
@@ -232,69 +228,48 @@ namespace EpServerEngineSampleClient
 		{
 			ToggleButton(1, SendCmd(1));
 		}
-
 		private void btn12v1_Click(object sender, EventArgs e)
 		{
 			ToggleButton(2, SendCmd(2));
 		}
-
 		private void btn12v2_Click(object sender, EventArgs e)
 		{
 			ToggleButton(3, SendCmd(3));
 		}
-
 		private void btn5v1_Click(object sender, EventArgs e)
 		{
 			ToggleButton(4, SendCmd(4));
 		}
-
 		private void btn5v2_Click(object sender, EventArgs e)
 		{
 			ToggleButton(5, SendCmd(5));
 		}
-
 		private void btn3v31_Click(object sender, EventArgs e)
 		{
 			ToggleButton(6, SendCmd(6));
 		}
-
 		private void btn3v32_Click(object sender, EventArgs e)
 		{
 			ToggleButton(7, SendCmd(7));
 		}
-		private void Coop1Light_Click(object sender, EventArgs e)
+		private void btnBenchLight1_Click(object sender, EventArgs e)
 		{
 			ToggleButton(8, SendCmd(8));
 		}
-
-		private void btnCoop1Heat_Click(object sender, EventArgs e)
+		private void btnBenchLight2_Click(object sender, EventArgs e)
 		{
 			ToggleButton(9, SendCmd(9));
 		}
-
-		private void btnCoop2Light_Click(object sender, EventArgs e)
+		private void btnBatteryHeater_Click(object sender, EventArgs e)
 		{
 			ToggleButton(10, SendCmd(10));
 		}
-
-		private void btnCoop2Heat_Click(object sender, EventArgs e)
+		private void LoadEvent(object sender, EventArgs e)
 		{
-			ToggleButton(11, SendCmd(11));
-		}
-
-		private void btnBenchLight1_Click(object sender, EventArgs e)
-		{
-			ToggleButton(12, SendCmd(12));
-		}
-
-		private void btnBenchLight2_Click(object sender, EventArgs e)
-		{
-			ToggleButton(13, SendCmd(13));
-		}
-
-		private void btnWaterPump_Click(object sender, EventArgs e)
-		{
-			ToggleButton(14, SendCmd(14));
+			for (int i = 0; i < 16; i++)
+			{
+				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
+			}
 		}
 	}
 }

@@ -45,20 +45,12 @@
 			this.btn3v31 = new System.Windows.Forms.Button();
 			this.btn3v32 = new System.Windows.Forms.Button();
 			this.label8 = new System.Windows.Forms.Label();
-			this.btnCoop1Light = new System.Windows.Forms.Button();
-			this.btnCoop1Heat = new System.Windows.Forms.Button();
-			this.btnCoop2Heat = new System.Windows.Forms.Button();
-			this.btnCoop2Light = new System.Windows.Forms.Button();
-			this.label9 = new System.Windows.Forms.Label();
+			this.btnBatteryHeater = new System.Windows.Forms.Button();
 			this.label10 = new System.Windows.Forms.Label();
-			this.label11 = new System.Windows.Forms.Label();
-			this.label12 = new System.Windows.Forms.Label();
 			this.btnBenchLight1 = new System.Windows.Forms.Button();
 			this.btnBenchLight2 = new System.Windows.Forms.Button();
 			this.label13 = new System.Windows.Forms.Label();
 			this.label14 = new System.Windows.Forms.Label();
-			this.btnWaterPump = new System.Windows.Forms.Button();
-			this.label15 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -133,12 +125,12 @@
 			// 
 			// tbAddMsg
 			// 
-			this.tbAddMsg.Location = new System.Drawing.Point(314, 430);
+			this.tbAddMsg.Location = new System.Drawing.Point(12, 506);
 			this.tbAddMsg.Multiline = true;
 			this.tbAddMsg.Name = "tbAddMsg";
 			this.tbAddMsg.ReadOnly = true;
 			this.tbAddMsg.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbAddMsg.Size = new System.Drawing.Size(325, 132);
+			this.tbAddMsg.Size = new System.Drawing.Size(325, 96);
 			this.tbAddMsg.TabIndex = 15;
 			this.tbAddMsg.TabStop = false;
 			// 
@@ -240,89 +232,26 @@
 			this.label8.TabIndex = 23;
 			this.label8.Text = "3v3 2";
 			// 
-			// btnCoop1Light
+			// btnBatteryHeater
 			// 
-			this.btnCoop1Light.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCoop1Light.Location = new System.Drawing.Point(521, 115);
-			this.btnCoop1Light.Name = "btnCoop1Light";
-			this.btnCoop1Light.Size = new System.Drawing.Size(118, 39);
-			this.btnCoop1Light.TabIndex = 8;
-			this.btnCoop1Light.Text = "OFF";
-			this.btnCoop1Light.UseVisualStyleBackColor = true;
-			this.btnCoop1Light.Click += new System.EventHandler(this.Coop1Light_Click);
-			// 
-			// btnCoop1Heat
-			// 
-			this.btnCoop1Heat.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCoop1Heat.Location = new System.Drawing.Point(521, 169);
-			this.btnCoop1Heat.Name = "btnCoop1Heat";
-			this.btnCoop1Heat.Size = new System.Drawing.Size(118, 39);
-			this.btnCoop1Heat.TabIndex = 9;
-			this.btnCoop1Heat.Text = "OFF";
-			this.btnCoop1Heat.UseVisualStyleBackColor = true;
-			this.btnCoop1Heat.Click += new System.EventHandler(this.btnCoop1Heat_Click);
-			// 
-			// btnCoop2Heat
-			// 
-			this.btnCoop2Heat.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCoop2Heat.Location = new System.Drawing.Point(521, 280);
-			this.btnCoop2Heat.Name = "btnCoop2Heat";
-			this.btnCoop2Heat.Size = new System.Drawing.Size(118, 39);
-			this.btnCoop2Heat.TabIndex = 11;
-			this.btnCoop2Heat.Text = "OFF";
-			this.btnCoop2Heat.UseVisualStyleBackColor = true;
-			this.btnCoop2Heat.Click += new System.EventHandler(this.btnCoop2Heat_Click);
-			// 
-			// btnCoop2Light
-			// 
-			this.btnCoop2Light.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCoop2Light.Location = new System.Drawing.Point(521, 224);
-			this.btnCoop2Light.Name = "btnCoop2Light";
-			this.btnCoop2Light.Size = new System.Drawing.Size(118, 39);
-			this.btnCoop2Light.TabIndex = 10;
-			this.btnCoop2Light.Text = "OFF";
-			this.btnCoop2Light.UseVisualStyleBackColor = true;
-			this.btnCoop2Light.Click += new System.EventHandler(this.btnCoop2Light_Click);
-			// 
-			// label9
-			// 
-			this.label9.AutoSize = true;
-			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label9.Location = new System.Drawing.Point(379, 129);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(128, 24);
-			this.label9.TabIndex = 26;
-			this.label9.Text = "Coop 1 Light";
+			this.btnBatteryHeater.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnBatteryHeater.Location = new System.Drawing.Point(521, 122);
+			this.btnBatteryHeater.Name = "btnBatteryHeater";
+			this.btnBatteryHeater.Size = new System.Drawing.Size(118, 39);
+			this.btnBatteryHeater.TabIndex = 10;
+			this.btnBatteryHeater.Text = "OFF";
+			this.btnBatteryHeater.UseVisualStyleBackColor = true;
+			this.btnBatteryHeater.Click += new System.EventHandler(this.btnBatteryHeater_Click);
 			// 
 			// label10
 			// 
 			this.label10.AutoSize = true;
 			this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label10.Location = new System.Drawing.Point(381, 184);
+			this.label10.Location = new System.Drawing.Point(381, 132);
 			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(126, 24);
+			this.label10.Size = new System.Drawing.Size(141, 24);
 			this.label10.TabIndex = 27;
-			this.label10.Text = "Coop 1 Heat";
-			// 
-			// label11
-			// 
-			this.label11.AutoSize = true;
-			this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label11.Location = new System.Drawing.Point(381, 231);
-			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(128, 24);
-			this.label11.TabIndex = 28;
-			this.label11.Text = "Coop 2 Light";
-			// 
-			// label12
-			// 
-			this.label12.AutoSize = true;
-			this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label12.Location = new System.Drawing.Point(379, 287);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(126, 24);
-			this.label12.TabIndex = 29;
-			this.label12.Text = "Coop 2 Heat";
+			this.label10.Text = "Battery Heater";
 			// 
 			// btnBenchLight1
 			// 
@@ -330,7 +259,7 @@
 			this.btnBenchLight1.Location = new System.Drawing.Point(521, 12);
 			this.btnBenchLight1.Name = "btnBenchLight1";
 			this.btnBenchLight1.Size = new System.Drawing.Size(118, 39);
-			this.btnBenchLight1.TabIndex = 12;
+			this.btnBenchLight1.TabIndex = 8;
 			this.btnBenchLight1.Text = "OFF";
 			this.btnBenchLight1.UseVisualStyleBackColor = true;
 			this.btnBenchLight1.Click += new System.EventHandler(this.btnBenchLight1_Click);
@@ -341,7 +270,7 @@
 			this.btnBenchLight2.Location = new System.Drawing.Point(521, 67);
 			this.btnBenchLight2.Name = "btnBenchLight2";
 			this.btnBenchLight2.Size = new System.Drawing.Size(118, 39);
-			this.btnBenchLight2.TabIndex = 13;
+			this.btnBenchLight2.TabIndex = 9;
 			this.btnBenchLight2.Text = "OFF";
 			this.btnBenchLight2.UseVisualStyleBackColor = true;
 			this.btnBenchLight2.Click += new System.EventHandler(this.btnBenchLight2_Click);
@@ -366,47 +295,18 @@
 			this.label14.TabIndex = 25;
 			this.label14.Text = "Bench Light 2";
 			// 
-			// btnWaterPump
-			// 
-			this.btnWaterPump.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWaterPump.Location = new System.Drawing.Point(521, 334);
-			this.btnWaterPump.Name = "btnWaterPump";
-			this.btnWaterPump.Size = new System.Drawing.Size(118, 39);
-			this.btnWaterPump.TabIndex = 14;
-			this.btnWaterPump.Text = "OFF";
-			this.btnWaterPump.UseVisualStyleBackColor = true;
-			this.btnWaterPump.Click += new System.EventHandler(this.btnWaterPump_Click);
-			// 
-			// label15
-			// 
-			this.label15.AutoSize = true;
-			this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label15.Location = new System.Drawing.Point(377, 341);
-			this.label15.Name = "label15";
-			this.label15.Size = new System.Drawing.Size(124, 24);
-			this.label15.TabIndex = 30;
-			this.label15.Text = "Water Pump";
-			// 
 			// TestBench
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(651, 574);
-			this.Controls.Add(this.label15);
-			this.Controls.Add(this.btnWaterPump);
+			this.ClientSize = new System.Drawing.Size(651, 614);
 			this.Controls.Add(this.label14);
 			this.Controls.Add(this.label13);
 			this.Controls.Add(this.btnBenchLight2);
 			this.Controls.Add(this.btnBenchLight1);
-			this.Controls.Add(this.label12);
-			this.Controls.Add(this.label11);
 			this.Controls.Add(this.label10);
-			this.Controls.Add(this.label9);
-			this.Controls.Add(this.btnCoop2Heat);
-			this.Controls.Add(this.btnCoop2Light);
-			this.Controls.Add(this.btnCoop1Heat);
-			this.Controls.Add(this.btnCoop1Light);
+			this.Controls.Add(this.btnBatteryHeater);
 			this.Controls.Add(this.label8);
 			this.Controls.Add(this.btn3v32);
 			this.Controls.Add(this.btn3v31);
@@ -449,19 +349,11 @@
 		private System.Windows.Forms.Button btn3v31;
 		private System.Windows.Forms.Button btn3v32;
 		private System.Windows.Forms.Label label8;
-		private System.Windows.Forms.Button btnCoop1Light;
-		private System.Windows.Forms.Button btnCoop1Heat;
-		private System.Windows.Forms.Button btnCoop2Heat;
-		private System.Windows.Forms.Button btnCoop2Light;
-		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.Button btnBatteryHeater;
 		private System.Windows.Forms.Label label10;
-		private System.Windows.Forms.Label label11;
-		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.Button btnBenchLight1;
 		private System.Windows.Forms.Button btnBenchLight2;
 		private System.Windows.Forms.Label label13;
 		private System.Windows.Forms.Label label14;
-		private System.Windows.Forms.Button btnWaterPump;
-		private System.Windows.Forms.Label label15;
 	}
 }

@@ -80,6 +80,7 @@
 			this.MoonsetLabel = new System.Windows.Forms.Label();
 			this.btnTimerSchedules = new System.Windows.Forms.Button();
 			this.btnOutdoor = new System.Windows.Forms.Button();
+			this.btnTest = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
@@ -642,12 +643,24 @@
 			this.btnOutdoor.UseVisualStyleBackColor = false;
 			this.btnOutdoor.Click += new System.EventHandler(this.btnOutdoor_Click);
 			// 
+			// btnTest
+			// 
+			this.btnTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.btnTest.Location = new System.Drawing.Point(897, 657);
+			this.btnTest.Name = "btnTest";
+			this.btnTest.Size = new System.Drawing.Size(219, 37);
+			this.btnTest.TabIndex = 65;
+			this.btnTest.Text = "Test";
+			this.btnTest.UseVisualStyleBackColor = true;
+			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1140, 735);
+			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.btnOutdoor);
 			this.Controls.Add(this.btnTimerSchedules);
 			this.Controls.Add(this.MoonsetLabel);
@@ -764,6 +777,7 @@
 		private System.Windows.Forms.Label MoonsetLabel;
 		private System.Windows.Forms.Button btnTimerSchedules;
 		private System.Windows.Forms.Button btnOutdoor;
+		private System.Windows.Forms.Button btnTest;
 	}
 }
 

@@ -334,7 +334,7 @@ UCHAR get_host_cmd_task2(int test)
 									exit(EXIT_FAILURE);
 								}
 								*/
-								uSleep(0,TIME_DELAY/8);
+								uSleep(0,TIME_DELAY/4);
 							}
 						}
 						break;

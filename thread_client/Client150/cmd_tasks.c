@@ -292,6 +292,37 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case GET_ALL_CLLIST:
+						for(i = 0;i < 20;i++)
+						{
+							cllist_find_data(i, ctpp, &cll);
+							if(ctp->port > -1)
+							{
+								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+										ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
+								printf("%s\n",tempx);
+								cmd = REPLY_CLLIST;
+								msg_len = strlen(tempx);
+								send_sock_msg(tempx, msg_len, cmd, 8);
+								/*
+								msg.mtext[0] = cmd;
+								msg_len = strlen(tempx);
+								msg.mtext[1] = (UCHAR)msg_len;
+								msg.mtext[2] = (UCHAR)(msg_len >> 4);
+								strncpy(msg.mtext+3,tempx,msg_len);
+
+								if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+								{
+									perror("msgsnd error");
+									printf("exit from send client list\n");
+									exit(EXIT_FAILURE);
+								}
+								*/
+								uSleep(0,TIME_DELAY/4);
+							}
+						}
+						break;
+
 					case AREYOUTHERE:
 						printf("yes im here\n");
 						break;

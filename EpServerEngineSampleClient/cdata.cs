@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EpServerEngineSampleClient
 {
-	class Cdata
+	public class Cdata
 	{
 		public string label { get; set; }
 		public int index { get; set; }

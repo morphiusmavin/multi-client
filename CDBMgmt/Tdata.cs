@@ -1,6 +1,6 @@
 ﻿namespace CDBMgmt
 {
-	internal class Tdata
+	public class Tdata
 	{
 		public string label { get; set; }
 		public int index { get; set; }

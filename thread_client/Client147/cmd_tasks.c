@@ -103,10 +103,10 @@ UCHAR get_host_cmd_task2(int test)
 	O_DATA tempo1;
 //	RI_DATA tempr1;
 //	I_DATA *itp;
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
-//	C_DATA *ctp;
-//	C_DATA **ctpp = &ctp;
+//	O_DATA *otp;
+//	O_DATA **otpp = &otp;
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
 	int rc = 0; 
 	int rc1 = 0;
 	UCHAR cmd = 0x21;
@@ -273,12 +273,7 @@ UCHAR get_host_cmd_task2(int test)
 					case BENCH_3V3_2:
 					case BENCH_LIGHT1:
 					case BENCH_LIGHT2:
-					case WATER_HEATER:
 					case BATTERY_HEATER:
-					case WATER_PUMP:
-					case WATER_VALVE1:
-					case WATER_VALVE2:
-					case WATER_VALVE3:
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
 					case SHELL_AND_RENAME:
@@ -302,6 +297,37 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case GET_ALL_CLLIST:
+						for(i = 0;i < 20;i++)
+						{
+							cllist_find_data(i, ctpp, &cll);
+							if(ctp->port > -1)
+							{
+								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+										ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
+								printf("%s\n",tempx);
+								cmd = REPLY_CLLIST;
+								msg_len = strlen(tempx);
+								send_sock_msg(tempx, msg_len, cmd, 8);
+								/*
+								msg.mtext[0] = cmd;
+								msg_len = strlen(tempx);
+								msg.mtext[1] = (UCHAR)msg_len;
+								msg.mtext[2] = (UCHAR)(msg_len >> 4);
+								strncpy(msg.mtext+3,tempx,msg_len);
+
+								if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+								{
+									perror("msgsnd error");
+									printf("exit from send client list\n");
+									exit(EXIT_FAILURE);
+								}
+								*/
+								uSleep(0,TIME_DELAY/4);
+							}
+						}
+						break;
+
 /*	testing how the winCl sends ints & longs 
 					case DB_LOOKUP:
 						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
@@ -317,8 +343,6 @@ UCHAR get_host_cmd_task2(int test)
 						trunning_minutes = tempx[2];
 						trunning_seconds = tempx[3];
 */						
-						break;
-
 					case SET_NEXT_CLIENT:
 						next_client = tempx[0];
 						if(next_client == 8)

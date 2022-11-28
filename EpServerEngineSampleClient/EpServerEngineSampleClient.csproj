@@ -72,6 +72,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddRecord.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddRecord.Designer.cs">
+      <DependentUpon>AddRecord.cs</DependentUpon>
+    </Compile>
     <Compile Include="ButtonList.cs" />
     <Compile Include="Cabin.cs">
       <SubType>Form</SubType>
@@ -95,6 +101,12 @@
     <Compile Include="ClientParams.cs" />
     <Compile Include="ClientsAvail.cs" />
     <Compile Include="ConfigParams.cs" />
+    <Compile Include="DeleteRec.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeleteRec.Designer.cs">
+      <DependentUpon>DeleteRec.cs</DependentUpon>
+    </Compile>
     <Compile Include="DlgSetParams.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,6 +182,9 @@
     <Compile Include="WinCLMsg.Designer.cs">
       <DependentUpon>WinCLMsg.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AddRecord.resx">
+      <DependentUpon>AddRecord.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Cabin.resx">
       <DependentUpon>Cabin.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,6 +193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ClientDest.resx">
       <DependentUpon>ClientDest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeleteRec.resx">
+      <DependentUpon>DeleteRec.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DlgSetParams.resx">
       <DependentUpon>DlgSetParams.cs</DependentUpon>

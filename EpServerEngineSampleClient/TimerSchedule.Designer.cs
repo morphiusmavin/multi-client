@@ -35,25 +35,16 @@ namespace EpServerEngineSampleClient
 			this.lbClientType = new System.Windows.Forms.ListBox();
 			this.lbPort = new System.Windows.Forms.ListBox();
 			this.tbReceived = new System.Windows.Forms.TextBox();
-			this.cbHourOn = new System.Windows.Forms.ComboBox();
-			this.cbMinuteOn = new System.Windows.Forms.ComboBox();
-			this.cbSecondOn = new System.Windows.Forms.ComboBox();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.label3 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
-			this.cbSecondOff = new System.Windows.Forms.ComboBox();
-			this.cbMinuteOff = new System.Windows.Forms.ComboBox();
-			this.cbHourOff = new System.Windows.Forms.ComboBox();
 			this.btnShow = new System.Windows.Forms.Button();
 			this.btnSingle = new System.Windows.Forms.Button();
 			this.CGridView = new System.Windows.Forms.DataGridView();
-			this.groupBox1.SuspendLayout();
-			this.groupBox2.SuspendLayout();
+			this.btnLoadXML = new System.Windows.Forms.Button();
+			this.btnUpdateChart = new System.Windows.Forms.Button();
+			this.btnHelp = new System.Windows.Forms.Button();
+			this.label1 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.btnAddRecord = new System.Windows.Forms.Button();
+			this.btnDeleteRecord = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.CGridView)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -61,7 +52,7 @@ namespace EpServerEngineSampleClient
 			// 
 			this.btnRefresh.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnRefresh.Location = new System.Drawing.Point(12, 272);
+			this.btnRefresh.Location = new System.Drawing.Point(12, 265);
 			this.btnRefresh.Name = "btnRefresh";
 			this.btnRefresh.Size = new System.Drawing.Size(160, 42);
 			this.btnRefresh.TabIndex = 0;
@@ -101,10 +92,11 @@ namespace EpServerEngineSampleClient
 			this.lbClientType.Items.AddRange(new object[] {
             "garage",
             "cabin",
-            "testbench"});
-			this.lbClientType.Location = new System.Drawing.Point(33, 40);
+            "testbench",
+            "outdoor"});
+			this.lbClientType.Location = new System.Drawing.Point(12, 73);
 			this.lbClientType.Name = "lbClientType";
-			this.lbClientType.Size = new System.Drawing.Size(120, 94);
+			this.lbClientType.Size = new System.Drawing.Size(160, 94);
 			this.lbClientType.TabIndex = 3;
 			this.lbClientType.SelectedIndexChanged += new System.EventHandler(this.lbClientType_SelectedIndexChanged);
 			// 
@@ -113,165 +105,27 @@ namespace EpServerEngineSampleClient
 			this.lbPort.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbPort.FormattingEnabled = true;
 			this.lbPort.ItemHeight = 18;
-			this.lbPort.Location = new System.Drawing.Point(190, 40);
+			this.lbPort.Location = new System.Drawing.Point(190, 75);
 			this.lbPort.Name = "lbPort";
-			this.lbPort.Size = new System.Drawing.Size(189, 256);
+			this.lbPort.Size = new System.Drawing.Size(161, 220);
 			this.lbPort.TabIndex = 4;
 			this.lbPort.SelectedIndexChanged += new System.EventHandler(this.lbPort_SelectedIndexChanged);
 			// 
 			// tbReceived
 			// 
-			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tbReceived.Location = new System.Drawing.Point(190, 321);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(567, 272);
+			this.tbReceived.Size = new System.Drawing.Size(161, 179);
 			this.tbReceived.TabIndex = 5;
-			// 
-			// cbHourOn
-			// 
-			this.cbHourOn.FormattingEnabled = true;
-			this.cbHourOn.Location = new System.Drawing.Point(36, 46);
-			this.cbHourOn.Name = "cbHourOn";
-			this.cbHourOn.Size = new System.Drawing.Size(68, 21);
-			this.cbHourOn.TabIndex = 6;
-			// 
-			// cbMinuteOn
-			// 
-			this.cbMinuteOn.FormattingEnabled = true;
-			this.cbMinuteOn.Location = new System.Drawing.Point(123, 46);
-			this.cbMinuteOn.Name = "cbMinuteOn";
-			this.cbMinuteOn.Size = new System.Drawing.Size(68, 21);
-			this.cbMinuteOn.TabIndex = 7;
-			// 
-			// cbSecondOn
-			// 
-			this.cbSecondOn.FormattingEnabled = true;
-			this.cbSecondOn.Location = new System.Drawing.Point(206, 46);
-			this.cbSecondOn.Name = "cbSecondOn";
-			this.cbSecondOn.Size = new System.Drawing.Size(68, 21);
-			this.cbSecondOn.TabIndex = 8;
-			// 
-			// groupBox1
-			// 
-			this.groupBox1.Controls.Add(this.label3);
-			this.groupBox1.Controls.Add(this.label2);
-			this.groupBox1.Controls.Add(this.label1);
-			this.groupBox1.Controls.Add(this.cbSecondOn);
-			this.groupBox1.Controls.Add(this.cbMinuteOn);
-			this.groupBox1.Controls.Add(this.cbHourOn);
-			this.groupBox1.Location = new System.Drawing.Point(434, 40);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(323, 82);
-			this.groupBox1.TabIndex = 9;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Start Time";
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(215, 24);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(55, 16);
-			this.label3.TabIndex = 11;
-			this.label3.Text = "Second";
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label2.Location = new System.Drawing.Point(130, 24);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(47, 16);
-			this.label2.TabIndex = 10;
-			this.label2.Text = "Minute";
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label1.Location = new System.Drawing.Point(47, 24);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(37, 16);
-			this.label1.TabIndex = 9;
-			this.label1.Text = "Hour";
-			// 
-			// groupBox2
-			// 
-			this.groupBox2.Controls.Add(this.label4);
-			this.groupBox2.Controls.Add(this.label5);
-			this.groupBox2.Controls.Add(this.label6);
-			this.groupBox2.Controls.Add(this.cbSecondOff);
-			this.groupBox2.Controls.Add(this.cbMinuteOff);
-			this.groupBox2.Controls.Add(this.cbHourOff);
-			this.groupBox2.Location = new System.Drawing.Point(434, 143);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(323, 82);
-			this.groupBox2.TabIndex = 10;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "End Time";
-			// 
-			// label4
-			// 
-			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(215, 24);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(55, 16);
-			this.label4.TabIndex = 11;
-			this.label4.Text = "Second";
-			// 
-			// label5
-			// 
-			this.label5.AutoSize = true;
-			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.Location = new System.Drawing.Point(130, 24);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(47, 16);
-			this.label5.TabIndex = 10;
-			this.label5.Text = "Minute";
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label6.Location = new System.Drawing.Point(47, 24);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(37, 16);
-			this.label6.TabIndex = 9;
-			this.label6.Text = "Hour";
-			// 
-			// cbSecondOff
-			// 
-			this.cbSecondOff.FormattingEnabled = true;
-			this.cbSecondOff.Location = new System.Drawing.Point(206, 46);
-			this.cbSecondOff.Name = "cbSecondOff";
-			this.cbSecondOff.Size = new System.Drawing.Size(68, 21);
-			this.cbSecondOff.TabIndex = 8;
-			// 
-			// cbMinuteOff
-			// 
-			this.cbMinuteOff.FormattingEnabled = true;
-			this.cbMinuteOff.Location = new System.Drawing.Point(123, 46);
-			this.cbMinuteOff.Name = "cbMinuteOff";
-			this.cbMinuteOff.Size = new System.Drawing.Size(68, 21);
-			this.cbMinuteOff.TabIndex = 7;
-			// 
-			// cbHourOff
-			// 
-			this.cbHourOff.FormattingEnabled = true;
-			this.cbHourOff.Location = new System.Drawing.Point(36, 46);
-			this.cbHourOff.Name = "cbHourOff";
-			this.cbHourOff.Size = new System.Drawing.Size(68, 21);
-			this.cbHourOff.TabIndex = 6;
 			// 
 			// btnShow
 			// 
 			this.btnShow.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnShow.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnShow.Location = new System.Drawing.Point(12, 377);
+			this.btnShow.Location = new System.Drawing.Point(12, 364);
 			this.btnShow.Name = "btnShow";
 			this.btnShow.Size = new System.Drawing.Size(160, 42);
 			this.btnShow.TabIndex = 11;
@@ -283,7 +137,7 @@ namespace EpServerEngineSampleClient
 			// 
 			this.btnSingle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnSingle.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSingle.Location = new System.Drawing.Point(12, 327);
+			this.btnSingle.Location = new System.Drawing.Point(12, 316);
 			this.btnSingle.Name = "btnSingle";
 			this.btnSingle.Size = new System.Drawing.Size(160, 42);
 			this.btnSingle.TabIndex = 12;
@@ -294,22 +148,107 @@ namespace EpServerEngineSampleClient
 			// CGridView
 			// 
 			this.CGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.CGridView.Location = new System.Drawing.Point(797, 40);
+			this.CGridView.Location = new System.Drawing.Point(368, 43);
 			this.CGridView.Name = "CGridView";
-			this.CGridView.Size = new System.Drawing.Size(647, 553);
+			this.CGridView.Size = new System.Drawing.Size(1052, 553);
 			this.CGridView.TabIndex = 13;
+			// 
+			// btnLoadXML
+			// 
+			this.btnLoadXML.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnLoadXML.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnLoadXML.Location = new System.Drawing.Point(12, 412);
+			this.btnLoadXML.Name = "btnLoadXML";
+			this.btnLoadXML.Size = new System.Drawing.Size(160, 42);
+			this.btnLoadXML.TabIndex = 14;
+			this.btnLoadXML.Text = "Load XML";
+			this.btnLoadXML.UseVisualStyleBackColor = false;
+			this.btnLoadXML.Click += new System.EventHandler(this.btnLoadXML_Click);
+			// 
+			// btnUpdateChart
+			// 
+			this.btnUpdateChart.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnUpdateChart.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnUpdateChart.Location = new System.Drawing.Point(12, 213);
+			this.btnUpdateChart.Name = "btnUpdateChart";
+			this.btnUpdateChart.Size = new System.Drawing.Size(160, 41);
+			this.btnUpdateChart.TabIndex = 15;
+			this.btnUpdateChart.Text = "Update";
+			this.btnUpdateChart.UseVisualStyleBackColor = false;
+			this.btnUpdateChart.Click += new System.EventHandler(this.btnUpdateChart_Click);
+			// 
+			// btnHelp
+			// 
+			this.btnHelp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnHelp.Location = new System.Drawing.Point(12, 459);
+			this.btnHelp.Name = "btnHelp";
+			this.btnHelp.Size = new System.Drawing.Size(160, 41);
+			this.btnHelp.TabIndex = 16;
+			this.btnHelp.Text = "Help";
+			this.btnHelp.UseVisualStyleBackColor = false;
+			this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+			// 
+			// label1
+			// 
+			this.label1.AutoSize = true;
+			this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label1.Location = new System.Drawing.Point(12, 40);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(43, 20);
+			this.label1.TabIndex = 17;
+			this.label1.Text = "Type";
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label2.Location = new System.Drawing.Point(187, 40);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(38, 20);
+			this.label2.TabIndex = 18;
+			this.label2.Text = "Port";
+			// 
+			// btnAddRecord
+			// 
+			this.btnAddRecord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnAddRecord.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnAddRecord.Location = new System.Drawing.Point(191, 506);
+			this.btnAddRecord.Name = "btnAddRecord";
+			this.btnAddRecord.Size = new System.Drawing.Size(160, 42);
+			this.btnAddRecord.TabIndex = 19;
+			this.btnAddRecord.Text = "Add Rec";
+			this.btnAddRecord.UseVisualStyleBackColor = false;
+			this.btnAddRecord.Click += new System.EventHandler(this.btnAddRecord_Click);
+			// 
+			// btnDeleteRecord
+			// 
+			this.btnDeleteRecord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnDeleteRecord.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnDeleteRecord.Location = new System.Drawing.Point(190, 554);
+			this.btnDeleteRecord.Name = "btnDeleteRecord";
+			this.btnDeleteRecord.Size = new System.Drawing.Size(160, 42);
+			this.btnDeleteRecord.TabIndex = 20;
+			this.btnDeleteRecord.Text = "Del Rec";
+			this.btnDeleteRecord.UseVisualStyleBackColor = false;
+			this.btnDeleteRecord.Click += new System.EventHandler(this.btnDeleteRecord_Click);
 			// 
 			// TimerSchedule
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(1466, 620);
+			this.ClientSize = new System.Drawing.Size(1439, 620);
+			this.Controls.Add(this.btnDeleteRecord);
+			this.Controls.Add(this.btnAddRecord);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.label1);
+			this.Controls.Add(this.btnHelp);
+			this.Controls.Add(this.btnUpdateChart);
+			this.Controls.Add(this.btnLoadXML);
 			this.Controls.Add(this.CGridView);
 			this.Controls.Add(this.btnSingle);
 			this.Controls.Add(this.btnShow);
-			this.Controls.Add(this.groupBox2);
-			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.tbReceived);
 			this.Controls.Add(this.lbPort);
 			this.Controls.Add(this.lbClientType);
@@ -318,10 +257,6 @@ namespace EpServerEngineSampleClient
 			this.Controls.Add(this.btnRefresh);
 			this.Name = "TimerSchedule";
 			this.Text = "TimerSchedule";
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
-			this.groupBox2.ResumeLayout(false);
-			this.groupBox2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.CGridView)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
@@ -336,22 +271,15 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.ListBox lbClientType;
 		private System.Windows.Forms.ListBox lbPort;
 		private System.Windows.Forms.TextBox tbReceived;
-		private System.Windows.Forms.ComboBox cbHourOn;
-		private System.Windows.Forms.ComboBox cbMinuteOn;
-		private System.Windows.Forms.ComboBox cbSecondOn;
-		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.ComboBox cbSecondOff;
-		private System.Windows.Forms.ComboBox cbMinuteOff;
-		private System.Windows.Forms.ComboBox cbHourOff;
 		private System.Windows.Forms.Button btnShow;
 		private System.Windows.Forms.Button btnSingle;
 		private System.Windows.Forms.DataGridView CGridView;
+		private System.Windows.Forms.Button btnLoadXML;
+		private System.Windows.Forms.Button btnUpdateChart;
+		private System.Windows.Forms.Button btnHelp;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Button btnAddRecord;
+		private System.Windows.Forms.Button btnDeleteRecord;
 	}
 }

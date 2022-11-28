@@ -31,45 +31,37 @@ namespace CDBMgmt
 		{
 			this.btncdata = new System.Windows.Forms.Button();
 			this.btntdata = new System.Windows.Forms.Button();
-			this.label1 = new System.Windows.Forms.Label();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
-			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.btnUpdate = new System.Windows.Forms.Button();
 			this.btnDiff = new System.Windows.Forms.Button();
-			this.btnDiff2 = new System.Windows.Forms.Button();
 			this.btnDiff3 = new System.Windows.Forms.Button();
+			this.btnCdata2 = new System.Windows.Forms.Button();
+			this.btnReadCdata = new System.Windows.Forms.Button();
+			this.btnAddRecord = new System.Windows.Forms.Button();
+			this.btnCreateNew = new System.Windows.Forms.Button();
+			this.btnCurrent2XML = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btncdata
 			// 
-			this.btncdata.Location = new System.Drawing.Point(12, 593);
+			this.btncdata.Location = new System.Drawing.Point(54, 518);
 			this.btncdata.Name = "btncdata";
-			this.btncdata.Size = new System.Drawing.Size(75, 23);
+			this.btncdata.Size = new System.Drawing.Size(168, 23);
 			this.btncdata.TabIndex = 0;
-			this.btncdata.Text = "cdata";
+			this.btncdata.Text = "Create XML from csv";
 			this.btncdata.UseVisualStyleBackColor = true;
 			this.btncdata.Click += new System.EventHandler(this.btncdata_Click);
 			// 
 			// btntdata
 			// 
-			this.btntdata.Location = new System.Drawing.Point(102, 593);
+			this.btntdata.Location = new System.Drawing.Point(236, 518);
 			this.btntdata.Name = "btntdata";
-			this.btntdata.Size = new System.Drawing.Size(75, 23);
+			this.btntdata.Size = new System.Drawing.Size(149, 23);
 			this.btntdata.TabIndex = 1;
-			this.btntdata.Text = "tdata";
+			this.btntdata.Text = "Create sunrise/sunset XML";
 			this.btntdata.UseVisualStyleBackColor = true;
 			this.btntdata.Click += new System.EventHandler(this.btntdata_Click);
-			// 
-			// label1
-			// 
-			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(12, 577);
-			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(476, 13);
-			this.label1.TabIndex = 2;
-			this.label1.Text = "cdata & tdata creates, respectively, a cdata.xml from a cdata.csv and a tdata.xml" +
-    " from a tdata.csv file";
 			// 
 			// dataGridView1
 			// 
@@ -80,65 +72,100 @@ namespace CDBMgmt
 			this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.CellClick);
 			this.dataGridView1.RowEnter += new System.Windows.Forms.DataGridViewCellEventHandler(this.RowEnter);
 			// 
-			// textBox1
-			// 
-			this.textBox1.Location = new System.Drawing.Point(49, 489);
-			this.textBox1.Name = "textBox1";
-			this.textBox1.Size = new System.Drawing.Size(63, 20);
-			this.textBox1.TabIndex = 4;
-			// 
 			// btnUpdate
 			// 
-			this.btnUpdate.Location = new System.Drawing.Point(568, 497);
+			this.btnUpdate.Location = new System.Drawing.Point(54, 476);
 			this.btnUpdate.Name = "btnUpdate";
-			this.btnUpdate.Size = new System.Drawing.Size(75, 23);
+			this.btnUpdate.Size = new System.Drawing.Size(156, 23);
 			this.btnUpdate.TabIndex = 5;
-			this.btnUpdate.Text = "Update";
+			this.btnUpdate.Text = "Grid to Current Data";
 			this.btnUpdate.UseVisualStyleBackColor = true;
 			this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
 			// 
 			// btnDiff
 			// 
-			this.btnDiff.Location = new System.Drawing.Point(673, 497);
+			this.btnDiff.Location = new System.Drawing.Point(228, 476);
 			this.btnDiff.Name = "btnDiff";
-			this.btnDiff.Size = new System.Drawing.Size(75, 23);
+			this.btnDiff.Size = new System.Drawing.Size(141, 23);
 			this.btnDiff.TabIndex = 6;
-			this.btnDiff.Text = "Diff";
+			this.btnDiff.Text = "Display from XML";
 			this.btnDiff.UseVisualStyleBackColor = true;
 			this.btnDiff.Click += new System.EventHandler(this.btnDiff_Click);
 			// 
-			// btnDiff2
-			// 
-			this.btnDiff2.Location = new System.Drawing.Point(777, 497);
-			this.btnDiff2.Name = "btnDiff2";
-			this.btnDiff2.Size = new System.Drawing.Size(75, 23);
-			this.btnDiff2.TabIndex = 7;
-			this.btnDiff2.Text = "Diff";
-			this.btnDiff2.UseVisualStyleBackColor = true;
-			this.btnDiff2.Click += new System.EventHandler(this.btnDiff2_Click);
-			// 
 			// btnDiff3
 			// 
-			this.btnDiff3.Location = new System.Drawing.Point(882, 497);
+			this.btnDiff3.Location = new System.Drawing.Point(392, 476);
 			this.btnDiff3.Name = "btnDiff3";
-			this.btnDiff3.Size = new System.Drawing.Size(75, 23);
+			this.btnDiff3.Size = new System.Drawing.Size(120, 23);
 			this.btnDiff3.TabIndex = 8;
-			this.btnDiff3.Text = "Diff";
+			this.btnDiff3.Text = "Current data to grid";
 			this.btnDiff3.UseVisualStyleBackColor = true;
 			this.btnDiff3.Click += new System.EventHandler(this.btnDiff3_Click);
+			// 
+			// btnCdata2
+			// 
+			this.btnCdata2.Location = new System.Drawing.Point(401, 518);
+			this.btnCdata2.Name = "btnCdata2";
+			this.btnCdata2.Size = new System.Drawing.Size(129, 23);
+			this.btnCdata2.TabIndex = 9;
+			this.btnCdata2.Text = "create cdata flat file";
+			this.btnCdata2.UseVisualStyleBackColor = true;
+			this.btnCdata2.Click += new System.EventHandler(this.btnCdata2_Click);
+			// 
+			// btnReadCdata
+			// 
+			this.btnReadCdata.Location = new System.Drawing.Point(559, 518);
+			this.btnReadCdata.Name = "btnReadCdata";
+			this.btnReadCdata.Size = new System.Drawing.Size(134, 23);
+			this.btnReadCdata.TabIndex = 10;
+			this.btnReadCdata.Text = "read cdata flat file";
+			this.btnReadCdata.UseVisualStyleBackColor = true;
+			this.btnReadCdata.Click += new System.EventHandler(this.btnReadCdata_Click);
+			// 
+			// btnAddRecord
+			// 
+			this.btnAddRecord.Location = new System.Drawing.Point(553, 476);
+			this.btnAddRecord.Name = "btnAddRecord";
+			this.btnAddRecord.Size = new System.Drawing.Size(120, 23);
+			this.btnAddRecord.TabIndex = 11;
+			this.btnAddRecord.Text = "Add Rec.";
+			this.btnAddRecord.UseVisualStyleBackColor = true;
+			this.btnAddRecord.Click += new System.EventHandler(this.btnAddRecord_Click);
+			// 
+			// btnCreateNew
+			// 
+			this.btnCreateNew.Location = new System.Drawing.Point(715, 518);
+			this.btnCreateNew.Name = "btnCreateNew";
+			this.btnCreateNew.Size = new System.Drawing.Size(134, 23);
+			this.btnCreateNew.TabIndex = 12;
+			this.btnCreateNew.Text = "Create a New csv file";
+			this.btnCreateNew.UseVisualStyleBackColor = true;
+			this.btnCreateNew.Click += new System.EventHandler(this.btnCreateNew_Click);
+			// 
+			// btnCurrent2XML
+			// 
+			this.btnCurrent2XML.Location = new System.Drawing.Point(706, 476);
+			this.btnCurrent2XML.Name = "btnCurrent2XML";
+			this.btnCurrent2XML.Size = new System.Drawing.Size(120, 23);
+			this.btnCurrent2XML.TabIndex = 13;
+			this.btnCurrent2XML.Text = "Current data to XML";
+			this.btnCurrent2XML.UseVisualStyleBackColor = true;
+			this.btnCurrent2XML.Click += new System.EventHandler(this.btnCurrent2XML_Click);
 			// 
 			// CDBMgmt
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1328, 628);
+			this.Controls.Add(this.btnCurrent2XML);
+			this.Controls.Add(this.btnCreateNew);
+			this.Controls.Add(this.btnAddRecord);
+			this.Controls.Add(this.btnReadCdata);
+			this.Controls.Add(this.btnCdata2);
 			this.Controls.Add(this.btnDiff3);
-			this.Controls.Add(this.btnDiff2);
 			this.Controls.Add(this.btnDiff);
 			this.Controls.Add(this.btnUpdate);
-			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.dataGridView1);
-			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btntdata);
 			this.Controls.Add(this.btncdata);
 			this.Name = "CDBMgmt";
@@ -146,7 +173,6 @@ namespace CDBMgmt
 			this.Load += new System.EventHandler(this.LoadForm);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);
-			this.PerformLayout();
 
 		}
 
@@ -154,13 +180,15 @@ namespace CDBMgmt
 
 		private System.Windows.Forms.Button btncdata;
 		private System.Windows.Forms.Button btntdata;
-		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.DataGridView dataGridView1;
-		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Button btnUpdate;
 		private System.Windows.Forms.Button btnDiff;
-		private System.Windows.Forms.Button btnDiff2;
 		private System.Windows.Forms.Button btnDiff3;
+		private System.Windows.Forms.Button btnCdata2;
+		private System.Windows.Forms.Button btnReadCdata;
+		private System.Windows.Forms.Button btnAddRecord;
+		private System.Windows.Forms.Button btnCreateNew;
+		private System.Windows.Forms.Button btnCurrent2XML;
 	}
 }
 

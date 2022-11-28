@@ -47,7 +47,6 @@ namespace EpServerEngineSampleClient
 			Control sCtl = this.btn1;
 			//for (int i = 0; i < this.Controls.Count; i++)
 			button_list = new List<ButtonList>();
-
 			for (int i = 0; i < 8; i++)
 			{
 				if (sCtl.GetType() == typeof(Button))
@@ -62,9 +61,7 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-			
 		}
-		
 		private void ToggleButton(int which, bool state)
 		{
 			if (state)
@@ -97,42 +94,34 @@ namespace EpServerEngineSampleClient
 		{
 			ToggleButton(0, SendCmd(0));
 		}
-
 		private void btn2_Click(object sender, EventArgs e)
 		{
 			ToggleButton(1, SendCmd(1));
 		}
-
 		private void btn3_Click(object sender, EventArgs e)
 		{
 			ToggleButton(2, SendCmd(2));
 		}
-
 		private void btn4_Click(object sender, EventArgs e)
 		{
 			ToggleButton(3, SendCmd(3));
 		}
-
 		private void btn5_Click(object sender, EventArgs e)
 		{
 			ToggleButton(4, SendCmd(4));
 		}
-
 		private void btn6_Click(object sender, EventArgs e)
 		{
 			ToggleButton(5, SendCmd(5));
 		}
-
 		private void btn7_Click(object sender, EventArgs e)
 		{
 			ToggleButton(6, SendCmd(6));
 		}
-
 		private void btn8_Click(object sender, EventArgs e)
 		{
 			ToggleButton(7, SendCmd(7));
 		}
-
 		private void btnAllOn_Click(object sender, EventArgs e)
 		{
 			for(int i = 0;i < 8;i++)
@@ -140,7 +129,6 @@ namespace EpServerEngineSampleClient
 				ToggleButton(i, SendCmd(i));
 			}
 		}
-
 		private void btnAllOff_Click(object sender, EventArgs e)
 		{
 			for (int i = 0; i < 8; i++)
@@ -148,7 +136,6 @@ namespace EpServerEngineSampleClient
 				ToggleButton(i, SendCmd(i));
 			}
 		}
-
 		private void LoadEvent(object sender, EventArgs e)
 		{
 			for (int i = 0; i < 8; i++)

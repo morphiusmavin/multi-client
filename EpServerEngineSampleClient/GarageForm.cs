@@ -56,11 +56,16 @@ namespace EpServerEngineSampleClient
 			on_label_list.Add("WEST_LIGHT");
 			on_label_list.Add("NORTHEAST_LIGHT");
 			on_label_list.Add("SOUTHWEST_LIGHT");
+			on_label_list.Add("WATER_HEATER");
+			on_label_list.Add("WATER_PUMP");
+			on_label_list.Add("WATER_VALVE1");
+			on_label_list.Add("WATER_VALVE2");
+			on_label_list.Add("WATER_VALVE3");
 
 			button_list = new List<ButtonList>();
 			Control sCtl = this.btnDesk;
 			//for (int i = 0; i < this.Controls.Count; i++)
-			for (int i = 0; i < 9; i++)
+			for (int i = 0; i < 13; i++)
 			{
 				if (sCtl.GetType() == typeof(Button))
 				{
@@ -75,7 +80,6 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-			
 		}
 		public void Enable_Dlg(bool wait)
 		{
@@ -310,27 +314,22 @@ namespace EpServerEngineSampleClient
 		{
 			ToggleButton(1, SendCmd(1));
 		}
-
 		private void btnNWest_Click(object sender, EventArgs e)
 		{
 			ToggleButton(2, SendCmd(2));
 		}
-
 		private void btnSeast_Click(object sender, EventArgs e)
 		{
 			ToggleButton(3, SendCmd(3));
 		}
-
 		private void btnMiddle_Click(object sender, EventArgs e)
 		{
 			ToggleButton(4, SendCmd(4));
 		}
-
 		private void btnWest_Click(object sender, EventArgs e)
 		{
 			ToggleButton(5, SendCmd(5));
 		}
-
 		private void btnNeast_Click(object sender, EventArgs e)
 		{
 			ToggleButton(6, SendCmd(6));
@@ -338,6 +337,26 @@ namespace EpServerEngineSampleClient
 		private void btnSWest_Click(object sender, EventArgs e)
 		{
 			ToggleButton(7, SendCmd(7));
+		}
+		private void btnWaterHeater_Click(object sender, EventArgs e)
+		{
+			ToggleButton(8, SendCmd(8));
+		}
+		private void btnWaterPump_Click(object sender, EventArgs e)
+		{
+			ToggleButton(9, SendCmd(9));
+		}
+		private void btnWaterValve1_Click(object sender, EventArgs e)
+		{
+			ToggleButton(10, SendCmd(10));
+		}
+		private void btnWaterValve2_Click(object sender, EventArgs e)
+		{
+			ToggleButton(11, SendCmd(11));
+		}
+		private void btnWaterValve3_Click(object sender, EventArgs e)
+		{
+			ToggleButton(12, SendCmd(12));
 		}
 		private void btnAll_Click_1(object sender, EventArgs e)
 		{
@@ -353,24 +372,27 @@ namespace EpServerEngineSampleClient
 			SendCmd(7, allon);
 			if (allon)
 			{
-				for (i = 0; i < no_lights+1; i++)
+				for (i = 0; i < no_lights; i++)
 				{
 					//status[i] = true;
 					button_list[i].Ctl.Text = "ON";
 					button_list[i].Ctl.BackColor = Color.Aqua;
 				}
+				btnAll.BackColor = Color.Aqua;
+				btnAll.Text = "ON";
 			}
 			else
 			{
-				for (i = 0; i < no_lights+1; i++)
+				for (i = 0; i < no_lights; i++)
 				{
 					//status[i] = false;
 					button_list[i].Ctl.Text = "OFF";
 					button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 				}
+				btnAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+				btnAll.Text = "OFF";
 			}
 		}
-
 		private void LoadEvent(object sender, EventArgs e)
 		{
 			for (int i = 0; i < 8; i++)

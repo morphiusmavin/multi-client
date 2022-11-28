@@ -221,6 +221,11 @@ UCHAR get_host_cmd_task(int test)
 				case SOUTHWEST_LIGHT:
 				case SHUTDOWN_IOBOX:
 				case REBOOT_IOBOX:
+				case WATER_HEATER:
+				case WATER_PUMP:
+				case WATER_VALVE1:
+				case WATER_VALVE2:
+				case WATER_VALVE3:
 				case SHELL_AND_RENAME:
 					//printf("sending que: %02x\r\n",cmd);
 					memset(tempx,0,sizeof(tempx));
@@ -251,7 +256,7 @@ UCHAR get_host_cmd_task(int test)
 							printf("exit from send client list\n");
 							exit(EXIT_FAILURE);
 						}
-						uSleep(0,TIME_DELAY/16);
+						uSleep(0,TIME_DELAY/4);
 					break;
 
 				case GET_ALL_CLLIST:
@@ -276,7 +281,7 @@ UCHAR get_host_cmd_task(int test)
 								printf("exit from send client list\n");
 								exit(EXIT_FAILURE);
 							}
-							uSleep(0,TIME_DELAY/16);
+							uSleep(0,TIME_DELAY/4);
 						}
 					}
 					break;

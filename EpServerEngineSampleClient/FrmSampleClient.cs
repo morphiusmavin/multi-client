@@ -61,18 +61,9 @@ namespace EpServerEngineSampleClient
         int connected_tick = 0;
         int which_winclient = -1;
         Int64 alarm_tick = 0;
-        Boolean midnight_flag = false;
         bool oneoff = true;
         bool oneoff2 = true;
-        bool oneoff3 = true;
-        bool oneoff4 = true;
 
-        private string xml_dialog1_location = "c:\\Users\\daniel\\dev\\uiformat1.xml";
-        private string xml_dialog2_location = "c:\\Users\\daniel\\dev\\uiformat2.xml";
-        private string xml_dialog3_location = "c:\\Users\\daniel\\dev\\uiformat3.xml";
-        private string xml_dialog4_location = "c:\\Users\\daniel\\dev\\uiformat4.xml";
-        private string xml_dialog5_location = "c:\\Users\\daniel\\dev\\uiformat5.xml";
-        private string xml_dialog6_location = "c:\\Users\\daniel\\dev\\uiformat6.xml";
         private string xml_params_location = "c:\\Users\\daniel\\dev\\ClientParams.xml";
         private string xml_clients_avail_location = "c:\\Users\\daniel\\dev\\ClientsAvail.xml";
         private string sunrisesunset_location = "c:\\Users\\daniel\\dev\\tdata.xml";
@@ -963,24 +954,77 @@ namespace EpServerEngineSampleClient
                     AddMsg("sunrise");
                     //tbSunrise.Text = "now";
                     SunriseLabel.Text = sunrise_sunsets[now.Day].sunrise + " tomorrow";
-                }
+                    oneoff2 = true;
+                }else
                 if (hour == sunrisesunsetHoursMinutes[now.Day - 1].AstTwiStartHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].AstTwiStartMinute && oneoff2)
                 {
                     play_tone(0);
                     AddMsg("start of Ast Twilight");
                     oneoff2 = false;
-                }
-                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].NautTwiStartHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].NautTwiStartMinute && oneoff3)
+                    oneoff = true;
+                }else
+                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].NautTwiStartHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].NautTwiStartMinute && oneoff)
                 {
                     play_tone(1);
                     AddMsg("start of Naut Twilight");
-                    oneoff3 = false;
-                }
-                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].CivilTwiStartHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].CivilTwiStartMinute && oneoff4)
+                    oneoff = false;
+                    oneoff2 = true;
+                }else
+                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].CivilTwiStartHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].CivilTwiStartMinute && oneoff2)
                 {
                     play_tone(2);
                     AddMsg("start of Civil Twilight");
-                    oneoff4 = false;
+                    oneoff2 = false;
+                    oneoff = true;
+                }else
+                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].SunsetHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].SunsetMinute && oneoff)
+                // because of the lay of the land the actual sunrise happens about a minute after the official sunrise
+                {
+                    oneoff = false;     // have to do this because the player is synchronous
+                    oneoff2 = true;
+                    play_tone(6);
+                    AddMsg("sunset");
+                    //tbSunrise.Text = "now";
+                    SunriseLabel.Text = sunrise_sunsets[now.Day].sunrise + " tomorrow";
+                }else
+                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].CivilTwiEndHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].CivilTwiEndMinute && oneoff2)
+                {
+                    play_tone(5);
+                    AddMsg("end of Civil Twilight");
+                    oneoff2 = false;
+                    oneoff = true;
+                }else
+                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].NautTwiEndHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].NautTwiEndMinute && oneoff)
+                {
+                    play_tone(4);
+                    AddMsg("end of Naut Twilight");
+                    oneoff = false;
+                    oneoff2 = true;
+                }else
+                if (hour == sunrisesunsetHoursMinutes[now.Day - 1].AstTwiEndHour && minute == sunrisesunsetHoursMinutes[now.Day - 1].AstTwiEndMinute && oneoff2)
+                {
+                    play_tone(3);
+                    AddMsg("end of Ast Twilight");
+                    oneoff2 = false;
+                    oneoff = true;
+                }else 
+                if(hour == 0 && minute == 0 && oneoff)
+				{
+                    oneoff = false;
+                    oneoff2 = true;
+                    DateTime now2 = DateTime.Now;
+                    string t2date = now2.Date.ToString();
+                    int space = t2date.IndexOf(" ");
+                    t2date = t2date.Remove(space);
+                    tbTodaysDate.Text = t2date;
+                    btnSunriseSunset_Click(new object(), new EventArgs());
+                    play_tone(0);
+                }
+                else 
+                if(hour == 0 && minute == 1 && oneoff2)
+				{
+                    oneoff = true;
+                    oneoff2 = false;
                 }
             }
             if (cbAlarm.Checked == true)
@@ -1022,33 +1066,8 @@ namespace EpServerEngineSampleClient
                 UpdateClientInfo();
                 clients_inited = true;
             }
-            if (tick > 1600)
-            {
-                //value.TimeOfDay.Ticks == 0;
-                if (hour == 0 && midnight_flag == false)
-                {
-                    //AddMsg("it is now midnight");
-                    midnight_flag = true;
-                    DateTime now2 = DateTime.Now;
-                    string t2date = now2.Date.ToString();
-                    int space = t2date.IndexOf(" ");
-                    t2date = t2date.Remove(space);
-                    tbTodaysDate.Text = t2date;
-                }
-                else if (hour > 0 && midnight_flag == true)
-                {
-                    midnight_flag = false;
-                    btnSunriseSunset_Click(new object(), new EventArgs());
-/*
-                    SunriseLabel.Text = sunrise_sunsets[now.Day - 1].sunrise;
-                    SunsetLabel.Text = sunrise_sunsets[now.Day - 1].sunset;
-                    MoonriseLabel.Text = sunrise_sunsets[now.Day - 1].moonrise;
-                    MoonsetLabel.Text = sunrise_sunsets[now.Day - 1].moonset;
-*/
-                    oneoff = oneoff2 = oneoff3 = oneoff4 = true;
-                }
+            if(tick > 1600)
                 tick = 36;
-            }
         }
         void play_sunrise_clip()
         {
@@ -1068,16 +1087,25 @@ namespace EpServerEngineSampleClient
             switch(which)
 			{
                 case 0:
-                    song += "tone440.wav";
+                    song += "startAst.wav";
                     break;
                 case 1:
-                    song += "tone490.wav";
+                    song += "startNaut.wav";
                     break;
                 case 2:
-                    song += "tone537.wav";
+                    song += "startCivil.wav";
                     break;
                 case 3:
-                    song += "tone639.wav";
+                    song += "endAst.wav";
+                    break;
+                case 4:
+                    song += "endNaut.wav";
+                    break;
+                case 5:
+                    song += "endCivil.wav";
+                    break;
+                case 6:
+                    song += "sunset.wav";
                     break;
                 default:
                     song += "tone440.wav";
@@ -1467,6 +1495,17 @@ namespace EpServerEngineSampleClient
             outdoor.StartPosition = FormStartPosition.Manual;
             outdoor.Location = new Point(100, 10);
             if (outdoor.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+        }
+		private void btnTest_Click(object sender, EventArgs e)
+		{
+            timer_schedule.StartPosition = FormStartPosition.Manual;
+            timer_schedule.Location = new Point(100, 10);
+            if (timer_schedule.ShowDialog(this) == DialogResult.OK)
             {
             }
             else

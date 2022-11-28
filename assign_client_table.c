@@ -27,7 +27,7 @@ void assign_client_table(void)
 	client_table[_159].qid = 0;
 	client_table[_159].task_id = 1;
 // 2
-	strcpy(client_table[_154].ip,"154\0");
+	strcpy(client_table[_154].ip,"154\0");				// cabin
 	strcpy(client_table[_154].label,"Client154\0");
 	client_table[_154].socket = -1;
 	client_table[_154].type = TS_CLIENT;
@@ -35,7 +35,7 @@ void assign_client_table(void)
 	client_table[_154].qid = 0;
 	client_table[_154].task_id = 2;
 // 3
-	strcpy(client_table[_147].ip,"147\0");
+	strcpy(client_table[_147].ip,"147\0");				// testbench
 	strcpy(client_table[_147].label,"Client147\0");
 	client_table[_147].socket = -1;
 	client_table[_147].type = TS_CLIENT;
@@ -43,7 +43,7 @@ void assign_client_table(void)
 	client_table[_147].qid = 0;
 	client_table[_147].task_id = 3;
 // 4
-	strcpy(client_table[_150].ip,"150\0");
+	strcpy(client_table[_150].ip,"150\0");				// outdoor
 	strcpy(client_table[_150].label,"Client150\0");
 	client_table[_150].socket = -1;
 	client_table[_150].type = TS_CLIENT;
@@ -75,7 +75,7 @@ void assign_client_table(void)
 	client_table[_145].qid = 0;
 	client_table[_145].task_id = 7;
 // 8
-	strcpy(client_table[_SERVER].ip,"146\0");
+	strcpy(client_table[_SERVER].ip,"146\0");				// garage
 	strcpy(client_table[_SERVER].label,"Server146\0");
 	client_table[_SERVER].socket = -1;
 	client_table[_SERVER].type = TS_SERVER;
