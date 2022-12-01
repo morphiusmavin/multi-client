@@ -301,7 +301,7 @@ int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp)
 	{
 		if (cur->index == index)
 		{
-			printf("cur: %s\n",cur->datap->label);
+			//printf("cur: %s\n",cur->datap->label);
 			cur->datap = datap;
 			//free(cur);
 			status = 0;

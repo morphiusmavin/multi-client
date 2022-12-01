@@ -8,6 +8,8 @@ namespace EpServerEngineSampleClient
 {
 	class SunriseSunsetHoursMinutes
 	{
+		public int month { get; set; }
+		public int day { get; set; }
 		public int AstTwiStartHour { get; set; }
 		public int AstTwiStartMinute { get; set; }
 		public int AstTwiEndHour { get; set; }

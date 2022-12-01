@@ -86,7 +86,7 @@ UCHAR get_host_cmd_task(int test)
 	UCHAR tempx[UPLOAD_BUFF_SIZE];
 	char tempy[30];
 	char temp_time[5];
-	char *pch;
+	char *pch, *pch2;
 	int fname_index;
 	UCHAR uch_fname_index;
 	UCHAR mask;
@@ -106,12 +106,15 @@ UCHAR get_host_cmd_task(int test)
 	UINT utemp;
 	struct msgqbuf msg;
 	int msgtype = 1;
-	UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
+	UCHAR ytemp[30];
+	//UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 	int temp;
+	char label[30];
+	int iport, index, state, on_hour, on_minute, on_second, off_hour, off_minute, off_second;
 
 	assign_client_table();
 
-	memset(write_serial_buffer, 0, SERIAL_BUFF_SIZE);
+	//memset(write_serial_buffer, 0, SERIAL_BUFF_SIZE);
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
 	// inportstatus array, representing 3 byts of each 2 (3x8x2 = 48) to
@@ -311,12 +314,121 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SET_CLLIST:
-					for(i = 0;i < msg_len;i++)
-						printf("%d: %d\n",i,tempx[i]);
-					//cllist_change_data(i,ctp,&cll);
-					//cllist_find_data(i, ctpp, &cll);
-					break;
+#if 1
+					memset(ytemp,0,sizeof(ytemp));
+					pch2 = pch = &tempx[0];
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(label,pch2,i);
 
+					pch2 = pch;
+					pch2++;
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(ytemp,pch2,i);
+					index = atoi(ytemp);
+
+					pch2 = pch;
+					pch2++;
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(ytemp,pch2,i);
+					iport = atoi(ytemp);
+					pch2 = pch;
+					pch2++;
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(ytemp,pch2,i);
+					state = atoi(ytemp);
+
+					pch2 = pch;
+					pch2++;
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(ytemp,pch2,i);
+					on_hour = atoi(ytemp);
+
+					pch2 = pch;
+					pch2++;
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(ytemp,pch2,i);
+					on_minute = atoi(ytemp);
+
+					pch2 = pch;
+					pch2++;
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(ytemp,pch2,i);
+					on_second = atoi(ytemp);
+
+					pch2 = pch;
+					pch2++;
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(ytemp,pch2,i);
+					off_hour = atoi(ytemp);
+
+					pch2 = pch;
+					pch2++;
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(ytemp,pch2,i);
+					off_minute = atoi(ytemp);
+
+					pch2 = pch;
+					pch2++;
+					i = 0;
+					do {
+						i++;
+						pch++;
+					}while(*pch != ' ');
+					strncpy(ytemp,pch2,i);
+					off_second = atoi(ytemp);
+
+					cllist_find_data(index, ctpp, &cll);
+
+					ctp->index = index;
+					ctp->port = iport;
+					ctp->state = state;
+					ctp->on_hour = on_hour;
+					ctp->on_minute = on_minute;
+					ctp->on_second = on_second;
+					ctp->off_hour = off_hour;
+					ctp->off_minute = off_minute;
+					ctp->off_second = off_second;
+					strcpy(ctp->label,label);
+					printf("%s\n",ctp->label);
+					cllist_change_data(index,ctp,&cll);
+					break;
+#endif
 				case SAVE_CLLIST:
 					break;
 

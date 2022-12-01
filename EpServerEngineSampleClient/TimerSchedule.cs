@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Xml.Linq;
 
 namespace EpServerEngineSampleClient
 {
@@ -53,13 +54,18 @@ namespace EpServerEngineSampleClient
 			svrcmd = new ServerCmds();
 			svrcmd.SetClient(m_client);
 			mycdata = new List<Cdata>();
-			btnLoadXML_Click(new object(), new EventArgs());
+			//btnLoadXML_Click(new object(), new EventArgs());
 			if (false)
 			foreach(Cdata cd in mycdata)
 			{
 				AddMsg(cd.label + " " + cd.index.ToString() + " " + cd.port.ToString() + " " + cd.on_hour.ToString() + " " + cd.on_minute.ToString());
 			}
 			init_lists();
+		}
+		private void LoadEvent(object sender, EventArgs e)
+		{
+			init_lists();
+			AddMsg("loaded");
 		}
 		private void init_lists()
 		{
@@ -99,8 +105,8 @@ namespace EpServerEngineSampleClient
 			outdoor_list.Add("OUTDOOR_LIGHT1");
 			outdoor_list.Add("OUTDOOR_LIGHT2");
 
-			for (int i = 0; i < 8; i++)
-				AddMsg(svrcmd.GetCmdIndexI(cabin_list[i]).ToString());
+			//for (int i = 0; i < 8; i++)
+				//AddMsg(svrcmd.GetCmdIndexI(cabin_list[i]).ToString());
 			btnRefresh.Enabled = false;
 			btnShow.Enabled = false;
 			port = -1;
@@ -230,7 +236,7 @@ namespace EpServerEngineSampleClient
 					i++;
 				}
 				mycdata.Add(cdata_temp);
-				AddMsg(mycdata.Count().ToString());
+				//AddMsg(mycdata.Count().ToString());
 				cdata_temp = null;
 				break;
 
@@ -243,7 +249,7 @@ namespace EpServerEngineSampleClient
 		private void lbClientType_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			int index = lbClientType.SelectedIndex;
-			AddMsg(index.ToString());
+			//AddMsg(index.ToString());
 			switch (index)
 			{
 				case 0:
@@ -270,43 +276,10 @@ namespace EpServerEngineSampleClient
 					type = -1;
 					break;
 			}
-			btnRefresh.Enabled = false;
-			btnShow.Enabled = false;
-			port = -1;
-			AddMsg("type: " + type.ToString());
-		}
-		private void lbPort_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			port = lbPort.SelectedIndex;
-			//AddMsg(port.ToString());
-			switch (type)
-			{
-				case 8:
-					//AddMsg(garage_list[port]);
-					port = svrcmd.GetCmdIndexI(garage_list[port]);
-					break;
-				case 3:
-					//AddMsg(cabin_list[port]);
-					port = svrcmd.GetCmdIndexI(cabin_list[port]);
-					port -= 25;	// TODO: 13 is 'BLANK'
-					//AddMsg("port: " + port.ToString());
-					break;
-				case 2:
-					//AddMsg(testbench_list[port]);
-					port = svrcmd.GetCmdIndexI(testbench_list[port]);
-					port -= 9;
-					break;
-				case 4:
-					port = svrcmd.GetCmdIndexI(outdoor_list[port]);
-					port -= 34;
-					break;
-				default:
-					AddMsg("what?");
-					break;
-			}
-			//AddMsg(port.ToString());
 			btnRefresh.Enabled = true;
 			btnShow.Enabled = true;
+			port = -1;
+			//AddMsg("type: " + type.ToString());
 		}
 		private void btnOK_Click(object sender, EventArgs e)
 		{
@@ -340,20 +313,19 @@ namespace EpServerEngineSampleClient
 			mycdata.Clear();
 			svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_ALL_CLLIST"), type, "");
 		}
-		private void btnSingle_Click(object sender, EventArgs e)
-		{
-			if (port > -1 && type > -1)
-				svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_CLLIST"), type, port);
-		}
 		private void btnLoadXML_Click(object sender, EventArgs e)
 		{
 			DataSet ds = new DataSet();
 			XmlReader xmlfile = null;
 			int port;
 			int lbindex = 0;
-			var filePath = m_xml_file_location;
+			string tfilename = ChooseXMLFileName();
+			if (tfilename == "")
+				tfilename = m_xml_file_location;
+
 			Cdata item = null;
-			xmlfile = XmlReader.Create(filePath, new XmlReaderSettings());
+			mycdata.Clear();
+			xmlfile = XmlReader.Create(tfilename, new XmlReaderSettings());
 			ds.ReadXml(xmlfile);
 			foreach (DataRow dr in ds.Tables[0].Rows)
 			{
@@ -363,16 +335,17 @@ namespace EpServerEngineSampleClient
 				{
 					item = new Cdata();
 
-					item.label = dr.ItemArray[0].ToString();
-					item.index = Convert.ToInt16(dr.ItemArray[1]);
-					item.port = Convert.ToInt16(dr.ItemArray[2]);
-					item.state = Convert.ToInt16(dr.ItemArray[3]);
-					item.on_hour = Convert.ToInt16(dr.ItemArray[4]);
-					item.on_minute = Convert.ToInt16(dr.ItemArray[5]);
-					item.on_second = Convert.ToInt16(dr.ItemArray[6]);
-					item.off_hour = Convert.ToInt16(dr.ItemArray[7]);
-					item.off_minute = Convert.ToInt16(dr.ItemArray[8]);
-					//item.off_second = Convert.ToInt16(dr.ItemArray[9]);
+					item.index = Convert.ToInt16(dr.ItemArray[0]);
+					item.port = Convert.ToInt16(dr.ItemArray[1]);
+					item.state = Convert.ToInt16(dr.ItemArray[2]);
+					item.on_hour = Convert.ToInt16(dr.ItemArray[3]);
+					item.on_minute = Convert.ToInt16(dr.ItemArray[4]);
+					item.on_second = Convert.ToInt16(dr.ItemArray[5]);
+					item.off_hour = Convert.ToInt16(dr.ItemArray[6]);
+					item.off_minute = Convert.ToInt16(dr.ItemArray[7]);
+					item.off_second = Convert.ToInt16(dr.ItemArray[8]);
+					item.label = dr.ItemArray[9].ToString();
+					AddMsg(item.label);
 					mycdata.Add(item);
 					item = null;
 					lbindex++;
@@ -408,6 +381,7 @@ namespace EpServerEngineSampleClient
 			dt.Columns.Add(dc9);
 			return dt;
 		}
+		// puts cdata in chart
 		private void btnUpdateChart_Click(object sender, EventArgs e)
 		{
 			DataTable dt = GetDataTable();
@@ -417,7 +391,6 @@ namespace EpServerEngineSampleClient
 					td.on_minute.ToString(), td.on_second.ToString(), td.off_hour.ToString(), td.off_minute.ToString(),
 					td.off_second.ToString(), td.label);
 			}
-			//          Step 5: Binding the datatable to datagrid:
 			CGridView.DataSource = dt;
 		}
 
@@ -439,15 +412,19 @@ namespace EpServerEngineSampleClient
 			if (addrec.ShowDialog(this) == DialogResult.OK)
 			{
 				cdata = addrec.GetCdata();
-				AddMsg(cdata.on_hour.ToString());
-				AddMsg(cdata.on_minute.ToString());
+				//AddMsg(cdata.on_hour.ToString());
+				//AddMsg(cdata.on_minute.ToString());
 			}
 			else
 			{
 				//                this.txtResult.Text = "Cancelled";
 			}
 			addrec.Dispose();
+			int count = mycdata.Count();
+			AddMsg("count: " + count.ToString());
+			cdata.index = count + 1;
 			mycdata.Add(cdata);
+			btnUpdateChart_Click(new object(), new EventArgs());
 		}
 
 		private void btnDeleteRecord_Click(object sender, EventArgs e)
@@ -460,13 +437,237 @@ namespace EpServerEngineSampleClient
 			if (delrec.ShowDialog(this) == DialogResult.OK)
 			{
 				delrecno = delrec.GetDelRecNo();
-				AddMsg(delrecno.ToString());
+				AddMsg("rec to del: " + delrecno.ToString());
 			}
 			else
 			{
 				//                this.txtResult.Text = "Cancelled";
 			}
 			delrec.Dispose();
+		}
+
+		private void btnChart2Cdata_Click(object sender, EventArgs e)
+		{
+			Cdata tdata = null;
+			int i = 0;
+			string val = "";
+			mycdata.Clear();
+			foreach (DataGridViewRow dr in CGridView.Rows)
+			{
+				tdata = new Cdata();
+				tdata.index = i;
+				if (dr.Cells[1].Value != null)
+				{
+					val = (string)dr.Cells[1].Value;
+					tdata.port = int.Parse(val);
+					val = (string)dr.Cells[2].Value;
+					tdata.state = int.Parse(val);
+					val = (string)dr.Cells[3].Value;
+					tdata.on_hour = int.Parse(val);
+					val = (string)dr.Cells[4].Value;
+					tdata.on_minute = int.Parse(val);
+					val = (string)dr.Cells[5].Value;
+					tdata.on_second = int.Parse(val);
+					val = (string)dr.Cells[6].Value;
+					tdata.off_hour = int.Parse(val);
+					val = (string)dr.Cells[7].Value;
+					tdata.off_minute = int.Parse(val);
+					val = (string)dr.Cells[8].Value;
+					tdata.off_second = int.Parse(val);
+					tdata.label = (string)dr.Cells[9].Value;
+					mycdata.Add(tdata);
+					tdata = null;
+					i++;
+				}
+			}
+		}
+
+		private void SelectionChanged(object sender, EventArgs e)
+		{
+			//AddMsg("row: " + e.ToString());
+		}
+		private string ChooseXMLFileName()
+		{
+			OpenFileDialog openFileDialog2 = new OpenFileDialog
+			{
+				InitialDirectory = @"C:\Users\Daniel\dev",
+				Title = "Browse XML Files",
+
+				CheckFileExists = true,
+				CheckPathExists = true,
+
+				DefaultExt = "xml",
+				Filter = "xml files (*.xml)|*.XML",
+				FilterIndex = 2,
+				RestoreDirectory = true,
+
+				ReadOnlyChecked = true,
+				ShowReadOnly = true
+			};
+
+			if (openFileDialog2.ShowDialog() == DialogResult.OK)
+			{
+				//tbFileName.Text = openFileDialog2.FileName;
+				return openFileDialog2.FileName;
+			}
+			else return "";
+
+		}
+		private string CreateXMLFileName()
+		{
+			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+			saveFileDialog1.Filter = "XML file|*.XML|xml file|*.xml";
+			saveFileDialog1.Title = "Create an XML file";
+			saveFileDialog1.InitialDirectory = @"C:\Users\Daniel\dev";
+			saveFileDialog1.ShowDialog();
+
+			// If the file name is not an empty string open it for saving.
+			if (saveFileDialog1.FileName != "")
+			{
+				return saveFileDialog1.FileName;
+			}
+			else return "";
+		}
+
+		private void btnClearNonRecs_Click(object sender, EventArgs e)
+		{
+			ClearNonRecords();
+			DataTable dt = GetDataTable();
+			foreach (Cdata td in mycdata)
+			{
+				dt.Rows.Add(td.index.ToString(), td.port.ToString(), td.state.ToString(), td.on_hour.ToString(),
+					td.on_minute.ToString(), td.on_second.ToString(), td.off_hour.ToString(), td.off_minute.ToString(),
+					td.off_second.ToString(), td.label);
+			}
+			//          Step 5: Binding the datatable to datagrid:
+			CGridView.DataSource = dt;
+		}
+
+		private void ClearNonRecords()
+		{
+			Cdata[] temp_cdata = new Cdata[20];
+			int count = mycdata.Count();
+			int i;
+			int k = 0;
+			for (i = 0; i < count; i++)
+			{
+				if (mycdata[i].port != -1)
+				{
+					temp_cdata[i] = mycdata[i];
+					k++;
+				}
+			}
+			mycdata.Clear();
+			for (int j = 0; j < k; j++)
+			{
+				mycdata.Add(temp_cdata[j]);
+			}
+		}
+		private void SortRecords()
+		{
+			int i;
+			List<Cdata> temp_cdata = new List<Cdata>();
+			Cdata temp = new Cdata();
+			temp.port = -1;
+			for(i = 0;i < 20;i++)
+			{
+				temp_cdata.Add(temp);
+			}
+			int count = mycdata.Count();
+			int k = 0;
+			for (i = 0; i < count; i++)
+			{
+				if (mycdata[i].port != -1)
+				{
+					temp_cdata[i] = mycdata[i];
+					k++;
+				}
+			}
+			mycdata.Clear();
+			for(i = 0;i < 20;i++)
+			{
+				if(temp_cdata[i].index == i && temp_cdata[i].port != -1)
+				{
+					mycdata.Add(temp_cdata[i]);
+					AddMsg(mycdata[i].label);
+				}
+			}
+		}
+
+		private void btnCdata2XML_Click(object sender, EventArgs e)
+		{
+			string tfilename;
+			tfilename = CreateXMLFileName();
+			if (tfilename == "")
+				return;
+			if (File.Exists(tfilename))
+			{
+				MessageBox.Show(tfilename + " already exists");
+				return;
+			}
+			int count = mycdata.Count;
+			String[] file = new string[20];
+			int i = 0;
+			foreach (Cdata td in mycdata)
+			{
+				//if (td.port > -1)
+				file[i] = td.index.ToString() + "," + td.port.ToString() + "," + td.state.ToString() + "," + td.on_hour.ToString() + "," +
+					td.on_minute.ToString() + "," + td.on_second.ToString() + "," + td.off_hour.ToString() + "," + td.off_minute.ToString() + "," +
+					td.off_second.ToString() + "," + td.label;
+				i++;
+			}
+			string line = "0,0,0,0,0,0,0,temp";
+			string line2;
+			int index = count;
+			for (int j = 0; j < 20 - count; j++)
+			{
+				line2 = index.ToString() + ',' + "-1" + ',' + line + index.ToString();
+				file[index] = line2;
+				index++;
+			}
+			String xml = "";
+			XElement top = new XElement("Table",
+			from items in file
+			let fields = items.Split(',')
+			select new XElement("C_DATA",
+			new XElement("index", fields[0]),
+			new XElement("port", fields[1]),
+			new XElement("state", fields[2]),
+			new XElement("on_hour", fields[3]),
+			new XElement("on_minute", fields[4]),
+			new XElement("on_second", fields[5]),
+			new XElement("off_hour", fields[6]),
+			new XElement("off_minute", fields[7]),
+			new XElement("off_second", fields[8]),
+			new XElement("label", fields[9])
+			)
+			);
+			File.WriteAllText(tfilename, xml + top.ToString());
+			MessageBox.Show("created: " + tfilename);
+		}
+
+		private void btnSendRecs_Click(object sender, EventArgs e)
+		{
+			if (type > -1)
+			{
+				foreach (Cdata cd in mycdata)
+				{
+					if (cd.port > -1)
+					{
+						string data = cd.label + " " +
+							cd.index.ToString() + " " +
+							cd.port.ToString() + " " +
+							cd.state.ToString() + " " +
+							cd.on_hour.ToString() + " " +
+							cd.on_minute.ToString() + " " +
+							cd.on_second.ToString() + " " +
+							cd.off_hour.ToString() + " " +
+							cd.off_minute.ToString() + " " +
+							cd.off_second.ToString();
+						svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SET_CLLIST"), type, data);
+					}
+				}
+			}
 		}
 
 		public void AddMsg(string message)

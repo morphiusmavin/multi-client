@@ -40,6 +40,7 @@ namespace CDBMgmt
 			this.btnAddRecord = new System.Windows.Forms.Button();
 			this.btnCreateNew = new System.Windows.Forms.Button();
 			this.btnCurrent2XML = new System.Windows.Forms.Button();
+			this.tbFileName = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -152,11 +153,19 @@ namespace CDBMgmt
 			this.btnCurrent2XML.UseVisualStyleBackColor = true;
 			this.btnCurrent2XML.Click += new System.EventHandler(this.btnCurrent2XML_Click);
 			// 
+			// tbFileName
+			// 
+			this.tbFileName.Location = new System.Drawing.Point(877, 520);
+			this.tbFileName.Name = "tbFileName";
+			this.tbFileName.Size = new System.Drawing.Size(335, 20);
+			this.tbFileName.TabIndex = 15;
+			// 
 			// CDBMgmt
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1328, 628);
+			this.ClientSize = new System.Drawing.Size(1236, 628);
+			this.Controls.Add(this.tbFileName);
 			this.Controls.Add(this.btnCurrent2XML);
 			this.Controls.Add(this.btnCreateNew);
 			this.Controls.Add(this.btnAddRecord);
@@ -173,6 +182,7 @@ namespace CDBMgmt
 			this.Load += new System.EventHandler(this.LoadForm);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
@@ -189,6 +199,7 @@ namespace CDBMgmt
 		private System.Windows.Forms.Button btnAddRecord;
 		private System.Windows.Forms.Button btnCreateNew;
 		private System.Windows.Forms.Button btnCurrent2XML;
+		private System.Windows.Forms.TextBox tbFileName;
 	}
 }
 

@@ -24,6 +24,7 @@ namespace EpServerEngineSampleClient
 			tbOffMinute.Text = "0";
 			tbOffSecond.Text = "0";
 			tbPort.Text = "0";
+			tbLabel.Text = "Label";
 		}
 
 		public void SetCdata(Cdata cdata)
@@ -44,6 +45,9 @@ namespace EpServerEngineSampleClient
 			m_cdata.off_hour = int.Parse(tbOffHour.Text);
 			m_cdata.off_minute = int.Parse(tbOffMinute.Text);
 			m_cdata.off_second = int.Parse(tbOffSecond.Text);
+			if (tbLabel.Text == "")
+				tbLabel.Text = "Label";
+			m_cdata.label = tbLabel.Text;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

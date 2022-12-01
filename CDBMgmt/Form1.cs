@@ -15,7 +15,8 @@ using System.Runtime.InteropServices;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Xml.Linq;
+
+// https://github.com/morphiusmavin/multi-client
 
 namespace CDBMgmt
 {
@@ -68,28 +69,15 @@ namespace CDBMgmt
             }
             */
         }
-        // create an XML file from a cdata.csv 
+        // create an XML file from a csv file
 		private void btncdata_Click(object sender, EventArgs e)
 		{
             string tfilename;
             // can't have the 1st line blank
-            string filename = "cdata";
-            Filenamer fn = new Filenamer("create an XML file from a csv file", "csv");
-            if (fn.ShowDialog(this) == DialogResult.OK)
-            {
-                filename = fn.GetFilename();
-            }
-            else
-            {
-            }
-            fn.Dispose();
-            tfilename = filename + ".csv";
-            if(!File.Exists(@"C:\Users\Daniel\dev\" + tfilename))
-			{
-                MessageBox.Show("can't find file: " + filename + ".csv");
+            tfilename = ChooseCSVFileName();
+            if (tfilename == "")
                 return;
-			}
-            String[] file = File.ReadAllLines(@"C:\Users\Daniel\dev\" + filename + ".csv");
+            String[] file = File.ReadAllLines(tfilename);
             String xml = "";
             XElement top = new XElement("Table",
             from items in file
@@ -107,14 +95,25 @@ namespace CDBMgmt
             new XElement("label", fields[9])
             )
             );
-            File.WriteAllText(@"C:\Users\Daniel\dev\" + filename + ".xml", xml + top.ToString());
-            MessageBox.Show("created: C:\\Users\\Daniel\\dev\\" + filename + ".xml");
+            int i = tfilename.IndexOf('.');
+            tfilename = tfilename.Remove(i);
+            tfilename += ".dat";
+            File.WriteAllText(tfilename, xml + top.ToString());
+
+            MessageBox.Show("created: " + tfilename);
         }
 
         // sunrise sunset data
 		private void btntdata_Click(object sender, EventArgs e)
 		{
-            String[] file = File.ReadAllLines(@"C:\Users\Daniel\dev\tdata.csv");
+            string tfilename;
+            // can't have the 1st line blank
+            MessageBox.Show("make sure this csv file is in the sunset/sunrise format", "WARNING");
+            tfilename = ChooseCSVFileName();
+            if (tfilename == "")
+                return;
+
+            String[] file = File.ReadAllLines(tfilename);
             foreach (String sr in file)
             {
                 int i = sr.IndexOf('?');
@@ -153,7 +152,7 @@ namespace CDBMgmt
             )
             );
             File.WriteAllText(@"C:\Users\Daniel\dev\tdata.xml", xml + top.ToString());
-            MessageBox.Show("C:\\Users\\Daniel\\dev\\tdata.xml");
+            MessageBox.Show("C:\\Users\\Daniel\\dev\\tdata.xml (used by Win Client)");
         }
 
 		private void CellClick(object sender, DataGridViewCellEventArgs e)
@@ -224,6 +223,10 @@ namespace CDBMgmt
             Tdata item;
             string filename = "cdata";
             string tfilename;
+            tfilename = ChooseXMLFileName();
+            if (tfilename == "")
+                return;
+            /*
             Filenamer fn = new Filenamer("gets data from an XML file in dev dir and displays in grid", ".xml");
             if (fn.ShowDialog(this) == DialogResult.OK)
             {
@@ -233,14 +236,14 @@ namespace CDBMgmt
             {
             }
             fn.Dispose();
-            tfilename = filename + ".xml";
-            if (!File.Exists(@"C:\Users\Daniel\dev\" + tfilename))
+            */
+            if (!File.Exists(tfilename))
             {
                 MessageBox.Show("can't find file: " + tfilename);
                 return;
             }
             DataSet ds = new DataSet();
-            var filePath = "c:\\users\\Daniel\\dev\\" + tfilename;
+            var filePath = tfilename;
             xmlfile = XmlReader.Create(filePath, new XmlReaderSettings());
             ds.ReadXml(xmlfile);
             mycdata.Clear();
@@ -288,23 +291,6 @@ namespace CDBMgmt
         {
             string tfilename;
             // can't have the 1st line blank
-            string filename = "cdata";
-            Filenamer fn = new Filenamer("create an cdata.dat flatfile from a csv file", "");
-            if (fn.ShowDialog(this) == DialogResult.OK)
-            {
-                filename = fn.GetFilename();
-            }
-            else
-            {
-            }
-            fn.Dispose();
-            tfilename = @"C:\Users\Daniel\dev\" + filename + ".csv";
-            if (!File.Exists(tfilename))
-            {
-                MessageBox.Show("can't find file: " + tfilename);
-                return;
-            }
-            String[] file = File.ReadAllLines(tfilename);
 			byte id = 170;
 			int i,j,k;
 			int val;
@@ -314,12 +300,21 @@ namespace CDBMgmt
             string tstring3;
             string label;
             string temp = new string(' ',30);
-            string fileName2 = @"C:\Users\Daniel\dev\" + filename + ".dat";
+           
+            tfilename = ChooseCSVFileName();
+            if (tfilename == "")
+                return;
+            string fileName2 = tfilename;
+            i = fileName2.IndexOf('.');
+            fileName2 = fileName2.Remove(i);
+            fileName2 += ".dat";
+
             if(File.Exists(fileName2))
 			{
                 MessageBox.Show("deleting original " + fileName2);
                 File.Delete(fileName2);
 			}
+            String[] file = File.ReadAllLines(tfilename);
             j = 0;
             StringBuilder tstring = new StringBuilder();
             using (BinaryWriter binWriter = new BinaryWriter(File.Open(fileName2, FileMode.Create)))
@@ -380,7 +375,11 @@ namespace CDBMgmt
             Tdata item = null;
             string tfilename;
             // can't have the 1st line blank
-            string filename = "cdata";
+            tfilename = ChooseDATFileName();
+            if (tfilename == "")
+                return;
+            //string filename = "cdata";
+            /*
             Filenamer fn = new Filenamer("read cdata.dat flatfile and display in grid", ".dat");
             if (fn.ShowDialog(this) == DialogResult.OK)
             {
@@ -391,6 +390,7 @@ namespace CDBMgmt
             }
             fn.Dispose();
             tfilename = @"C:\Users\Daniel\dev\" + filename + ".dat";
+            */
             if (!File.Exists(tfilename))
             {
                 MessageBox.Show("can't find file: " + tfilename);
@@ -548,21 +548,24 @@ namespace CDBMgmt
 		{
             string tfilename;
             // can't have the 1st line blank
-            string filename = "cdata";
-            Filenamer fn = new Filenamer("Create a New csv file", ".csv");
-            if (fn.ShowDialog(this) == DialogResult.OK)
-            {
-                filename = fn.GetFilename();
-            }
-            else
-            {
-            }
-            fn.Dispose();
-            tfilename = @"C:\Users\Daniel\dev\" + filename + ".csv";
+            tfilename = CreateCSVFileName();
+            if (tfilename == "")
+                return;
             if (File.Exists(tfilename))
             {
-                MessageBox.Show(tfilename + " already exists");
-                return;
+                string message = "File exists. Do you want to overwrite?";
+                string title = "Overwrite File";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+                DialogResult result = MessageBox.Show(message, title, buttons);
+                if (result == DialogResult.Yes)
+                {
+                    this.Close();
+                }
+                else
+                {
+                    this.Close();
+                    return;
+                }
             }
             int index = 0;
             int port = 0;
@@ -586,21 +589,12 @@ namespace CDBMgmt
 		private void btnCurrent2XML_Click(object sender, EventArgs e)
 		{
             string tfilename;
-            // can't have the 1st line blank
-            string filename = "cdata";
-            Filenamer fn = new Filenamer("create an XML file from current data", "XML");
-            if (fn.ShowDialog(this) == DialogResult.OK)
+            tfilename = CreateXMLFileName();
+            if (tfilename == "")
+                return;
+            if(File.Exists(tfilename))
             {
-                filename = fn.GetFilename();
-            }
-            else
-            {
-            }
-            fn.Dispose();
-            tfilename = filename + ".csv";
-            if (File.Exists(@"C:\Users\Daniel\dev\" + tfilename))
-            {
-                MessageBox.Show(filename + ".XML already exists");
+                MessageBox.Show(tfilename + " already exists");
                 return;
             }
             int count = mycdata.Count;
@@ -640,8 +634,125 @@ namespace CDBMgmt
             new XElement("label", fields[9])
             )
             );
-            File.WriteAllText(@"C:\Users\Daniel\dev\" + filename + ".xml", xml + top.ToString());
-            MessageBox.Show("created: C:\\Users\\Daniel\\dev\\" + filename + ".xml");
+            File.WriteAllText(tfilename, xml + top.ToString());
+            MessageBox.Show("created: " + tfilename);
         }
-	}
+
+		private string CreateCSVFileName()
+		{
+			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+			saveFileDialog1.Filter = "csv file|*.csv|CSV file|*.CSV";
+			saveFileDialog1.Title = "Save a csv file";
+            saveFileDialog1.InitialDirectory = @"C:\Users\Daniel\dev";
+            saveFileDialog1.ShowDialog();
+
+            // If the file name is not an empty string open it for saving.
+            if (saveFileDialog1.FileName != "")
+            {
+                tbFileName.Text = saveFileDialog1.FileName;
+                return saveFileDialog1.FileName;
+            }
+            else return "";
+		}
+
+		private string CreateXMLFileName()
+		{
+			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+			saveFileDialog1.Filter =  "XML file|*.XML|xml file|*.xml";
+			saveFileDialog1.Title = "Create an XML file";
+            saveFileDialog1.InitialDirectory = @"C:\Users\Daniel\dev";
+			saveFileDialog1.ShowDialog();
+
+            // If the file name is not an empty string open it for saving.
+            if (saveFileDialog1.FileName != "")
+            {
+                tbFileName.Text = saveFileDialog1.FileName;
+                return saveFileDialog1.FileName;
+            }
+            else return "";
+		}
+
+        private string ChooseXMLFileName()
+		{
+            OpenFileDialog openFileDialog2 = new OpenFileDialog
+            {
+                InitialDirectory = @"C:\Users\Daniel\dev",
+                Title = "Browse XML Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "xml",
+                Filter = "xml files (*.xml)|*.XML",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                tbFileName.Text = openFileDialog2.FileName;
+                return openFileDialog2.FileName;
+            }
+            else return "";
+
+        }
+
+        private string ChooseCSVFileName()
+        {
+            OpenFileDialog openFileDialog2 = new OpenFileDialog
+            {
+                InitialDirectory = @"C:\Users\Daniel\dev",
+                Title = "Browse CSV Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "csv",
+                Filter = "csv files (*.csv)|*.CSV",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                tbFileName.Text = openFileDialog2.FileName;
+                return openFileDialog2.FileName;
+            }
+            else return "";
+
+        }
+        private string ChooseDATFileName()
+        {
+            OpenFileDialog openFileDialog2 = new OpenFileDialog
+            {
+                InitialDirectory = @"C:\Users\Daniel\dev",
+                Title = "Browse dat Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "dat",
+                Filter = "dat files (*.dat)|*.DAT",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                tbFileName.Text = openFileDialog2.FileName;
+                return openFileDialog2.FileName;
+            }
+            else return "";
+
+        }
+    }
 }
