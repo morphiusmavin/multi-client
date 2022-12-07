@@ -30,7 +30,6 @@ namespace CDBMgmt
 		private void InitializeComponent()
 		{
 			this.btncdata = new System.Windows.Forms.Button();
-			this.btntdata = new System.Windows.Forms.Button();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			this.btnUpdate = new System.Windows.Forms.Button();
 			this.btnDiff = new System.Windows.Forms.Button();
@@ -41,6 +40,8 @@ namespace CDBMgmt
 			this.btnCreateNew = new System.Windows.Forms.Button();
 			this.btnCurrent2XML = new System.Windows.Forms.Button();
 			this.tbFileName = new System.Windows.Forms.TextBox();
+			this.btnTest = new System.Windows.Forms.Button();
+			this.btnClearNon = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -53,16 +54,6 @@ namespace CDBMgmt
 			this.btncdata.Text = "Create XML from csv";
 			this.btncdata.UseVisualStyleBackColor = true;
 			this.btncdata.Click += new System.EventHandler(this.btncdata_Click);
-			// 
-			// btntdata
-			// 
-			this.btntdata.Location = new System.Drawing.Point(236, 518);
-			this.btntdata.Name = "btntdata";
-			this.btntdata.Size = new System.Drawing.Size(149, 23);
-			this.btntdata.TabIndex = 1;
-			this.btntdata.Text = "Create sunrise/sunset XML";
-			this.btntdata.UseVisualStyleBackColor = true;
-			this.btntdata.Click += new System.EventHandler(this.btntdata_Click);
 			// 
 			// dataGridView1
 			// 
@@ -160,11 +151,33 @@ namespace CDBMgmt
 			this.tbFileName.Size = new System.Drawing.Size(335, 20);
 			this.tbFileName.TabIndex = 15;
 			// 
+			// btnTest
+			// 
+			this.btnTest.Location = new System.Drawing.Point(1031, 476);
+			this.btnTest.Name = "btnTest";
+			this.btnTest.Size = new System.Drawing.Size(120, 23);
+			this.btnTest.TabIndex = 16;
+			this.btnTest.Text = "Test";
+			this.btnTest.UseVisualStyleBackColor = true;
+			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+			// 
+			// btnClearNon
+			// 
+			this.btnClearNon.Location = new System.Drawing.Point(854, 476);
+			this.btnClearNon.Name = "btnClearNon";
+			this.btnClearNon.Size = new System.Drawing.Size(120, 23);
+			this.btnClearNon.TabIndex = 17;
+			this.btnClearNon.Text = "Clear Non";
+			this.btnClearNon.UseVisualStyleBackColor = true;
+			this.btnClearNon.Click += new System.EventHandler(this.btnClearNon_Click);
+			// 
 			// CDBMgmt
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1236, 628);
+			this.Controls.Add(this.btnClearNon);
+			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.tbFileName);
 			this.Controls.Add(this.btnCurrent2XML);
 			this.Controls.Add(this.btnCreateNew);
@@ -175,7 +188,6 @@ namespace CDBMgmt
 			this.Controls.Add(this.btnDiff);
 			this.Controls.Add(this.btnUpdate);
 			this.Controls.Add(this.dataGridView1);
-			this.Controls.Add(this.btntdata);
 			this.Controls.Add(this.btncdata);
 			this.Name = "CDBMgmt";
 			this.Text = "CDBMgmt";
@@ -189,7 +201,6 @@ namespace CDBMgmt
 		#endregion
 
 		private System.Windows.Forms.Button btncdata;
-		private System.Windows.Forms.Button btntdata;
 		private System.Windows.Forms.DataGridView dataGridView1;
 		private System.Windows.Forms.Button btnUpdate;
 		private System.Windows.Forms.Button btnDiff;
@@ -200,6 +211,8 @@ namespace CDBMgmt
 		private System.Windows.Forms.Button btnCreateNew;
 		private System.Windows.Forms.Button btnCurrent2XML;
 		private System.Windows.Forms.TextBox tbFileName;
+		private System.Windows.Forms.Button btnTest;
+		private System.Windows.Forms.Button btnClearNon;
 	}
 }
 

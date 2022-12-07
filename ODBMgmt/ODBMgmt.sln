@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32510.428
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODBMgmt", "ODBMgmt.csproj", "{053EA1DE-06D5-4320-B5AC-29A7A8B752FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{053EA1DE-06D5-4320-B5AC-29A7A8B752FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{053EA1DE-06D5-4320-B5AC-29A7A8B752FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{053EA1DE-06D5-4320-B5AC-29A7A8B752FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{053EA1DE-06D5-4320-B5AC-29A7A8B752FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ECCF877D-47F5-4333-A6C1-A5B392F6B92C}
+	EndGlobalSection
+EndGlobal

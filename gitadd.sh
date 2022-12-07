@@ -96,10 +96,17 @@ git add CDBMgmt/Form1.resx
 git add CDBMgmt/AddRecord.cs
 git add CDBMgmt/AddRecord.Designer.cs
 git add CDBMgmt/AddRecord.resx
-git add CDBMgmt/Filenamer.cs
-git add CDBMgmt/Filenamer.Designer.cs
-git add CDBMgmt/Filenamer.resx
 git add CDBMgmt/Properties/*
+
+git add ODBMgmt/App.config
+git add ODBMgmt/ODBMgmt.sln
+git add ODBMgmt/Program.cs
+git add ODBMgmt/Odata.cs
+git add ODBMgmt/ODBMgmt.csproj
+git add ODBMgmt/Form1.cs
+git add ODBMgmt/Form1.Designer.cs
+git add ODBMgmt/Form1.resx
+git add ODBMgmt/Properties/*
 
 git status
 

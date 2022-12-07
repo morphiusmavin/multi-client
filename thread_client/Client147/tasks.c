@@ -102,6 +102,7 @@ enum output_types
 	BENCH_24V_2a,
 	BENCH_12V_1a,
 	BENCH_12V_2a,
+	BLANKa,
 	BENCH_5V_1a,
 	BENCH_5V_2a,
 	BENCH_3V3_1a,
@@ -785,7 +786,7 @@ UCHAR timer_task(int test)
 					printf("turn off %s\n",ctp->label);
 					ctp->state = 0;
 					cllist_change_data(i,ctp,&cll);
-					add_msg_queue(ctp->port+25,ctp->state);
+					add_msg_queue(ctp->port+9,ctp->state);	// skip over blank
 				}
 			}else if(ctp->state == 0)	// if off check for next on time
 			{
@@ -796,10 +797,10 @@ UCHAR timer_task(int test)
 					printf("turn on %s\n",ctp->label);
 					ctp->state = 1;
 					cllist_change_data(i, ctp, &cll);
-					add_msg_queue(ctp->port+25,ctp->state);
+					add_msg_queue(ctp->port+9,ctp->state);
 				}
 			}
-			uSleep(0,TIME_DELAY/16);
+			uSleep(0,TIME_DELAY/32);
 		}
 
 		if(shutdown_all)

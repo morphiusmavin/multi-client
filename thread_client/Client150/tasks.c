@@ -773,7 +773,7 @@ UCHAR timer_task(int test)
 					add_msg_queue(ctp->port+34,ctp->state);
 				}
 			}
-			uSleep(0,TIME_DELAY/16);
+			uSleep(0,TIME_DELAY/32);
 		}
 
 		if(shutdown_all)

@@ -208,7 +208,7 @@ void OutPortD(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTD_OFFSET] = state;
 	*(card_ports + ROC_4) = *pstate;
-	//printf("state: %2x\n ",state);
+//	printf("state: %2x\n ",state);
 }
 /**********************************************************************************************************/
 void OutPortE(int onoff, UCHAR bit)
@@ -227,7 +227,7 @@ void OutPortE(int onoff, UCHAR bit)
 	pstate = &state;
 	outportstatus[OUTPORTE_OFFSET] = state;
 	*(card_ports + ROC_5) = *pstate;
-	//printf("state: %2x\n ",state);
+//	printf("state: %2x\n ",state);
 }
 /**********************************************************************************************************/
 void OutPortF(int onoff, UCHAR bit)

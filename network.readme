@@ -8,13 +8,9 @@ todo:
 4) days in client gets reset from 2 to 1 (happened just once)
 5) strlen() in some msg's may not send data w/ 0's 
 6) SEND_CLIENT_LIST from cmd_tasks to sock_mgt shouldn't need any params (line 306 in cmd_tasks.c) 
-7) CDBMgmt program needs things added:
-	a) file dialog picker for file to load from (csv dat xml) and file to create (csv dat or xm) 
-	b) button that hides unused records (port = -1) 
-	c) button to delete records 
-	d) button to add new records 
-8) fix problem where clock turns midnight on the last day of the month and now.Day tries to access 
-	sunrisesunsetHoursMinutes[] element that's not there 
+7) Hook up temp sensors and use as triggers for ports (heat strips) or warnings 
+8) Clients/Server should send a msg back to Winclient after Winclient logs in saying that they 
+	already have their time set 
 
 to add new commands:
 

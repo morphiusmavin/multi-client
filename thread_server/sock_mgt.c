@@ -1080,7 +1080,7 @@ int get_msg(int sd)
 	}
 	if(memcmp(preamble,pre_preamble,8) != 0)
 	{
-		printf("bad preamble\n");
+		//printf("bad preamble\n");
 		return -1;
 	}
 	ret = recv_tcp(sd, &low,1,1);

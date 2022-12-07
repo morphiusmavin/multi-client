@@ -136,11 +136,10 @@ int cllist_find_data(int index, C_DATA **datapp, cllist_t *llistp)
 {
 	cllist_node_t *cur, *prev;
 	int status = -1;
-	if(index > 19)
-		return -1;
+
 	/* Initialize to "not found" */
 	*datapp = (C_DATA *)NULL;
-
+printf("index: %d\n",index);
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 
 	/* Look through index for our entry */
@@ -150,15 +149,17 @@ int cllist_find_data(int index, C_DATA **datapp, cllist_t *llistp)
 		{
 			*datapp = cur->datap;
 			status = 0;
-//			printf("find: %d %d %d %s\r\n", index, cur->datap->onoff, cur->datap->port, cur->datap->label);
+			//printf("find: %d %d %d %s\r\n", index, cur->datap->index, cur->datap->port, cur->datap->label);
 			break;
 		}
 		else if (cur->index > index)
 		{
+			//printf("bad break\n");
 			break;
 		}
 	}
 	pthread_rdwr_runlock_np(&(llistp->rwlock));
+	//printf("status: %d\n",status);
 	return status;
 }
 
@@ -302,7 +303,7 @@ int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp)
 	{
 		if (cur->index == index)
 		{
-			printf("cur: %s\n",cur->datap->label);
+			//printf("cur: %s\n",cur->datap->label);
 			cur->datap = datap;
 			//free(cur);
 			status = 0;
@@ -321,13 +322,12 @@ int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp)
 int cllist_show(cllist_t *llistp)
 {
 //	char list_buf[100];
-	char *ptr;
-	int iptr;
+	//char *ptr;
+	//int iptr;
 	cllist_node_t *cur;
-	char list_buf[100];
+	//char list_buf[100];
 	int i = 0;
 
-	printf("showing C_DATA\r\n");
 /*
 	char label[OLABELSIZE];
 	int port;					// which port to turn on/off
@@ -339,6 +339,7 @@ int cllist_show(cllist_t *llistp)
 	int duration_seconds;		// use these if type 0
 	int duration_minutes;
 */
+	printf("showing C_DATA\r\n");
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 	cur=llistp->first;
 
@@ -346,6 +347,7 @@ int cllist_show(cllist_t *llistp)
 
 	for (cur=llistp->first; cur != NULL; cur=cur->nextp)
 	{
+		printf("%d ",cur->datap->index);
 		if(cur->datap->label[0] != 0)
 		{
 			printf("%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%s\r\n",

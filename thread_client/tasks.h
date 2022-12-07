@@ -57,13 +57,7 @@ enum sched_task_types
 	BASIC_CONTROLS
 } SCHED_TASK_TYPES;
 
-enum water_states
-{
-	RESET_ON,
-	WATER_ON,
-	RESET_OFF,
-	WATER_OFF
-} WATER_STATES;
+
 
 void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest);
 UCHAR recv_msg_task(int test);
@@ -106,6 +100,7 @@ void send_status_msg(char *msg);
 void set_gps_baudrate(int baudrate);
 void print_cmd(UCHAR cmd);
 void assign_client_table(void);
+void sort_countdown(void);
 
 typedef struct
 {
@@ -119,6 +114,19 @@ typedef struct
 	int index;
 	int onoff;
 }SPECIAL_CMD_ARR;
+
+typedef struct
+{
+	int index;
+	int port;
+	int onoff;
+	int hour;
+	int minute;
+	int second;
+	int seconds_away;
+}COUNTDOWN;
+
+#define COUNTDOWN_SIZE 40
 
 // global variables
 int trunning_days, trunning_hours, trunning_minutes, trunning_seconds;
@@ -141,8 +149,6 @@ key_t sock_key;
 key_t sched_key;
 key_t basic_controls_key;
 int this_client_index;
-int timer_on;
-int timer_seconds;
 int next_client;
 
 #endif

@@ -23,4 +23,9 @@ thread_client/cs_client/cdata.csv.154
 thread_client/cs_client/cdata.xml
 thread_client/gettime.c
 thread_server/cs_client/cdata146.csv
+ODBMgmt/.vs/
+ODBMgmt/bin/
+ODBMgmt/obj/
+new 1.txt
+sort_example.txt
 

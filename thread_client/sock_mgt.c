@@ -208,9 +208,10 @@ UCHAR get_host_cmd_task1(int test)
 */
 		if(msg_len < 0)
 		{
-			printf("bad msg\r\n");
+			//printf("bad msg\r\n");
+			printf(".");
 			cmd = BAD_MSG;
-			usleep(10000);
+			uSleep(2,0);
 		}else
 		{
 			rc = recv_tcp(&msg_buf[0],msg_len+1,1);
@@ -419,8 +420,9 @@ int get_msg(void)
 	}
 	if(memcmp(preamble,pre_preamble,8) != 0)
 	{
-		printf("bad preamble\n");
-		uSleep(1,0);
+		//printf("bad preamble\n");
+		printf(".");
+		uSleep(2,0);
 		return -1;
 	}
 	ret = recv_tcp(&low,1,1);

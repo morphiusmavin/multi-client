@@ -68,7 +68,7 @@ UCHAR get_host_cmd_task(int test)
 //	O_DATA **otpp = &otp;
 	C_DATA *ctp;
 	C_DATA **ctpp = &ctp;
-	C_DATA *cdata_temp;
+	//C_DATA *cdata_temp;
 	int rc = 0; 
 	int rc1 = 0;
 	UCHAR cmd = 0x21;
@@ -106,12 +106,12 @@ UCHAR get_host_cmd_task(int test)
 	UINT utemp;
 	struct msgqbuf msg;
 	int msgtype = 1;
-	UCHAR ytemp[30];
+
 	//UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
 	int temp;
 	char label[30];
-	int iport, index, state, on_hour, on_minute, on_second, off_hour, off_minute, off_second;
-
+	int index;
+	
 	assign_client_table();
 
 	//memset(write_serial_buffer, 0, SERIAL_BUFF_SIZE);
@@ -180,10 +180,8 @@ UCHAR get_host_cmd_task(int test)
 
 	init_ips();
 	same_msg = 0;
-	timer_on = 0;
-	timer_seconds = 2;
-	cdata_temp = (C_DATA *)malloc(sizeof(C_DATA));
-	memset(cdata_temp, 0, sizeof(C_DATA));
+	//cdata_temp = (C_DATA *)malloc(sizeof(C_DATA));
+	//memset(cdata_temp, 0, sizeof(C_DATA));
 
 	while(TRUE)
 	{
@@ -241,11 +239,34 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
+				case CLEAR_CLLIST:
+					for(i = 0;i < 20;i++)
+					{
+						cllist_find_data(i, ctpp, &cll);
+						ctp->port = -1;
+						ctp->state = 0;
+						ctp->on_hour = 0;
+						ctp->on_minute = 0;
+						ctp->on_second = 0;
+						ctp->off_hour = 0;
+						ctp->off_minute = 0;
+						ctp->off_second = 0;
+						strcpy(ctp->label,"test");
+						cllist_change_data(i,ctp,&cll);
+					}
+					break;
+					
+				case SHOW_CLLIST:
+					cllist_show(&cll);
+					break;
+
 				case REPLY_CLLIST:
+/*
 						printf("msg_len: %d\n",msg_len);
 						for(i = 0;i < msg_len;i++)
 							printf("%c",tempx[i]);
 						printf("\n");
+*/
 						cmd = REPLY_CLLIST;
 						msg.mtext[0] = cmd;
 						msg_len = strlen(tempx);
@@ -289,147 +310,32 @@ UCHAR get_host_cmd_task(int test)
 					}
 					break;
 
-				case GET_CLLIST:
-					port = tempx[0];
-					cllist_find_data((int)port, ctpp, &cll);
-					if(ctp->port > -1)
-					{
-						sprintf(tempx,"%d %d %d %d %d %d %d %d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
-								ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
-						printf("%s\n",tempx);
-						cmd = REPLY_CLLIST;
-						msg.mtext[0] = cmd;
-						msg_len = strlen(tempx);
-						msg.mtext[1] = (UCHAR)msg_len;
-						msg.mtext[2] = (UCHAR)(msg_len >> 4);
-						strncpy(msg.mtext+3,tempx,msg_len);
-
-						if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-						{
-							perror("msgsnd error");
-							printf("exit from send client list\n");
-							exit(EXIT_FAILURE);
-						}
-					}
-					break;
-
 				case SET_CLLIST:
-#if 1
-					memset(ytemp,0,sizeof(ytemp));
-					pch2 = pch = &tempx[0];
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(label,pch2,i);
-
-					pch2 = pch;
-					pch2++;
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(ytemp,pch2,i);
-					index = atoi(ytemp);
-
-					pch2 = pch;
-					pch2++;
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(ytemp,pch2,i);
-					iport = atoi(ytemp);
-					pch2 = pch;
-					pch2++;
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(ytemp,pch2,i);
-					state = atoi(ytemp);
-
-					pch2 = pch;
-					pch2++;
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(ytemp,pch2,i);
-					on_hour = atoi(ytemp);
-
-					pch2 = pch;
-					pch2++;
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(ytemp,pch2,i);
-					on_minute = atoi(ytemp);
-
-					pch2 = pch;
-					pch2++;
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(ytemp,pch2,i);
-					on_second = atoi(ytemp);
-
-					pch2 = pch;
-					pch2++;
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(ytemp,pch2,i);
-					off_hour = atoi(ytemp);
-
-					pch2 = pch;
-					pch2++;
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(ytemp,pch2,i);
-					off_minute = atoi(ytemp);
-
-					pch2 = pch;
-					pch2++;
-					i = 0;
-					do {
-						i++;
-						pch++;
-					}while(*pch != ' ');
-					strncpy(ytemp,pch2,i);
-					off_second = atoi(ytemp);
-
+/*
+					printf("msg_len: %d\n",msg_len);
+					for(i = 0;i < msg_len;i++)
+						printf("%02x ",tempx[i]);
+					printf("\n");
+*/
+					index = (int)tempx[0];
 					cllist_find_data(index, ctpp, &cll);
-
 					ctp->index = index;
-					ctp->port = iport;
-					ctp->state = state;
-					ctp->on_hour = on_hour;
-					ctp->on_minute = on_minute;
-					ctp->on_second = on_second;
-					ctp->off_hour = off_hour;
-					ctp->off_minute = off_minute;
-					ctp->off_second = off_second;
+					ctp->port = (int)tempx[1];
+					ctp->state = (int)tempx[2];
+					ctp->on_hour = (int)tempx[3];
+					ctp->on_minute = (int)tempx[4];
+					ctp->on_second = (int)tempx[5];
+					ctp->off_hour = (int)tempx[6];
+					ctp->off_minute = (int)tempx[7];
+					ctp->off_second = (int)tempx[8];
+					memset(label,0,sizeof(label));
+					memcpy(label,&tempx[10],30);
 					strcpy(ctp->label,label);
-					printf("%s\n",ctp->label);
 					cllist_change_data(index,ctp,&cll);
 					break;
-#endif
+
 				case SAVE_CLLIST:
+					clWriteConfig(cFileName,&cll,csize,errmsg);
 					break;
 
 				case YESIMHERE:
@@ -447,26 +353,6 @@ UCHAR get_host_cmd_task(int test)
 						printf("exit from send client list\n");
 						exit(EXIT_FAILURE);
 					}
-					break;
-
-				case SET_TIMER:
-					timer_seconds = tempx[0];
-					printf("timer set to: %d seconds\n",timer_seconds);
-					break;
-
-				case START_TIMER1:
-					timer_on = 1;
-					printf("timer1 on\n");
-					break;
-
-				case START_TIMER2:
-					timer_on = 2;
-					printf("timer2 on\n");
-					break;
-
-				case STOP_TIMER:
-					timer_on = 0;
-					printf("timer off\n");
 					break;
 
 				case SEND_CLIENT_LIST:

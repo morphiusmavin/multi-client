@@ -143,8 +143,6 @@ extern char cFileName[20];
 int sock_qid;
 int sched_qid;
 int basic_controls_qid;
-int timer_on;
-int timer_seconds;
 
 UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];

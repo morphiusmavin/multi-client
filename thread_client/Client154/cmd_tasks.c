@@ -48,6 +48,8 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 struct msgqbuf msg;
 int msgtype = 1;
+extern int curr_countdown_size;
+extern void sort_countdown(void);
 
 inline int pack4chars(char c1, char c2, char c3, char c4) {
     return ((int)(((unsigned char)c1) << 24)
@@ -101,12 +103,8 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 
 UCHAR get_host_cmd_task2(int test)
 {
-//	I_DATA tempi1;
-	O_DATA tempo1;
-//	RI_DATA tempr1;
-//	I_DATA *itp;
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
+//	O_DATA *otp;
+//	O_DATA **otpp = &otp;
 	C_DATA *ctp;
 	C_DATA **ctpp = &ctp;
 	int rc = 0; 
@@ -124,7 +122,7 @@ UCHAR get_host_cmd_task2(int test)
 	UCHAR tempx[SERIAL_BUFF_SIZE];
 	UCHAR tempx2[SERIAL_BUFF_SIZE];
 	char temp_time[5];
-	char *pch, *pch2;
+	char *pch;
 	int fname_index;
 	UCHAR uch_fname_index;
 	UCHAR mask;
@@ -144,13 +142,10 @@ UCHAR get_host_cmd_task2(int test)
 	char version[15] = "sched v1.03\0";
 	UINT utemp;
 //	UCHAR time_buffer[20];
-	timer_on = 0;
-	timer_seconds = 2;
 	next_client = 0;
-	UCHAR ytemp[30];
 	char label[30];
-	int iport, index, state, on_hour, on_minute, on_second, off_hour, off_minute, off_second;
-
+	int index;
+	
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
 	// inportstatus array, representing 3 byts of each 2 (3x8x2 = 48) to
@@ -207,9 +202,11 @@ UCHAR get_host_cmd_task2(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
+		ollist_show(&oll);
 	}
 
 	cllist_init(&cll);
+	printf("%s\n",cFileName);
 	if(access(cFileName,F_OK) != -1)
 	{
 		clLoadConfig(cFileName,&cll,csize,errmsg);
@@ -218,21 +215,21 @@ UCHAR get_host_cmd_task2(int test)
 			printf("%s\r\n",errmsg);
 		}
 		
-		cllist_show(&cll);
+		//cllist_show(&cll);
 /*
 		int index = 4;
 		cllist_find_data(index, ctpp, &cll);
-		printf("%d %d %s\n",ctp->port, ctp->type, ctp->label);
+		printf("%d %s\n",ctp->port, ctp->label);
 		index++;
 		cllist_find_data(index, ctpp, &cll);
-		printf("%d %d %s\n",ctp->port, ctp->type, ctp->label);
+		printf("%d %s\n",ctp->port, ctp->label);
 		index++;
 		cllist_find_data(index, ctpp, &cll);
-		printf("%d %d %s\n",ctp->port, ctp->type, ctp->label);
+		printf("%d %s\n",ctp->port, ctp->label);
 */
 		}
 
-	init_ips();
+	//init_ips();
 	same_msg = 0;
 
 	//printf("%s\n",version);
@@ -311,128 +308,83 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case CLEAR_CLLIST:
+						for(i = 0;i < 20;i++)
+						{
+							j = cllist_find_data(i, ctpp, &cll);
+							if(j == -1)
+							{
+								printf("bad find: %d\n",index);
+								break;
+							}
+							ctp->port = -1;
+							ctp->state = 0;
+							ctp->on_hour = 0;
+							ctp->on_minute = 0;
+							ctp->on_second = 0;
+							ctp->off_hour = 0;
+							ctp->off_minute = 0;
+							ctp->off_second = 0;
+							strcpy(ctp->label,"test");
+							cllist_change_data(i,ctp,&cll);
+						}
+						curr_countdown_size = 0;
+						break;
+
+					case SHOW_CLLIST:
+						printf("show cllist\n");
+						j = cllist_show(&cll);
+						if(j == -1)
+						{
+							printf("bad find: %d\n",index);
+							break;
+						}
+						break;
+
+					case SORT_CLLIST:
+						printf("sort\n");
+						sort_countdown();
+						break;
+
 					case SET_CLLIST:
-#if 1
-						memset(ytemp,0,sizeof(ytemp));
-						pch2 = pch = &tempx[0];
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(label,pch2,i);
-
-						pch2 = pch;
-						pch2++;
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(ytemp,pch2,i);
-						index = atoi(ytemp);
-
-						pch2 = pch;
-						pch2++;
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(ytemp,pch2,i);
-						iport = atoi(ytemp);
-						pch2 = pch;
-						pch2++;
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(ytemp,pch2,i);
-						state = atoi(ytemp);
-
-						pch2 = pch;
-						pch2++;
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(ytemp,pch2,i);
-						on_hour = atoi(ytemp);
-
-						pch2 = pch;
-						pch2++;
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(ytemp,pch2,i);
-						on_minute = atoi(ytemp);
-
-						pch2 = pch;
-						pch2++;
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(ytemp,pch2,i);
-						on_second = atoi(ytemp);
-
-						pch2 = pch;
-						pch2++;
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(ytemp,pch2,i);
-						off_hour = atoi(ytemp);
-
-						pch2 = pch;
-						pch2++;
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(ytemp,pch2,i);
-						off_minute = atoi(ytemp);
-
-						pch2 = pch;
-						pch2++;
-						i = 0;
-						do {
-							i++;
-							pch++;
-						}while(*pch != ' ');
-						strncpy(ytemp,pch2,i);
-						off_second = atoi(ytemp);
-
-						cllist_find_data(index, ctpp, &cll);
-
+/*
+						printf("msg_len: %d\n",msg_len);
+						for(i = 0;i < msg_len;i++)
+							printf("%02x ",tempx[i]);
+						printf("\n");
+*/
+						index = (int)tempx[0];
+						j = cllist_find_data(index, ctpp, &cll);
+						if(j == -1)
+						{
+							printf("bad find: %d\n",index);
+							break;
+						}
 						ctp->index = index;
-						ctp->port = iport;
-						ctp->state = state;
-						ctp->on_hour = on_hour;
-						ctp->on_minute = on_minute;
-						ctp->on_second = on_second;
-						ctp->off_hour = off_hour;
-						ctp->off_minute = off_minute;
-						ctp->off_second = off_second;
+						ctp->port = (int)tempx[1];
+						ctp->state = (int)tempx[2];
+						ctp->on_hour = (int)tempx[3];
+						ctp->on_minute = (int)tempx[4];
+						ctp->on_second = (int)tempx[5];
+						ctp->off_hour = (int)tempx[6];
+						ctp->off_minute = (int)tempx[7];
+						ctp->off_second = (int)tempx[8];
+						memset(label,0,sizeof(label));
+						memcpy(label,&tempx[10],30);
 						strcpy(ctp->label,label);
-						printf("%s\n",ctp->label);
 						cllist_change_data(index,ctp,&cll);
 					break;
-#endif
-				case SAVE_CLLIST:
-					break;
+
+					case SAVE_CLLIST:
+						clWriteConfig(cFileName,&cll,csize,errmsg);
+						break;
+					
 					case GET_ALL_CLLIST:
 						for(i = 0;i < 20;i++)
 						{
-							cllist_find_data(i, ctpp, &cll);
+							j = cllist_find_data(i, ctpp, &cll);
+							if(j == -1)
+								break;
 							if(ctp->port > -1)
 							{
 								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
@@ -457,20 +409,6 @@ UCHAR get_host_cmd_task2(int test)
 								*/
 								uSleep(0,TIME_DELAY/4);
 							}
-						}
-						break;
-
-					case GET_CLLIST:
-						port = tempx[0];
-						printf("port: %d\n",port);
-						cllist_find_data((int)port, ctpp, &cll);
-						if(ctp->port > -1)
-						{
-							sprintf(tempx,"%d %d %d %d %d %d %d %d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
-									ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
-							printf("%s\n",tempx);
-							cmd = REPLY_CLLIST;
-							send_sock_msg(tempx, msg_len, cmd, 8);
 						}
 						break;
 
@@ -501,27 +439,6 @@ UCHAR get_host_cmd_task2(int test)
 						j++;
 						if(j > 10)
 							j = 0;
-						break;
-
-					case SET_TIMER:
-						timer_seconds = tempx[0];
-						//printf("%02x %02x %02x\n",tempx[0], tempx[1], tempx[2]);
-						//printf("timer set to: %d seconds\n",timer_seconds);
-						break;
-
-					case START_TIMER1:
-						timer_on = 1;
-						//printf("timer 1 on\n");
-						break;
-
-					case START_TIMER2:
-						timer_on = 2;
-						//printf("timer 2 on\n");
-						break;
-
-					case STOP_TIMER:
-						timer_on = 0;
-						//printf("timer off\n");
 						break;
 
 					case CLIENT_RECONNECT:

@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Xml.Linq;
 
 // https://github.com/morphiusmavin/multi-client
 
@@ -25,6 +26,7 @@ namespace CDBMgmt
         private List<String> temp;
         private List<Tdata> mycdata = null;
          private int selected_row = -1;
+        private string initial_directory = @"C:\Users\Daniel\ClientProgramData\";
         public CDBMgmt()
 		{
 			InitializeComponent();
@@ -102,59 +104,6 @@ namespace CDBMgmt
 
             MessageBox.Show("created: " + tfilename);
         }
-
-        // sunrise sunset data
-		private void btntdata_Click(object sender, EventArgs e)
-		{
-            string tfilename;
-            // can't have the 1st line blank
-            MessageBox.Show("make sure this csv file is in the sunset/sunrise format", "WARNING");
-            tfilename = ChooseCSVFileName();
-            if (tfilename == "")
-                return;
-
-            String[] file = File.ReadAllLines(tfilename);
-            foreach (String sr in file)
-            {
-                int i = sr.IndexOf('?');
-                i--;
-                int j = sr.IndexOf(',', i);
-                String temp2 = sr.Remove(i, j - i);
-                i = temp2.IndexOf('?');
-                i--;
-                j = temp2.IndexOf(',', i);
-                temp2 = temp2.Remove(i, j - i);
-                i = temp2.IndexOf('?');
-                temp2 = temp2.Remove(i, 1);
-                i = temp2.IndexOf('(');
-                j = temp2.IndexOf(')');
-                temp2 = temp2.Remove(i, j - i + 1);
-                temp.Add(temp2);
-            }
-            String xml = "";
-            XElement top = new XElement("Table",
-            from items in temp
-            let fields = items.Split(',')
-            select new XElement("T_DATA",
-            new XElement("Index", fields[0]),
-            new XElement("Sunrise", fields[1]),
-            new XElement("Sunset", fields[2]),
-            new XElement("Length", fields[3]),
-            new XElement("Diff", fields[4]),
-            new XElement("AstStart", fields[5]),
-            new XElement("AstEnd", fields[6]),
-            new XElement("NautStart", fields[7]),
-            new XElement("NautEnd", fields[8]),
-            new XElement("CivilStart", fields[9]),
-            new XElement("CivilEnd", fields[10]),
-            new XElement("Time", fields[11]),
-            new XElement("MilMiles", fields[12])
-            )
-            );
-            File.WriteAllText(@"C:\Users\Daniel\dev\tdata.xml", xml + top.ToString());
-            MessageBox.Show("C:\\Users\\Daniel\\dev\\tdata.xml (used by Win Client)");
-        }
-
 		private void CellClick(object sender, DataGridViewCellEventArgs e)
 		{
             int row = 0;
@@ -643,7 +592,7 @@ namespace CDBMgmt
 			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 			saveFileDialog1.Filter = "csv file|*.csv|CSV file|*.CSV";
 			saveFileDialog1.Title = "Save a csv file";
-            saveFileDialog1.InitialDirectory = @"C:\Users\Daniel\dev";
+            saveFileDialog1.InitialDirectory = initial_directory;
             saveFileDialog1.ShowDialog();
 
             // If the file name is not an empty string open it for saving.
@@ -660,7 +609,7 @@ namespace CDBMgmt
 			SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 			saveFileDialog1.Filter =  "XML file|*.XML|xml file|*.xml";
 			saveFileDialog1.Title = "Create an XML file";
-            saveFileDialog1.InitialDirectory = @"C:\Users\Daniel\dev";
+            saveFileDialog1.InitialDirectory = initial_directory;
 			saveFileDialog1.ShowDialog();
 
             // If the file name is not an empty string open it for saving.
@@ -676,7 +625,7 @@ namespace CDBMgmt
 		{
             OpenFileDialog openFileDialog2 = new OpenFileDialog
             {
-                InitialDirectory = @"C:\Users\Daniel\dev",
+                InitialDirectory = initial_directory,
                 Title = "Browse XML Files",
 
                 CheckFileExists = true,
@@ -704,7 +653,7 @@ namespace CDBMgmt
         {
             OpenFileDialog openFileDialog2 = new OpenFileDialog
             {
-                InitialDirectory = @"C:\Users\Daniel\dev",
+                InitialDirectory = initial_directory,
                 Title = "Browse CSV Files",
 
                 CheckFileExists = true,
@@ -731,7 +680,7 @@ namespace CDBMgmt
         {
             OpenFileDialog openFileDialog2 = new OpenFileDialog
             {
-                InitialDirectory = @"C:\Users\Daniel\dev",
+                InitialDirectory = initial_directory,
                 Title = "Browse dat Files",
 
                 CheckFileExists = true,
@@ -754,5 +703,97 @@ namespace CDBMgmt
             else return "";
 
         }
-    }
+
+		private void btnTest_Click(object sender, EventArgs e)
+		{
+            Tdata tdata = new Tdata();
+            byte single;
+            byte[] data = new byte[40];
+            byte[] label = new byte[60];
+            byte[] label2 = new byte[30];
+            int i;
+            tdata.index = 0;
+            tdata.port = 1;
+            tdata.state = 0;
+            tdata.on_hour = 1;
+            tdata.on_minute = 2;
+            tdata.on_second = 3;
+            tdata.off_hour = 4;
+            tdata.off_minute = 5;
+            tdata.off_second = 6;
+            tdata.label = "ABCDEFGasdfasdf ";
+
+            data[0] = GetByteFromInt(tdata.index);
+            data[1] = GetByteFromInt(tdata.port);
+            data[2] = GetByteFromInt(tdata.state);
+            data[3] = GetByteFromInt(tdata.on_hour);
+            data[4] = GetByteFromInt(tdata.on_minute);
+            data[5] = GetByteFromInt(tdata.on_second);
+            data[6] = GetByteFromInt(tdata.off_hour);
+            data[7] = GetByteFromInt(tdata.off_minute);
+            data[8] = GetByteFromInt(tdata.off_second);
+            label = BytesFromString(tdata.label);
+            for(i = 0;i < label.Length/2;i++)
+			{
+                label2[i] = label[i * 2];
+			}
+            System.Buffer.BlockCopy(label2, 0, data, 10, 30);
+            //string asdf = "1234567890";
+            //byte[] test2 = BytesFromString(asdf);
+            // this returns: 49,0,50,0,51,0...
+            //System.Buffer.BlockCopy(label, 0, data, 10, 30);
+            // BlockCopy(src, srcoff, dest, destoff,len);
+            i = 0;
+
+        }
+        public static byte[] ConvertIntToByteArray(int I)
+        {
+            return BitConverter.GetBytes(I);
+        }
+        public static byte GetByteFromInt(int i)
+		{
+            byte[] bytes = BitConverter.GetBytes(i);
+            return bytes[0];
+		}
+        byte[] BytesFromString(String str)
+        {
+            byte[] bytes = new byte[str.Length * sizeof(char)];
+            System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
+            return bytes;
+        }
+        private void btnClearNon_Click(object sender, EventArgs e)
+        {
+            ClearNonRecords();
+            DataTable dt = GetDataTable();
+            foreach (Tdata td in mycdata)
+            {
+                dt.Rows.Add(td.index.ToString(), td.port.ToString(), td.state.ToString(), td.on_hour.ToString(),
+                    td.on_minute.ToString(), td.on_second.ToString(), td.off_hour.ToString(), td.off_minute.ToString(),
+                    td.off_second.ToString(), td.label);
+            }
+            //          Step 5: Binding the datatable to datagrid:
+            dataGridView1.DataSource = dt;
+        }
+
+        private void ClearNonRecords()
+        {
+            Tdata[] temp_cdata = new Tdata[20];
+            int count = mycdata.Count();
+            int i;
+            int k = 0;
+            for (i = 0; i < count; i++)
+            {
+                if (mycdata[i].port != -1)
+                {
+                    temp_cdata[i] = mycdata[i];
+                    k++;
+                }
+            }
+            mycdata.Clear();
+            for (int j = 0; j < k; j++)
+            {
+                mycdata.Add(temp_cdata[j]);
+            }
+        }
+	}
 }

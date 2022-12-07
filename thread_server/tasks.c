@@ -782,7 +782,6 @@ UCHAR timer_task(int test)
 	uSleep(5,0);
 	while(TRUE)
 	{
-		uSleep(1,0);
 		time_t T = time(NULL);
 		struct tm tm = *localtime(&T);
 
@@ -817,36 +816,12 @@ UCHAR timer_task(int test)
 					}
 				}
 			}
+			uSleep(0,TIME_DELAY/4);		// 0.25 seconds
+//			uSleep(0,TIME_DELAY/8);		// 0.125 seconds
+//			uSleep(0,TIME_DELAY/16);	// 0.0625 seconds
+//			uSleep(0,TIME_DELAY/32);	// 0.03125 seconds
+//			uSleep(0,TIME_DELAY/64);	// 0.015625 seconds
 		}
-
-		if(timer_on == 1)
-		{
-			//printf("%s %d\n",client_table[i].label, client_table[i].socket);
-			for(i = 0;i < MAX_CLIENTS;i++)
-			{
-				if(client_table[i].type == TS_CLIENT && client_table[i].socket > 0)
-				{
-					//printf("%s %d\n",client_table[i].label, client_table[i].socket);
-					msg_len = SERIAL_BUFF_SIZE-20;
-					//printf("msg_len: %d\n",msg_len);
-					msg.mtext[0] = cmd;
-					msg.mtext[1] = (UCHAR)i;
-					msg.mtext[2] = (UCHAR)msg_len;
-					msg.mtext[3] = (UCHAR)(msg_len >> 4);
-					memcpy(msg.mtext+4,write_serial_buffer,msg_len);
-					if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
-					{
-						perror("msgsnd error");
-						exit(EXIT_FAILURE);
-					}
-					uSleep(timer_seconds,0);
-				}
-			}
-		}
-		else if(timer_on == 2)
-		{
-			
-		}else uSleep(0,TIME_DELAY/200);
 	
 		if(shutdown_all)
 		{
