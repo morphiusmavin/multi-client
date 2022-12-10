@@ -20,7 +20,7 @@ typedef unsigned long ULONG;
 #define SERIAL_BUFF_SIZE 255
 #define RAW_DATA_ARRAY_SIZE 15
 #define MAX_CLIENTS	9
-#define NO_CMDS 75
+#define NO_CMDS 76
 #define NO_CLLIST_RECS 20
 
 // format of message queue (msgsnd & msgrcv)
@@ -70,6 +70,7 @@ enum client_list
 }CLIENT_LIST;
 
 #define OLABELSIZE 30
+#define CLABELSIZE 15
 
 typedef struct _ip
 {

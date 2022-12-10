@@ -50,6 +50,7 @@ struct msgqbuf msg;
 int msgtype = 1;
 extern int curr_countdown_size;
 extern void sort_countdown(void);
+extern void display_sort(void);
 
 inline int pack4chars(char c1, char c2, char c3, char c4) {
     return ((int)(((unsigned char)c1) << 24)
@@ -143,7 +144,7 @@ UCHAR get_host_cmd_task2(int test)
 	UINT utemp;
 //	UCHAR time_buffer[20];
 	next_client = 0;
-	char label[30];
+	char label[CLABELSIZE];
 	int index;
 	
 	// since each card only has 20 ports then the 1st 2 port access bytes
@@ -183,6 +184,7 @@ UCHAR get_host_cmd_task2(int test)
 	i = NO_CLLIST_RECS;
 	//printf("no. port bits: %d\r\n",i);
 	csize = sizeof(C_DATA);
+	printf("csize: %d\n",csize);
 	csize *= i;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
@@ -202,7 +204,7 @@ UCHAR get_host_cmd_task2(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
-		ollist_show(&oll);
+		//ollist_show(&oll);
 	}
 
 	cllist_init(&cll);
@@ -215,7 +217,7 @@ UCHAR get_host_cmd_task2(int test)
 			printf("%s\r\n",errmsg);
 		}
 		
-		//cllist_show(&cll);
+		cllist_show(&cll);
 /*
 		int index = 4;
 		cllist_find_data(index, ctpp, &cll);
@@ -346,10 +348,15 @@ UCHAR get_host_cmd_task2(int test)
 						sort_countdown();
 						break;
 
+					case DISPLAY_CLLIST_SORT:
+						display_sort();
+						break;
+
 					case SET_CLLIST:
-/*
+/*					
+						printf("set cllist\n");
 						printf("msg_len: %d\n",msg_len);
-						for(i = 0;i < msg_len;i++)
+						for(i = 0;i < msg_len/2;i++)
 							printf("%02x ",tempx[i]);
 						printf("\n");
 */
@@ -370,9 +377,13 @@ UCHAR get_host_cmd_task2(int test)
 						ctp->off_minute = (int)tempx[7];
 						ctp->off_second = (int)tempx[8];
 						memset(label,0,sizeof(label));
-						memcpy(label,&tempx[10],30);
+						memcpy(label,&tempx[10],CLABELSIZE);
 						strcpy(ctp->label,label);
+						if(ctp->on_hour == 0 && ctp->on_minute == 0 && ctp->on_second == 0 && ctp->off_hour == 0 
+								&& ctp->off_minute == 0 && ctp->off_second == 0)
+							ctp->port = -1;
 						cllist_change_data(index,ctp,&cll);
+						printf("done\n");
 					break;
 
 					case SAVE_CLLIST:
@@ -507,7 +518,7 @@ UCHAR get_host_cmd_task2(int test)
 						break;
 
 					case SET_TIME:
-						printf("set time\n");
+						//printf("set time\n");
 						curtime2 = 0L;
 						j = 0;
 
@@ -532,7 +543,7 @@ UCHAR get_host_cmd_task2(int test)
 						}
 						memcpy(&temp_time[0],&tempx[0],i);
 						i = atoi(temp_time);
-//						printf("\nmon: %d\n",i - 1);
+						//printf("\nmon: %d\n",i - 1);
 						pt->tm_mon = i - 1;
 						i = 0;
 
@@ -546,7 +557,7 @@ UCHAR get_host_cmd_task2(int test)
 //						printf("%s\n",temp_time);
 						i = atoi(temp_time);
 						pt->tm_mday = i;
-//						printf("day: %d\r\n",i);
+						//printf("day: %d\r\n",i);
 				//		return 0;
 
 						i = 0;
@@ -561,7 +572,7 @@ UCHAR get_host_cmd_task2(int test)
 						i = atoi(temp_time);
 						i += 100;
 						pt->tm_year = i;
-//						printf("year: %d\r\n",i-100);
+						//printf("year: %d\r\n",i-100);
 				//		return 0;
 						i = 0;
 
@@ -572,7 +583,7 @@ UCHAR get_host_cmd_task2(int test)
 //						printf("%s \n",temp_time);
 						i = atoi(temp_time);
 						pt->tm_hour = i;
-//						printf("hour: %d\r\n",i);
+						//printf("hour: %d\r\n",i);
 				//		return 0;
 
 						i = 0;
@@ -583,7 +594,7 @@ UCHAR get_host_cmd_task2(int test)
 //						printf("%s \n",temp_time);
 						i = atoi(temp_time);
 						pt->tm_min = i;
-//						printf("min: %d\r\n",i);
+						//printf("min: %d\r\n",i);
 
 						i = 0;
 						while(*(pch++) != ' ' && i < msg_len)
@@ -593,11 +604,11 @@ UCHAR get_host_cmd_task2(int test)
 //						printf("%s \n",temp_time);
 						i = atoi(temp_time);
 						pt->tm_sec = i;
-//						printf("sec: %d\r\n",i);
+						//printf("sec: %d\r\n",i);
 //						printf("%c %x\n",*pch,*pch);
 						if(*pch == 'P')
 						{
-//							printf("PM\n");
+							//printf("PM\n");
 							pt->tm_hour += 12;
 						}
 						curtime2 = mktime(pt);

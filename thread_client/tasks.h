@@ -57,8 +57,6 @@ enum sched_task_types
 	BASIC_CONTROLS
 } SCHED_TASK_TYPES;
 
-
-
 void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest);
 UCHAR recv_msg_task(int test);
 UCHAR get_host_cmd_task1(int test);
@@ -101,6 +99,7 @@ void set_gps_baudrate(int baudrate);
 void print_cmd(UCHAR cmd);
 void assign_client_table(void);
 void sort_countdown(void);
+void display_sort(void);
 
 typedef struct
 {

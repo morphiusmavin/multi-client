@@ -26,7 +26,7 @@
 
 typedef struct c_data
 {
-	char label[OLABELSIZE];
+	char label[CLABELSIZE];
 	int index;
 	int port;					// which port to turn on/off
 	int state;					// 0 - off; 1 - on
@@ -54,10 +54,6 @@ int cllist_insert_data (int index, cllist_t *llistp,C_DATA *datap);
 int cllist_remove_data(int index, C_DATA **datapp, cllist_t *llistp);
 int cllist_removeall_data(cllist_t *llistp);
 int cllist_find_data(int index, C_DATA **datapp, cllist_t *llistp);
-int cllist_find_data_ip(int index, C_DATA **datapp, cllist_t *llistp);
-int cllist_find_data_op(int index, int port, C_DATA **datapp, cllist_t *llistp);
-int cllist_toggle_output(int index, cllist_t *llistp);
-int cllist_change_output(int index, cllist_t *llistp, int onoff);
 int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp);
 int cllist_show(cllist_t *llistp);
 int cllist_printfile(int fp, cllist_t *llistp);

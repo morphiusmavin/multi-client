@@ -62,6 +62,7 @@
 			this.label12 = new System.Windows.Forms.Label();
 			this.label13 = new System.Windows.Forms.Label();
 			this.label14 = new System.Windows.Forms.Label();
+			this.tbTimer = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -407,12 +408,22 @@
 			this.label14.TabIndex = 30;
 			this.label14.Text = "Valve 2";
 			// 
+			// tbTimer
+			// 
+			this.tbTimer.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbTimer.Location = new System.Drawing.Point(440, 527);
+			this.tbTimer.Name = "tbTimer";
+			this.tbTimer.Size = new System.Drawing.Size(100, 24);
+			this.tbTimer.TabIndex = 31;
+			this.tbTimer.TextChanged += new System.EventHandler(this.tbTimerChanged);
+			// 
 			// GarageForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(581, 570);
+			this.Controls.Add(this.tbTimer);
 			this.Controls.Add(this.label14);
 			this.Controls.Add(this.label13);
 			this.Controls.Add(this.label12);
@@ -487,5 +498,6 @@
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.Label label13;
 		private System.Windows.Forms.Label label14;
+		private System.Windows.Forms.TextBox tbTimer;
 	}
 }

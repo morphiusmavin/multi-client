@@ -1,7 +1,7 @@
 ﻿
-namespace CDBMgmt
+namespace EpServerEngineSampleClient
 {
-	partial class Filenamer
+	partial class Settings
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -29,71 +29,70 @@ namespace CDBMgmt
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.tbFilename = new System.Windows.Forms.TextBox();
-			this.Prompt_label = new System.Windows.Forms.Label();
-			this.Ext_Label = new System.Windows.Forms.Label();
 			this.btnOK = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
+			this.cbSilentMode = new System.Windows.Forms.CheckBox();
+			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
-			// 
-			// tbFilename
-			// 
-			this.tbFilename.Location = new System.Drawing.Point(35, 55);
-			this.tbFilename.Name = "tbFilename";
-			this.tbFilename.Size = new System.Drawing.Size(100, 20);
-			this.tbFilename.TabIndex = 0;
-			this.tbFilename.TextChanged += new System.EventHandler(this.tbFilename_TextChanged);
-			// 
-			// Prompt_label
-			// 
-			this.Prompt_label.AutoSize = true;
-			this.Prompt_label.Location = new System.Drawing.Point(32, 23);
-			this.Prompt_label.Name = "Prompt_label";
-			this.Prompt_label.Size = new System.Drawing.Size(35, 13);
-			this.Prompt_label.TabIndex = 1;
-			this.Prompt_label.Text = "label1";
-			// 
-			// Ext_Label
-			// 
-			this.Ext_Label.AutoSize = true;
-			this.Ext_Label.Location = new System.Drawing.Point(141, 58);
-			this.Ext_Label.Name = "Ext_Label";
-			this.Ext_Label.Size = new System.Drawing.Size(35, 13);
-			this.Ext_Label.TabIndex = 2;
-			this.Ext_Label.Text = "label2";
 			// 
 			// btnOK
 			// 
-			this.btnOK.Location = new System.Drawing.Point(12, 125);
+			this.btnOK.Location = new System.Drawing.Point(23, 402);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(75, 23);
-			this.btnOK.TabIndex = 3;
+			this.btnOK.TabIndex = 0;
 			this.btnOK.Text = "OK";
 			this.btnOK.UseVisualStyleBackColor = true;
 			this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(101, 125);
+			this.btnCancel.Location = new System.Drawing.Point(117, 402);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
-			this.btnCancel.TabIndex = 4;
+			this.btnCancel.TabIndex = 1;
 			this.btnCancel.Text = "Cancel";
 			this.btnCancel.UseVisualStyleBackColor = true;
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			// 
-			// Filenamer
+			// cbSilentMode
+			// 
+			this.cbSilentMode.AutoSize = true;
+			this.cbSilentMode.Location = new System.Drawing.Point(32, 36);
+			this.cbSilentMode.Name = "cbSilentMode";
+			this.cbSilentMode.Size = new System.Drawing.Size(82, 17);
+			this.cbSilentMode.TabIndex = 2;
+			this.cbSilentMode.Text = "Silent Mode";
+			this.cbSilentMode.UseVisualStyleBackColor = true;
+			this.cbSilentMode.CheckedChanged += new System.EventHandler(this.ccSilentMode);
+			// 
+			// textBox1
+			// 
+			this.textBox1.Location = new System.Drawing.Point(32, 94);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(160, 20);
+			this.textBox1.TabIndex = 3;
+			// 
+			// textBox2
+			// 
+			this.textBox2.Location = new System.Drawing.Point(32, 153);
+			this.textBox2.Name = "textBox2";
+			this.textBox2.Size = new System.Drawing.Size(160, 20);
+			this.textBox2.TabIndex = 4;
+			// 
+			// Settings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(335, 160);
+			this.ClientSize = new System.Drawing.Size(246, 450);
+			this.Controls.Add(this.textBox2);
+			this.Controls.Add(this.textBox1);
+			this.Controls.Add(this.cbSilentMode);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.btnOK);
-			this.Controls.Add(this.Ext_Label);
-			this.Controls.Add(this.Prompt_label);
-			this.Controls.Add(this.tbFilename);
-			this.Name = "Filenamer";
-			this.Text = "Filenamer";
+			this.Name = "Settings";
+			this.Text = "Settings";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -101,10 +100,10 @@ namespace CDBMgmt
 
 		#endregion
 
-		private System.Windows.Forms.TextBox tbFilename;
-		private System.Windows.Forms.Label Prompt_label;
-		private System.Windows.Forms.Label Ext_Label;
 		private System.Windows.Forms.Button btnOK;
 		private System.Windows.Forms.Button btnCancel;
+		private System.Windows.Forms.CheckBox cbSilentMode;
+		private System.Windows.Forms.TextBox textBox1;
+		private System.Windows.Forms.TextBox textBox2;
 	}
 }

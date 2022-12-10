@@ -24,6 +24,7 @@ namespace EpServerEngineSampleClient
 	public partial class Cabin : Form
 	{
 		private INetworkClient m_client;
+		private int timer_tick = 145;
 		private bool m_wait = false;
 		ServerCmds svrcmd = new ServerCmds();
 		List<String> on_label_list = new List<String>();
@@ -61,6 +62,7 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
+			tbStatus.Text = "145";
 		}
 		private void ToggleButton(int which, bool state)
 		{
@@ -122,26 +124,41 @@ namespace EpServerEngineSampleClient
 		{
 			ToggleButton(7, SendCmd(7));
 		}
-		private void btnAllOn_Click(object sender, EventArgs e)
-		{
-			for(int i = 0;i < 8;i++)
-			{
-				ToggleButton(i, SendCmd(i));
-			}
-		}
-		private void btnAllOff_Click(object sender, EventArgs e)
-		{
-			for (int i = 0; i < 8; i++)
-			{
-				ToggleButton(i, SendCmd(i));
-			}
-		}
 		private void LoadEvent(object sender, EventArgs e)
 		{
 			for (int i = 0; i < 8; i++)
 			{
 				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}
+			tbStatus.Text = "145";
+			timer_tick = 145;
+		}
+
+		private void btnTimer_Click(object sender, EventArgs e)
+		{
+			timer1.Enabled = true;
+		}
+		private void TimerTick(object sender, EventArgs e)
+		{
+			int i,j;
+			if (--timer_tick == 0)
+			{
+				for (j = 0; j < 8; j++)
+					if (svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[j])))
+					{
+						tbStatus.Text = j.ToString();
+						ToggleButton(j, SendCmd(j));
+					}
+				timer1.Enabled = false;
+				//timer_tick = int.Parse(tbStatus.Text);
+				this.Close();
+			}
+			tbStatus.Text = timer_tick.ToString();
+
+		}
+		private void tbStatusChanged(object sender, EventArgs e)
+		{
+			timer_tick = int.Parse(tbStatus.Text);
 		}
 	}
 }

@@ -246,6 +246,19 @@ UCHAR get_host_cmd_task(int test)
 			//print_cmd(cmd);
 			switch(cmd)
 			{
+				case SORT_CLLIST:
+					msg_len = 0;
+					for(i = 2;i < 8;i++)
+					{
+						if(client_table[i].socket > 0)
+						{
+							//printf("dest: %d sock: %d msg_len: %d\n",dest,client_table[dest].socket,msg_len);
+							send_msg(client_table[i].socket, msg_len, (UCHAR*)&write_serial_buff[0],cmd);
+						}
+					}
+					break;
+
+
 				case REPLY_CLLIST:
 					send_msgb(client_table[0].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
 					//printf("msg_len: %d\n",msg_len);

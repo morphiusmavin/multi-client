@@ -40,16 +40,15 @@ namespace CDBMgmt
 			this.btnCreateNew = new System.Windows.Forms.Button();
 			this.btnCurrent2XML = new System.Windows.Forms.Button();
 			this.tbFileName = new System.Windows.Forms.TextBox();
-			this.btnTest = new System.Windows.Forms.Button();
 			this.btnClearNon = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// btncdata
 			// 
-			this.btncdata.Location = new System.Drawing.Point(54, 518);
+			this.btncdata.Location = new System.Drawing.Point(336, 476);
 			this.btncdata.Name = "btncdata";
-			this.btncdata.Size = new System.Drawing.Size(168, 23);
+			this.btncdata.Size = new System.Drawing.Size(122, 23);
 			this.btncdata.TabIndex = 0;
 			this.btncdata.Text = "Create XML from csv";
 			this.btncdata.UseVisualStyleBackColor = true;
@@ -68,7 +67,7 @@ namespace CDBMgmt
 			// 
 			this.btnUpdate.Location = new System.Drawing.Point(54, 476);
 			this.btnUpdate.Name = "btnUpdate";
-			this.btnUpdate.Size = new System.Drawing.Size(156, 23);
+			this.btnUpdate.Size = new System.Drawing.Size(120, 23);
 			this.btnUpdate.TabIndex = 5;
 			this.btnUpdate.Text = "Grid to Current Data";
 			this.btnUpdate.UseVisualStyleBackColor = true;
@@ -76,9 +75,9 @@ namespace CDBMgmt
 			// 
 			// btnDiff
 			// 
-			this.btnDiff.Location = new System.Drawing.Point(228, 476);
+			this.btnDiff.Location = new System.Drawing.Point(195, 476);
 			this.btnDiff.Name = "btnDiff";
-			this.btnDiff.Size = new System.Drawing.Size(141, 23);
+			this.btnDiff.Size = new System.Drawing.Size(122, 23);
 			this.btnDiff.TabIndex = 6;
 			this.btnDiff.Text = "Display from XML";
 			this.btnDiff.UseVisualStyleBackColor = true;
@@ -86,7 +85,7 @@ namespace CDBMgmt
 			// 
 			// btnDiff3
 			// 
-			this.btnDiff3.Location = new System.Drawing.Point(392, 476);
+			this.btnDiff3.Location = new System.Drawing.Point(54, 517);
 			this.btnDiff3.Name = "btnDiff3";
 			this.btnDiff3.Size = new System.Drawing.Size(120, 23);
 			this.btnDiff3.TabIndex = 8;
@@ -96,9 +95,9 @@ namespace CDBMgmt
 			// 
 			// btnCdata2
 			// 
-			this.btnCdata2.Location = new System.Drawing.Point(401, 518);
+			this.btnCdata2.Location = new System.Drawing.Point(481, 476);
 			this.btnCdata2.Name = "btnCdata2";
-			this.btnCdata2.Size = new System.Drawing.Size(129, 23);
+			this.btnCdata2.Size = new System.Drawing.Size(120, 23);
 			this.btnCdata2.TabIndex = 9;
 			this.btnCdata2.Text = "create cdata flat file";
 			this.btnCdata2.UseVisualStyleBackColor = true;
@@ -106,9 +105,9 @@ namespace CDBMgmt
 			// 
 			// btnReadCdata
 			// 
-			this.btnReadCdata.Location = new System.Drawing.Point(559, 518);
+			this.btnReadCdata.Location = new System.Drawing.Point(481, 519);
 			this.btnReadCdata.Name = "btnReadCdata";
-			this.btnReadCdata.Size = new System.Drawing.Size(134, 23);
+			this.btnReadCdata.Size = new System.Drawing.Size(120, 23);
 			this.btnReadCdata.TabIndex = 10;
 			this.btnReadCdata.Text = "read cdata flat file";
 			this.btnReadCdata.UseVisualStyleBackColor = true;
@@ -116,7 +115,7 @@ namespace CDBMgmt
 			// 
 			// btnAddRecord
 			// 
-			this.btnAddRecord.Location = new System.Drawing.Point(553, 476);
+			this.btnAddRecord.Location = new System.Drawing.Point(632, 476);
 			this.btnAddRecord.Name = "btnAddRecord";
 			this.btnAddRecord.Size = new System.Drawing.Size(120, 23);
 			this.btnAddRecord.TabIndex = 11;
@@ -126,9 +125,9 @@ namespace CDBMgmt
 			// 
 			// btnCreateNew
 			// 
-			this.btnCreateNew.Location = new System.Drawing.Point(715, 518);
+			this.btnCreateNew.Location = new System.Drawing.Point(336, 517);
 			this.btnCreateNew.Name = "btnCreateNew";
-			this.btnCreateNew.Size = new System.Drawing.Size(134, 23);
+			this.btnCreateNew.Size = new System.Drawing.Size(122, 23);
 			this.btnCreateNew.TabIndex = 12;
 			this.btnCreateNew.Text = "Create a New csv file";
 			this.btnCreateNew.UseVisualStyleBackColor = true;
@@ -136,9 +135,9 @@ namespace CDBMgmt
 			// 
 			// btnCurrent2XML
 			// 
-			this.btnCurrent2XML.Location = new System.Drawing.Point(706, 476);
+			this.btnCurrent2XML.Location = new System.Drawing.Point(195, 517);
 			this.btnCurrent2XML.Name = "btnCurrent2XML";
-			this.btnCurrent2XML.Size = new System.Drawing.Size(120, 23);
+			this.btnCurrent2XML.Size = new System.Drawing.Size(122, 23);
 			this.btnCurrent2XML.TabIndex = 13;
 			this.btnCurrent2XML.Text = "Current data to XML";
 			this.btnCurrent2XML.UseVisualStyleBackColor = true;
@@ -146,24 +145,14 @@ namespace CDBMgmt
 			// 
 			// tbFileName
 			// 
-			this.tbFileName.Location = new System.Drawing.Point(877, 520);
+			this.tbFileName.Location = new System.Drawing.Point(818, 521);
 			this.tbFileName.Name = "tbFileName";
-			this.tbFileName.Size = new System.Drawing.Size(335, 20);
+			this.tbFileName.Size = new System.Drawing.Size(223, 20);
 			this.tbFileName.TabIndex = 15;
-			// 
-			// btnTest
-			// 
-			this.btnTest.Location = new System.Drawing.Point(1031, 476);
-			this.btnTest.Name = "btnTest";
-			this.btnTest.Size = new System.Drawing.Size(120, 23);
-			this.btnTest.TabIndex = 16;
-			this.btnTest.Text = "Test";
-			this.btnTest.UseVisualStyleBackColor = true;
-			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
 			// 
 			// btnClearNon
 			// 
-			this.btnClearNon.Location = new System.Drawing.Point(854, 476);
+			this.btnClearNon.Location = new System.Drawing.Point(632, 519);
 			this.btnClearNon.Name = "btnClearNon";
 			this.btnClearNon.Size = new System.Drawing.Size(120, 23);
 			this.btnClearNon.TabIndex = 17;
@@ -177,7 +166,6 @@ namespace CDBMgmt
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1236, 628);
 			this.Controls.Add(this.btnClearNon);
-			this.Controls.Add(this.btnTest);
 			this.Controls.Add(this.tbFileName);
 			this.Controls.Add(this.btnCurrent2XML);
 			this.Controls.Add(this.btnCreateNew);
@@ -211,7 +199,6 @@ namespace CDBMgmt
 		private System.Windows.Forms.Button btnCreateNew;
 		private System.Windows.Forms.Button btnCurrent2XML;
 		private System.Windows.Forms.TextBox tbFileName;
-		private System.Windows.Forms.Button btnTest;
 		private System.Windows.Forms.Button btnClearNon;
 	}
 }

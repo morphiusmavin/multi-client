@@ -13,6 +13,7 @@ namespace EpServerEngineSampleClient
 	public partial class AddRecord : Form
 	{
 		private Cdata m_cdata;
+		private int noRecs;
 		public AddRecord(Cdata cdata)
 		{
 			InitializeComponent();
@@ -25,8 +26,24 @@ namespace EpServerEngineSampleClient
 			tbOffSecond.Text = "0";
 			tbPort.Text = "0";
 			tbLabel.Text = "Label";
+			noRecs = 1;
+			tbNoRecs.Text = noRecs.ToString(); 
 		}
-
+		public AddRecord()
+		{
+			InitializeComponent();
+			m_cdata = new Cdata();
+			tbOnHour.Text = "0";
+			tbOnMinute.Text = "0";
+			tbOnSecond.Text = "0";
+			tbOffHour.Text = "0";
+			tbOffMinute.Text = "0";
+			tbOffSecond.Text = "0";
+			tbPort.Text = "0";
+			tbLabel.Text = "Label";
+			noRecs = 1;
+			tbNoRecs.Text = noRecs.ToString();
+		}
 		public void SetCdata(Cdata cdata)
 		{
 			m_cdata = cdata;
@@ -35,7 +52,16 @@ namespace EpServerEngineSampleClient
 		{
 			return m_cdata;
 		}
+		public int GetNoRecs()
+		{
+			return noRecs;
+		}
 
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.Cancel;
+			this.Close();
+		}
 		private void btnOK_Click(object sender, EventArgs e)
 		{
 			m_cdata.port = int.Parse(tbPort.Text);
@@ -51,11 +77,21 @@ namespace EpServerEngineSampleClient
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}
-
-		private void btnCancel_Click(object sender, EventArgs e)
+		private void textBox1_TextChanged(object sender, EventArgs e)
 		{
-			this.DialogResult = DialogResult.Cancel;
-			this.Close();
+			noRecs = int.Parse(tbNoRecs.Text);
 		}
+		private void LoadAddForm(object sender, EventArgs e)
+		{
+			tbOnHour.Text = m_cdata.on_hour.ToString();
+			tbOnMinute.Text = m_cdata.on_minute.ToString();
+			tbOnSecond.Text = m_cdata.on_second.ToString();
+			tbOffHour.Text = m_cdata.off_hour.ToString();
+			tbOffMinute.Text = m_cdata.off_minute.ToString();
+			tbOffSecond.Text = m_cdata.off_second.ToString();
+			tbPort.Text = m_cdata.port.ToString();
+			tbLabel.Text = m_cdata.label;
+		}
+
 	}
 }

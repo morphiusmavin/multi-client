@@ -27,16 +27,16 @@
 typedef struct o_data
 {
 	char label[OLABELSIZE];
-	UCHAR port;
-	UCHAR onoff;			// current state: 1 if on; 0 if off
-	UCHAR input_port;		// input port which affects this output (if not set to 0xFF)
-	UCHAR input_type;		// 
+	int port;
+	int onoff;			// current state: 1 if on; 0 if off
+	int input_port;		// input port which affects this output (if not set to 0xFF)
+	int input_type;		// 
 							// 
-	UCHAR type;				// see below
-	UINT time_delay;		// when type 2-4 this is used as the time delay
-	UINT time_left;			// gets set to time_delay and then counts down
-	UCHAR pulse_time;		// not used
-	UCHAR reset;			// used to make 2nd pass
+	int type;				// see below
+	int time_delay;		// when type 2-4 this is used as the time delay
+	int time_left;			// gets set to time_delay and then counts down
+	int pulse_time;		// not used
+	int reset;			// used to make 2nd pass
 } O_DATA;
 
 /*

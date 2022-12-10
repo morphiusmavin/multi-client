@@ -74,6 +74,8 @@ static int raw_data_ptr;
 int avg_raw_data(int prev_data);
 int max_ips;
 IP ip[40];
+static COUNTDOWN count_down[COUNTDOWN_SIZE];
+int curr_countdown_size;
 
 #define ON 1
 #define OFF 0
@@ -705,17 +707,120 @@ int change_output(int index, int onoff)
 	return index;
 }
 #endif
+void swap(COUNTDOWN* xp, COUNTDOWN* yp)
+{
+	COUNTDOWN temp = *xp;
+	*xp = *yp;
+	*yp = temp;
+}
+/*********************************************************************/
+void remove_top_countdown()
+{
+	int i;
+	
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		memcpy(&count_down[i],&count_down[i+i],sizeof(COUNTDOWN));
+	}
+	curr_countdown_size--;
+}
+/*********************************************************************/
+void sort_countdown(void)
+{
+	C_DATA *ctp;
+	C_DATA **ctpp = &ctp;
+
+	int i,j,k,n,min_idx;
+
+	int hour, minute, second;
+	time_t T = time(NULL);
+	struct tm tm = *localtime(&T);
+	COUNTDOWN *ct;
+	COUNTDOWN tct;
+	int current_seconds = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
+	printf("curr sec: %d\n",current_seconds);
+	k = 0;
+	for(i = 0;i < 20;i++)
+	{
+		j = cllist_find_data(i, ctpp, &cll);
+		if(ctp->port > -1)
+		{
+			count_down[k].port = ctp->port;
+			count_down[k].hour = ctp->on_hour;
+			count_down[k].minute = ctp->on_minute;
+			count_down[k].second = ctp->on_second;
+			count_down[k].onoff = 1;
+			count_down[k].index = i;
+			k++;
+			count_down[k].port = ctp->port;
+			count_down[k].hour = ctp->off_hour;
+			count_down[k].minute = ctp->off_minute;
+			count_down[k].second = ctp->off_second;
+			count_down[k].onoff = 0;
+			count_down[k].index = i;
+			k++;
+		}
+		
+	}
+	curr_countdown_size = k;
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		count_down[i].seconds_away = count_down[i].hour * 3600 + count_down[i].minute * 60 + count_down[i].second;
+	}
+/*
+	printf("\n");
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+	}
+	printf("\n");
+*/
+	for (i = 0; i < curr_countdown_size - 1; i++) 		// do the sort
+	{
+		// Find the minimum element in unsorted array
+		min_idx = i;
+		for (j = i + 1; j < curr_countdown_size; j++)
+			if (count_down[j].seconds_away < count_down[min_idx].seconds_away)
+				min_idx = j;
+
+		// Swap the found minimum element
+		// with the first element
+		swap(&count_down[min_idx], &count_down[i]);
+	}
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		// seconds_away > current_seconds then seconds_away is in the future
+		if(count_down[i].seconds_away > current_seconds)	
+			count_down[i].seconds_away -= current_seconds;
+
+		else 
+		{
+			count_down[i].seconds_away = -1;
+		}
+	}
+/*
+	printf("\n");
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+	}
+*/
+}
+/*********************************************************************/
+void display_sort()
+{
+	int i;
+	printf("sort:\n");
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		if(count_down[i].seconds_away > -1)
+			printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+	}
+}
 /*********************************************************************/
 // this happens 10x a second
 UCHAR timer2_task(int test)
 {
-	int i,j;
-	char tempx[20];
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
-	O_DATA *otp2;
-	O_DATA **otpp2 = &otp2;
-	int bank = 0;
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 
 	while(TRUE)
@@ -750,25 +855,13 @@ UCHAR timer2_task(int test)
 UCHAR timer_task(int test)
 {
 	int i;
-	char tempx[100];
-//	UCHAR tempx[SERIAL_BUFF_SIZE];
-	int index = 3;
-	time_t t;
-	struct timeval mtv;
-	C_DATA *ctp;
-	C_DATA **ctpp = &ctp;
-//	static int test_ctr = 0;
-//	static int test_ctr2 = 0;
-	UCHAR cmd;
-	int msg_len;
-	int ret;
+	int onoff;
 	struct msgqbuf msg;
 	int msgtype = 1;
-	msg.mtype = msgtype;
+	
+	int msg_len;
 
-//	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
-
-	cmd = 0x21;
+	UCHAR cmd = 0x21;
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
 	{
 		write_serial_buffer[i] = cmd;
@@ -776,51 +869,52 @@ UCHAR timer_task(int test)
 			cmd = 0x21;
 	}
 
-	i = 0;
-	cmd = AREYOUTHERE;
-
 	uSleep(5,0);
+	sort_countdown();
+
 	while(TRUE)
 	{
 		time_t T = time(NULL);
 		struct tm tm = *localtime(&T);
 
-		//printf("System Date is: %02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
-		//printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-		for(i = 0;i < 20;i++)
+		// at 5 minutes after midnight, send a SORT_CLLIST msg to all the clients 
+		// so they can reset thier timer list - just wait 5 minutes in case some 
+		// clients have a different time and date 
+		if(tm.tm_hour == 0 && tm.tm_min == 5 && tm.tm_sec == 0)
 		{
-			cllist_find_data(i, ctpp, &cll);
-			if(ctp->port > -1)
+			cmd = SORT_CLLIST;
+			msg.mtext[0] = cmd;
+			msg.mtext[1] = 8;
+			msg_len = 2;
+			msg.mtext[2] = (UCHAR)msg_len;
+			msg.mtext[3] = (UCHAR)(msg_len >> 4);
+
+			if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 			{
-				if(ctp->state == 1)		// if on check for next off time
+				// keep getting "Invalid Argument" - cause I didn't set the mtype
+				perror("msgsnd error");
+				printf("exit from send client list\n");
+				exit(EXIT_FAILURE);
+			}
+		}
+		uSleep(1,0);
+		if(curr_countdown_size > 0)
+		{
+			for(i = 0;i < curr_countdown_size;i++)
+			{
+				//printf("%d ",count_down[i].seconds_away);
+				if(count_down[i].seconds_away > -1)
 				{
-					//printf("on %d %d\n",tm.tm_hour, tm.tm_min);
-					if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute && tm.tm_sec == ctp->off_second)
+					if(--count_down[i].seconds_away == 0)
 					{
-						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-						printf("turn off %d %s\n",ctp->port, ctp->label);
-						ctp->state = 0;
-						cllist_change_data(i,ctp,&cll);
-						add_msg_queue(ctp->port+1,ctp->state);
-					}
-				}else if(ctp->state == 0)	// if off check for next on time
-				{
-					//printf("off %d %d\n",tm.tm_hour, tm.tm_min);
-					if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute && tm.tm_sec == ctp->on_second)
-					{
-						printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-						printf("turn on %d %s\n",ctp->port, ctp->label);
-						ctp->state = 1;
-						cllist_change_data(i, ctp, &cll);
-						add_msg_queue(ctp->port+1,ctp->state);
+						//printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+						onoff = count_down[i].onoff;
+						add_msg_queue(count_down[i].port+1, onoff);
+						//printf("%d\n",onoff);
+						//remove_top_countdown();
 					}
 				}
 			}
-			uSleep(0,TIME_DELAY/4);		// 0.25 seconds
-//			uSleep(0,TIME_DELAY/8);		// 0.125 seconds
-//			uSleep(0,TIME_DELAY/16);	// 0.0625 seconds
-//			uSleep(0,TIME_DELAY/32);	// 0.03125 seconds
-//			uSleep(0,TIME_DELAY/64);	// 0.015625 seconds
 		}
 	
 		if(shutdown_all)
@@ -1105,7 +1199,7 @@ UCHAR basic_controls_task(int test)
 		}
 		cmd = msg.mtext[0];
 		onoff = msg.mtext[1];
-		
+		//print_cmd(cmd);
 		switch(cmd)
 		{
 			case DESK_LIGHT:

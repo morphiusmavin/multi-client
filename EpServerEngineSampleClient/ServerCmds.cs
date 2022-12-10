@@ -21,7 +21,12 @@ namespace EpServerEngineSampleClient
 			WEST_LIGHT,
 			NORTHEAST_LIGHT,
 			SOUTHWEST_LIGHT,
-			BENCH_24V_1,
+			WATER_HEATER,
+			WATER_PUMP,
+			WATER_VALVE1,
+			WATER_VALVE2,
+			WATER_VALVE3,       // last one on garage
+			BENCH_24V_1,        // start of 147
 			BENCH_24V_2,
 			BENCH_12V_1,
 			BENCH_12V_2,
@@ -32,26 +37,21 @@ namespace EpServerEngineSampleClient
 			BENCH_3V3_2,
 			BENCH_LIGHT1,
 			BENCH_LIGHT2,
-			WATER_HEATER,
-			BATTERY_HEATER,
-			WATER_PUMP,
-			WATER_VALVE1,
-			WATER_VALVE2,
-			WATER_VALVE3,
-			CABIN1,
+			BATTERY_HEATER,     // last one for 147
+			CABIN1,             // start of 154
 			CABIN2,
 			CABIN3,
 			CABIN4,
 			CABIN5,
 			CABIN6,
 			CABIN7,
-			CABIN8,
-			COOP1_LIGHT,
+			CABIN8,             // last one for 154
+			COOP1_LIGHT,        // start of 150
 			COOP1_HEATER,
 			COOP2_LIGHT,
 			COOP2_HEATER,
 			OUTDOOR_LIGHT1,
-			OUTDOOR_LIGHT2,
+			OUTDOOR_LIGHT2,     // last of 150
 			GET_TEMP4,
 			SHUTDOWN_IOBOX,
 			REBOOT_IOBOX,
@@ -73,11 +73,6 @@ namespace EpServerEngineSampleClient
 			UPDATE_STATUS,
 			SEND_MESSAGE,
 			CLIENT_RECONNECT,
-			DB_LOOKUP,
-			SET_TIMER,
-			START_TIMER1,
-			START_TIMER2,
-			STOP_TIMER,
 			SET_NEXT_CLIENT,
 			SEND_NEXT_CLIENT,
 			UPDATE_CLIENT_INFO,
@@ -88,9 +83,12 @@ namespace EpServerEngineSampleClient
 			REPLY_CLLIST,
 			SET_CLLIST,
 			SAVE_CLLIST,
-			NO_CLLIST_REC
-}
-
+			NO_CLLIST_REC,
+			SHOW_CLLIST,
+			CLEAR_CLLIST,
+			SORT_CLLIST,
+			DISPLAY_CLLIST_SORT
+		}
 		public ServerCmds()
 		{
 
@@ -101,14 +99,12 @@ namespace EpServerEngineSampleClient
 			m_client = client;
 		}
 		//Queue<int> qt = new Queue<int>();
-
 		byte[] BytesFromString(String str)
 		{
 			byte[] bytes = new byte[str.Length * sizeof(char)];
 			System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
 			return bytes;
 		}
-
 		public byte GetCmdIndexB(string cmd)
 		{
 			byte i = 0;
@@ -630,7 +626,7 @@ namespace EpServerEngineSampleClient
 				m_client.Send(packet);
 			}
 		}
-		public void Send_ClCmd(int msg, int index, byte[] bytes)
+		public int Send_ClCmd(int msg, int index, byte[] bytes)
 		{
 			// bytes should be send as 2x as what's needed
 			var temp = index;
@@ -651,6 +647,7 @@ namespace EpServerEngineSampleClient
 			{
 				m_client.Send(packet);
 			}
+			return dtemp.Length;
 		}
 		public bool connection_alive()
 		{

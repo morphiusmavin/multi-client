@@ -13,6 +13,7 @@ namespace CDBMgmt
 	public partial class AddRecord : Form
 	{
 		private Tdata m_cdata;
+		private int noRecs;
 		public AddRecord(Tdata cdata)
 		{
 			InitializeComponent();
@@ -25,8 +26,24 @@ namespace CDBMgmt
 			tbOffSecond.Text = "0";
 			tbPort.Text = "0";
 			tbLabel.Text = "Label";
+			noRecs = 1;
+			tbNoRecs.Text = noRecs.ToString();
 		}
-
+		public AddRecord()
+		{
+			InitializeComponent();
+			m_cdata = new Tdata();
+			tbOnHour.Text = "0";
+			tbOnMinute.Text = "0";
+			tbOnSecond.Text = "0";
+			tbOffHour.Text = "0";
+			tbOffMinute.Text = "0";
+			tbOffSecond.Text = "0";
+			tbPort.Text = "0";
+			tbLabel.Text = "Label";
+			noRecs = 1;
+			tbNoRecs.Text = noRecs.ToString();
+		}
 		public void SetCdata(Tdata cdata)
 		{
 			m_cdata = cdata;
@@ -34,6 +51,10 @@ namespace CDBMgmt
 		public Tdata GetCdata()
 		{
 			return m_cdata;
+		}
+		public int GetNoRecs()
+		{
+			return noRecs;
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
@@ -67,6 +88,28 @@ namespace CDBMgmt
 		{
 			this.DialogResult = DialogResult.Cancel;
 			this.Close();
+		}
+
+		private void btnAddPort_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void LoadAddForm(object sender, EventArgs e)
+		{
+			tbOnHour.Text = m_cdata.on_hour.ToString();
+			tbOnMinute.Text = m_cdata.on_minute.ToString();
+			tbOnSecond.Text = m_cdata.on_second.ToString();
+			tbOffHour.Text = m_cdata.off_hour.ToString();
+			tbOffMinute.Text = m_cdata.off_minute.ToString();
+			tbOffSecond.Text = m_cdata.off_second.ToString();
+			tbPort.Text = m_cdata.port.ToString();
+			tbLabel.Text = m_cdata.label;
+		}
+
+		private void tbNoRecs_TextChanged(object sender, EventArgs e)
+		{
+			noRecs = int.Parse(tbNoRecs.Text);
 		}
 	}
 }

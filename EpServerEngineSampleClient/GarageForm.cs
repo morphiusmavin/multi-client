@@ -30,7 +30,7 @@ namespace EpServerEngineSampleClient
 		private bool m_pause = false;
 		bool allon = false;
 		int single_select = 0;
-		int timer_tick = 0;
+		int timer_tick = 20;
 		int no_lights = 8;
 
 		List<String> on_label_list = new List<String>();
@@ -80,6 +80,7 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
+			tbTimer.Text = "20";
 		}
 		public void Enable_Dlg(bool wait)
 		{
@@ -273,34 +274,22 @@ namespace EpServerEngineSampleClient
 		}
 		private void myTimerTick(object sender, EventArgs e)
 		{
-			int i;
-			if (++timer_tick > 20)
+			int i,j;
+			if (--timer_tick == 0)
 			{
-				for (i = 0; i < 7; i++)
-				{
-					//status[i] = true;
-				}
-				SendCmd(0);
-				SendCmd(1);
-				SendCmd(2);
-				SendCmd(3);
-				SendCmd(4);
-				SendCmd(5);
-				SendCmd(6);
+				for (j = 0; j < 8; j++)
+					if (svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[j])))
+					{
+						ToggleButton(j, SendCmd(j));
+					}
 				timer1.Enabled = false;
-				timer_tick = 0;
-				for (i = 0; i < 7; i++)
-				{
-					//status[i] = false;
-					button_list[i].Ctl.Text = "OFF";
-					button_list[i].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-				}
-				for (i = 0; i < 7; i++)
-				{
-					//status[i] = false;
-				}
+				//timer_tick = int.Parse(tbTimer.Text);
+				btnAll.Text = "OFF";
+				btnAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+				this.Close();
 			}
-			AddMsg(timer_tick.ToString());
+			tbTimer.Text = timer_tick.ToString();
+			//AddMsg(timer_tick.ToString());
 		}
 		private void btnTimer_Click(object sender, EventArgs e)
 		{
@@ -399,6 +388,12 @@ namespace EpServerEngineSampleClient
 			{
 				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}
+			tbTimer.Text = "20";
+			timer_tick = 20;
+		}
+		private void tbTimerChanged(object sender, EventArgs e)
+		{
+			timer_tick = int.Parse(tbTimer.Text);
 		}
 	}
 }

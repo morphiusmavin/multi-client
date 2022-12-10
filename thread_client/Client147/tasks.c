@@ -63,8 +63,9 @@ static int raw_data_ptr;
 int avg_raw_data(int prev_data);
 int max_ips;
 IP ip[40];
-//static UCHAR msg_queue[MSG_QUEUE_SIZE];
-//static int msg_queue_ptr;
+
+static COUNTDOWN count_down[COUNTDOWN_SIZE];
+int curr_countdown_size;
 
 #define ON 1
 #define OFF 0
@@ -727,80 +728,154 @@ UCHAR timer2_task(int test)
 	return 1;
 }
 /*********************************************************************/
-// this happens once a second
-UCHAR timer_task(int test)
+void swap(COUNTDOWN* xp, COUNTDOWN* yp)
+{
+	COUNTDOWN temp = *xp;
+	*xp = *yp;
+	*yp = temp;
+}
+/*********************************************************************/
+void remove_top_countdown()
 {
 	int i;
+	
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		memcpy(&count_down[i],&count_down[i+i],sizeof(COUNTDOWN));
+	}
+	curr_countdown_size--;
+}
+/*********************************************************************/
+void sort_countdown(void)
+{
 	C_DATA *ctp;
 	C_DATA **ctpp = &ctp;
 
-	UCHAR cmd = 0x21;
-	UCHAR ucbuff[6];
-	int temp;
-	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
-	temp = 0;
-	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
+	int i,j,k,n,min_idx;
+
+	int hour, minute, second;
+	time_t T = time(NULL);
+	struct tm tm = *localtime(&T);
+	COUNTDOWN *ct;
+	COUNTDOWN tct;
+	int current_seconds = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
+	printf("curr sec: %d\n",current_seconds);
+	k = 0;
+	for(i = 0;i < 20;i++)
 	{
-		write_serial_buffer[i] = cmd;
-		if(++cmd > 0x7e)
-			cmd = 0x21;
+		j = cllist_find_data(i, ctpp, &cll);
+		if(ctp->port > -1)
+		{
+			count_down[k].port = ctp->port;
+			count_down[k].hour = ctp->on_hour;
+			count_down[k].minute = ctp->on_minute;
+			count_down[k].second = ctp->on_second;
+			count_down[k].onoff = 1;
+			count_down[k].index = i;
+			k++;
+			count_down[k].port = ctp->port;
+			count_down[k].hour = ctp->off_hour;
+			count_down[k].minute = ctp->off_minute;
+			count_down[k].second = ctp->off_second;
+			count_down[k].onoff = 0;
+			count_down[k].index = i;
+			k++;
+		}
+		
 	}
-	write_serial_buffer[SERIAL_BUFF_SIZE - 20] = 0;
-	i = 0;
+	curr_countdown_size = k;
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		count_down[i].seconds_away = count_down[i].hour * 3600 + count_down[i].minute * 60 + count_down[i].second;
+	}
 /*
-	fp = init_serial();
-	if(fp < 0)
+	printf("\n");
+	for(i = 0;i < curr_countdown_size;i++)
 	{
-		printf("can't open comm port 1\n");
-	}else printf("com port1: %d\n",fp);
-
-	fp = init_serial2();
-	if(fp < 0)
-	{
-		printf("can't open comm port 2\n");
-	}else printf("com port2: %d\n",fp);
-
-	fp = init_serial3(5);
-	if(fp < 0)
-	{
-		printf("can't open comm port 3\n");
-	}else printf("com port3: %d\n",fp);
+		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+	}
+	printf("\n");
 */
-	uSleep(5,0);
+	for (i = 0; i < curr_countdown_size - 1; i++) 		// do the sort
+	{
+		// Find the minimum element in unsorted array
+		min_idx = i;
+		for (j = i + 1; j < curr_countdown_size; j++)
+			if (count_down[j].seconds_away < count_down[min_idx].seconds_away)
+				min_idx = j;
+
+		// Swap the found minimum element
+		// with the first element
+		swap(&count_down[min_idx], &count_down[i]);
+	}
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		// seconds_away > current_seconds then seconds_away is in the future
+		if(count_down[i].seconds_away > current_seconds)	
+			count_down[i].seconds_away -= current_seconds;
+
+		else 
+		{
+			count_down[i].seconds_away = -1;
+		}
+	}
+/*
+	printf("\n");
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+	}
+*/
+}
+/*********************************************************************/
+void display_sort()
+{
+	int i;
+	printf("sort:\n");
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		if(count_down[i].seconds_away > -1)
+			printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+	}
+}
+/*********************************************************************/
+// this happens once a second
+UCHAR timer_task(int test)
+{
+	int i,j;
+	int onoff;
+
+	time_t T;
+	struct tm tm;
+	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
+
+	uSleep(2,0);
+	printf("starting timer task\n");
+
+	sort_countdown();
+
 	while(TRUE)
 	{
-		time_t T = time(NULL);
-		struct tm tm = *localtime(&T);
-
-		//printf("System Date is: %02d/%02d/%04d\n", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
-		//printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-		for(i = 0;i < 20;i++)
+		uSleep(1,0);
+		if(curr_countdown_size > 0)
 		{
-			cllist_find_data(i, ctpp, &cll);
-			if(ctp->state == 1)		// if on check for next off time
+			for(i = 0;i < curr_countdown_size;i++)
 			{
-				//printf("on %d %d\n",tm.tm_hour, tm.tm_min);
-				if(tm.tm_hour == ctp->off_hour && tm.tm_min == ctp->off_minute && tm.tm_sec == ctp->off_second)
+				//printf("%d ",count_down[i].seconds_away);
+				if(count_down[i].seconds_away > -1)
 				{
-					printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-					printf("turn off %s\n",ctp->label);
-					ctp->state = 0;
-					cllist_change_data(i,ctp,&cll);
-					add_msg_queue(ctp->port+9,ctp->state);	// skip over blank
-				}
-			}else if(ctp->state == 0)	// if off check for next on time
-			{
-				//printf("off %d %d\n",tm.tm_hour, tm.tm_min);
-				if(tm.tm_hour == ctp->on_hour && tm.tm_min == ctp->on_minute && tm.tm_sec == ctp->on_second)
-				{
-					printf("System Time is: %02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-					printf("turn on %s\n",ctp->label);
-					ctp->state = 1;
-					cllist_change_data(i, ctp, &cll);
-					add_msg_queue(ctp->port+9,ctp->state);
+					if(--count_down[i].seconds_away == 0)
+					{
+						T = time(NULL);
+						tm = *localtime(&T);
+						printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+						onoff = count_down[i].onoff;
+						add_msg_queue(count_down[i].port+14, onoff);
+						printf("%d\n",onoff);
+						//remove_top_countdown();
+					}
 				}
 			}
-			uSleep(0,TIME_DELAY/32);
 		}
 
 		if(shutdown_all)

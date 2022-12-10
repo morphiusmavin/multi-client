@@ -33,10 +33,13 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 	char *fptr;
 	int fp = -1;
 	int i = 0;
+	int j;
 	fptr = (char *)filename;
 	UCHAR id;
-	C_DATA o_data;
+	C_DATA c_data;
 	int ret = 0;
+	//void *ptr;
+	//UCHAR tempx[60];
 
 	fp = open((const char *)fptr, O_RDWR);
 	if(fp < 0)
@@ -57,10 +60,20 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 		printf("invalid file format\n");
 		return -1;
 	}
+	printf("sizeof: %d\n",sizeof(C_DATA));
 	for(i = 0;i < NO_CLLIST_RECS;i++)
 	{
-		ret += read(fp,&o_data,sizeof(C_DATA));
-		cllist_insert_data(i, oll, &o_data);
+		ret += read(fp,&c_data,sizeof(C_DATA));
+		//ret += read(fp,&tempx[0],sizeof(C_DATA));
+/*		
+		for(j = 0;j < 52;j++)
+		{
+			printf("%02x ",tempx[j]);
+		}
+		printf("\n");
+*/
+		//printf("%d ",ret);
+		cllist_insert_data(i, oll, &c_data);
 	}
 	//printf("fp:%d  read: %d bytes in clLoadConfig\n",fp,ret);
 	close(fp);

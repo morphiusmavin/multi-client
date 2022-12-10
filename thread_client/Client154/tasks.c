@@ -693,17 +693,6 @@ int change_output(int index, int onoff)
 // this happens 10x a second
 UCHAR timer2_task(int test)
 {
-	int i,j;
-	char tempx[20];
-	static int prev_light_sensor_value;
-	static int time_lapse;
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
-	O_DATA *otp2;
-	O_DATA **otpp2 = &otp2;
-	int bank = 0;
-	UCHAR mask;
-	int index = 0;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 
@@ -717,6 +706,7 @@ UCHAR timer2_task(int test)
 			if(++trunning_minutes > 59)
 			{
 				trunning_minutes = 0;
+				printf("running hours: %d\n",trunning_hours);
 				if(++trunning_hours > 23)
 				{
 					trunning_hours = 0;
@@ -788,21 +778,22 @@ void sort_countdown(void)
 			count_down[k].index = i;
 			k++;
 		}
+		
 	}
 	curr_countdown_size = k;
 	for(i = 0;i < curr_countdown_size;i++)
 	{
 		count_down[i].seconds_away = count_down[i].hour * 3600 + count_down[i].minute * 60 + count_down[i].second;
 	}
-/*	
-	for(i = 0;i < k;i++)
+/*
+	printf("\n");
+	for(i = 0;i < curr_countdown_size;i++)
 	{
 		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
 	}
+	printf("\n");
 */
-	//ct = (COUNTDOWN *)malloc(sizeof(COUNTDOWN)*k);
-
-	for (i = 0; i < curr_countdown_size - 1; i++) 
+	for (i = 0; i < curr_countdown_size - 1; i++) 		// do the sort
 	{
 		// Find the minimum element in unsorted array
 		min_idx = i;
@@ -814,14 +805,35 @@ void sort_countdown(void)
 		// with the first element
 		swap(&count_down[min_idx], &count_down[i]);
 	}
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		// seconds_away > current_seconds then seconds_away is in the future
+		if(count_down[i].seconds_away > current_seconds)	
+			count_down[i].seconds_away -= current_seconds;
 
+		else 
+		{
+			count_down[i].seconds_away = -1;
+		}
+	}
+/*
 	printf("\n");
 	for(i = 0;i < curr_countdown_size;i++)
 	{
 		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
 	}
-
-	//free(ct);
+*/
+}
+/*********************************************************************/
+void display_sort()
+{
+	int i;
+	printf("sort:\n");
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		if(count_down[i].seconds_away > -1)
+			printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+	}
 }
 /*********************************************************************/
 // this happens once a second
@@ -830,11 +842,8 @@ UCHAR timer_task(int test)
 	int i,j;
 	int onoff;
 
-	C_DATA *ctp;
-	C_DATA **ctpp = &ctp;
-
-	UCHAR cmd = 0x21;
-	UCHAR ucbuff[6];
+	time_t T;
+	struct tm tm;
 
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 
@@ -855,19 +864,24 @@ UCHAR timer_task(int test)
 */
 	while(TRUE)
 	{
-		time_t T = time(NULL);
-		struct tm tm = *localtime(&T);
 		uSleep(1,0);
 		if(curr_countdown_size > 0)
 		{
 			for(i = 0;i < curr_countdown_size;i++)
 			{
-				if(--count_down[i].seconds_away == 0)
+				//printf("%d ",count_down[i].seconds_away);
+				if(count_down[i].seconds_away > -1)
 				{
-					printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
-					onoff = count_down[i].onoff == 1?0:1;
-					add_msg_queue(count_down[i].port+26, onoff);
-					remove_top_countdown();
+					if(--count_down[i].seconds_away == 0)
+					{
+						T = time(NULL);
+						tm = *localtime(&T);
+						printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+						onoff = count_down[i].onoff;
+						add_msg_queue(count_down[i].port+26, onoff);
+						printf("%d\n",onoff);
+						//remove_top_countdown();
+					}
 				}
 			}
 		}

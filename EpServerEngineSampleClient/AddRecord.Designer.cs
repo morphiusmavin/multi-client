@@ -46,11 +46,13 @@ namespace EpServerEngineSampleClient
 			this.label6 = new System.Windows.Forms.Label();
 			this.tbLabel = new System.Windows.Forms.TextBox();
 			this.label7 = new System.Windows.Forms.Label();
+			this.tbNoRecs = new System.Windows.Forms.TextBox();
+			this.label8 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// btnOK
 			// 
-			this.btnOK.Location = new System.Drawing.Point(278, 165);
+			this.btnOK.Location = new System.Drawing.Point(16, 189);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(75, 23);
 			this.btnOK.TabIndex = 0;
@@ -60,7 +62,7 @@ namespace EpServerEngineSampleClient
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(375, 165);
+			this.btnCancel.Location = new System.Drawing.Point(113, 189);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 1;
@@ -70,50 +72,50 @@ namespace EpServerEngineSampleClient
 			// 
 			// tbOnHour
 			// 
-			this.tbOnHour.Location = new System.Drawing.Point(134, 84);
+			this.tbOnHour.Location = new System.Drawing.Point(66, 74);
 			this.tbOnHour.Name = "tbOnHour";
-			this.tbOnHour.Size = new System.Drawing.Size(100, 20);
+			this.tbOnHour.Size = new System.Drawing.Size(40, 20);
 			this.tbOnHour.TabIndex = 2;
 			// 
 			// tbOnMinute
 			// 
-			this.tbOnMinute.Location = new System.Drawing.Point(263, 84);
+			this.tbOnMinute.Location = new System.Drawing.Point(112, 74);
 			this.tbOnMinute.Name = "tbOnMinute";
-			this.tbOnMinute.Size = new System.Drawing.Size(100, 20);
+			this.tbOnMinute.Size = new System.Drawing.Size(46, 20);
 			this.tbOnMinute.TabIndex = 3;
 			// 
 			// tbOnSecond
 			// 
-			this.tbOnSecond.Location = new System.Drawing.Point(398, 84);
+			this.tbOnSecond.Location = new System.Drawing.Point(164, 74);
 			this.tbOnSecond.Name = "tbOnSecond";
-			this.tbOnSecond.Size = new System.Drawing.Size(100, 20);
+			this.tbOnSecond.Size = new System.Drawing.Size(43, 20);
 			this.tbOnSecond.TabIndex = 4;
 			// 
 			// tbOffSecond
 			// 
-			this.tbOffSecond.Location = new System.Drawing.Point(398, 121);
+			this.tbOffSecond.Location = new System.Drawing.Point(164, 111);
 			this.tbOffSecond.Name = "tbOffSecond";
-			this.tbOffSecond.Size = new System.Drawing.Size(100, 20);
+			this.tbOffSecond.Size = new System.Drawing.Size(43, 20);
 			this.tbOffSecond.TabIndex = 7;
 			// 
 			// tbOffMinute
 			// 
-			this.tbOffMinute.Location = new System.Drawing.Point(263, 121);
+			this.tbOffMinute.Location = new System.Drawing.Point(112, 111);
 			this.tbOffMinute.Name = "tbOffMinute";
-			this.tbOffMinute.Size = new System.Drawing.Size(100, 20);
+			this.tbOffMinute.Size = new System.Drawing.Size(46, 20);
 			this.tbOffMinute.TabIndex = 6;
 			// 
 			// tbOffHour
 			// 
-			this.tbOffHour.Location = new System.Drawing.Point(134, 121);
+			this.tbOffHour.Location = new System.Drawing.Point(66, 111);
 			this.tbOffHour.Name = "tbOffHour";
-			this.tbOffHour.Size = new System.Drawing.Size(100, 20);
+			this.tbOffHour.Size = new System.Drawing.Size(40, 20);
 			this.tbOffHour.TabIndex = 5;
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(50, 91);
+			this.label1.Location = new System.Drawing.Point(13, 81);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(47, 13);
 			this.label1.TabIndex = 8;
@@ -122,7 +124,7 @@ namespace EpServerEngineSampleClient
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(50, 124);
+			this.label2.Location = new System.Drawing.Point(13, 114);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(47, 13);
 			this.label2.TabIndex = 9;
@@ -131,7 +133,7 @@ namespace EpServerEngineSampleClient
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(167, 57);
+			this.label3.Location = new System.Drawing.Point(63, 47);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(30, 13);
 			this.label3.TabIndex = 10;
@@ -140,7 +142,7 @@ namespace EpServerEngineSampleClient
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(292, 57);
+			this.label4.Location = new System.Drawing.Point(109, 47);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(39, 13);
 			this.label4.TabIndex = 11;
@@ -149,7 +151,7 @@ namespace EpServerEngineSampleClient
 			// label5
 			// 
 			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(426, 57);
+			this.label5.Location = new System.Drawing.Point(163, 47);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(44, 13);
 			this.label5.TabIndex = 12;
@@ -157,15 +159,15 @@ namespace EpServerEngineSampleClient
 			// 
 			// tbPort
 			// 
-			this.tbPort.Location = new System.Drawing.Point(134, 165);
+			this.tbPort.Location = new System.Drawing.Point(66, 142);
 			this.tbPort.Name = "tbPort";
-			this.tbPort.Size = new System.Drawing.Size(100, 20);
+			this.tbPort.Size = new System.Drawing.Size(27, 20);
 			this.tbPort.TabIndex = 13;
 			// 
 			// label6
 			// 
 			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(50, 165);
+			this.label6.Location = new System.Drawing.Point(13, 142);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(26, 13);
 			this.label6.TabIndex = 14;
@@ -173,7 +175,7 @@ namespace EpServerEngineSampleClient
 			// 
 			// tbLabel
 			// 
-			this.tbLabel.Location = new System.Drawing.Point(180, 23);
+			this.tbLabel.Location = new System.Drawing.Point(51, 12);
 			this.tbLabel.Name = "tbLabel";
 			this.tbLabel.Size = new System.Drawing.Size(183, 20);
 			this.tbLabel.TabIndex = 15;
@@ -181,17 +183,36 @@ namespace EpServerEngineSampleClient
 			// label7
 			// 
 			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(141, 26);
+			this.label7.Location = new System.Drawing.Point(12, 15);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(33, 13);
 			this.label7.TabIndex = 16;
 			this.label7.Text = "Label";
 			// 
+			// tbNoRecs
+			// 
+			this.tbNoRecs.Location = new System.Drawing.Point(167, 142);
+			this.tbNoRecs.Name = "tbNoRecs";
+			this.tbNoRecs.Size = new System.Drawing.Size(40, 20);
+			this.tbNoRecs.TabIndex = 17;
+			this.tbNoRecs.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(109, 145);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(49, 13);
+			this.label8.TabIndex = 18;
+			this.label8.Text = "No Recs";
+			// 
 			// AddRecord
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(571, 241);
+			this.ClientSize = new System.Drawing.Size(314, 241);
+			this.Controls.Add(this.label8);
+			this.Controls.Add(this.tbNoRecs);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.tbLabel);
 			this.Controls.Add(this.label6);
@@ -235,5 +256,7 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.TextBox tbLabel;
 		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.TextBox tbNoRecs;
+		private System.Windows.Forms.Label label8;
 	}
 }

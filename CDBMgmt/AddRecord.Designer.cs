@@ -46,6 +46,8 @@ namespace CDBMgmt
 			this.label6 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
 			this.btnCancel = new System.Windows.Forms.Button();
+			this.btnAddPort = new System.Windows.Forms.Button();
+			this.tbNoRecs = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// tbOnHour
@@ -99,7 +101,7 @@ namespace CDBMgmt
 			// 
 			// btnOK
 			// 
-			this.btnOK.Location = new System.Drawing.Point(146, 296);
+			this.btnOK.Location = new System.Drawing.Point(370, 301);
 			this.btnOK.Name = "btnOK";
 			this.btnOK.Size = new System.Drawing.Size(90, 29);
 			this.btnOK.TabIndex = 7;
@@ -180,7 +182,7 @@ namespace CDBMgmt
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Location = new System.Drawing.Point(270, 296);
+			this.btnCancel.Location = new System.Drawing.Point(494, 301);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(90, 29);
 			this.btnCancel.TabIndex = 16;
@@ -188,11 +190,31 @@ namespace CDBMgmt
 			this.btnCancel.UseVisualStyleBackColor = true;
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click_1);
 			// 
+			// btnAddPort
+			// 
+			this.btnAddPort.Location = new System.Drawing.Point(195, 301);
+			this.btnAddPort.Name = "btnAddPort";
+			this.btnAddPort.Size = new System.Drawing.Size(90, 29);
+			this.btnAddPort.TabIndex = 17;
+			this.btnAddPort.Text = "Add Port";
+			this.btnAddPort.UseVisualStyleBackColor = true;
+			this.btnAddPort.Click += new System.EventHandler(this.btnAddPort_Click);
+			// 
+			// tbNoRecs
+			// 
+			this.tbNoRecs.Location = new System.Drawing.Point(370, 240);
+			this.tbNoRecs.Name = "tbNoRecs";
+			this.tbNoRecs.Size = new System.Drawing.Size(100, 20);
+			this.tbNoRecs.TabIndex = 18;
+			this.tbNoRecs.TextChanged += new System.EventHandler(this.tbNoRecs_TextChanged);
+			// 
 			// AddRecord
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Controls.Add(this.tbNoRecs);
+			this.Controls.Add(this.btnAddPort);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.label6);
@@ -212,6 +234,7 @@ namespace CDBMgmt
 			this.Controls.Add(this.tbOnHour);
 			this.Name = "AddRecord";
 			this.Text = "AddRecord";
+			this.Load += new System.EventHandler(this.LoadAddForm);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -236,5 +259,7 @@ namespace CDBMgmt
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Button btnCancel;
+		private System.Windows.Forms.Button btnAddPort;
+		private System.Windows.Forms.TextBox tbNoRecs;
 	}
 }

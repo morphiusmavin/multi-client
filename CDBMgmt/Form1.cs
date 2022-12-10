@@ -25,54 +25,18 @@ namespace CDBMgmt
 	{
         private List<String> temp;
         private List<Tdata> mycdata = null;
-         private int selected_row = -1;
+        private int selected_row = -1;
         private string initial_directory = @"C:\Users\Daniel\ClientProgramData\";
+
         public CDBMgmt()
 		{
 			InitializeComponent();
             Tdata item = new Tdata();
             mycdata = new List<Tdata>();
             mycdata.Add(item);
-            /*
-            string xml_file_location = "c:\\users\\Daniel\\dev\\cdata2.xml";
-            Tdata item;
-            mycdata = new List<Tdata>();
-            XmlReader xmlfile = null;
-            int lbindex = 0;
-            DataSet ds = new DataSet();
-            var filePath = xml_file_location;
-            xmlfile = XmlReader.Create(filePath, new XmlReaderSettings());
-            ds.ReadXml(xmlfile);
-            foreach (DataRow dr in ds.Tables[0].Rows)
-            {
-                //string temp = "";
-                item = new Tdata();
-                item.label = dr.ItemArray[0].ToString();
-                //item.index = lbindex;
-                item.index = Convert.ToInt16(dr.ItemArray[0]);
-                item.port = Convert.ToInt16(dr.ItemArray[1]);
-                item.state = Convert.ToInt16(dr.ItemArray[2]);
-                item.on_hour = Convert.ToInt16(dr.ItemArray[3]);
-                item.on_minute = Convert.ToInt16(dr.ItemArray[4]);
-                item.on_second = Convert.ToInt16(dr.ItemArray[5]);
-                item.off_hour = Convert.ToInt16(dr.ItemArray[6]);
-                item.off_minute = Convert.ToInt16(dr.ItemArray[7]);
-                item.off_second = Convert.ToInt16(dr.ItemArray[8]);
-                item.label = dr.ItemArray[9].ToString();
-                mycdata.Add(item);
-                item = null;
-                lbindex++;
-            }
-            dataGridView1.DataSource = ds.Tables[0];
-            foreach (DataColumn dc in ds.Tables[0].Columns)
-            {
-                if(dc.ColumnName != "label")
-                    dc.MaxLength = 3;
-            }
-            */
         }
         // create an XML file from a csv file
-		private void btncdata_Click(object sender, EventArgs e)
+        private void btncdata_Click(object sender, EventArgs e)
 		{
             string tfilename;
             // can't have the 1st line blank
@@ -99,7 +63,7 @@ namespace CDBMgmt
             );
             int i = tfilename.IndexOf('.');
             tfilename = tfilename.Remove(i);
-            tfilename += ".dat";
+            tfilename += ".xml";
             File.WriteAllText(tfilename, xml + top.ToString());
 
             MessageBox.Show("created: " + tfilename);
@@ -248,7 +212,7 @@ namespace CDBMgmt
             string tstring2;
             string tstring3;
             string label;
-            string temp = new string(' ',30);
+            string temp = new string(' ',15);
            
             tfilename = ChooseCSVFileName();
             if (tfilename == "")
@@ -285,9 +249,11 @@ namespace CDBMgmt
                     label = words2[9];
                     byte[] bytes = Encoding.ASCII.GetBytes(label);
                     len = label.Length;
+                    if (len > 15)
+                        len = 15;
                     binWriter.Write(bytes,0,len);
                   
-                    for (k = 0; k < 32 - len; k++)
+                    for (k = 0; k < 16 - len; k++)
                         binWriter.Write(zero);
                     
                     tstring2 = tstring.ToString();
@@ -327,19 +293,7 @@ namespace CDBMgmt
             tfilename = ChooseDATFileName();
             if (tfilename == "")
                 return;
-            //string filename = "cdata";
-            /*
-            Filenamer fn = new Filenamer("read cdata.dat flatfile and display in grid", ".dat");
-            if (fn.ShowDialog(this) == DialogResult.OK)
-            {
-                filename = fn.GetFilename();
-            }
-            else
-            {
-            }
-            fn.Dispose();
-            tfilename = @"C:\Users\Daniel\dev\" + filename + ".dat";
-            */
+           
             if (!File.Exists(tfilename))
             {
                 MessageBox.Show("can't find file: " + tfilename);
@@ -441,26 +395,39 @@ namespace CDBMgmt
 
         private void btnAddRecord_Click(object sender, EventArgs e)
         {
-            Tdata cdata = new Tdata();
-            AddRecord addrec = new AddRecord(cdata);
+            int i;
+            Tdata addcdata = null;
+            Tdata temp = null;
+            int norecs;
 
-            //addrec.SetClient(m_client);
-            addrec.SetCdata(cdata);
-            addrec.StartPosition = FormStartPosition.Manual;
-            addrec.Location = new Point(100, 10);
-
+            AddRecord addrec = new AddRecord();
+            addrec.SetCdata(mycdata[mycdata.Count()-1]);
             if (addrec.ShowDialog(this) == DialogResult.OK)
             {
-                cdata = addrec.GetCdata();
+                addcdata = addrec.GetCdata();
+                norecs = addrec.GetNoRecs();
+                int count = mycdata.Count();
+                for (i = 0;i < norecs;i++)
+				{
+                    temp = new Tdata();
+                    temp.on_hour = addcdata.on_hour;
+                    temp.on_minute = addcdata.on_minute;
+                    temp.on_second = addcdata.on_second;
+                    temp.off_hour = addcdata.off_hour;
+                    temp.off_minute = addcdata.off_minute;
+                    temp.off_second = addcdata.off_second;
+                    temp.port = addcdata.port;
+                    temp.index = count + i;
+                    temp.label += "temp" + i.ToString();
+                    mycdata.Add(temp);
+                    temp = null;
+                }
             }
             else
             {
-                //                this.txtResult.Text = "Cancelled";
+                return;
             }
             addrec.Dispose();
-            int count = mycdata.Count();
-            cdata.index = count;
-            mycdata.Add(cdata);
             btnDiff3_Click(new object(), new EventArgs());
         }
         private DataTable GetDataTable()
@@ -703,48 +670,29 @@ namespace CDBMgmt
             else return "";
 
         }
+        private void calc_time_before(ref int hour, ref int minutes, int offset)
+        {
+            if (minutes < offset)
+            {
+                hour--;
+                minutes = minutes + 60 - offset;
 
-		private void btnTest_Click(object sender, EventArgs e)
+            }
+            else minutes -= offset;
+        }
+        private void calc_time_after(ref int hour, ref int minutes, int offset)
+        {
+            if (minutes + offset > 60)
+            {
+                hour++;
+                minutes = minutes + offset - 60;
+            }
+            else minutes += offset;
+        }
+
+        private void btnTest_Click(object sender, EventArgs e)
 		{
-            Tdata tdata = new Tdata();
-            byte single;
-            byte[] data = new byte[40];
-            byte[] label = new byte[60];
-            byte[] label2 = new byte[30];
-            int i;
-            tdata.index = 0;
-            tdata.port = 1;
-            tdata.state = 0;
-            tdata.on_hour = 1;
-            tdata.on_minute = 2;
-            tdata.on_second = 3;
-            tdata.off_hour = 4;
-            tdata.off_minute = 5;
-            tdata.off_second = 6;
-            tdata.label = "ABCDEFGasdfasdf ";
-
-            data[0] = GetByteFromInt(tdata.index);
-            data[1] = GetByteFromInt(tdata.port);
-            data[2] = GetByteFromInt(tdata.state);
-            data[3] = GetByteFromInt(tdata.on_hour);
-            data[4] = GetByteFromInt(tdata.on_minute);
-            data[5] = GetByteFromInt(tdata.on_second);
-            data[6] = GetByteFromInt(tdata.off_hour);
-            data[7] = GetByteFromInt(tdata.off_minute);
-            data[8] = GetByteFromInt(tdata.off_second);
-            label = BytesFromString(tdata.label);
-            for(i = 0;i < label.Length/2;i++)
-			{
-                label2[i] = label[i * 2];
-			}
-            System.Buffer.BlockCopy(label2, 0, data, 10, 30);
-            //string asdf = "1234567890";
-            //byte[] test2 = BytesFromString(asdf);
-            // this returns: 49,0,50,0,51,0...
-            //System.Buffer.BlockCopy(label, 0, data, 10, 30);
-            // BlockCopy(src, srcoff, dest, destoff,len);
-            i = 0;
-
+           
         }
         public static byte[] ConvertIntToByteArray(int I)
         {
@@ -758,8 +706,13 @@ namespace CDBMgmt
         byte[] BytesFromString(String str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
+            byte[] bytes2 = new byte[bytes.Count() / 2];
             System.Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
-            return bytes;
+            for(int i = 0;i < bytes2.Count();i++)
+			{
+                bytes2[i] = bytes[i * 2];
+			}
+            return bytes2;
         }
         private void btnClearNon_Click(object sender, EventArgs e)
         {
@@ -797,3 +750,42 @@ namespace CDBMgmt
         }
 	}
 }
+/*
+ *  int i,j;
+            int hour, minute;
+            int offset;
+            hour = 1;
+            minute = 58;
+            offset = 10;
+            calc_time_after(ref hour, ref minute, offset);
+            hour = 3;
+            minute = 8;
+            offset = 10;
+            calc_time_before(ref hour, ref minute, offset);
+            hour = 2;
+            Tdata tdata = new Tdata();
+            byte[] data = new byte[40];
+            byte[] label;
+            tdata.index = 0;
+            tdata.port = 1;
+            tdata.state = 0;
+            tdata.on_hour = 1;
+            tdata.on_minute = 2;
+            tdata.on_second = 3;
+            tdata.off_hour = 4;
+            tdata.off_minute = 5;
+            tdata.off_second = 6;
+            tdata.label = "ABCDEFG";
+
+            data[0] = GetByteFromInt(tdata.index);
+            data[1] = GetByteFromInt(tdata.port);
+            data[2] = GetByteFromInt(tdata.state);
+            data[3] = GetByteFromInt(tdata.on_hour);
+            data[4] = GetByteFromInt(tdata.on_minute);
+            data[5] = GetByteFromInt(tdata.on_second);
+            data[6] = GetByteFromInt(tdata.off_hour);
+            data[7] = GetByteFromInt(tdata.off_minute);
+            data[8] = GetByteFromInt(tdata.off_second);
+            label = BytesFromString(tdata.label);
+            System.Buffer.BlockCopy(label, 0, data, 10, label.Count());
+*/

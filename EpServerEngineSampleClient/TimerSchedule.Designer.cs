@@ -46,6 +46,11 @@ namespace EpServerEngineSampleClient
 			this.btnChart2Cdata = new System.Windows.Forms.Button();
 			this.btnClearNonRecs = new System.Windows.Forms.Button();
 			this.btnCdata2XML = new System.Windows.Forms.Button();
+			this.btnClearTarget = new System.Windows.Forms.Button();
+			this.btnTarget2Disk = new System.Windows.Forms.Button();
+			this.btnWriteXML = new System.Windows.Forms.Button();
+			this.btnSort = new System.Windows.Forms.Button();
+			this.btnDispSort = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.CGridView)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -77,7 +82,7 @@ namespace EpServerEngineSampleClient
 			// 
 			this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCancel.Location = new System.Drawing.Point(1198, 543);
+			this.btnCancel.Location = new System.Drawing.Point(1138, 608);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(160, 42);
 			this.btnCancel.TabIndex = 2;
@@ -140,7 +145,7 @@ namespace EpServerEngineSampleClient
 			this.CGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.CGridView.Location = new System.Drawing.Point(202, 43);
 			this.CGridView.Name = "CGridView";
-			this.CGridView.Size = new System.Drawing.Size(1218, 481);
+			this.CGridView.Size = new System.Drawing.Size(971, 481);
 			this.CGridView.TabIndex = 13;
 			this.CGridView.SelectionChanged += new System.EventHandler(this.SelectionChanged);
 			// 
@@ -250,12 +255,77 @@ namespace EpServerEngineSampleClient
 			this.btnCdata2XML.UseVisualStyleBackColor = false;
 			this.btnCdata2XML.Click += new System.EventHandler(this.btnCdata2XML_Click);
 			// 
+			// btnClearTarget
+			// 
+			this.btnClearTarget.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnClearTarget.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnClearTarget.Location = new System.Drawing.Point(312, 608);
+			this.btnClearTarget.Name = "btnClearTarget";
+			this.btnClearTarget.Size = new System.Drawing.Size(160, 42);
+			this.btnClearTarget.TabIndex = 24;
+			this.btnClearTarget.Text = "Clear Target";
+			this.btnClearTarget.UseVisualStyleBackColor = false;
+			this.btnClearTarget.Click += new System.EventHandler(this.btnClearTarget_Click);
+			// 
+			// btnTarget2Disk
+			// 
+			this.btnTarget2Disk.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnTarget2Disk.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnTarget2Disk.Location = new System.Drawing.Point(487, 608);
+			this.btnTarget2Disk.Name = "btnTarget2Disk";
+			this.btnTarget2Disk.Size = new System.Drawing.Size(175, 42);
+			this.btnTarget2Disk.TabIndex = 25;
+			this.btnTarget2Disk.Text = "Target 2 Disk";
+			this.btnTarget2Disk.UseVisualStyleBackColor = false;
+			this.btnTarget2Disk.Click += new System.EventHandler(this.btnTarget2Disk_Click);
+			// 
+			// btnWriteXML
+			// 
+			this.btnWriteXML.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnWriteXML.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnWriteXML.Location = new System.Drawing.Point(679, 608);
+			this.btnWriteXML.Name = "btnWriteXML";
+			this.btnWriteXML.Size = new System.Drawing.Size(175, 42);
+			this.btnWriteXML.TabIndex = 26;
+			this.btnWriteXML.Text = "Write to XML";
+			this.btnWriteXML.UseVisualStyleBackColor = false;
+			this.btnWriteXML.Click += new System.EventHandler(this.btnWriteXML_Click);
+			// 
+			// btnSort
+			// 
+			this.btnSort.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnSort.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnSort.Location = new System.Drawing.Point(860, 608);
+			this.btnSort.Name = "btnSort";
+			this.btnSort.Size = new System.Drawing.Size(127, 42);
+			this.btnSort.TabIndex = 27;
+			this.btnSort.Text = "Sort";
+			this.btnSort.UseVisualStyleBackColor = false;
+			this.btnSort.Click += new System.EventHandler(this.btnSort_Click);
+			// 
+			// btnDispSort
+			// 
+			this.btnDispSort.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnDispSort.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnDispSort.Location = new System.Drawing.Point(993, 608);
+			this.btnDispSort.Name = "btnDispSort";
+			this.btnDispSort.Size = new System.Drawing.Size(127, 42);
+			this.btnDispSort.TabIndex = 28;
+			this.btnDispSort.Text = "Disp Sort";
+			this.btnDispSort.UseVisualStyleBackColor = false;
+			this.btnDispSort.Click += new System.EventHandler(this.btnDispSort_Click);
+			// 
 			// TimerSchedule
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(1439, 688);
+			this.ClientSize = new System.Drawing.Size(1310, 688);
+			this.Controls.Add(this.btnDispSort);
+			this.Controls.Add(this.btnSort);
+			this.Controls.Add(this.btnWriteXML);
+			this.Controls.Add(this.btnTarget2Disk);
+			this.Controls.Add(this.btnClearTarget);
 			this.Controls.Add(this.btnCdata2XML);
 			this.Controls.Add(this.btnClearNonRecs);
 			this.Controls.Add(this.btnChart2Cdata);
@@ -300,5 +370,10 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.Button btnChart2Cdata;
 		private System.Windows.Forms.Button btnClearNonRecs;
 		private System.Windows.Forms.Button btnCdata2XML;
+		private System.Windows.Forms.Button btnClearTarget;
+		private System.Windows.Forms.Button btnTarget2Disk;
+		private System.Windows.Forms.Button btnWriteXML;
+		private System.Windows.Forms.Button btnSort;
+		private System.Windows.Forms.Button btnDispSort;
 	}
 }

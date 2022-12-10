@@ -255,9 +255,24 @@ UCHAR get_host_cmd_task(int test)
 						cllist_change_data(i,ctp,&cll);
 					}
 					break;
-					
+
 				case SHOW_CLLIST:
-					cllist_show(&cll);
+					printf("show cllist\n");
+					j = cllist_show(&cll);
+					if(j == -1)
+					{
+						printf("bad find: %d\n",index);
+						break;
+					}
+					break;
+
+				case SORT_CLLIST:
+					printf("sort\n");
+					sort_countdown();
+					break;
+
+				case DISPLAY_CLLIST_SORT:
+					display_sort();
 					break;
 
 				case REPLY_CLLIST:
@@ -331,7 +346,11 @@ UCHAR get_host_cmd_task(int test)
 					memset(label,0,sizeof(label));
 					memcpy(label,&tempx[10],30);
 					strcpy(ctp->label,label);
+					if(ctp->on_hour == 0 && ctp->on_minute == 0 && ctp->on_second == 0 && ctp->off_hour == 0 
+							&& ctp->off_minute == 0 && ctp->off_second == 0)
+						ctp->port = -1;
 					cllist_change_data(index,ctp,&cll);
+					printf("done\n");
 					break;
 
 				case SAVE_CLLIST:

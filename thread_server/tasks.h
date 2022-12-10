@@ -33,6 +33,7 @@
 #define SEND_CMD_HOST_QKEY	1234
 #define RECV_CMD_HOST_QKEY	1300
 #define BASIC_CONTROLS_QKEY	1301
+#define COUNTDOWN_SIZE 40
 
 // uSleep(0,100000000L); - roughly 100ms using uSleep();
 
@@ -63,6 +64,17 @@ enum sched_task_types
 	SERIAL_RECV,
 	BASIC_CONTROLS,
 } SCHED_TASK_TYPES;
+
+typedef struct
+{
+	int index;
+	int port;
+	int onoff;
+	int hour;
+	int minute;
+	int second;
+	int seconds_away;
+}COUNTDOWN;
 
 UCHAR sock_timer(int test);
 UCHAR get_host_cmd_task(int test);
@@ -105,6 +117,9 @@ void send_status_msg(char *msg);
 void set_gps_baudrate(int baudrate);
 void print_cmd(UCHAR cmd);
 void assign_client_table(void);
+void sort_countdown(void);
+void display_sort(void);
+
 //double getDistance(double lat1, double lon1, double lat2, double lon2, int units);
 typedef struct
 {

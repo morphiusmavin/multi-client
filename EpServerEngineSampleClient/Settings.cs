@@ -8,20 +8,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace CDBMgmt
+namespace EpServerEngineSampleClient
 {
-	public partial class Filenamer : Form
+	public partial class Settings : Form
 	{
-		string filename;
-		public Filenamer(string prompt, string ext)
+		private bool silent_mode;
+		public Settings()
 		{
 			InitializeComponent();
-			Prompt_label.Text = prompt;
-			Ext_Label.Text = ext;
+			silent_mode = (bool)Properties.Settings.Default["silent_mode"];
+			cbSilentMode.Checked = silent_mode;
 		}
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
+			Properties.Settings.Default["silent_mode"] = silent_mode;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}
@@ -32,13 +33,11 @@ namespace CDBMgmt
 			this.Close();
 		}
 
-		private void tbFilename_TextChanged(object sender, EventArgs e)
+		private void ccSilentMode(object sender, EventArgs e)
 		{
-			filename = tbFilename.Text;
-		}
-		public string GetFilename()
-		{
-			return filename;
+			if (cbSilentMode.Checked)
+				silent_mode = true;
+			else silent_mode = false;
 		}
 	}
 }

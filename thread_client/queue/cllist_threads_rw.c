@@ -18,8 +18,6 @@
 #include "../../mytypes.h"
 #include "../serial_io.h"
 #include "cllist_threads_rw.h"
-#ifdef MAKE_TARGET
-#endif
 /******************************************************************************/
 int cllist_init (cllist_t *llistp)
 {
@@ -139,7 +137,7 @@ int cllist_find_data(int index, C_DATA **datapp, cllist_t *llistp)
 
 	/* Initialize to "not found" */
 	*datapp = (C_DATA *)NULL;
-printf("index: %d\n",index);
+//printf("index: %d\n",index);
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 
 	/* Look through index for our entry */
@@ -162,137 +160,6 @@ printf("index: %d\n",index);
 	//printf("status: %d\n",status);
 	return status;
 }
-
-/******************************************************************************/
-int cllist_find_data_ip(int index, C_DATA **datapp, cllist_t *llistp)
-{
-	cllist_node_t *cur, *prev;
-	int status = -1;
-return -1;
-	/* Initialize to "not found" */
-	*datapp = (C_DATA *)NULL;
-
-	pthread_rdwr_rlock_np(&(llistp->rwlock));
-
-	/* Look through index for our entry */
-	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
-	{
-		if (cur->index == index)
-		{
-			*datapp = cur->datap;
-			if(0)
-//			if(cur->datap->input_port != 0x41)
-			{
-//				printf("find: %d %d %d %d %s\r\n", index, cur->datap->onoff, cur->datap->port, 
-//					cur->datap->input_port, cur->datap->label);
-//				status = cur->datap->input_port;		
-				break;
-			}
-		}
-		else if (cur->index > index)
-		{
-			break;
-		}
-	}
-	pthread_rdwr_runlock_np(&(llistp->rwlock));
-	return status;
-}
-/******************************************************************************/
-int cllist_find_data_op(int index, int port, C_DATA **datapp, cllist_t *llistp)
-{
-	cllist_node_t *cur, *prev;
-	int status = -1;
-return -1;
-	/* Initialize to "not found" */
-	*datapp = (C_DATA *)NULL;
-
-	pthread_rdwr_rlock_np(&(llistp->rwlock));
-
-	/* Look through index for our entry */
-	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
-	{
-		*datapp = cur->datap;
-		if (0)
-		//if (cur->datap->input_port != 0x41 && cur->datap->port == port && cur->datap->input_port == index)
-		{
-//			printf("find: input: %d port: %d %s\r\n", index, cur->datap->port, cur->datap->label);
-//			status = cur->datap->port;
-			break;
-		}
-//		else if(cur->datap->input_port != 0xff)
-//			break;
-	}
-	pthread_rdwr_runlock_np(&(llistp->rwlock));
-	return status;
-}
-
-/******************************************************************************/
-int cllist_toggle_output(int index, cllist_t *llistp)
-{
-	cllist_node_t *cur, *prev;
-	int status = -1; /* assume failure */
-	C_DATA c_data;
-	int onoff;
-return 0;
-#if 0
-	pthread_rdwr_wlock_np(&(llistp->rwlock));
-
-	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
-	{
-		if (cur->index == index)
-		{
-			memcpy(&c_data,cur->datap,sizeof(C_DATA));
-//			printf("%d %s ",o_data.onoff,o_data.label);
-			if(c_data.onoff == 1)
-				c_data.onoff = 0;
-			else c_data.onoff = 1;
-			onoff = c_data.onoff;
-			memcpy(cur->datap,&c_data,sizeof(C_DATA));
-			status = 0;
-			break;
-		}
-		else if (cur->index > index)
-		{
-			break;
-		}
-	}
-	pthread_rdwr_wunlock_np(&(llistp->rwlock));
-#endif
-	return onoff;
-}
-/******************************************************************************/
-// I think this is crashing the program on exit
-int cllist_change_output(int index, cllist_t *llistp, int onoff)
-{
-	cllist_node_t *cur, *prev;
-	int status = -1; /* assume failure */
-
-	return -1;
-#if 0
-	pthread_rdwr_wlock_np(&(llistp->rwlock));
-
-	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
-	{
-		if (cur->index == index)
-		{
-//			memcpy(&o_data,cur->datap,sizeof(O_DATA));
-//			o_data.onoff = onoff;
-//			memcpy(cur->datap,&o_data,sizeof(O_DATA));
-			cur->datap->onoff = onoff;
-//			printf("%d %s\r\n",o_data.onoff,o_data.label);
-			status = 0;
-			break;
-		}
-		else if (cur->index > index)
-		{
-			break;
-		}
-	}
-	pthread_rdwr_wunlock_np(&(llistp->rwlock));
-#endif
-	return status;
-}
-
 /******************************************************************************/
 int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp)
 {
@@ -342,12 +209,13 @@ int cllist_show(cllist_t *llistp)
 	printf("showing C_DATA\r\n");
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 	cur=llistp->first;
+	printf("%d\n",cur->datap->index);
 
 //	printf("port\tonoff\tinput_port\ttype\ttime_delay\tlabel\r\n");
 
 	for (cur=llistp->first; cur != NULL; cur=cur->nextp)
 	{
-		printf("%d ",cur->datap->index);
+		//printf("%d ",cur->datap->index);
 		if(cur->datap->label[0] != 0)
 		{
 			printf("%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%s\r\n",

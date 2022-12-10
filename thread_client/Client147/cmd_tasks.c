@@ -48,6 +48,9 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 struct msgqbuf msg;
 int msgtype = 1;
+extern int curr_countdown_size;
+extern void sort_countdown(void);
+extern void display_sort(void);
 
 inline int pack4chars(char c1, char c2, char c3, char c4) {
     return ((int)(((unsigned char)c1) << 24)
@@ -299,7 +302,12 @@ UCHAR get_host_cmd_task2(int test)
 					case CLEAR_CLLIST:
 						for(i = 0;i < 20;i++)
 						{
-							cllist_find_data(i, ctpp, &cll);
+							j = cllist_find_data(i, ctpp, &cll);
+							if(j == -1)
+							{
+								printf("bad find: %d\n",index);
+								break;
+							}
 							ctp->port = -1;
 							ctp->state = 0;
 							ctp->on_hour = 0;
@@ -311,11 +319,43 @@ UCHAR get_host_cmd_task2(int test)
 							strcpy(ctp->label,"test");
 							cllist_change_data(i,ctp,&cll);
 						}
+						curr_countdown_size = 0;
+						break;
+
+					case SHOW_CLLIST:
+						printf("show cllist\n");
+						j = cllist_show(&cll);
+						if(j == -1)
+						{
+							printf("bad find: %d\n",index);
+							break;
+						}
+						break;
+
+					case SORT_CLLIST:
+						printf("sort\n");
+						sort_countdown();
+						break;
+
+					case DISPLAY_CLLIST_SORT:
+						display_sort();
 						break;
 
 					case SET_CLLIST:
+/*					
+						printf("set cllist\n");
+						printf("msg_len: %d\n",msg_len);
+						for(i = 0;i < msg_len/2;i++)
+							printf("%02x ",tempx[i]);
+						printf("\n");
+*/
 						index = (int)tempx[0];
-						cllist_find_data(index, ctpp, &cll);
+						j = cllist_find_data(index, ctpp, &cll);
+						if(j == -1)
+						{
+							printf("bad find: %d\n",index);
+							break;
+						}
 						ctp->index = index;
 						ctp->port = (int)tempx[1];
 						ctp->state = (int)tempx[2];
@@ -326,23 +366,25 @@ UCHAR get_host_cmd_task2(int test)
 						ctp->off_minute = (int)tempx[7];
 						ctp->off_second = (int)tempx[8];
 						memset(label,0,sizeof(label));
-						memcpy(label,&tempx[10],30);
+						memcpy(label,&tempx[10],CLABELSIZE);
 						strcpy(ctp->label,label);
+						if(ctp->on_hour == 0 && ctp->on_minute == 0 && ctp->on_second == 0 && ctp->off_hour == 0 
+								&& ctp->off_minute == 0 && ctp->off_second == 0)
+							ctp->port = -1;
 						cllist_change_data(index,ctp,&cll);
-						break;
-
-					case SHOW_CLLIST:
-						cllist_show(&cll);
-						break;
+						printf("done\n");
+					break;
 
 					case SAVE_CLLIST:
 						clWriteConfig(cFileName,&cll,csize,errmsg);
 						break;
-
+					
 					case GET_ALL_CLLIST:
 						for(i = 0;i < 20;i++)
 						{
-							cllist_find_data(i, ctpp, &cll);
+							j = cllist_find_data(i, ctpp, &cll);
+							if(j == -1)
+								break;
 							if(ctp->port > -1)
 							{
 								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
@@ -488,7 +530,7 @@ UCHAR get_host_cmd_task2(int test)
 //							write_serial2(tempx[i]);
 						}
 */
-						tempx[msg_len-2] = 'M';
+						//tempx[msg_len-2] = 'M';
 						memset(temp_time,0,sizeof(temp_time));
 						i = 0;
 						pch = &tempx[0];
