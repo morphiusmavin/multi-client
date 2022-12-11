@@ -208,8 +208,9 @@ int cllist_show(cllist_t *llistp)
 */
 	printf("showing C_DATA\r\n");
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
+	printf("%02x \n",cur);
 	cur=llistp->first;
-	printf("%d\n",cur->datap->index);
+	//printf("%d\n",cur->datap->index);
 
 //	printf("port\tonoff\tinput_port\ttype\ttime_delay\tlabel\r\n");
 

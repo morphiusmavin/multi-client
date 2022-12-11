@@ -645,6 +645,7 @@ UCHAR get_host_cmd_task2(int test)
 						break;
 
 					case UPDATE_CONFIG:
+#if 0
 						utemp = (UINT)msg_buf[3];
 						utemp <<= 8;
 						utemp |= (UINT)msg_buf[2];
@@ -738,7 +739,7 @@ UCHAR get_host_cmd_task2(int test)
 						memset(password,0,PASSWORD_SIZE);
 						usleep(500);
 						i = WriteParams("param.conf", &ps, &password[0], errmsg);
-
+#endif
 						break;
 
 					case GET_CONFIG2:

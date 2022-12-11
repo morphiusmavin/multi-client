@@ -121,7 +121,7 @@ UCHAR get_host_cmd_task2(int test)
 	size_t csize;
 	size_t osize;
 	UCHAR tempx[SERIAL_BUFF_SIZE];
-	UCHAR tempx2[SERIAL_BUFF_SIZE];
+	//UCHAR tempx2[SERIAL_BUFF_SIZE];
 	char temp_time[5];
 	char *pch;
 	int fname_index;
@@ -217,7 +217,7 @@ UCHAR get_host_cmd_task2(int test)
 			printf("%s\r\n",errmsg);
 		}
 		
-		cllist_show(&cll);
+		//cllist_show(&cll);
 /*
 		int index = 4;
 		cllist_find_data(index, ctpp, &cll);
@@ -231,7 +231,7 @@ UCHAR get_host_cmd_task2(int test)
 */
 		}
 
-	//init_ips();
+	init_ips();
 	same_msg = 0;
 
 	//printf("%s\n",version);
@@ -518,6 +518,7 @@ UCHAR get_host_cmd_task2(int test)
 						break;
 
 					case SET_TIME:
+#if 1
 						//printf("set time\n");
 						curtime2 = 0L;
 						j = 0;
@@ -619,7 +620,7 @@ UCHAR get_host_cmd_task2(int test)
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 						printf("%s\n",tempx);
 						break;
-
+#endif
 					case GET_TIME:
 						gettimeofday(&mtv, NULL);
 						curtime2 = mtv.tv_sec;
@@ -643,6 +644,7 @@ UCHAR get_host_cmd_task2(int test)
 						break;
 
 					case UPDATE_CONFIG:
+#if 0
 						utemp = (UINT)msg_buf[3];
 						utemp <<= 8;
 						utemp |= (UINT)msg_buf[2];
@@ -736,7 +738,7 @@ UCHAR get_host_cmd_task2(int test)
 						memset(password,0,PASSWORD_SIZE);
 						usleep(500);
 						i = WriteParams("param.conf", &ps, &password[0], errmsg);
-
+#endif
 						break;
 
 					case GET_CONFIG2:

@@ -469,7 +469,7 @@ UCHAR monitor_input_task(int test)
 						{
 							ollist_find_data(ip[i].port,&otp,&oll);
 							set_output(otp, onoff);
-//							sprintf(tempx,"+%d %d", index, otp->port);
+							printf("+%d %d", index, otp->port);
 //							myprintf1(tempx);
 						}else
 						{
@@ -601,13 +601,14 @@ UCHAR monitor_fake_input_task(int test)
 
 				for(i = 0;i < max_ips;i++)
 				{
-//					printf("%d %d %d\r\n",ip[i].port,ip[i].input,index);
+					printf("%d %d %d\r\n",ip[i].port,ip[i].input,index);
 					if(ip[i].input == index)
 					{
 						if(ip[i].function == 0)
 						{
 							ollist_find_data(ip[i].port,&otp,&oll);
 							set_output(otp, onoff);
+							//printf("ip %d\n",i);
 						}else 
 						{
 							add_msg_queue(ip[i].function,0);
@@ -650,7 +651,8 @@ int change_output(int index, int onoff)
 
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
-//	printf("bank: %d\r\n",bank);
+	//printf("bank: %d index: %d\r\n",bank,index);
+	//return index;
 	pthread_mutex_lock( &io_mem_lock);
 	switch(bank)
 	{
@@ -849,7 +851,6 @@ UCHAR timer_task(int test)
 
 	uSleep(2,0);
 	printf("starting timer task\n");
-
 	sort_countdown();
 /*
 	while(TRUE)
@@ -1167,48 +1168,48 @@ UCHAR basic_controls_task(int test)
 		onoff = msg.mtext[1];
 
 		//printf("basic controls: %d ",onoff);
-		print_cmd(cmd);
+		//print_cmd(cmd);
 		usleep(_5MS);
 
 		switch(cmd)
 		{
 			case  CABIN1:
-				change_output(CABIN1a,onoff);
+				index = change_output(CABIN1a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN2:
-				change_output(CABIN2a,onoff);
+				//index = change_output(CABIN2a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN3:
-				change_output(CABIN3a,onoff);
+				index = change_output(CABIN3a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN4:
-				change_output(CABIN4a,onoff);
+				index = change_output(CABIN4a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN5:
-				change_output(CABIN5a,onoff);
+				index = change_output(CABIN5a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN6:
-				change_output(CABIN6a,onoff);
+				index = change_output(CABIN6a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN7:
-				change_output(CABIN7a,onoff);
+				index = change_output(CABIN7a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN8:
-				change_output(CABIN8a,onoff);
+				//index = change_output(CABIN8a,onoff);
 				usleep(_100MS);
 				break;
 
@@ -1255,7 +1256,7 @@ UCHAR basic_controls_task(int test)
 			default:
 				break;
 		}	// end of switch
-
+//printf("%d\n",index);
 		if(shutdown_all == 1)
 		{
 			printf("stopping basic_controls_task\n");

@@ -209,7 +209,7 @@ UCHAR get_host_cmd_task1(int test)
 		if(msg_len < 0)
 		{
 			//printf("bad msg\r\n");
-			printf(".");
+			printf("b");
 			cmd = BAD_MSG;
 			uSleep(2,0);
 		}else
@@ -421,7 +421,7 @@ int get_msg(void)
 	if(memcmp(preamble,pre_preamble,8) != 0)
 	{
 		//printf("bad preamble\n");
-		printf(".");
+		printf("g");
 		uSleep(2,0);
 		return -1;
 	}

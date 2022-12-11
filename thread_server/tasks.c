@@ -858,7 +858,7 @@ UCHAR timer_task(int test)
 	int onoff;
 	struct msgqbuf msg;
 	int msgtype = 1;
-	
+	msg.mtype = msgtype;
 	int msg_len;
 
 	UCHAR cmd = 0x21;
@@ -868,9 +868,9 @@ UCHAR timer_task(int test)
 		if(++cmd > 0x7e)
 			cmd = 0x21;
 	}
-
-	uSleep(5,0);
+	uSleep(3,0);
 	sort_countdown();
+	uSleep(3,0);
 
 	while(TRUE)
 	{
@@ -884,11 +884,6 @@ UCHAR timer_task(int test)
 		{
 			cmd = SORT_CLLIST;
 			msg.mtext[0] = cmd;
-			msg.mtext[1] = 8;
-			msg_len = 2;
-			msg.mtext[2] = (UCHAR)msg_len;
-			msg.mtext[3] = (UCHAR)(msg_len >> 4);
-
 			if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 			{
 				// keep getting "Invalid Argument" - cause I didn't set the mtype
@@ -896,6 +891,7 @@ UCHAR timer_task(int test)
 				printf("exit from send client list\n");
 				exit(EXIT_FAILURE);
 			}
+			sort_countdown();
 		}
 		uSleep(1,0);
 		if(curr_countdown_size > 0)

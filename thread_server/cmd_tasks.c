@@ -175,7 +175,7 @@ UCHAR get_host_cmd_task(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
-		cllist_show(&cll);
+		//cllist_show(&cll);
 	}else printf("can't find %s\n",cFileName);
 
 	init_ips();
@@ -292,7 +292,7 @@ UCHAR get_host_cmd_task(int test)
 						if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 						{
 							perror("msgsnd error");
-							printf("exit from send client list\n");
+							printf("exit from REPLY_CLLIST\n");
 							exit(EXIT_FAILURE);
 						}
 						uSleep(0,TIME_DELAY/4);
@@ -317,7 +317,7 @@ UCHAR get_host_cmd_task(int test)
 							if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 							{
 								perror("msgsnd error");
-								printf("exit from send client list\n");
+								printf("exit from GET_ALL_CLLIST list\n");
 								exit(EXIT_FAILURE);
 							}
 							uSleep(0,TIME_DELAY/4);
@@ -369,7 +369,7 @@ UCHAR get_host_cmd_task(int test)
 					{
 						// keep getting "Invalid Argument" - cause I didn't set the mtype
 						perror("msgsnd error");
-						printf("exit from send client list\n");
+						printf("exit from YESIMHERE list\n");
 						exit(EXIT_FAILURE);
 					}
 					break;
@@ -416,7 +416,7 @@ UCHAR get_host_cmd_task(int test)
 					{
 						// keep getting "Invalid Argument" - cause I didn't set the mtype
 						perror("msgsnd error");
-						printf("exit from send client list\n");
+						printf("exit from UPTIME_MSG list\n");
 						exit(EXIT_FAILURE);
 					}
 					break;
@@ -434,7 +434,7 @@ UCHAR get_host_cmd_task(int test)
 					{
 						// keep getting "Invalid Argument" - cause I didn't set the mtype
 						perror("msgsnd error");
-						printf("exit from send client list\n");
+						printf("exit from SEND_TIMEUP list\n");
 						exit(EXIT_FAILURE);
 					}
 					break;

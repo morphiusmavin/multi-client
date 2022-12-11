@@ -31,13 +31,35 @@ namespace EpServerEngineSampleClient
 
 		private void tbRecord_TextChanged(object sender, EventArgs e)
 		{
-			delrecno = int.Parse(tbRecord.Text);
+			int i,j;
+			string temp = tbRecord.Text;
+			if (temp.Contains(','))
+			{
+				string[] words = temp.Split(' ');
+				i = 0;
+				j = 0;
+				foreach (var word in words)
+				{
+					switch (i)
+					{
+						case 0:
+							j = int.Parse(word);
+							break;
+					}
+				}
+			}
+						delrecno = int.Parse(tbRecord.Text);
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
 			this.DialogResult = DialogResult.Cancel;
 			this.Close();
+		}
+
+		private void DeleteRec_Load(object sender, EventArgs e)
+		{
+
 		}
 	}
 }
