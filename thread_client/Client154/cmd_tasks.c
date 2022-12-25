@@ -120,6 +120,8 @@ UCHAR get_host_cmd_task2(int test)
 	int k;
 	size_t csize;
 	size_t osize;
+	time_t T;
+	struct tm tm;
 	UCHAR tempx[SERIAL_BUFF_SIZE];
 	//UCHAR tempx2[SERIAL_BUFF_SIZE];
 	char temp_time[5];
@@ -184,7 +186,7 @@ UCHAR get_host_cmd_task2(int test)
 	i = NO_CLLIST_RECS;
 	//printf("no. port bits: %d\r\n",i);
 	csize = sizeof(C_DATA);
-	printf("csize: %d\n",csize);
+	//printf("csize: %d\n",csize);
 	csize *= i;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
@@ -208,7 +210,7 @@ UCHAR get_host_cmd_task2(int test)
 	}
 
 	cllist_init(&cll);
-	printf("%s\n",cFileName);
+	//printf("%s\n",cFileName);
 	if(access(cFileName,F_OK) != -1)
 	{
 		clLoadConfig(cFileName,&cll,csize,errmsg);
@@ -418,7 +420,7 @@ UCHAR get_host_cmd_task2(int test)
 									exit(EXIT_FAILURE);
 								}
 								*/
-								uSleep(0,TIME_DELAY/4);
+								uSleep(0,TIME_DELAY/8);
 							}
 						}
 						break;
@@ -519,6 +521,7 @@ UCHAR get_host_cmd_task2(int test)
 
 					case SET_TIME:
 #if 1
+printf("%s\n",tempx);
 						//printf("set time\n");
 						curtime2 = 0L;
 						j = 0;
@@ -606,12 +609,14 @@ UCHAR get_host_cmd_task2(int test)
 						i = atoi(temp_time);
 						pt->tm_sec = i;
 						//printf("sec: %d\r\n",i);
-//						printf("%c %x\n",*pch,*pch);
+
 						if(*pch == 'P')
 						{
-							//printf("PM\n");
+							printf("PM\n");
 							pt->tm_hour += 12;
 						}
+printf("hour: %d\n",pt->tm_hour);
+
 						curtime2 = mktime(pt);
 						stime(pcurtime2);
 						uSleep(0,TIME_DELAY/3);
@@ -626,7 +631,17 @@ UCHAR get_host_cmd_task2(int test)
 						curtime2 = mtv.tv_sec;
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 						printf(tempx);
-						//send_msg(strlen((char*)tempx),(UCHAR*)tempx,GET_TIME, _SERVER);
+						printf("\n");
+
+						strftime(tempx,30,"%H",localtime(&curtime2));  // show as 24-hour (00 -> 23)
+						printf(tempx);
+						printf("\n");
+						strftime(tempx,30,"%I",localtime(&curtime2));	// show as 12-hour (01 -> 12)
+						printf(tempx);
+						printf("\n");
+						T = time(NULL);
+						tm = *localtime(&T);
+						printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
 						break;
 
 					case BAD_MSG:

@@ -732,12 +732,18 @@ void sort_countdown(void)
 
 	int i,j,k,n,min_idx;
 
-	int hour, minute, second;
+	int hour;
 	time_t T = time(NULL);
 	struct tm tm = *localtime(&T);
 	COUNTDOWN *ct;
 	COUNTDOWN tct;
-	int current_seconds = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
+	hour = tm.tm_hour;
+	if(hour == 12)
+		hour = 0;
+	if(hour == 0)
+		hour = 12;
+	printf("hour: %d\n",hour);
+	int current_seconds = hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
 	printf("curr sec: %d\n",current_seconds);
 	k = 0;
 	for(i = 0;i < 20;i++)

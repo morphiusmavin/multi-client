@@ -82,7 +82,8 @@ UCHAR get_host_cmd_task(int test)
 	int k;
 	size_t osize;
 	size_t csize;
-
+	time_t T;
+	struct tm tm;
 	UCHAR tempx[UPLOAD_BUFF_SIZE];
 	char tempy[30];
 	char temp_time[5];
@@ -530,11 +531,14 @@ for(i = 0;i < msg_len+2;i++)
 					pt->tm_sec = i;
 //printf("second: %d\n",pt->tm_sec);
 //printf("*%c %c\n",*(pch-1),*pch);
+
+printf("%c\n",*pch);
 					if(*pch == 'P')
 					{
 						pt->tm_hour += 12;
-//printf("hour: %d\n",pt->tm_hour);
 					}
+printf("hour: %d\n",pt->tm_hour);
+
 					curtime2 = mktime(pt);
 					stime(pcurtime2);
 					gettimeofday(&mtv, NULL);
@@ -548,6 +552,17 @@ for(i = 0;i < msg_len+2;i++)
 					curtime2 = mtv.tv_sec;
 					strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 					printf(tempx);
+					printf("\n");
+
+					strftime(tempx,30,"%H",localtime(&curtime2));  // show as 24-hour (00 -> 23)
+					printf(tempx);
+					printf("\n");
+					strftime(tempx,30,"%I",localtime(&curtime2));	// show as 12-hour (01 -> 12)
+					printf(tempx);
+					printf("\n");
+					T = time(NULL);
+					tm = *localtime(&T);
+					printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
 					break;
 
 				case BAD_MSG:

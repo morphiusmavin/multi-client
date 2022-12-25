@@ -62,7 +62,7 @@ namespace EpServerEngineSampleClient
         int which_winclient = -1;
         int alarm_hours, alarm_minutes, alarm_seconds;
         Int64 alarm_tick;
-        bool oneoff = true;
+        bool oneoff = false;
         bool oneoff2 = true;
         bool clk_oneoff = true;
         bool clk_oneoff2 = true;
@@ -73,6 +73,7 @@ namespace EpServerEngineSampleClient
         private string sunrisesunset_location = "c:\\Users\\daniel\\ClientProgramData\\tdata.xml";
         private int hour;
         private int minute;
+        private int second;
         private int hour_before_sunrise;
         private int minute_before_sunrise;
         private int hour_before_sunset;
@@ -916,10 +917,12 @@ namespace EpServerEngineSampleClient
             now = DateTime.Now;
             tick++;
             connected_tick++;
+
             if ((tick % 3) == 0)
             {
                 //AddMsg(tick.ToString());
                 hour = now.Hour;
+                //AddMsg(hour.ToString());
                 minute = now.Minute;
                 string tTime = now.TimeOfDay.ToString();
                 tTime = tTime.Substring(0, 8);
@@ -967,7 +970,7 @@ namespace EpServerEngineSampleClient
                     AddMsg("Five Minutes before sunrise");
                     oneoff = false;
                     oneoff2 = true;
-				}
+                }
                 else if (hour == curr_srss_day.SunriseHour && minute == curr_srss_day.SunriseMinute && oneoff2)
                 {
                     play_sunrise_clip();
@@ -976,8 +979,34 @@ namespace EpServerEngineSampleClient
                     SunriseLabel.Text = sunrise_sunsets[now.Day].sunrise + " tomorrow";
                     oneoff = true;
                 }
-                else if(hour == hour_before_sunset && minute == minute_before_sunset && oneoff)
+                else if(hour == 12 && minute == 1 && oneoff)
 				{
+                    oneoff = false;
+                    oneoff2 = true;
+                    foreach (ClientsAvail j in clients_avail)
+                    {
+                        //AddMsg(j.ip_addr + " " + j.label + " " + j.socket.ToString() + " " + j.type);
+                        if (j.socket > 0 && j.type != 0)
+                        {
+                            SetTime(j.index);
+                        }
+                    }
+                }
+                else if (hour == 13 && minute == 1 && oneoff2)
+                {
+                    oneoff2 = false;
+                    oneoff = true;
+                    foreach (ClientsAvail j in clients_avail)
+                    {
+                        //AddMsg(j.ip_addr + " " + j.label + " " + j.socket.ToString() + " " + j.type);
+                        if (j.socket > 0 && j.type != 0)
+                        {
+                            SetTime(j.index);
+                        }
+                    }
+                }
+                else if (hour == hour_before_sunset && minute == minute_before_sunset && oneoff)
+                {
                     play_tone(8);
                     AddMsg("Five Minutes before sunset");
                     oneoff = false;
@@ -1010,13 +1039,13 @@ namespace EpServerEngineSampleClient
                 {
                     play_tone(3);
                     AddMsg("end of Ast Twilight");
-                    oneoff = false;
-                    oneoff2 = true;
-                }
-                else if (hour == 0 && minute == 0 && oneoff2)
-                {
                     oneoff2 = false;
                     oneoff = true;
+                }
+                else if (hour == 0 && minute == 0 && oneoff)
+                {
+                    oneoff = false;
+                    oneoff2 = true;
                     DateTime now2 = DateTime.Now;
                     string t2date = now2.Date.ToString();
                     int space = t2date.IndexOf(" ");
@@ -1026,10 +1055,10 @@ namespace EpServerEngineSampleClient
                     //play_tone(9);
                     AddMsg("midnight");
                 }
-                else if (hour == 0 && minute == 1 && oneoff)
+                else if (hour == 0 && minute == 1 && oneoff2)
                 {
-                    oneoff = false;
-                    oneoff2 = true;
+                    oneoff2 = false;
+                    oneoff = true;
                     foreach (SunriseSunsetHoursMinutes srss in sunrisesunsetHoursMinutes)
                     {
                         if (srss.day == now.Day && srss.month == now.Month)
@@ -1040,6 +1069,14 @@ namespace EpServerEngineSampleClient
                         hour_before_sunset = curr_srss_day.SunsetHour;
                         minute_before_sunset = curr_srss_day.SunsetMinute;
                         calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 5);
+                    }
+                    foreach (ClientsAvail j in clients_avail)
+                    {
+                        //AddMsg(j.ip_addr + " " + j.label + " " + j.socket.ToString() + " " + j.type);
+                        if (j.socket > 0 && j.type != 0)
+                        {
+                            SetTime(j.index);
+                        }
                     }
                 }
             }
@@ -1053,7 +1090,7 @@ namespace EpServerEngineSampleClient
                 }
 
             }
-            if (clients_inited == false && tick == 10)
+            if (clients_inited == false && tick == 4)
             {
                 //AddMsg("set time");
                 if (m_client.IsConnectionAlive)
@@ -1068,7 +1105,7 @@ namespace EpServerEngineSampleClient
                     }
                 }
             }
-            if (clients_inited == false && tick == 15)
+            if (clients_inited == false && tick == 5)
             {
                 if (m_client.IsConnectionAlive)
                 {

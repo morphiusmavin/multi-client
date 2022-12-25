@@ -62,7 +62,7 @@ static int raw_data_array[RAW_DATA_ARRAY_SIZE];
 static int raw_data_ptr;
 int avg_raw_data(int prev_data);
 int max_ips;
-IP ip[40];
+IP ip[20];
 
 static COUNTDOWN count_down[COUNTDOWN_SIZE];
 int curr_countdown_size;
@@ -708,12 +708,12 @@ UCHAR timer2_task(int test)
 			if(++trunning_minutes > 59)
 			{
 				trunning_minutes = 0;
-				printf("running hours: %d\n",trunning_hours);
 				if(++trunning_hours > 23)
 				{
 					trunning_hours = 0;
 					trunning_days++;
 				}
+				printf("running hours: %d\n",trunning_hours + trunning_days*24);
 			}
 		}
 
@@ -752,12 +752,19 @@ void sort_countdown(void)
 
 	int i,j,k,n,min_idx;
 
-	int hour, minute, second;
+	int hour;
 	time_t T = time(NULL);
 	struct tm tm = *localtime(&T);
 	COUNTDOWN *ct;
 	COUNTDOWN tct;
-	int current_seconds = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
+	hour = tm.tm_hour;
+	printf("hour: %d\n",hour);
+	if(hour == 12)
+		hour = 0;
+	if(hour == 0)
+		hour = 12;
+	printf("hour: %d\n",hour);
+	int current_seconds = hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
 	printf("curr sec: %d\n",current_seconds);
 	k = 0;
 	for(i = 0;i < 20;i++)

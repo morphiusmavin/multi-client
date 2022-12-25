@@ -605,11 +605,13 @@ UCHAR get_host_cmd_task2(int test)
 						pt->tm_sec = i;
 //						printf("sec: %d\r\n",i);
 //						printf("%c %x\n",*pch,*pch);
+/*
 						if(*pch == 'P')
 						{
 //							printf("PM\n");
 							pt->tm_hour += 12;
 						}
+*/
 						curtime2 = mktime(pt);
 						stime(pcurtime2);
 						uSleep(0,TIME_DELAY/3);

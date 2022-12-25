@@ -185,8 +185,8 @@ UCHAR get_host_cmd_task2(int test)
 	//printf("osize: %d\r\n",osize);
 	i = NO_CLLIST_RECS;
 	//printf("no. port bits: %d\r\n",i);
-//	csize = sizeof(C_DATA);
-//	csize *= i;
+	csize = sizeof(C_DATA);
+	csize *= i;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 /*
@@ -373,6 +373,7 @@ UCHAR get_host_cmd_task2(int test)
 					break;
 
 					case SAVE_CLLIST:
+						printf("%d %s\n",csize,cFileName);
 						clWriteConfig(cFileName,&cll,csize,errmsg);
 						break;
 					
@@ -608,11 +609,13 @@ UCHAR get_host_cmd_task2(int test)
 						pt->tm_sec = i;
 //						printf("sec: %d\r\n",i);
 //						printf("%c %x\n",*pch,*pch);
+printf("%c\n",*pch);
 						if(*pch == 'P')
 						{
 //							printf("PM\n");
 							pt->tm_hour += 12;
 						}
+//printf("hour: %d\n",pt->tm_hour);
 						curtime2 = mktime(pt);
 						stime(pcurtime2);
 						uSleep(0,TIME_DELAY/3);

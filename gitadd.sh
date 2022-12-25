@@ -108,6 +108,8 @@ git add ODBMgmt/Form1.Designer.cs
 git add ODBMgmt/Form1.resx
 git add ODBMgmt/Properties/*
 
+git add nbus/*
+
 git status
 
 

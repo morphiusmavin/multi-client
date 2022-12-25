@@ -201,8 +201,9 @@ UCHAR get_host_cmd_task1(int test)
 		memset(msg_buf,0,sizeof(msg_buf));
 		//printf("wait for msg_len\n");
 		msg_len = get_msg();
-		//printf("msg_len: %d\n",msg_len);
 /*
+		printf("msg_len: %d\n",msg_len);
+
 		for(i = 1;i < msg_len+1;i++)
 			printf("%02x ",tempx[i]);
 */
@@ -211,7 +212,7 @@ UCHAR get_host_cmd_task1(int test)
 			//printf("bad msg\r\n");
 			printf("b");
 			cmd = BAD_MSG;
-			uSleep(2,0);
+			uSleep(1,0);
 		}else
 		{
 			rc = recv_tcp(&msg_buf[0],msg_len+1,1);

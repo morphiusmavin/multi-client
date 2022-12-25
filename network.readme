@@ -51,6 +51,11 @@ be limited to 255 total commands.
 155	"
 145	"
 
+146	8
+154 2
+147 3
+150 4
+
 when sending array of bytes from WinCl to svr/cl 
 array must be 2x what's needed 
 
@@ -211,4 +216,3 @@ relay modules:
 middle: common 
 left: no 
 right: nc  
-

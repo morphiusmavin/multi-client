@@ -105,10 +105,21 @@ enum output_types
 	COOP2_HEATERa,
 	OUTDOOR_LIGHT1a,
 	OUTDOOR_LIGHT2a,
+	UNUSED150_1a,
+	UNUSED150_2a,
 	TEST_OUTPUT10,
 	TEST_OUTPUT11,
-	TEST_OUTPUT12,
-	TEST_OUTPUT13
+	UNUSED150_3a,
+	UNUSED150_4a,
+	UNUSED150_5a,
+	UNUSED150_6a,
+	UNUSED150_7a,
+	UNUSED150_8a,
+	UNUSED150_9a,
+	UNUSED150_10a,
+	TEST_OUTPUT10,
+	TEST_OUTPUT11
+	
 }OUTPUT_TYPES;
 
 int switch_status[10];
@@ -1181,6 +1192,55 @@ UCHAR basic_controls_task(int test)
 
 			case OUTDOOR_LIGHT2:
 				change_output(OUTDOOR_LIGHT2a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_1:
+				change_output(UNUSED150_1a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_2:
+				change_output(UNUSED150_2a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_3:
+				change_output(UNUSED150_3a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_4:
+				change_output(UNUSED150_4a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_5:
+				change_output(UNUSED150_5a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_6:
+				change_output(UNUSED150_6a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_7:
+				change_output(UNUSED150_7a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_8:
+				change_output(UNUSED150_8a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_9:
+				change_output(UNUSED150_9a,onoff);
+				usleep(_100MS);
+				break;
+			case UNUSED150_10:
+				change_output(UNUSED150_10a,onoff);
 				usleep(_100MS);
 				break;
 
