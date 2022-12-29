@@ -25,7 +25,6 @@ namespace EpServerEngineSampleClient
 	{
 		private INetworkClient m_client;
 		private int timer_tick = 145;
-		private bool m_wait = false;
 		ServerCmds svrcmd = new ServerCmds();
 		List<String> on_label_list = new List<String>();
 		//List<String> off_label_list = new List<String>();
@@ -159,6 +158,24 @@ namespace EpServerEngineSampleClient
 		private void tbStatusChanged(object sender, EventArgs e)
 		{
 			timer_tick = int.Parse(tbStatus.Text);
+		}
+
+		private void btnSafety_Click(object sender, EventArgs e)
+		{
+			// explicitly turn off 1,2,6,7
+			// they come on for some strange reason by themselves
+			string cmd = on_label_list[1];
+			int index = svrcmd.GetCmdIndexI(cmd);
+			svrcmd.Change_PortCmd(index, 2, false);
+			cmd = on_label_list[2];
+			index = svrcmd.GetCmdIndexI(cmd);
+			svrcmd.Change_PortCmd(index, 2, false);
+			cmd = on_label_list[6];
+			index = svrcmd.GetCmdIndexI(cmd);
+			svrcmd.Change_PortCmd(index, 2, false);
+			cmd = on_label_list[7];
+			index = svrcmd.GetCmdIndexI(cmd);
+			svrcmd.Change_PortCmd(index, 2, false);
 		}
 	}
 }

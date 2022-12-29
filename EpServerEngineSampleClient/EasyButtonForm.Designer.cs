@@ -41,6 +41,8 @@ namespace EpServerEngineSampleClient
 			this.btnQuit = new System.Windows.Forms.Button();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.tbReceived = new System.Windows.Forms.TextBox();
+			this.rbFunc4 = new System.Windows.Forms.RadioButton();
+			this.rbFunc5 = new System.Windows.Forms.RadioButton();
 			this.SuspendLayout();
 			// 
 			// lbClientType
@@ -49,10 +51,11 @@ namespace EpServerEngineSampleClient
 			this.lbClientType.Items.AddRange(new object[] {
             "Garage Lights",
             "Cabin Lights",
-            "Testbench"});
+            "Testbench",
+            "Outdoor"});
 			this.lbClientType.Location = new System.Drawing.Point(41, 52);
 			this.lbClientType.Name = "lbClientType";
-			this.lbClientType.Size = new System.Drawing.Size(120, 43);
+			this.lbClientType.Size = new System.Drawing.Size(120, 56);
 			this.lbClientType.TabIndex = 0;
 			this.lbClientType.SelectedIndexChanged += new System.EventHandler(this.lbClientType_SelectedIndexChanged);
 			// 
@@ -167,12 +170,38 @@ namespace EpServerEngineSampleClient
 			this.tbReceived.Size = new System.Drawing.Size(401, 141);
 			this.tbReceived.TabIndex = 15;
 			// 
+			// rbFunc4
+			// 
+			this.rbFunc4.AutoSize = true;
+			this.rbFunc4.Location = new System.Drawing.Point(354, 128);
+			this.rbFunc4.Name = "rbFunc4";
+			this.rbFunc4.Size = new System.Drawing.Size(75, 17);
+			this.rbFunc4.TabIndex = 16;
+			this.rbFunc4.TabStop = true;
+			this.rbFunc4.Text = "Function 4";
+			this.rbFunc4.UseVisualStyleBackColor = true;
+			this.rbFunc4.CheckedChanged += new System.EventHandler(this.rbFunc4_CheckChanged);
+			// 
+			// rbFunc5
+			// 
+			this.rbFunc5.AutoSize = true;
+			this.rbFunc5.Location = new System.Drawing.Point(354, 151);
+			this.rbFunc5.Name = "rbFunc5";
+			this.rbFunc5.Size = new System.Drawing.Size(75, 17);
+			this.rbFunc5.TabIndex = 17;
+			this.rbFunc5.TabStop = true;
+			this.rbFunc5.Text = "Function 5";
+			this.rbFunc5.UseVisualStyleBackColor = true;
+			this.rbFunc5.CheckedChanged += new System.EventHandler(this.rbFunc5_CheckChanged);
+			// 
 			// EasyButtonForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(476, 461);
+			this.Controls.Add(this.rbFunc5);
+			this.Controls.Add(this.rbFunc4);
 			this.Controls.Add(this.tbReceived);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.btnQuit);
@@ -206,5 +235,7 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.Button btnQuit;
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.TextBox tbReceived;
+		private System.Windows.Forms.RadioButton rbFunc4;
+		private System.Windows.Forms.RadioButton rbFunc5;
 	}
 }

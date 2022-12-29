@@ -210,29 +210,33 @@ namespace EpServerEngineSampleClient
 							break;
 						case 2:
 							j = int.Parse(word);
-							cdata_temp.on_hour = j;
+							cdata_temp.state = j;
 							break;
-						case 3:
+							case 3:
 							j = int.Parse(word);
-							cdata_temp.on_minute = j;
+							cdata_temp.on_hour = j;
 							break;
 						case 4:
 							j = int.Parse(word);
-							cdata_temp.on_second = j;
+							cdata_temp.on_minute = j;
 							break;
 						case 5:
 							j = int.Parse(word);
-							cdata_temp.off_hour = j;
+							cdata_temp.on_second = j;
 							break;
 						case 6:
 							j = int.Parse(word);
-							cdata_temp.off_minute = j;
+							cdata_temp.off_hour = j;
 							break;
 						case 7:
 							j = int.Parse(word);
-							cdata_temp.off_second = j;
+							cdata_temp.off_minute = j;
 							break;
 						case 8:
+							j = int.Parse(word);
+							cdata_temp.off_second = j;
+							break;
+						case 9:
 							cdata_temp.label = word;
 							//AddMsg(word);
 							//AddMsg("");

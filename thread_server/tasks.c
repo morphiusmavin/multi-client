@@ -738,10 +738,12 @@ void sort_countdown(void)
 	COUNTDOWN *ct;
 	COUNTDOWN tct;
 	hour = tm.tm_hour;
+/*
 	if(hour == 12)
 		hour = 0;
-	if(hour == 0)
+	else if(hour == 0)
 		hour = 12;
+*/
 	printf("hour: %d\n",hour);
 	int current_seconds = hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
 	printf("curr sec: %d\n",current_seconds);
@@ -817,10 +819,11 @@ void display_sort()
 {
 	int i;
 	printf("sort:\n");
+	printf("index\tsec away\tport\tonoff\thour\tmin\tsec\n");
 	for(i = 0;i < curr_countdown_size;i++)
 	{
 		if(count_down[i].seconds_away > -1)
-			printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+			printf("%d:\t%d\t\t%d\t%d\t%d\t%d\t%d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
 	}
 }
 /*********************************************************************/

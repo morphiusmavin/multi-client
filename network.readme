@@ -11,6 +11,7 @@ todo:
 7) Hook up temp sensors and use as triggers for ports (heat strips) or warnings 
 8) Clients/Server should send a msg back to Winclient after Winclient logs in saying that they 
 	already have their time set 
+9) journal entry feature 
 
 to add new commands:
 

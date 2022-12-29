@@ -26,6 +26,7 @@ namespace EpServerEngineSampleClient
 		List<String> garage_list;
 		List<String> cabin_list;
 		List<String> testbench_list;
+		List<String> outdoor_list;
 		//List<int> ports;
 		List<String> ports1;
 		List<String> ports2;
@@ -39,6 +40,7 @@ namespace EpServerEngineSampleClient
 			garage_list = new List<String>();
 			cabin_list = new List<String>();
 			testbench_list = new List<String>();
+			outdoor_list = new List<String>();
 
 			svrcmd = new ServerCmds();
 
@@ -70,6 +72,13 @@ namespace EpServerEngineSampleClient
 			testbench_list.Add("CABIN6");
 			testbench_list.Add("CABIN7");
 			testbench_list.Add("CABIN8");
+			
+			outdoor_list.Add("COOP1_LIGHT");
+			outdoor_list.Add("COOP1_HEATER");
+			outdoor_list.Add("COOP2_LIGHT");
+			outdoor_list.Add("COOP2_HEATER");
+			outdoor_list.Add("OUTDOOR_LIGHT1");
+			outdoor_list.Add("OUTDOOR_LIGHT2");
 
 			func = 0;
 			type = 0;
@@ -112,6 +121,15 @@ namespace EpServerEngineSampleClient
 			lbPort.Items.Add("CABIN6");
 			lbPort.Items.Add("CABIN7");
 			lbPort.Items.Add("CABIN8");
+		}
+		private void add_outdoor_list()
+		{
+			lbPort.Items.Add("COOP1_LIGHT");
+			lbPort.Items.Add("COOP1_HEATER");
+			lbPort.Items.Add("COOP2_LIGHT");
+			lbPort.Items.Add("COOP2_HEATER");
+			lbPort.Items.Add("OUTDOOR_LIGHT1");
+			lbPort.Items.Add("OUTDOOR_LIGHT2");
 		}
 		delegate void AddMsg_Involk(string message);
 		public void AddMsg(string message)
@@ -159,6 +177,10 @@ namespace EpServerEngineSampleClient
 					add_testbench_list();
 					type = 3;   // testbench
 					break;
+				case 3:
+					add_outdoor_list();
+					type = 3;   // testbench
+					break;
 
 				default:
 					type = 0;
@@ -173,16 +195,19 @@ namespace EpServerEngineSampleClient
 			switch(type)
 			{
 				case 8:
-					//AddMsg(garage_list[port]);
+					AddMsg(garage_list[port]);
 					port = svrcmd.GetCmdIndexI(garage_list[port]);
 					break;
 				case 3:
-					//AddMsg(cabin_list[port]);
+					AddMsg(cabin_list[port]);
 					port = svrcmd.GetCmdIndexI(cabin_list[port]);
 					break;
 				case 2:
-					//AddMsg(testbench_list[port]);
+					AddMsg(testbench_list[port]);
 					port = svrcmd.GetCmdIndexI(testbench_list[port]);
+					break;
+				case 4:
+					port = svrcmd.GetCmdIndexI(outdoor_list[port]);
 					break;
 				default:
 					AddMsg("what?");
@@ -211,6 +236,16 @@ namespace EpServerEngineSampleClient
 		private void rbFunc3_CheckedChanged(object sender, EventArgs e)
 		{
 			func = 3;
+		}
+
+		private void rbFunc4_CheckChanged(object sender, EventArgs e)
+		{
+			func = 4;
+		}
+
+		private void rbFunc5_CheckChanged(object sender, EventArgs e)
+		{
+			func = 5;
 		}
 
 		private void btnQuit_Click(object sender, EventArgs e)

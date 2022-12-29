@@ -39,12 +39,22 @@ namespace EpServerEngineSampleClient
 			on_label_list.Add("COOP2_HEATER");
 			on_label_list.Add("OUTDOOR_LIGHT1");
 			on_label_list.Add("OUTDOOR_LIGHT2");
+			on_label_list.Add("UNUSED150_1");
+			on_label_list.Add("UNUSED150_2");
+			on_label_list.Add("UNUSED150_3");
+			on_label_list.Add("UNUSED150_4");
+			on_label_list.Add("UNUSED150_5");
+			on_label_list.Add("UNUSED150_6");
+			on_label_list.Add("UNUSED150_7");
+			on_label_list.Add("UNUSED150_8");
+			on_label_list.Add("UNUSED150_9");
+			on_label_list.Add("UNUSED150_10");
 
 			Control sCtl = this.btnCoopLight1;
 			//for (int i = 0; i < this.Controls.Count; i++)
 			button_list = new List<ButtonList>();
 
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 16; i++)
 			{
 				if (sCtl.GetType() == typeof(Button))
 				{
@@ -117,12 +127,62 @@ namespace EpServerEngineSampleClient
 		{
 			ToggleButton(5, SendCmd(5));
 		}
+		private void btnTest1_Click(object sender, EventArgs e)
+		{
+			ToggleButton(6, SendCmd(6));
+		}
+
+		private void btnTest2_Click(object sender, EventArgs e)
+		{
+			ToggleButton(7, SendCmd(7));
+		}
+
+		private void btnTest3_Click(object sender, EventArgs e)
+		{
+			ToggleButton(8, SendCmd(8));
+		}
+
+		private void btnTest4_Click(object sender, EventArgs e)
+		{
+			ToggleButton(9, SendCmd(9));
+		}
+
+		private void btnTest5_Click(object sender, EventArgs e)
+		{
+			ToggleButton(10, SendCmd(10));
+		}
+
+		private void btnTest6_Click(object sender, EventArgs e)
+		{
+			ToggleButton(11, SendCmd(11));
+		}
+
+		private void btnTest7_Click(object sender, EventArgs e)
+		{
+			ToggleButton(12, SendCmd(12));
+		}
+
+		private void btnTest8_Click(object sender, EventArgs e)
+		{
+			ToggleButton(13, SendCmd(13));
+		}
+
+		private void btnTest9_Click(object sender, EventArgs e)
+		{
+			ToggleButton(14, SendCmd(14));
+		}
+		private void btnTest10_Click(object sender, EventArgs e)
+		{
+			ToggleButton(15, SendCmd(15));
+		}
+
 		private void LoadEvent(object sender, EventArgs e)
 		{
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 16; i++)
 			{
 				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}
 		}
+
 	}
 }

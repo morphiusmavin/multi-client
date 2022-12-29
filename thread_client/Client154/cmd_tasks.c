@@ -400,9 +400,9 @@ UCHAR get_host_cmd_task2(int test)
 								break;
 							if(ctp->port > -1)
 							{
-								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->index, ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
 										ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
-								printf("%s\n",tempx);
+								//printf("%s\n",tempx);
 								cmd = REPLY_CLLIST;
 								msg_len = strlen(tempx);
 								send_sock_msg(tempx, msg_len, cmd, 8);
@@ -521,7 +521,7 @@ UCHAR get_host_cmd_task2(int test)
 
 					case SET_TIME:
 #if 1
-printf("%s\n",tempx);
+printf("tempx: %s\n",tempx);
 						//printf("set time\n");
 						curtime2 = 0L;
 						j = 0;
@@ -609,14 +609,14 @@ printf("%s\n",tempx);
 						i = atoi(temp_time);
 						pt->tm_sec = i;
 						//printf("sec: %d\r\n",i);
-
 						if(*pch == 'P')
 						{
 							printf("PM\n");
-							pt->tm_hour += 12;
-						}
+							if(pt->tm_hour != 12)
+								pt->tm_hour += 12;
+						}else if(*pch == 'A' && pt->tm_hour == 12)
+							pt->tm_hour -= 12;
 printf("hour: %d\n",pt->tm_hour);
-
 						curtime2 = mktime(pt);
 						stime(pcurtime2);
 						uSleep(0,TIME_DELAY/3);

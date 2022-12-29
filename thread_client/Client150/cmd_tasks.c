@@ -609,13 +609,15 @@ UCHAR get_host_cmd_task2(int test)
 						pt->tm_sec = i;
 //						printf("sec: %d\r\n",i);
 //						printf("%c %x\n",*pch,*pch);
-printf("%c\n",*pch);
 						if(*pch == 'P')
 						{
-//							printf("PM\n");
-							pt->tm_hour += 12;
-						}
-//printf("hour: %d\n",pt->tm_hour);
+							printf("PM\n");
+							if(pt->tm_hour != 12)
+								pt->tm_hour += 12;
+						}else if(*pch == 'A' && pt->tm_hour == 12)
+							pt->tm_hour -= 12;
+						printf("hour: %d\n",pt->tm_hour);
+
 						curtime2 = mktime(pt);
 						stime(pcurtime2);
 						uSleep(0,TIME_DELAY/3);
@@ -630,7 +632,15 @@ printf("%c\n",*pch);
 						curtime2 = mtv.tv_sec;
 						strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 						printf(tempx);
-						//send_msg(strlen((char*)tempx),(UCHAR*)tempx,GET_TIME, _SERVER);
+						strftime(tempx,30,"%H",localtime(&curtime2));  // show as 24-hour (00 -> 23)
+						printf(tempx);
+						printf("\n");
+						strftime(tempx,30,"%I",localtime(&curtime2));	// show as 12-hour (01 -> 12)
+						printf(tempx);
+						printf("\n");
+						T = time(NULL);
+						tm = *localtime(&T);
+						printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
 						break;
 
 					case BAD_MSG:

@@ -305,9 +305,9 @@ UCHAR get_host_cmd_task(int test)
 						cllist_find_data(i, ctpp, &cll);
 						if(ctp->port > -1)
 						{
-							sprintf(tempx,"%d %d %d %d %d %d %d %d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
-									ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
-							printf("%s\n",tempx);
+							sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->index, ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+										ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
+							//printf("%s\n",tempx);
 							cmd = REPLY_CLLIST;
 							msg.mtext[0] = cmd;
 							msg_len = strlen(tempx);
@@ -532,11 +532,14 @@ for(i = 0;i < msg_len+2;i++)
 //printf("second: %d\n",pt->tm_sec);
 //printf("*%c %c\n",*(pch-1),*pch);
 
-printf("%c\n",*pch);
+//printf("%c\n",*pch);
 					if(*pch == 'P')
-					{
-						pt->tm_hour += 12;
-					}
+						{
+							printf("PM\n");
+							if(pt->tm_hour != 12)
+								pt->tm_hour += 12;
+						}else if(*pch == 'A' && pt->tm_hour == 12)
+							pt->tm_hour -= 12;
 printf("hour: %d\n",pt->tm_hour);
 
 					curtime2 = mktime(pt);

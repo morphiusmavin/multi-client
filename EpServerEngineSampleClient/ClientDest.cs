@@ -24,9 +24,7 @@ namespace EpServerEngineSampleClient
 	public partial class ClientDest : Form
 	{
 		private INetworkClient m_client;
-		private bool m_wait = false;
 		ServerCmds svrcmd = new ServerCmds();
-		private bool m_pause = false;
 		private List<ClientsAvail> clients_avail;
 		int sindex, iparam;
 		int timer_seconds = 0;
