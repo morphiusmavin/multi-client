@@ -61,7 +61,7 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-			tbStatus.Text = "145";
+			tbStatus.Text = "300";
 		}
 		private void ToggleButton(int which, bool state)
 		{
@@ -129,8 +129,8 @@ namespace EpServerEngineSampleClient
 			{
 				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}
-			tbStatus.Text = "145";
-			timer_tick = 145;
+			tbStatus.Text = "300";
+			timer_tick = 300;
 		}
 
 		private void btnTimer_Click(object sender, EventArgs e)

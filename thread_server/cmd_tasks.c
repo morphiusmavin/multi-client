@@ -138,9 +138,6 @@ UCHAR get_host_cmd_task(int test)
 		real_banks[i].bank = (i+4)/8;
 		real_banks[i].index = i - (real_banks[i].bank*8)+4;
 	}
-
-	memset(dat_names,0,sizeof(dat_names));
-
 	i = NUM_PORT_BITS;
 	//printf("no. port bits: %d\r\n",i);
 	osize = sizeof(O_DATA);
@@ -240,6 +237,19 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
+				case RELOAD_CLLIST:
+					cllist_init(&cll);
+					if(access(cFileName,F_OK) != -1)
+					{
+						clLoadConfig(cFileName,&cll,csize,errmsg);
+						if(rc > 0)
+						{
+							printf("%s\r\n",errmsg);
+						}
+						cllist_show(&cll);
+					}
+					break;
+
 				case CLEAR_CLLIST:
 					for(i = 0;i < 20;i++)
 					{
@@ -307,7 +317,7 @@ UCHAR get_host_cmd_task(int test)
 						{
 							sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->index, ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
 										ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
-							//printf("%s\n",tempx);
+							printf("%s\n",tempx);
 							cmd = REPLY_CLLIST;
 							msg.mtext[0] = cmd;
 							msg_len = strlen(tempx);
@@ -351,6 +361,7 @@ UCHAR get_host_cmd_task(int test)
 							&& ctp->off_minute == 0 && ctp->off_second == 0)
 						ctp->port = -1;
 					cllist_change_data(index,ctp,&cll);
+					memset(tempx,0,sizeof(tempx));
 					printf("done\n");
 					break;
 

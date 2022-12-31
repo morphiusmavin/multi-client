@@ -97,7 +97,8 @@ namespace EpServerEngineSampleClient
 			SHOW_CLLIST,
 			CLEAR_CLLIST,
 			SORT_CLLIST,
-			DISPLAY_CLLIST_SORT
+			DISPLAY_CLLIST_SORT,
+			RELOAD_CLLIST
 		}
 		public ServerCmds()
 		{
@@ -278,6 +279,36 @@ namespace EpServerEngineSampleClient
 				case "OUTDOOR_LIGHT2":
 					Properties.Settings.Default["OUTDOOR_LIGHT2"] = iparam;
 					break;
+				case "UNUSED150_1":
+					Properties.Settings.Default["UNUSED150_1"] = iparam;
+					break;
+				case "UNUSED150_2":
+					Properties.Settings.Default["UNUSED150_2"] = iparam;
+					break;
+				case "UNUSED150_3":
+					Properties.Settings.Default["UNUSED150_3"] = iparam;
+					break;
+				case "UNUSED150_4":
+					Properties.Settings.Default["UNUSED150_4"] = iparam;
+					break;
+				case "UNUSED150_5":
+					Properties.Settings.Default["UNUSED150_5"] = iparam;
+					break;
+				case "UNUSED150_6":
+					Properties.Settings.Default["UNUSED150_6"] = iparam;
+					break;
+				case "UNUSED150_7":
+					Properties.Settings.Default["UNUSED150_7"] = iparam;
+					break;
+				case "UNUSED150_8":
+					Properties.Settings.Default["UNUSED150_8"] = iparam;
+					break;
+				case "UNUSED150_9":
+					Properties.Settings.Default["UNUSED150_9"] = iparam;
+					break;
+				case "UNUSED150_10":
+					Properties.Settings.Default["UNUSED150_10"] = iparam;
+					break;
 				default:
 					break;
 			}
@@ -408,6 +439,36 @@ namespace EpServerEngineSampleClient
 				case "OUTDOOR_LIGHT2":
 					Properties.Settings.Default["OUTDOOR_LIGHT2"] = current_state;
 					break;
+				case "UNUSED150_1":
+					Properties.Settings.Default["UNUSED150_1"] = current_state;
+					break;
+				case "UNUSED150_2":
+					Properties.Settings.Default["UNUSED150_2"] = current_state;
+					break;
+				case "UNUSED150_3":
+					Properties.Settings.Default["UNUSED150_3"] = current_state;
+					break;
+				case "UNUSED150_4":
+					Properties.Settings.Default["UNUSED150_4"] = current_state;
+					break;
+				case "UNUSED150_5":
+					Properties.Settings.Default["UNUSED150_5"] = current_state;
+					break;
+				case "UNUSED150_6":
+					Properties.Settings.Default["UNUSED150_6"] = current_state;
+					break;
+				case "UNUSED150_7":
+					Properties.Settings.Default["UNUSED150_7"] = current_state;
+					break;
+				case "UNUSED150_8":
+					Properties.Settings.Default["UNUSED150_8"] = current_state;
+					break;
+				case "UNUSED150_9":
+					Properties.Settings.Default["UNUSED150_9"] = current_state;
+					break;
+				case "UNUSED150_10":
+					Properties.Settings.Default["UNUSED150_10"] = current_state;
+					break;
 				default:
 					break;
 			}
@@ -535,6 +596,36 @@ namespace EpServerEngineSampleClient
 					break;
 				case "OUTDOOR_LIGHT2":
 					current_state = (bool)Properties.Settings.Default["OUTDOOR_LIGHT2"];
+					break;
+				case "UNUSED150_1":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_1"];
+					break;
+				case "UNUSED150_2":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_2"];
+					break;
+				case "UNUSED150_3":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_3"];
+					break;
+				case "UNUSED150_4":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_4"];
+					break;
+				case "UNUSED150_5":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_5"];
+					break;
+				case "UNUSED150_6":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_6"];
+					break;
+				case "UNUSED150_7":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_7"];
+					break;
+				case "UNUSED150_8":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_8"];
+					break;
+				case "UNUSED150_9":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_9"];
+					break;
+				case "UNUSED150_10":
+					current_state = (bool)Properties.Settings.Default["UNUSED150_10"];
 					break;
 				default:
 					current_state = false;

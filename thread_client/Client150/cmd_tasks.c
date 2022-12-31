@@ -137,6 +137,8 @@ UCHAR get_host_cmd_task2(int test)
 	long cur_fsize;
 	struct timeval mtv;
 	struct tm t;
+	struct tm tm;
+	time_t T;
 	struct tm *pt = &t;
 	int msg_len;
 	serial_recv_on = 1;
@@ -172,7 +174,6 @@ UCHAR get_host_cmd_task2(int test)
 		real_banks[i].bank = (i+4)/8;
 		real_banks[i].index = i - (real_banks[i].bank*8)+4;
 	}
-	memset(dat_names,0,sizeof(dat_names));
 /*
 	i = NUM_PORT_BITS;
 	isize = sizeof(I_DATA);
@@ -215,7 +216,6 @@ UCHAR get_host_cmd_task2(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
-		
 		cllist_show(&cll);
 	}
 
@@ -273,6 +273,16 @@ UCHAR get_host_cmd_task2(int test)
 					case COOP2_HEATER:
 					case OUTDOOR_LIGHT1:
 					case OUTDOOR_LIGHT2:
+					case UNUSED150_1:
+					case UNUSED150_2:
+					case UNUSED150_3:
+					case UNUSED150_4:
+					case UNUSED150_5:
+					case UNUSED150_6:
+					case UNUSED150_7:
+					case UNUSED150_8:
+					case UNUSED150_9:
+					case UNUSED150_10:
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
 					case SHELL_AND_RENAME:
@@ -296,6 +306,19 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case RELOAD_CLLIST:
+						cllist_init(&cll);
+						if(access(cFileName,F_OK) != -1)
+						{
+							clLoadConfig(cFileName,&cll,csize,errmsg);
+							if(rc > 0)
+							{
+								printf("%s\r\n",errmsg);
+							}
+							cllist_show(&cll);
+						}
+						break;
+
 					case CLEAR_CLLIST:
 						for(i = 0;i < 20;i++)
 						{
@@ -369,6 +392,7 @@ UCHAR get_host_cmd_task2(int test)
 								&& ctp->off_minute == 0 && ctp->off_second == 0)
 							ctp->port = -1;
 						cllist_change_data(index,ctp,&cll);
+						memset(tempx,0,sizeof(tempx));
 						printf("done\n");
 					break;
 
@@ -385,7 +409,7 @@ UCHAR get_host_cmd_task2(int test)
 								break;
 							if(ctp->port > -1)
 							{
-								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->index, ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
 										ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
 								printf("%s\n",tempx);
 								cmd = REPLY_CLLIST;

@@ -69,6 +69,20 @@ namespace EpServerEngineSampleClient
 				}
 			}
 		}
+		delegate void AddMsg_Involk(string message);
+		public void AddMsg(string message)
+		{
+			if (tbReceived.InvokeRequired)
+			{
+				AddMsg_Involk CI = new AddMsg_Involk(AddMsg);
+				tbReceived.Invoke(CI, message);
+			}
+			else
+			{
+				//tbReceived.Text += message + "\r\n";
+				tbReceived.AppendText(message + "\r\n");
+			}
+		}
 		private void ToggleButton(int which, bool state)
 		{
 			if (state)
@@ -181,8 +195,8 @@ namespace EpServerEngineSampleClient
 			for (int i = 0; i < 16; i++)
 			{
 				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
+				AddMsg(i.ToString());
 			}
 		}
-
 	}
 }

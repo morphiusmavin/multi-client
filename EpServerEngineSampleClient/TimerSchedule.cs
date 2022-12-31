@@ -37,7 +37,6 @@ namespace EpServerEngineSampleClient
 		private int iResult = 0;
 		string m_xml_file_location;
 		public Cdata m_cdata;	// inconsistent accessability: field type Cdata is less accessable than m_cdata
-		
 		public int GetResult()
 		{
 			return iResult;
@@ -56,17 +55,13 @@ namespace EpServerEngineSampleClient
 			svrcmd.SetClient(m_client);
 			mycdata = new List<Cdata>();
 			//btnLoadXML_Click(new object(), new EventArgs());
-			if (false)
-			foreach(Cdata cd in mycdata)
-			{
-				AddMsg(cd.label + " " + cd.index.ToString() + " " + cd.port.ToString() + " " + cd.on_hour.ToString() + " " + cd.on_minute.ToString());
-			}
 			init_lists();
+			
 		}
 		private void LoadEvent(object sender, EventArgs e)
 		{
 			init_lists();
-			AddMsg("loaded");
+			//AddMsg("loaded");
 		}
 		private void init_lists()
 		{
@@ -195,62 +190,64 @@ namespace EpServerEngineSampleClient
 					string[] words = ret.Split(' ');
 					i = 0;
 					int j;
-				Cdata cdata_temp = new Cdata();
-				foreach (var word in words)
-				{
-					switch (i)
+					Cdata cdata_temp = new Cdata();
+					foreach (var word in words)
 					{
-						case 0:
-							j = int.Parse(word);
-							cdata_temp.index = j;
-							break;
-						case 1:
-							j = int.Parse(word);
-							cdata_temp.port = j;
-							break;
-						case 2:
-							j = int.Parse(word);
-							cdata_temp.state = j;
-							break;
-							case 3:
-							j = int.Parse(word);
-							cdata_temp.on_hour = j;
-							break;
-						case 4:
-							j = int.Parse(word);
-							cdata_temp.on_minute = j;
-							break;
-						case 5:
-							j = int.Parse(word);
-							cdata_temp.on_second = j;
-							break;
-						case 6:
-							j = int.Parse(word);
-							cdata_temp.off_hour = j;
-							break;
-						case 7:
-							j = int.Parse(word);
-							cdata_temp.off_minute = j;
-							break;
-						case 8:
-							j = int.Parse(word);
-							cdata_temp.off_second = j;
-							break;
-						case 9:
-							cdata_temp.label = word;
-							//AddMsg(word);
-							//AddMsg("");
-							break;
-						default:
-							AddMsg("?");
-							break;
+						switch (i)
+						{
+							case 0:
+								j = int.Parse(word);
+								cdata_temp.index = j;
+								break;
+							case 1:
+								j = int.Parse(word);
+								cdata_temp.port = j;
+								break;
+							case 2:
+								j = int.Parse(word);
+								cdata_temp.state = j;
+								break;
+								case 3:
+								j = int.Parse(word);
+								cdata_temp.on_hour = j;
+								break;
+							case 4:
+								j = int.Parse(word);
+								cdata_temp.on_minute = j;
+								break;
+							case 5:
+								j = int.Parse(word);
+								cdata_temp.on_second = j;
+								break;
+							case 6:
+								j = int.Parse(word);
+								cdata_temp.off_hour = j;
+								break;
+							case 7:
+								j = int.Parse(word);
+								cdata_temp.off_minute = j;
+								break;
+							case 8:
+								j = int.Parse(word);
+								cdata_temp.off_second = j;
+								break;
+							case 9:
+								cdata_temp.label = word;
+								//AddMsg(word);
+								//AddMsg("");
+								//cdata_temp.label += '\n';
+								break;
+							default:
+								AddMsg("?");
+								break;
+						}
+						i++;
 					}
-					i++;
-				}
-				mycdata.Add(cdata_temp);
-				//AddMsg(mycdata.Count().ToString());
-				cdata_temp = null;
-				break;
+					mycdata.Add(cdata_temp);
+					//AddMsg(mycdata.Count().ToString());
+					cdata_temp = null;
+					//btnUpdateChart_Click(new object(), new EventArgs());
+					break;
 
 				default:
 					break;
@@ -361,6 +358,8 @@ namespace EpServerEngineSampleClient
 				dt.Rows.Add(td.index.ToString(), td.port.ToString(), td.state.ToString(), td.on_hour.ToString(),
 					td.on_minute.ToString(), td.on_second.ToString(), td.off_hour.ToString(), td.off_minute.ToString(),
 					td.off_second.ToString(), td.label);
+				//td.label += '\n';
+				//AddMsg(td.label);
 			}
 			CGridView.DataSource = dt;
 		}
@@ -403,31 +402,7 @@ namespace EpServerEngineSampleClient
 				return;
 			}
 			addrec.Dispose();
-			/*
-			Cdata cdata = new Cdata();
-			AddRecord addrec = new AddRecord(cdata);
-			
-			//addrec.SetClient(m_client);
-			addrec.SetCdata(cdata);
-			addrec.StartPosition = FormStartPosition.Manual;
-			addrec.Location = new Point(100, 10);
-
-			if (addrec.ShowDialog(this) == DialogResult.OK)
-			{
-				cdata = addrec.GetCdata();
-				//AddMsg(cdata.on_hour.ToString());
-				//AddMsg(cdata.on_minute.ToString());
-			}
-			else
-			{
-				//                this.txtResult.Text = "Cancelled";
-			}
-			addrec.Dispose();
-			int count = mycdata.Count();
-			AddMsg("count: " + count.ToString());
-			cdata.index = count;
-			mycdata.Add(cdata);
-			*/
+		
 			btnUpdateChart_Click(new object(), new EventArgs());
 		}
 		private void btnDeleteRecord_Click(object sender, EventArgs e)
@@ -501,57 +476,6 @@ namespace EpServerEngineSampleClient
 			//          Step 5: Binding the datatable to datagrid:
 			CGridView.DataSource = dt;
 		}
-		private void btnCdata2XML_Click(object sender, EventArgs e)
-		{
-			string tfilename;
-			tfilename = CreateXMLFileName();
-			if (tfilename == "")
-				return;
-			if (File.Exists(tfilename))
-			{
-				MessageBox.Show(tfilename + " already exists");
-				return;
-			}
-			int count = mycdata.Count;
-			String[] file = new string[20];
-			int i = 0;
-			foreach (Cdata td in mycdata)
-			{
-				//if (td.port > -1)
-				file[i] = td.index.ToString() + "," + td.port.ToString() + "," + td.state.ToString() + "," + td.on_hour.ToString() + "," +
-					td.on_minute.ToString() + "," + td.on_second.ToString() + "," + td.off_hour.ToString() + "," + td.off_minute.ToString() + "," +
-					td.off_second.ToString() + "," + td.label;
-				i++;
-			}
-			string line = "0,0,0,0,0,0,0,temp";
-			string line2;
-			int index = count;
-			for (int j = 0; j < 20 - count; j++)
-			{
-				line2 = index.ToString() + ',' + "-1" + ',' + line + index.ToString();
-				file[index] = line2;
-				index++;
-			}
-			String xml = "";
-			XElement top = new XElement("Table",
-			from items in file
-			let fields = items.Split(',')
-			select new XElement("C_DATA",
-			new XElement("index", fields[0]),
-			new XElement("port", fields[1]),
-			new XElement("state", fields[2]),
-			new XElement("on_hour", fields[3]),
-			new XElement("on_minute", fields[4]),
-			new XElement("on_second", fields[5]),
-			new XElement("off_hour", fields[6]),
-			new XElement("off_minute", fields[7]),
-			new XElement("off_second", fields[8]),
-			new XElement("label", fields[9])
-			)
-			);
-			File.WriteAllText(tfilename, xml + top.ToString());
-			MessageBox.Show("created: " + tfilename);
-		}
 		private void btnSendRecs_Click(object sender, EventArgs e)
 		{
 			int i;
@@ -559,6 +483,7 @@ namespace EpServerEngineSampleClient
 			byte[] label;
 			byte[] data = new byte[80];
 			//tbReceived.Clear();
+			Array.Clear(data, 0, data.Length);
 			if (type > -1)		// TODO: check to make sure no times start or stop at the same time
 			{
 				foreach (Cdata cd in mycdata)
@@ -585,7 +510,7 @@ namespace EpServerEngineSampleClient
 						*/
 						System.Buffer.BlockCopy(label, 0, data, 10, label.Length);
 						int ret = svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SET_CLLIST"), type, data);
-						AddMsg(ret.ToString());
+						//AddMsg(ret.ToString());
 					}
 				}
 			}
@@ -712,14 +637,15 @@ namespace EpServerEngineSampleClient
 			tfilename = CreateXMLFileName();
 			if (tfilename == "")
 				return;
-			if (File.Exists(tfilename))
-			{
-				MessageBox.Show(tfilename + " already exists");
-				return;
-			}
 			int count = mycdata.Count;
 			String[] file = new string[20];
 			int i = 0;
+			if (mycdata.Count() == 0)
+			{
+				MessageBox.Show("no data in mycdata");
+				return;
+			}
+				
 			foreach (Cdata td in mycdata)
 			{
 				//if (td.port > -1)
@@ -738,6 +664,16 @@ namespace EpServerEngineSampleClient
 				index++;
 			}
 			String xml = "";
+			i = 0;
+			AddMsg("");
+			
+			foreach(string fn in file)
+			{
+				//AddMsg(i.ToString() + " " + fn);
+				AddMsg(fn);
+				i++;
+			}
+			//return;
 			XElement top = new XElement("Table",
 			from items in file
 			let fields = items.Split(',')
@@ -756,18 +692,20 @@ namespace EpServerEngineSampleClient
 			);
 			File.WriteAllText(tfilename, xml + top.ToString());
 			MessageBox.Show("created: " + tfilename);
+			
 		}
-
 		private void btnSort_Click(object sender, EventArgs e)
 		{
 			svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SORT_CLLIST"), type, "");
 		}
-
 		private void btnDispSort_Click(object sender, EventArgs e)
 		{
 			svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISPLAY_CLLIST_SORT"), type, "");
 		}
-
+		private void LoadForm(object sender, EventArgs e)
+		{
+			tbReceived.Clear();
+		}
 		byte[] BytesFromString(String str)
 		{
 			byte[] bytes = new byte[str.Length * sizeof(char)];

@@ -248,11 +248,12 @@ UCHAR get_host_cmd_task(int test)
 			{
 				case SORT_CLLIST:
 					msg_len = 0;
+					// 2 is start of clients (skipping win cl) and 8 is server 
 					for(i = 2;i < 8;i++)
 					{
-						if(client_table[i].socket > 0)
+						if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 						{
-							//printf("dest: %d sock: %d msg_len: %d\n",dest,client_table[dest].socket,msg_len);
+							printf("dest: %d sock: %d type: %d\n",dest,client_table[dest].socket,client_table[dest].type);
 							send_msg(client_table[i].socket, msg_len, (UCHAR*)&write_serial_buff[0],cmd);
 						}
 					}

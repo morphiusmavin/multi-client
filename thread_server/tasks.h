@@ -151,7 +151,6 @@ time_t start_time;
 REAL_BANKS real_banks[40];
 
 static int serial_recv_on;
-static char dat_names[NUM_DAT_NAMES][DAT_NAME_STR_LEN];
 float convertF(int raw_data);
 extern char oFileName[20];
 extern char cFileName[20];

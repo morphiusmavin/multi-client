@@ -99,6 +99,9 @@
 			this.btnNextSunrise = new System.Windows.Forms.Button();
 			this.btnSendSort = new System.Windows.Forms.Button();
 			this.timer3 = new System.Windows.Forms.Timer(this.components);
+			this.tbJournalEntry = new System.Windows.Forms.TextBox();
+			this.label12 = new System.Windows.Forms.Label();
+			this.label13 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -109,12 +112,12 @@
 			// 
 			this.tbReceived.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbReceived.Location = new System.Drawing.Point(21, 372);
+			this.tbReceived.Location = new System.Drawing.Point(21, 378);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(484, 252);
+			this.tbReceived.Size = new System.Drawing.Size(235, 243);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
 			// 
@@ -265,7 +268,7 @@
 			this.btnRescan.Name = "btnRescan";
 			this.btnRescan.Size = new System.Drawing.Size(235, 61);
 			this.btnRescan.TabIndex = 2;
-			this.btnRescan.Text = "Unused";
+			this.btnRescan.Text = "Modify Target Time";
 			this.btnRescan.UseVisualStyleBackColor = false;
 			this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
 			// 
@@ -860,12 +863,47 @@
 			this.timer3.Interval = 3000000;
 			this.timer3.Tick += new System.EventHandler(this.timer3_tick);
 			// 
+			// tbJournalEntry
+			// 
+			this.tbJournalEntry.AcceptsReturn = true;
+			this.tbJournalEntry.AcceptsTab = true;
+			this.tbJournalEntry.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbJournalEntry.Location = new System.Drawing.Point(272, 406);
+			this.tbJournalEntry.Multiline = true;
+			this.tbJournalEntry.Name = "tbJournalEntry";
+			this.tbJournalEntry.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.tbJournalEntry.Size = new System.Drawing.Size(233, 215);
+			this.tbJournalEntry.TabIndex = 84;
+			// 
+			// label12
+			// 
+			this.label12.AutoSize = true;
+			this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+			this.label12.Location = new System.Drawing.Point(268, 378);
+			this.label12.Name = "label12";
+			this.label12.Size = new System.Drawing.Size(159, 20);
+			this.label12.TabIndex = 85;
+			this.label12.Text = "Daily Journal Entry";
+			// 
+			// label13
+			// 
+			this.label13.AutoSize = true;
+			this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+			this.label13.Location = new System.Drawing.Point(553, 570);
+			this.label13.Name = "label13";
+			this.label13.Size = new System.Drawing.Size(161, 20);
+			this.label13.TabIndex = 86;
+			this.label13.Text = "Modify Target Time";
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1356, 642);
+			this.Controls.Add(this.label13);
+			this.Controls.Add(this.label12);
+			this.Controls.Add(this.tbJournalEntry);
 			this.Controls.Add(this.btnSendSort);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.btnFnc5);
@@ -1009,6 +1047,9 @@
 		private System.Windows.Forms.Label NextSrssLabel;
 		private System.Windows.Forms.Button btnSendSort;
 		private System.Windows.Forms.Timer timer3;
+		private System.Windows.Forms.TextBox tbJournalEntry;
+		private System.Windows.Forms.Label label12;
+		private System.Windows.Forms.Label label13;
 	}
 }
 

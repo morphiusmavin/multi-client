@@ -647,7 +647,7 @@ int change_output(int index, int onoff)
 	return 0;
 #endif
 
-//	printf("change output: %d %d\r\n",index,onoff);
+	//printf("change output: %d\n",index);
 
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
@@ -680,10 +680,11 @@ int change_output(int index, int onoff)
 //printf("output f\n");
 			break;
 		default:
+			printf("change output ?\n");
 			break;
 	}
 	pthread_mutex_unlock(&io_mem_lock);
-//	printf("change output: %d %d\r\n",index,onoff);
+	//printf("change output: %d %d\r\n",index,onoff);
 
 //	sprintf(tempx,"%d %d %d", bank, index, onoff);
 //	myprintf1(tempx);
@@ -758,16 +759,10 @@ void sort_countdown(void)
 	COUNTDOWN *ct;
 	COUNTDOWN tct;
 	hour = tm.tm_hour;
-/*
-	printf("hour: %d\n",hour);
-	if(hour == 12)
-		hour = 0;
-	else if(hour == 0)
-		hour = 12;
-*/
-	printf("hour: %d\n",hour);
+
+//	printf("hour: %d\n",hour);
 	int current_seconds = hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
-	printf("curr sec: %d\n",current_seconds);
+//	printf("curr sec: %d\n",current_seconds);
 	k = 0;
 	for(i = 0;i < 20;i++)
 	{
@@ -827,13 +822,6 @@ void sort_countdown(void)
 			count_down[i].seconds_away = -1;
 		}
 	}
-/*
-	printf("\n");
-	for(i = 0;i < curr_countdown_size;i++)
-	{
-		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
-	}
-*/
 }
 /*********************************************************************/
 void display_sort()
@@ -860,7 +848,7 @@ UCHAR timer_task(int test)
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 
 	uSleep(2,0);
-	printf("starting timer task\n");
+	//printf("starting timer task\n");
 	sort_countdown();
 /*
 	while(TRUE)
@@ -899,7 +887,7 @@ UCHAR timer_task(int test)
 
 		if(shutdown_all)
 		{
-			printf("done timer_task\r\n");
+			//printf("done timer_task\r\n");
 			//printString2("done timer");
 			//close_serial();
 			//close_serial2();
@@ -1151,16 +1139,6 @@ UCHAR basic_controls_task(int test)
 	msg.mtype = msgtype;
 	//memset(switch_status,0,sizeof(switch_status));
 
-/*
-	for(i = 0;i < 10;i++)	// test the 2nd relay module
-	{
-		change_output(TEST_OUTPUT10+i,1);
-		uSleep(1,0);
-		change_output(TEST_OUTPUT10+i,0);
-		uSleep(1,0);
-	}
-*/
-
 	while(TRUE)
 	{
 		if (msgrcv(basic_controls_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
@@ -1178,7 +1156,7 @@ UCHAR basic_controls_task(int test)
 		onoff = msg.mtext[1];
 
 		//printf("basic controls: %d ",onoff);
-		//print_cmd(cmd);
+		print_cmd(cmd);
 		usleep(_5MS);
 
 		switch(cmd)
@@ -1189,7 +1167,7 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case  CABIN2:
-				//index = change_output(CABIN2a,onoff);
+				index = change_output(CABIN2a,onoff);
 				usleep(_100MS);
 				break;
 
@@ -1219,7 +1197,7 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case  CABIN8:
-				//index = change_output(CABIN8a,onoff);
+				index = change_output(CABIN8a,onoff);
 				usleep(_100MS);
 				break;
 

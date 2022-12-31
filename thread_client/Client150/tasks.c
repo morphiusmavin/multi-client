@@ -644,12 +644,12 @@ int change_output(int index, int onoff)
 	return 0;
 #endif
 
-	//printf("change output: %d %d\r\n",index,onoff);
+	printf("change output: %d\n",index);
 	pthread_mutex_lock( &io_mem_lock);
 
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
-	//printf("bank: %d\r\n",bank);
+	printf("bank: %d index: %d\r\n",bank,index);
 	switch(bank)
 	{
 /*
@@ -676,7 +676,7 @@ int change_output(int index, int onoff)
 			break;
 	}
 	pthread_mutex_unlock(&io_mem_lock);
-//	printf("change output: %d %d\r\n",index,onoff);
+	//printf("change output: %d %d\r\n",index,onoff);
 
 //	sprintf(tempx,"%d %d %d", bank, index, onoff);
 //	myprintf1(tempx);
@@ -832,11 +832,12 @@ void sort_countdown(void)
 void display_sort()
 {
 	int i;
-	printf("sort:\n");
+		printf("sort:\n");
+	printf("index\tsec away\tport\tonoff\thour\tmin\tsec\n");
 	for(i = 0;i < curr_countdown_size;i++)
 	{
 		if(count_down[i].seconds_away > -1)
-			printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+			printf("%d:\t%d\t\t%d\t%d\t%d\t%d\t%d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
 	}
 }
 /*********************************************************************/
@@ -851,7 +852,7 @@ UCHAR timer_task(int test)
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 
 	uSleep(2,0);
-	printf("starting timer task\n");
+	//printf("starting timer task\n");
 
 	sort_countdown();
 
@@ -1160,7 +1161,7 @@ UCHAR basic_controls_task(int test)
 		onoff = msg.mtext[1];
 
 		//printf("basic controls: ");
-		//print_cmd(cmd);
+		print_cmd(cmd);
 		usleep(_5MS);
 
 		switch(cmd)

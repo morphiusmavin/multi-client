@@ -52,6 +52,7 @@ namespace EpServerEngineSampleClient
 			this.btnTest9 = new System.Windows.Forms.Button();
 			this.btnTest10 = new System.Windows.Forms.Button();
 			this.label7 = new System.Windows.Forms.Label();
+			this.tbReceived = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// btnCoop2Heater
@@ -109,7 +110,7 @@ namespace EpServerEngineSampleClient
 			this.label3.Location = new System.Drawing.Point(44, 239);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(85, 29);
-			this.label3.TabIndex = 9;
+			this.label3.TabIndex = 19;
 			this.label3.Text = "Heater";
 			// 
 			// label4
@@ -119,7 +120,7 @@ namespace EpServerEngineSampleClient
 			this.label4.Location = new System.Drawing.Point(44, 174);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(65, 29);
-			this.label4.TabIndex = 8;
+			this.label4.TabIndex = 18;
 			this.label4.Text = "Light";
 			// 
 			// label5
@@ -129,7 +130,7 @@ namespace EpServerEngineSampleClient
 			this.label5.Location = new System.Drawing.Point(44, 296);
 			this.label5.Name = "label5";
 			this.label5.Size = new System.Drawing.Size(84, 29);
-			this.label5.TabIndex = 12;
+			this.label5.TabIndex = 20;
 			this.label5.Text = "Light 1";
 			// 
 			// label6
@@ -139,7 +140,7 @@ namespace EpServerEngineSampleClient
 			this.label6.Location = new System.Drawing.Point(44, 357);
 			this.label6.Name = "label6";
 			this.label6.Size = new System.Drawing.Size(84, 29);
-			this.label6.TabIndex = 13;
+			this.label6.TabIndex = 21;
 			this.label6.Text = "Light 2";
 			// 
 			// label2
@@ -149,7 +150,7 @@ namespace EpServerEngineSampleClient
 			this.label2.Location = new System.Drawing.Point(44, 113);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(85, 29);
-			this.label2.TabIndex = 7;
+			this.label2.TabIndex = 17;
 			this.label2.Text = "Heater";
 			// 
 			// label1
@@ -159,7 +160,7 @@ namespace EpServerEngineSampleClient
 			this.label1.Location = new System.Drawing.Point(44, 52);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(65, 29);
-			this.label1.TabIndex = 6;
+			this.label1.TabIndex = 16;
 			this.label1.Text = "Light";
 			// 
 			// btnCoop1Heater
@@ -313,15 +314,24 @@ namespace EpServerEngineSampleClient
 			this.label7.Location = new System.Drawing.Point(491, 23);
 			this.label7.Name = "label7";
 			this.label7.Size = new System.Drawing.Size(96, 29);
-			this.label7.TabIndex = 16;
+			this.label7.TabIndex = 22;
 			this.label7.Text = "Unused";
+			// 
+			// tbReceived
+			// 
+			this.tbReceived.Location = new System.Drawing.Point(314, 357);
+			this.tbReceived.Multiline = true;
+			this.tbReceived.Name = "tbReceived";
+			this.tbReceived.Size = new System.Drawing.Size(396, 251);
+			this.tbReceived.TabIndex = 23;
 			// 
 			// Outdoor
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(857, 512);
+			this.ClientSize = new System.Drawing.Size(748, 620);
+			this.Controls.Add(this.tbReceived);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.btnTest10);
 			this.Controls.Add(this.btnTest9);
@@ -376,5 +386,6 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.Button btnTest9;
 		private System.Windows.Forms.Button btnTest10;
 		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.TextBox tbReceived;
 	}
 }

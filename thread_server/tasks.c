@@ -738,15 +738,10 @@ void sort_countdown(void)
 	COUNTDOWN *ct;
 	COUNTDOWN tct;
 	hour = tm.tm_hour;
-/*
-	if(hour == 12)
-		hour = 0;
-	else if(hour == 0)
-		hour = 12;
-*/
-	printf("hour: %d\n",hour);
+
+	//printf("hour: %d\n",hour);
 	int current_seconds = hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
-	printf("curr sec: %d\n",current_seconds);
+	//printf("curr sec: %d\n",current_seconds);
 	k = 0;
 	for(i = 0;i < 20;i++)
 	{
@@ -775,14 +770,7 @@ void sort_countdown(void)
 	{
 		count_down[i].seconds_away = count_down[i].hour * 3600 + count_down[i].minute * 60 + count_down[i].second;
 	}
-/*
-	printf("\n");
-	for(i = 0;i < curr_countdown_size;i++)
-	{
-		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
-	}
-	printf("\n");
-*/
+
 	for (i = 0; i < curr_countdown_size - 1; i++) 		// do the sort
 	{
 		// Find the minimum element in unsorted array
@@ -901,6 +889,7 @@ UCHAR timer_task(int test)
 				exit(EXIT_FAILURE);
 			}
 			sort_countdown();
+			printf("server send sort\n");
 		}
 		uSleep(1,0);
 		if(curr_countdown_size > 0)

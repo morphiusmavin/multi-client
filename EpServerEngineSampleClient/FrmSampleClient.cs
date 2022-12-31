@@ -1016,6 +1016,11 @@ namespace EpServerEngineSampleClient
                     play_tone(3);
                     AddMsg("end of Ast Twilight");
                 }
+                else if (hour == 23 && minute == 59 && second == 0)
+				{
+                    SaveJournalEntry();
+                    tbJournalEntry.Clear();
+                }
                 else if (hour == 0 && minute == 0 && second == 0)
                 {
                     DateTime now2 = DateTime.Now;
@@ -1039,18 +1044,8 @@ namespace EpServerEngineSampleClient
                         hour_before_sunset = curr_srss_day.SunsetHour;
                         minute_before_sunset = curr_srss_day.SunsetMinute;
                         calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 5);
-                        DisplayQuoteOfTheDay();
                     }
-                    /*
-                    foreach (ClientsAvail cl in clients_avail)
-                    {
-                        if (cl.socket > 0 && cl.type != 0)
-                        {
-                            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SORT_CLLIST"), cl.index, "test");
-                            AddMsg(cl.index.ToString());
-                        }
-                    }
-                    */
+                    DisplayQuoteOfTheDay();
                 }
             }
             if (tick == 3)
@@ -1305,6 +1300,23 @@ namespace EpServerEngineSampleClient
                 AddMsg(msg + " " + temp);
             }
         }
+        private void SaveJournalEntry()
+		{
+            string[] lines = new string[2];
+            string temp = "";
+            DateTime localDate = DateTime.Now;
+            String cultureName = "en-US";
+            var culture = new CultureInfo(cultureName);
+            temp = localDate.ToString(culture);
+            string docPath = @"c:\users\daniel\documents\DailyJournal.txt";
+            //AddMsg(docPath);
+            //AddMsg(tbJournalEntry.Text);
+            using (StreamWriter sw = File.AppendText(docPath))
+            {
+                sw.WriteLine(temp);
+                sw.WriteLine(tbJournalEntry.Text);
+            }
+        }
         private void AvailClientSelIndexChanged(object sender, EventArgs e)
         {
             AvailClientCurrentSection = lbAvailClients.SelectedIndex;
@@ -1426,6 +1438,8 @@ namespace EpServerEngineSampleClient
             else
             {
             }
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("RELOAD_CLLIST"), 2, " ");
+
         }
 		private void btnSetNextClient_Click(object sender, EventArgs e)
 		{
@@ -1648,6 +1662,8 @@ namespace EpServerEngineSampleClient
         }
 		private void btnTest_Click(object sender, EventArgs e)
 		{
+            //SaveJournalEntry();
+            //return;
             timer_schedule.StartPosition = FormStartPosition.Manual;
             timer_schedule.Location = new Point(100, 10);
             if (timer_schedule.ShowDialog(this) == DialogResult.OK)
@@ -1747,7 +1763,6 @@ namespace EpServerEngineSampleClient
                 NextSrssLabel.Text = "";
             }
         }
-
 		private void btnSendSort_Click(object sender, EventArgs e)
 		{
             int dest = -1;
@@ -1760,7 +1775,6 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
-
 		private void timer3_tick(object sender, EventArgs e)
 		{
             int dest = -1;
@@ -1774,7 +1788,6 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
-
 		private void tbAlarmMinutes_TextChanged(object sender, EventArgs e)
         {
             alarm_minutes = int.Parse(tbAlarmMinutes.Text);
