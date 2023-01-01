@@ -17,9 +17,11 @@
 #define			OUTPORTA_OFFSET		0
 #define			OUTPORTB_OFFSET		1
 #define			OUTPORTC_OFFSET		2
-#define			OUTPORTD_OFFSET		3
-#define			OUTPORTE_OFFSET		4
-#define			OUTPORTF_OFFSET		5
+// these were 3->5 which was causing the strange bug where 
+// other ports were being set and the cll memory was corrupting
+#define			OUTPORTD_OFFSET		0
+#define			OUTPORTE_OFFSET		1
+#define			OUTPORTF_OFFSET		2
 
 VUCHAR *card_ports;
 UCHAR outportstatus[NUM_PORTS];

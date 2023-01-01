@@ -572,6 +572,13 @@ UCHAR monitor_fake_input_task(int test)
 	return 1;
 #endif
 
+	while(TRUE)
+	{
+		uSleep(1,0);
+		if(shutdown_all)
+			return 0;
+	}
+
 //	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
 
 	for(i = 0;i < 6;i++)
@@ -1201,7 +1208,7 @@ UCHAR basic_controls_task(int test)
 				usleep(_100MS);
 				break;
 
-			case EAST_LIGHT:
+			case EAST_LIGHT:	//  relay is wired nc while all others are no 
 				if(onoff == 0)
 					onoff = 1;
 				else onoff = 0;

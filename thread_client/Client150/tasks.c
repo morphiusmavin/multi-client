@@ -552,7 +552,12 @@ UCHAR monitor_fake_input_task(int test)
 			return 0;
 	}
 #endif
-
+while(TRUE)
+	{
+		uSleep(1,0);
+		if(shutdown_all)
+			return 0;
+	}
 	for(i = 0;i < 6;i++)
 	{
 		fake_inportstatus1[i] = 0;
@@ -644,12 +649,12 @@ int change_output(int index, int onoff)
 	return 0;
 #endif
 
-	printf("change output: %d\n",index);
+	//printf("change output: %d\n",index);
 	pthread_mutex_lock( &io_mem_lock);
 
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
-	printf("bank: %d index: %d\r\n",bank,index);
+	//printf("bank: %d index: %d\r\n",bank,index);
 	switch(bank)
 	{
 /*
@@ -1161,8 +1166,8 @@ UCHAR basic_controls_task(int test)
 		onoff = msg.mtext[1];
 
 		//printf("basic controls: ");
-		print_cmd(cmd);
-		usleep(_5MS);
+		//print_cmd(cmd);
+		//usleep(_5MS);
 
 		switch(cmd)
 		{

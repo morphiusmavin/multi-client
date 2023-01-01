@@ -1030,7 +1030,7 @@ namespace EpServerEngineSampleClient
                     tbTodaysDate.Text = t2date;
                     btnSunriseSunset_Click(new object(), new EventArgs());
                     //play_tone(9);
-                    AddMsg("midnight");
+                    //AddMsg("midnight");
                 }
                 else if (hour == 0 && minute == 1 && second == 0)
                 {
@@ -1438,22 +1438,7 @@ namespace EpServerEngineSampleClient
             else
             {
             }
-            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("RELOAD_CLLIST"), 2, " ");
-
-        }
-		private void btnSetNextClient_Click(object sender, EventArgs e)
-		{
-            setnextclient = new SetNextClient();
-            setnextclient.SetClient(m_client);
-            setnextclient.StartPosition = FormStartPosition.Manual;
-            setnextclient.Location = new Point(100, 10);
-            if (setnextclient.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-            setnextclient.Dispose();
+            //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("RELOAD_CLLIST"), 2, " ");
         }
         private void BtnAssignFunction(object sender, EventArgs e)
         {
@@ -1660,19 +1645,6 @@ namespace EpServerEngineSampleClient
             {
             }
         }
-		private void btnTest_Click(object sender, EventArgs e)
-		{
-            //SaveJournalEntry();
-            //return;
-            timer_schedule.StartPosition = FormStartPosition.Manual;
-            timer_schedule.Location = new Point(100, 10);
-            if (timer_schedule.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-        }
 		private void btnSettings_Click(object sender, EventArgs e)
 		{
             Settings dlg = new Settings();
@@ -1778,7 +1750,6 @@ namespace EpServerEngineSampleClient
 		private void timer3_tick(object sender, EventArgs e)
 		{
             int dest = -1;
-            //AddMsg("timer 3");
             foreach (ClientsAvail cl in clients_avail)
             {
                 if (cl.socket > 0 && cl.type != 0)
@@ -1787,6 +1758,11 @@ namespace EpServerEngineSampleClient
                     svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_TIME"), dest, "test");
                 }
             }
+        }
+		private void btnSave_Click(object sender, EventArgs e)
+		{
+            SaveJournalEntry();
+            tbJournalEntry.Clear();
         }
 		private void tbAlarmMinutes_TextChanged(object sender, EventArgs e)
         {

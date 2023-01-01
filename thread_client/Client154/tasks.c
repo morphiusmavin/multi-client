@@ -555,6 +555,14 @@ UCHAR monitor_fake_input_task(int test)
 	}
 #endif
 
+	while(TRUE)
+	{
+		uSleep(1,0);
+		if(shutdown_all)
+			return 0;
+	}
+
+
 	for(i = 0;i < 6;i++)
 	{
 		fake_inportstatus1[i] = 0;
@@ -1156,8 +1164,8 @@ UCHAR basic_controls_task(int test)
 		onoff = msg.mtext[1];
 
 		//printf("basic controls: %d ",onoff);
-		print_cmd(cmd);
-		usleep(_5MS);
+		//print_cmd(cmd);
+		//usleep(_5MS);
 
 		switch(cmd)
 		{
@@ -1167,12 +1175,12 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case  CABIN2:
-				index = change_output(CABIN2a,onoff);
+				//index = change_output(CABIN2a,onoff);		currently these are just bare wires 
 				usleep(_100MS);
 				break;
 
 			case  CABIN3:
-				index = change_output(CABIN3a,onoff);
+				//index = change_output(CABIN3a,onoff);
 				usleep(_100MS);
 				break;
 
@@ -1192,12 +1200,12 @@ UCHAR basic_controls_task(int test)
 				break;
 
 			case  CABIN7:
-				index = change_output(CABIN7a,onoff);
+				//index = change_output(CABIN7a,onoff);
 				usleep(_100MS);
 				break;
 
 			case  CABIN8:
-				index = change_output(CABIN8a,onoff);
+				//index = change_output(CABIN8a,onoff);
 				usleep(_100MS);
 				break;
 

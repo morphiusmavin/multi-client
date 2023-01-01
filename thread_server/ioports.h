@@ -17,9 +17,11 @@
 #define			OUTPORTA_OFFSET		0
 #define			OUTPORTB_OFFSET		1
 #define			OUTPORTC_OFFSET		2
-#define			OUTPORTD_OFFSET		3
-#define			OUTPORTE_OFFSET		4
-#define			OUTPORTF_OFFSET		5
+
+// this was causing the strange bug 
+#define			OUTPORTD_OFFSET		0
+#define			OUTPORTE_OFFSET		1
+#define			OUTPORTF_OFFSET		2
 
 VUCHAR *card_ports;
 UCHAR outportstatus[NUM_PORTS];

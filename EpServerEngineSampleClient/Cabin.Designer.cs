@@ -50,7 +50,6 @@ namespace EpServerEngineSampleClient
 			this.label7 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
-			this.btnSafety = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// btn1
@@ -256,24 +255,12 @@ namespace EpServerEngineSampleClient
 			this.label9.TabIndex = 18;
 			this.label9.Text = "Unused";
 			// 
-			// btnSafety
-			// 
-			this.btnSafety.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSafety.Location = new System.Drawing.Point(307, 147);
-			this.btnSafety.Name = "btnSafety";
-			this.btnSafety.Size = new System.Drawing.Size(118, 39);
-			this.btnSafety.TabIndex = 20;
-			this.btnSafety.Text = "Safety";
-			this.btnSafety.UseVisualStyleBackColor = true;
-			this.btnSafety.Click += new System.EventHandler(this.btnSafety_Click);
-			// 
 			// Cabin
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(437, 509);
-			this.Controls.Add(this.btnSafety);
 			this.Controls.Add(this.label8);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.label5);
@@ -323,6 +310,5 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.Button btnSafety;
 	}
 }

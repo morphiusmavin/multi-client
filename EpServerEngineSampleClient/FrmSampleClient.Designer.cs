@@ -45,7 +45,6 @@
 			this.btnMngServer = new System.Windows.Forms.Button();
 			this.btnRescan = new System.Windows.Forms.Button();
 			this.btnFnc3 = new System.Windows.Forms.Button();
-			this.btnDBMgmt = new System.Windows.Forms.Button();
 			this.btnClear = new System.Windows.Forms.Button();
 			this.btnFnc1 = new System.Windows.Forms.Button();
 			this.btnGarageForm = new System.Windows.Forms.Button();
@@ -76,7 +75,7 @@
 			this.MoonsetLabel = new System.Windows.Forms.Label();
 			this.btnTimerSchedules = new System.Windows.Forms.Button();
 			this.btnOutdoor = new System.Windows.Forms.Button();
-			this.btnTest = new System.Windows.Forms.Button();
+			this.btnSaveJournalEntry = new System.Windows.Forms.Button();
 			this.tbAlarmMinutes = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
@@ -102,6 +101,7 @@
 			this.tbJournalEntry = new System.Windows.Forms.TextBox();
 			this.label12 = new System.Windows.Forms.Label();
 			this.label13 = new System.Windows.Forms.Label();
+			this.btnUnused = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -283,18 +283,6 @@
 			this.btnFnc3.Text = "F3";
 			this.btnFnc3.UseVisualStyleBackColor = false;
 			this.btnFnc3.Click += new System.EventHandler(this.Function3Click);
-			// 
-			// btnDBMgmt
-			// 
-			this.btnDBMgmt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnDBMgmt.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnDBMgmt.Location = new System.Drawing.Point(21, 225);
-			this.btnDBMgmt.Name = "btnDBMgmt";
-			this.btnDBMgmt.Size = new System.Drawing.Size(235, 61);
-			this.btnDBMgmt.TabIndex = 4;
-			this.btnDBMgmt.Text = "Set Next Client";
-			this.btnDBMgmt.UseVisualStyleBackColor = false;
-			this.btnDBMgmt.Click += new System.EventHandler(this.btnSetNextClient_Click);
 			// 
 			// btnClear
 			// 
@@ -515,7 +503,7 @@
 			// tbTime
 			// 
 			this.tbTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.tbTime.Location = new System.Drawing.Point(765, 25);
+			this.tbTime.Location = new System.Drawing.Point(772, 25);
 			this.tbTime.Name = "tbTime";
 			this.tbTime.Size = new System.Drawing.Size(103, 26);
 			this.tbTime.TabIndex = 16;
@@ -621,16 +609,16 @@
 			this.btnOutdoor.UseVisualStyleBackColor = false;
 			this.btnOutdoor.Click += new System.EventHandler(this.btnOutdoor_Click);
 			// 
-			// btnTest
+			// btnSaveJournalEntry
 			// 
-			this.btnTest.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnTest.Location = new System.Drawing.Point(859, 540);
-			this.btnTest.Name = "btnTest";
-			this.btnTest.Size = new System.Drawing.Size(173, 37);
-			this.btnTest.TabIndex = 65;
-			this.btnTest.Text = "Test";
-			this.btnTest.UseVisualStyleBackColor = true;
-			this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+			this.btnSaveJournalEntry.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.btnSaveJournalEntry.Location = new System.Drawing.Point(401, 373);
+			this.btnSaveJournalEntry.Name = "btnSaveJournalEntry";
+			this.btnSaveJournalEntry.Size = new System.Drawing.Size(104, 37);
+			this.btnSaveJournalEntry.TabIndex = 65;
+			this.btnSaveJournalEntry.Text = "Save";
+			this.btnSaveJournalEntry.UseVisualStyleBackColor = true;
+			this.btnSaveJournalEntry.Click += new System.EventHandler(this.btnSave_Click);
 			// 
 			// tbAlarmMinutes
 			// 
@@ -859,7 +847,6 @@
 			// 
 			// timer3
 			// 
-			this.timer3.Enabled = true;
 			this.timer3.Interval = 3000000;
 			this.timer3.Tick += new System.EventHandler(this.timer3_tick);
 			// 
@@ -868,22 +855,22 @@
 			this.tbJournalEntry.AcceptsReturn = true;
 			this.tbJournalEntry.AcceptsTab = true;
 			this.tbJournalEntry.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbJournalEntry.Location = new System.Drawing.Point(272, 406);
+			this.tbJournalEntry.Location = new System.Drawing.Point(272, 420);
 			this.tbJournalEntry.Multiline = true;
 			this.tbJournalEntry.Name = "tbJournalEntry";
 			this.tbJournalEntry.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbJournalEntry.Size = new System.Drawing.Size(233, 215);
+			this.tbJournalEntry.Size = new System.Drawing.Size(233, 201);
 			this.tbJournalEntry.TabIndex = 84;
 			// 
 			// label12
 			// 
 			this.label12.AutoSize = true;
 			this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.label12.Location = new System.Drawing.Point(268, 378);
+			this.label12.Location = new System.Drawing.Point(283, 384);
 			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(159, 20);
+			this.label12.Size = new System.Drawing.Size(112, 20);
 			this.label12.TabIndex = 85;
-			this.label12.Text = "Daily Journal Entry";
+			this.label12.Text = "Daily Journal";
 			// 
 			// label13
 			// 
@@ -895,12 +882,24 @@
 			this.label13.TabIndex = 86;
 			this.label13.Text = "Modify Target Time";
 			// 
+			// btnUnused
+			// 
+			this.btnUnused.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnUnused.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnUnused.Location = new System.Drawing.Point(23, 224);
+			this.btnUnused.Name = "btnUnused";
+			this.btnUnused.Size = new System.Drawing.Size(235, 61);
+			this.btnUnused.TabIndex = 87;
+			this.btnUnused.Text = "Unused";
+			this.btnUnused.UseVisualStyleBackColor = false;
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1356, 642);
+			this.Controls.Add(this.btnUnused);
 			this.Controls.Add(this.label13);
 			this.Controls.Add(this.label12);
 			this.Controls.Add(this.tbJournalEntry);
@@ -916,7 +915,7 @@
 			this.Controls.Add(this.tbAddMinutes);
 			this.Controls.Add(this.tbAddHours);
 			this.Controls.Add(this.btnGetTime);
-			this.Controls.Add(this.btnTest);
+			this.Controls.Add(this.btnSaveJournalEntry);
 			this.Controls.Add(this.btnOutdoor);
 			this.Controls.Add(this.btnTimerSchedules);
 			this.Controls.Add(this.btnMinimize);
@@ -939,7 +938,6 @@
 			this.Controls.Add(this.btnGarageForm);
 			this.Controls.Add(this.btnFnc1);
 			this.Controls.Add(this.btnClear);
-			this.Controls.Add(this.btnDBMgmt);
 			this.Controls.Add(this.btnFnc3);
 			this.Controls.Add(this.btnRescan);
 			this.Controls.Add(this.btnMngServer);
@@ -990,7 +988,6 @@
         private System.Windows.Forms.Button btnMngServer;
         private System.Windows.Forms.Button btnRescan;
         private System.Windows.Forms.Button btnFnc3;
-        private System.Windows.Forms.Button btnDBMgmt;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnFnc1;
         private System.Windows.Forms.Button btnGarageForm;
@@ -1024,7 +1021,7 @@
 		private System.Windows.Forms.Label MoonsetLabel;
 		private System.Windows.Forms.Button btnTimerSchedules;
 		private System.Windows.Forms.Button btnOutdoor;
-		private System.Windows.Forms.Button btnTest;
+		private System.Windows.Forms.Button btnSaveJournalEntry;
 		private System.Windows.Forms.TextBox tbAlarmMinutes;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label6;
@@ -1050,6 +1047,7 @@
 		private System.Windows.Forms.TextBox tbJournalEntry;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.Label label13;
+		private System.Windows.Forms.Button btnUnused;
 	}
 }
 

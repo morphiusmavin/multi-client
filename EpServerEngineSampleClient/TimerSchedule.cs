@@ -645,7 +645,6 @@ namespace EpServerEngineSampleClient
 				MessageBox.Show("no data in mycdata");
 				return;
 			}
-				
 			foreach (Cdata td in mycdata)
 			{
 				//if (td.port > -1)
@@ -666,14 +665,6 @@ namespace EpServerEngineSampleClient
 			String xml = "";
 			i = 0;
 			AddMsg("");
-			
-			foreach(string fn in file)
-			{
-				//AddMsg(i.ToString() + " " + fn);
-				AddMsg(fn);
-				i++;
-			}
-			//return;
 			XElement top = new XElement("Table",
 			from items in file
 			let fields = items.Split(',')
@@ -692,7 +683,6 @@ namespace EpServerEngineSampleClient
 			);
 			File.WriteAllText(tfilename, xml + top.ToString());
 			MessageBox.Show("created: " + tfilename);
-			
 		}
 		private void btnSort_Click(object sender, EventArgs e)
 		{

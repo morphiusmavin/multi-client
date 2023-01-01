@@ -159,23 +159,5 @@ namespace EpServerEngineSampleClient
 		{
 			timer_tick = int.Parse(tbStatus.Text);
 		}
-
-		private void btnSafety_Click(object sender, EventArgs e)
-		{
-			// explicitly turn off 1,2,6,7
-			// they come on for some strange reason by themselves
-			string cmd = on_label_list[1];
-			int index = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Change_PortCmd(index, 2, false);
-			cmd = on_label_list[2];
-			index = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Change_PortCmd(index, 2, false);
-			cmd = on_label_list[6];
-			index = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Change_PortCmd(index, 2, false);
-			cmd = on_label_list[7];
-			index = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Change_PortCmd(index, 2, false);
-		}
 	}
 }
