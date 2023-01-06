@@ -7,10 +7,9 @@
 uint16_t show(unsigned int val)
 {
 	unsigned char show1;
-	show1 = winpeek8(val);
+	show1 = winpeek8a(val);
 	nbusunlock();
 	printf("%02x\n", show1);
-//	sleep(1);
 	nbuslock();
 	return show1;
 }
@@ -19,83 +18,29 @@ void do_bits(int which,int onoff)
 {
 	unsigned int val2;
 	unsigned char val;
-	val2 = 0x301;
+	val2 = 0x300;
 	nbuslock();
-	val = winpeek8(val2);
+	val = winpeek8a(val2);
 	if(onoff == 1)
-		winpoke8(val2, val | ( 1 << which));
+		winpoke8a(val2, val | ( 1 << which));
 	else
-		winpoke8(val2, val & ~( 1 << which));
+		winpoke8a(val2, val & ~( 1 << which));
 	val = show(val2);
 	nbusunlock();
 }
 
 int main (int argc, char **argv)
 {
-	char input_char = 0;
-	unsigned char temp,temp2;
+	int i;
 	printf("starting...\n");
-	nbuslock();
-	temp = 0;
-	winpoke8(0x300,temp);
-	winpoke8(0x301,temp);
-	winpoke8(0x302,temp);
-	nbusunlock();
-	unsigned int val2;
-	do
+
+	for(i = 0;i < 16;i++)
 	{
-		input_char = getchar();
-		switch(input_char)
-		{
-			case 'a':
-				do_bits(0,1);
-				break;
-			case 'b':
-				do_bits(0,0);
-				break;
-			case 'c':
-				do_bits(1,1);
-				break;
-			case 'd':
-				do_bits(1,0);
-				break;
-			case 'e':
-				do_bits(2,1);
-				break;
-			case 'f':
-				do_bits(2,0);
-				break;
-			case 'g':
-				do_bits(3,1);
-				break;
-			case 'h':
-				do_bits(3,0);
-				break;
-			case 'i':
-				do_bits(4,1);
-				break;
-			case 'j':
-				do_bits(4,0);
-				break;
-			case 'k':
-				do_bits(5,1);
-				break;
-			case 'l':
-				do_bits(5,0);
-				break;
-			case 'm':
-				do_bits(6,1);
-				break;
-			case 'n':
-				do_bits(6,0);
-				break;
-			case 'o':
-				do_bits(7,1);
-				break;
-			case 'p':
-				do_bits(7,0);
-				break;
-		}
-	}while(input_char != 'q');
+		do_bits(i,1);
+		usleep(100000);
+		do_bits(i,0);
+		usleep(100000);
+	}
 	return 0;
 }
+

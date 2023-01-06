@@ -146,11 +146,11 @@ namespace EpServerEngineSampleClient
                 item2.AstTwiEnd = dr.ItemArray[9].ToString();
                 item2.NautTwiEnd = dr.ItemArray[10].ToString();
                 item2.CivilTwiEnd = dr.ItemArray[11].ToString();
-                if(item2.day >= now.Day && item2.month >= now.Month)
-                    sunrise_sunsets.Add(item2);
+//                if(item2.day >= now.Day && item2.month >= now.Month)
+                sunrise_sunsets.Add(item2);
                 item2 = null;
             }
-            //AddMsg(sunrise_sunsets.Count().ToString() + " items in tdata");
+            AddMsg(sunrise_sunsets.Count().ToString() + " items in tdata");
             sunrisesunsetHoursMinutes = new List<SunriseSunsetHoursMinutes>();
             for (i = 0; i < sunrise_sunsets.Count(); i++)
                 sunrisesunsetHoursMinutes.Add(new SunriseSunsetHoursMinutes());
@@ -258,6 +258,7 @@ namespace EpServerEngineSampleClient
             tbTodaysDate.Text = t2date;
 
             i = 0;
+            int j = 0;
             foreach (Sunrise_sunset srss in sunrise_sunsets)
 			{
                 if (srss.sunrise != null)
@@ -280,6 +281,8 @@ namespace EpServerEngineSampleClient
                     sunrisesunsetHoursMinutes[i].SunriseMinute = getMinutes(srss.sunrise);
                     sunrisesunsetHoursMinutes[i].SunsetHour = getHours(srss.sunset);
                     sunrisesunsetHoursMinutes[i].SunsetMinute = getMinutes(srss.sunset);
+//                    if (srss.day == 1 && srss.month == 4)
+  //                      j++;
                     sunrisesunsetHoursMinutes[i].MoonriseHour = getHours(srss.moonrise);
                     sunrisesunsetHoursMinutes[i].MoonriseMinute = getMinutes(srss.moonrise);
                     sunrisesunsetHoursMinutes[i].MoonsetHour = getHours(srss.moonset);
@@ -290,14 +293,18 @@ namespace EpServerEngineSampleClient
             foreach (SunriseSunsetHoursMinutes srss in sunrisesunsetHoursMinutes)
             {
                 if (srss.day == now.Day && srss.month == now.Month)
+                {
                     curr_srss_day = srss;
-                hour_before_sunrise = curr_srss_day.SunriseHour;
-                minute_before_sunrise = curr_srss_day.SunriseMinute;
-                calc_time_before(ref hour_before_sunrise, ref minute_before_sunrise, 5);
-                hour_before_sunset = curr_srss_day.SunsetHour;
-                minute_before_sunset = curr_srss_day.SunsetMinute;
-                calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 5);
+                    break;
+                }
             }
+            hour_before_sunrise = curr_srss_day.SunriseHour;
+            minute_before_sunrise = curr_srss_day.SunriseMinute;
+            calc_time_before(ref hour_before_sunrise, ref minute_before_sunrise, 5);
+            hour_before_sunset = curr_srss_day.SunsetHour;
+            minute_before_sunset = curr_srss_day.SunsetMinute;
+            calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 5);
+
             i = 0;
             if (false)
             {
@@ -326,6 +333,9 @@ namespace EpServerEngineSampleClient
                 Quote_of_the_Day_List = System.IO.File.ReadAllLines(@"C:\Users\Daniel\Documents\Quote of the Day.txt");
                 DisplayQuoteOfTheDay();
             }
+
+            // turn off east light because it is on by default (relay is wired nc)
+            svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
         }
         private void DisplayQuoteOfTheDay()
 		{
@@ -339,7 +349,7 @@ namespace EpServerEngineSampleClient
 		{
             int num;
             string snum;
-            if (time.Contains("none"))
+            if (time.Contains("none") || time == "")
                 return -1;
             int colon = time.IndexOf(':');
             //colon = time.IndexOf(':',colon+1);
@@ -364,7 +374,7 @@ namespace EpServerEngineSampleClient
             string snum;
             char dig1;
             int colon;
-            if (time.Contains("none"))
+            if (time.Contains("none") || time == "")
                 return -1;
             colon = time.IndexOf(':');
             char dig2 = time[colon - 1];
@@ -954,7 +964,12 @@ namespace EpServerEngineSampleClient
                     clk_oneoff = false;
                     clk_oneoff2 = true;
                     clock_chime(xhour);
-                    AddMsg("The time is: " + xhour.ToString() + " O'Clock");
+                    if(xhour == 0)
+                        AddMsg("The time is 12 midnight");
+                    else if(xhour == 12)
+                        AddMsg("The time is: 12 noon");
+                    else
+                        AddMsg("The time is: " + xhour.ToString() + " O'Clock");
                 }
                 if (minute == 1 && clk_oneoff2)
                 {
@@ -1600,6 +1615,7 @@ namespace EpServerEngineSampleClient
             btnNextSunrise.Enabled = true;
             now = DateTime.Now;
             next_srss = 0;
+            tbReceived.Clear();
             foreach(Sunrise_sunset srss in sunrise_sunsets)
 			{
                 if(srss.day == now.Day && srss.month == now.Month)
@@ -1712,6 +1728,7 @@ namespace EpServerEngineSampleClient
             if (next_srss < sunrise_sunsets.Count()-1)
             {
                 next_srss++;
+                tbReceived.Clear();
                 AddMsg("Ast start " + sunrise_sunsets[next_srss].AstTwiStart);
                 AddMsg("Naut start " + sunrise_sunsets[next_srss].NautTwiStart);
                 AddMsg("Civil start " + sunrise_sunsets[next_srss].CivilTwiStart);
@@ -1755,7 +1772,8 @@ namespace EpServerEngineSampleClient
                 if (cl.socket > 0 && cl.type != 0)
                 {
                     dest = cl.index;
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_TIME"), dest, "test");
+                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_TIME"), dest, "test");
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SORT_CLLIST"), dest, "test");
                 }
             }
         }

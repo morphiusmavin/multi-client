@@ -14,6 +14,8 @@ todo:
 9) 154 turns on ports it's not supposed to (fixed - see line 21 in ioports.h )
 	but had to disable monitor_fake_input_task() because of 'bad mask 1' error 
 	monitor_fake_input_task reacts to change_input() used in old Truck_Project1 
+10) If moonrise is about an hour after sunset, then alert when moon will rise (5 minutes before)
+	(so I can go out on the porch and watch the moonrise)
 
 to add new commands:
 
@@ -229,3 +231,31 @@ this outputs the following:
 38: 5 2
 39: 5 3
 */
+
+using SET/SEND_CLIENT_LIST 
+to set 1 client to send msg 
+to the next 
+
+case SET_NEXT_CLIENT:
+	next_client = tempx[0];
+	if(next_client == 7)
+		next_client = 0;
+	printf("next client: %d\n",next_client);
+	j = 0;
+	break;
+
+case SEND_NEXT_CLIENT:
+	cmd = 0x21;
+	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
+	{
+		tempx[i] = cmd;
+		if(++cmd > 0x7e)
+			cmd = 0x21;
+	}
+	send_msg(200,(UCHAR*)&tempx[j], SEND_MESSAGE, next_client);
+	uSleep(0,TIME_DELAY/10);
+	send_msg(1,(UCHAR*)&tempx[j], SEND_NEXT_CLIENT, next_client);
+	j++;
+	if(j > 10)
+		j = 0;
+	break;
