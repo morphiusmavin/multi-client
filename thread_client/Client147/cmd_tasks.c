@@ -135,8 +135,9 @@ UCHAR get_host_cmd_task2(int test)
 	off_t fsize;
 	long cur_fsize;
 	struct timeval mtv;
-	struct tm t;
+	struct tm t,tm;
 	struct tm *pt = &t;
+	time_t T;
 	int msg_len;
 	serial_recv_on = 1;
 //	time_set = 0;
@@ -170,7 +171,6 @@ UCHAR get_host_cmd_task2(int test)
 		real_banks[i].bank = (i+4)/8;
 		real_banks[i].index = i - (real_banks[i].bank*8)+4;
 	}
-	memset(dat_names,0,sizeof(dat_names));
 /*
 	i = NUM_PORT_BITS;
 	isize = sizeof(I_DATA);
@@ -333,7 +333,6 @@ UCHAR get_host_cmd_task2(int test)
 						break;
 
 					case SORT_CLLIST:
-						printf("sort\n");
 						sort_countdown();
 						break;
 

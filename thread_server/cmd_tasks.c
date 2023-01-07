@@ -278,7 +278,6 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SORT_CLLIST:
-					printf("sort\n");
 					sort_countdown();
 					break;
 

@@ -1773,7 +1773,8 @@ namespace EpServerEngineSampleClient
                 {
                     dest = cl.index;
                     //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_TIME"), dest, "test");
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SORT_CLLIST"), dest, "test");
+                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SORT_CLLIST"), dest, "test");
+                    SetTime(dest);
                 }
             }
         }

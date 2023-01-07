@@ -701,7 +701,6 @@ int change_output(int index, int onoff)
 }
 #endif
 /*********************************************************************/
-// this happens 10x a second
 UCHAR timer2_task(int test)
 {
 
@@ -722,7 +721,6 @@ UCHAR timer2_task(int test)
 					trunning_hours = 0;
 					trunning_days++;
 				}
-				//printf("running hours: %d\n",trunning_hours + trunning_days*24);
 			}
 		}
 
@@ -835,7 +833,6 @@ void sort_countdown(void)
 void display_sort()
 {
 	int i;
-	printf("sort:\n");
 	printf("index\tsec away\tport\tonoff\thour\tmin\tsec\n");
 	for(i = 0;i < curr_countdown_size;i++)
 	{

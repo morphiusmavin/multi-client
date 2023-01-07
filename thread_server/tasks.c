@@ -76,6 +76,7 @@ int max_ips;
 IP ip[40];
 static COUNTDOWN count_down[COUNTDOWN_SIZE];
 int curr_countdown_size;
+void set_sort();
 
 #define ON 1
 #define OFF 0
@@ -834,8 +835,11 @@ UCHAR timer2_task(int test)
 		if(++trunning_seconds > 59)
 		{
 			trunning_seconds = 0;
+			if(trunning_minutes == 30)
+				set_sort();
 			if(++trunning_minutes > 59)
 			{
+				set_sort();
 				trunning_minutes = 0;
 				if(++trunning_hours > 23)
 				{
@@ -855,15 +859,31 @@ UCHAR timer2_task(int test)
 	return 1;
 }
 /*********************************************************************/
+void set_sort()
+{
+	struct msgqbuf msg;
+	int msgtype = 1;
+	msg.mtype = msgtype;
+	int msg_len;
+	UCHAR cmd = SORT_CLLIST;
+	msg.mtext[0] = cmd;
+	if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+	{
+		// keep getting "Invalid Argument" - cause I didn't set the mtype
+		perror("msgsnd error");
+		printf("exit from send client list\n");
+		exit(EXIT_FAILURE);
+	}
+	sort_countdown();
+	printf("server send sort\n");
+}
+
+/*********************************************************************/
 // this happens once a second
 UCHAR timer_task(int test)
 {
 	int i;
 	int onoff;
-	struct msgqbuf msg;
-	int msgtype = 1;
-	msg.mtype = msgtype;
-	int msg_len;
 
 	UCHAR cmd = 0x21;
 	for(i = 0;i < SERIAL_BUFF_SIZE;i++)
@@ -874,30 +894,13 @@ UCHAR timer_task(int test)
 	}
 	uSleep(3,0);
 	sort_countdown();
-	uSleep(3,0);
+	uSleep(1,0);
 
 	while(TRUE)
 	{
 		time_t T = time(NULL);
 		struct tm tm = *localtime(&T);
 
-		// at 5 minutes after midnight, send a SORT_CLLIST msg to all the clients 
-		// so they can reset thier timer list - just wait 5 minutes in case some 
-		// clients have a different time and date 
-		if(tm.tm_hour == 0 && tm.tm_min == 5 && tm.tm_sec == 0)
-		{
-			cmd = SORT_CLLIST;
-			msg.mtext[0] = cmd;
-			if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-			{
-				// keep getting "Invalid Argument" - cause I didn't set the mtype
-				perror("msgsnd error");
-				printf("exit from send client list\n");
-				exit(EXIT_FAILURE);
-			}
-			sort_countdown();
-			printf("server send sort\n");
-		}
 		uSleep(1,0);
 		if(curr_countdown_size > 0)
 		{

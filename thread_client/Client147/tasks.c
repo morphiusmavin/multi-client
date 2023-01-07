@@ -824,7 +824,6 @@ void sort_countdown(void)
 void display_sort()
 {
 	int i;
-	printf("sort:\n");
 	printf("index\tsec away\tport\tonoff\thour\tmin\tsec\n");
 	for(i = 0;i < curr_countdown_size;i++)
 	{
