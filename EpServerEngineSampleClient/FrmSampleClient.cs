@@ -65,6 +65,7 @@ namespace EpServerEngineSampleClient
         bool clk_oneoff = true;
         bool clk_oneoff2 = true;
 		bool silent_mode = false;
+		bool play_chimes = false;
         int next_srss = 0;
 
         private string xml_params_location = "c:\\Users\\daniel\\ClientProgramData\\ClientParams.xml";
@@ -74,7 +75,7 @@ namespace EpServerEngineSampleClient
         private int minute;
         private int second;
         private int hour_before_sunrise;
-        private int minute_before_sunrise;
+        private int minutes_before_sunrise_5, minutes_before_sunrise_1;
         private int hour_before_sunset;
         private int minute_before_sunset;
         //private string[] Todo_List;
@@ -85,6 +86,7 @@ namespace EpServerEngineSampleClient
         private const int CP_NOCLOSE_BUTTON = 0x200;
         private const int WS_CAPTION = 0x00C00000;
         // Removes the close button in the caption bar
+        string str_quote_of_the_day_file = @"C:\Users\Daniel\Documents\Quote of the Day.txt";
         protected override CreateParams CreateParams
         {
             get
@@ -299,11 +301,12 @@ namespace EpServerEngineSampleClient
                 }
             }
             hour_before_sunrise = curr_srss_day.SunriseHour;
-            minute_before_sunrise = curr_srss_day.SunriseMinute;
-            calc_time_before(ref hour_before_sunrise, ref minute_before_sunrise, 5);
+            minutes_before_sunrise_1 = minutes_before_sunrise_5 = curr_srss_day.SunriseMinute;
+            calc_time_before(ref hour_before_sunrise, ref minutes_before_sunrise_5, 5);
+            calc_time_before(ref hour_before_sunrise, ref minutes_before_sunrise_1, 1);
             hour_before_sunset = curr_srss_day.SunsetHour;
             minute_before_sunset = curr_srss_day.SunsetMinute;
-            calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 5);
+            calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 10);
 
             i = 0;
             if (false)
@@ -326,11 +329,11 @@ namespace EpServerEngineSampleClient
                     AddMsg(srhm.MoonsetHour.ToString() + " " + srhm.MoonsetMinute.ToString());
             }
             btnSunriseSunset_Click(new object(), new EventArgs());
-            AddMsg("Month: " + now.ToString("MMMM"));
-            
-            if (File.Exists(@"C:\Users\Daniel\Documents\Quote of the Day.txt"))
+            //AddMsg("Month: " + now.ToString("MMMM"));
+
+            if (File.Exists(str_quote_of_the_day_file))
 			{
-                Quote_of_the_Day_List = System.IO.File.ReadAllLines(@"C:\Users\Daniel\Documents\Quote of the Day.txt");
+                Quote_of_the_Day_List = System.IO.File.ReadAllLines(str_quote_of_the_day_file);
                 DisplayQuoteOfTheDay();
             }
 
@@ -991,12 +994,17 @@ namespace EpServerEngineSampleClient
                     play_tone(2);
                     AddMsg("start of Civil Twilight");
                 }
-                else if (hour == hour_before_sunrise && minute == minute_before_sunrise && second == 0)
+                else if (hour == hour_before_sunrise && minute == minutes_before_sunrise_1 && second == 0)
+                {
+                    play_tone(9);
+                    AddMsg("One Minutes before sunrise");
+                }
+                else if (hour == hour_before_sunrise && minute == minutes_before_sunrise_5 && second == 0)
                 {
                     play_tone(7);
                     AddMsg("Five Minutes before sunrise");
                 }
-                else if (hour == curr_srss_day.SunriseHour && minute == curr_srss_day.SunriseMinute && second == 0)
+                else if (hour == curr_srss_day.SunriseHour && minute == curr_srss_day.SunriseMinute && second == 30)
                 {
                     play_sunrise_clip();
                     AddMsg("sunrise");
@@ -1007,7 +1015,7 @@ namespace EpServerEngineSampleClient
                 else if (hour == hour_before_sunset && minute == minute_before_sunset && second == 0)
                 {
                     play_tone(8);
-                    AddMsg("Five Minutes before sunset");
+                    AddMsg("Ten Minutes before sunset");
                 }
                 else if (hour == curr_srss_day.SunsetHour && minute == curr_srss_day.SunsetMinute && second == 0)
                 {
@@ -1054,11 +1062,11 @@ namespace EpServerEngineSampleClient
                         if (srss.day == now.Day && srss.month == now.Month)
                             curr_srss_day = srss;
                         hour_before_sunrise = curr_srss_day.SunriseHour;
-                        minute_before_sunrise = curr_srss_day.SunriseMinute;
-                        calc_time_before(ref hour_before_sunrise, ref minute_before_sunrise, 5);
+                        minutes_before_sunrise_5 = curr_srss_day.SunriseMinute;
+                        calc_time_before(ref hour_before_sunrise, ref minutes_before_sunrise_5, 5);
                         hour_before_sunset = curr_srss_day.SunsetHour;
                         minute_before_sunset = curr_srss_day.SunsetMinute;
-                        calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 5);
+                        calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 10);
                     }
                     DisplayQuoteOfTheDay();
                 }
@@ -1131,7 +1139,7 @@ namespace EpServerEngineSampleClient
         }
         void clock_chime(int hour)
 		{
-			if(silent_mode)
+			if(!play_chimes)
 				return;
             System.Media.SoundPlayer player;
             string song = "c:\\users\\Daniel\\Music\\ClockChimes";
@@ -1216,16 +1224,10 @@ namespace EpServerEngineSampleClient
                     song += "Five_Minutes_Before_Sunrise.wav";
                     break;
                 case 8:
-                    song += "Five_Minutes_Before_Sunset.wav";
+                    song += "Ten_Minutes_Before_Sunset.wav";
                     break;
                 case 9:
-                    song += "twenty.wav";
-                    break;
-                case 10:
-                    song += "twentyone.wav";
-                    break;
-                case 11:
-                    song += "one.wav";
+                    song += "One_Minute_Before_Sunrise.wav";
                     break;
                 default:
                     song += "tone440.wav";
@@ -1250,7 +1252,7 @@ namespace EpServerEngineSampleClient
         {
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(0, 0);
-            AddMsg("loaded");
+            //AddMsg("loaded");
         }
         private void SetTime(int dest)
         {
@@ -1634,10 +1636,12 @@ namespace EpServerEngineSampleClient
                     SunsetLabel.Text = "sunset: " + srss.sunset + " tonite";
                     MoonriseLabel.Text = "moonrise: " + srss.moonrise;
                     MoonsetLabel.Text = "moonset: " + srss.moonset;
+                    NextSrssLabel.Text = "";
                     return;
                 }
                 next_srss++;
             }
+            
         }
         private void btnTimer_Click(object sender, EventArgs e)
 		{
@@ -1665,11 +1669,15 @@ namespace EpServerEngineSampleClient
 		{
             Settings dlg = new Settings();
             if (dlg.ShowDialog(this) == DialogResult.OK)
+            {
                 silent_mode = (bool)Properties.Settings.Default["silent_mode"];
+                play_chimes = (bool)Properties.Settings.Default["play_chimes"];
+            }
             dlg.Dispose();
             AddMsg("silent mode: " + silent_mode.ToString());
-		}
-		private void cbAlarm_CheckedChanged(object sender, EventArgs e)
+            AddMsg("play chimes: " + play_chimes.ToString());
+        }
+        private void cbAlarm_CheckedChanged(object sender, EventArgs e)
 		{
             if (cbAlarm.Checked)
             {
@@ -1710,6 +1718,7 @@ namespace EpServerEngineSampleClient
         }
 		private void btnRescan_Click(object sender, EventArgs e)
 		{
+/*
             // modify (for testing) the time of the selected target
             int dest = -1;
             foreach (ClientsAvail cl in clients_avail)
@@ -1722,6 +1731,7 @@ namespace EpServerEngineSampleClient
             //AddMsg("add time: " + dest.ToString() + tbAddHours.Text + " " +  tbAddMinutes.Text);
             if (tbAddHours.Text != "" && tbAddMinutes.Text != "" && dest != -1)
                 SetTime(dest, int.Parse(tbAddHours.Text), int.Parse(tbAddMinutes.Text));
+*/
 		}
         private void btnNextSunrise_Click(object sender, EventArgs e)
 		{

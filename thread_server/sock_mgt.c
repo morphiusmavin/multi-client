@@ -253,7 +253,7 @@ UCHAR get_host_cmd_task(int test)
 					{
 						if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 						{
-							printf("dest: %d sock: %d type: %d\n",i,client_table[i].socket,client_table[i].type);
+							//printf("dest: %d sock: %d type: %d\n",i,client_table[i].socket,client_table[i].type);
 							send_msg(client_table[i].socket, msg_len, (UCHAR*)&write_serial_buff[0],cmd);
 						}
 					}

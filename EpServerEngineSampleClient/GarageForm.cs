@@ -286,7 +286,8 @@ namespace EpServerEngineSampleClient
 				//timer_tick = int.Parse(tbTimer.Text);
 				btnAll.Text = "OFF";
 				btnAll.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-				this.Close();
+				if(this.Visible)
+					this.Close();
 			}
 			tbTimer.Text = timer_tick.ToString();
 			//AddMsg(timer_tick.ToString());
@@ -390,6 +391,8 @@ namespace EpServerEngineSampleClient
 			}
 			tbTimer.Text = "20";
 			timer_tick = 20;
+			timer1.Enabled = false;
+
 		}
 		private void tbTimerChanged(object sender, EventArgs e)
 		{

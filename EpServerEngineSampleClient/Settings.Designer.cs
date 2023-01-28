@@ -34,6 +34,7 @@ namespace EpServerEngineSampleClient
 			this.cbSilentMode = new System.Windows.Forms.CheckBox();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.chPlayChimes = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// btnOK
@@ -69,7 +70,7 @@ namespace EpServerEngineSampleClient
 			// 
 			// textBox1
 			// 
-			this.textBox1.Location = new System.Drawing.Point(32, 94);
+			this.textBox1.Location = new System.Drawing.Point(32, 118);
 			this.textBox1.Name = "textBox1";
 			this.textBox1.Size = new System.Drawing.Size(160, 20);
 			this.textBox1.TabIndex = 3;
@@ -81,11 +82,23 @@ namespace EpServerEngineSampleClient
 			this.textBox2.Size = new System.Drawing.Size(160, 20);
 			this.textBox2.TabIndex = 4;
 			// 
+			// chPlayChimes
+			// 
+			this.chPlayChimes.AutoSize = true;
+			this.chPlayChimes.Location = new System.Drawing.Point(32, 68);
+			this.chPlayChimes.Name = "chPlayChimes";
+			this.chPlayChimes.Size = new System.Drawing.Size(83, 17);
+			this.chPlayChimes.TabIndex = 5;
+			this.chPlayChimes.Text = "Play Chimes";
+			this.chPlayChimes.UseVisualStyleBackColor = true;
+			this.chPlayChimes.CheckedChanged += new System.EventHandler(this.chPlayChimes_CheckedChanged);
+			// 
 			// Settings
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(246, 450);
+			this.Controls.Add(this.chPlayChimes);
 			this.Controls.Add(this.textBox2);
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.cbSilentMode);
@@ -105,5 +118,6 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.CheckBox cbSilentMode;
 		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.TextBox textBox2;
+		private System.Windows.Forms.CheckBox chPlayChimes;
 	}
 }

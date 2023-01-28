@@ -875,7 +875,7 @@ void set_sort()
 		exit(EXIT_FAILURE);
 	}
 	sort_countdown();
-	printf("server send sort\n");
+	//printf("server send sort\n");
 }
 
 /*********************************************************************/

@@ -84,10 +84,6 @@
 			this.timer2 = new System.Windows.Forms.Timer(this.components);
 			this.tbAlarmTick = new System.Windows.Forms.TextBox();
 			this.btnGetTime = new System.Windows.Forms.Button();
-			this.tbAddHours = new System.Windows.Forms.TextBox();
-			this.tbAddMinutes = new System.Windows.Forms.TextBox();
-			this.label8 = new System.Windows.Forms.Label();
-			this.label9 = new System.Windows.Forms.Label();
 			this.tbQuoteOfTheDay = new System.Windows.Forms.TextBox();
 			this.label11 = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -100,7 +96,6 @@
 			this.timer3 = new System.Windows.Forms.Timer(this.components);
 			this.tbJournalEntry = new System.Windows.Forms.TextBox();
 			this.label12 = new System.Windows.Forms.Label();
-			this.label13 = new System.Windows.Forms.Label();
 			this.btnUnused = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
@@ -128,7 +123,7 @@
 			this.btnConnect.Location = new System.Drawing.Point(272, 69);
 			this.btnConnect.Name = "btnConnect";
 			this.btnConnect.Size = new System.Drawing.Size(233, 61);
-			this.btnConnect.TabIndex = 1;
+			this.btnConnect.TabIndex = 4;
 			this.btnConnect.Text = "Connect Server";
 			this.btnConnect.UseVisualStyleBackColor = false;
 			this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
@@ -192,7 +187,7 @@
 			this.btnAssignFunc.Location = new System.Drawing.Point(358, 12);
 			this.btnAssignFunc.Name = "btnAssignFunc";
 			this.btnAssignFunc.Size = new System.Drawing.Size(200, 46);
-			this.btnAssignFunc.TabIndex = 6;
+			this.btnAssignFunc.TabIndex = 27;
 			this.btnAssignFunc.Text = "Assign Func";
 			this.btnAssignFunc.UseVisualStyleBackColor = false;
 			this.btnAssignFunc.Click += new System.EventHandler(this.BtnAssignFunction);
@@ -267,8 +262,8 @@
 			this.btnRescan.Location = new System.Drawing.Point(21, 147);
 			this.btnRescan.Name = "btnRescan";
 			this.btnRescan.Size = new System.Drawing.Size(235, 61);
-			this.btnRescan.TabIndex = 2;
-			this.btnRescan.Text = "Modify Target Time";
+			this.btnRescan.TabIndex = 1;
+			this.btnRescan.Text = "Unused";
 			this.btnRescan.UseVisualStyleBackColor = false;
 			this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
 			// 
@@ -279,7 +274,7 @@
 			this.btnFnc3.Location = new System.Drawing.Point(155, 12);
 			this.btnFnc3.Name = "btnFnc3";
 			this.btnFnc3.Size = new System.Drawing.Size(52, 47);
-			this.btnFnc3.TabIndex = 12;
+			this.btnFnc3.TabIndex = 24;
 			this.btnFnc3.Text = "F3";
 			this.btnFnc3.UseVisualStyleBackColor = false;
 			this.btnFnc3.Click += new System.EventHandler(this.Function3Click);
@@ -291,7 +286,7 @@
 			this.btnClear.Location = new System.Drawing.Point(272, 225);
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(235, 61);
-			this.btnClear.TabIndex = 11;
+			this.btnClear.TabIndex = 6;
 			this.btnClear.Text = "Clear Screen";
 			this.btnClear.UseVisualStyleBackColor = false;
 			this.btnClear.Click += new System.EventHandler(this.ClearScreen);
@@ -303,7 +298,7 @@
 			this.btnFnc1.Location = new System.Drawing.Point(23, 12);
 			this.btnFnc1.Name = "btnFnc1";
 			this.btnFnc1.Size = new System.Drawing.Size(52, 47);
-			this.btnFnc1.TabIndex = 8;
+			this.btnFnc1.TabIndex = 22;
 			this.btnFnc1.Text = "F1";
 			this.btnFnc1.UseVisualStyleBackColor = false;
 			this.btnFnc1.Click += new System.EventHandler(this.Function1Click);
@@ -315,7 +310,7 @@
 			this.btnGarageForm.Location = new System.Drawing.Point(1056, 491);
 			this.btnGarageForm.Name = "btnGarageForm";
 			this.btnGarageForm.Size = new System.Drawing.Size(274, 38);
-			this.btnGarageForm.TabIndex = 5;
+			this.btnGarageForm.TabIndex = 17;
 			this.btnGarageForm.Text = "Garage Lights";
 			this.btnGarageForm.UseVisualStyleBackColor = false;
 			this.btnGarageForm.Click += new System.EventHandler(this.GarageFormClick);
@@ -327,7 +322,7 @@
 			this.btnSettings.Location = new System.Drawing.Point(272, 147);
 			this.btnSettings.Name = "btnSettings";
 			this.btnSettings.Size = new System.Drawing.Size(235, 61);
-			this.btnSettings.TabIndex = 3;
+			this.btnSettings.TabIndex = 5;
 			this.btnSettings.Text = "Settings";
 			this.btnSettings.UseVisualStyleBackColor = false;
 			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
@@ -339,7 +334,7 @@
 			this.btnCabin.Location = new System.Drawing.Point(1056, 445);
 			this.btnCabin.Name = "btnCabin";
 			this.btnCabin.Size = new System.Drawing.Size(274, 38);
-			this.btnCabin.TabIndex = 9;
+			this.btnCabin.TabIndex = 16;
 			this.btnCabin.Text = "Cabin";
 			this.btnCabin.UseVisualStyleBackColor = false;
 			this.btnCabin.Click += new System.EventHandler(this.Cabin_Click);
@@ -367,7 +362,7 @@
 			this.btnRebootClient.Location = new System.Drawing.Point(859, 190);
 			this.btnRebootClient.Name = "btnRebootClient";
 			this.btnRebootClient.Size = new System.Drawing.Size(173, 37);
-			this.btnRebootClient.TabIndex = 21;
+			this.btnRebootClient.TabIndex = 8;
 			this.btnRebootClient.Text = "Reboot";
 			this.btnRebootClient.UseVisualStyleBackColor = false;
 			this.btnRebootClient.Click += new System.EventHandler(this.btnRebootClient_Click);
@@ -378,7 +373,7 @@
 			this.btnShutdownClient.Location = new System.Drawing.Point(859, 290);
 			this.btnShutdownClient.Name = "btnShutdownClient";
 			this.btnShutdownClient.Size = new System.Drawing.Size(173, 37);
-			this.btnShutdownClient.TabIndex = 23;
+			this.btnShutdownClient.TabIndex = 10;
 			this.btnShutdownClient.Text = "Shutdown";
 			this.btnShutdownClient.UseVisualStyleBackColor = true;
 			this.btnShutdownClient.Click += new System.EventHandler(this.btnShutdownClient_Click);
@@ -389,7 +384,7 @@
 			this.btnSendStatus.Location = new System.Drawing.Point(859, 340);
 			this.btnSendStatus.Name = "btnSendStatus";
 			this.btnSendStatus.Size = new System.Drawing.Size(173, 37);
-			this.btnSendStatus.TabIndex = 25;
+			this.btnSendStatus.TabIndex = 11;
 			this.btnSendStatus.Text = "Get Status";
 			this.btnSendStatus.UseVisualStyleBackColor = true;
 			this.btnSendStatus.Click += new System.EventHandler(this.btnSendStatus_Click);
@@ -400,7 +395,7 @@
 			this.btnSendMsg.Location = new System.Drawing.Point(533, 475);
 			this.btnSendMsg.Name = "btnSendMsg";
 			this.btnSendMsg.Size = new System.Drawing.Size(198, 37);
-			this.btnSendMsg.TabIndex = 26;
+			this.btnSendMsg.TabIndex = 20;
 			this.btnSendMsg.Text = "Send Message";
 			this.btnSendMsg.UseVisualStyleBackColor = true;
 			this.btnSendMsg.Click += new System.EventHandler(this.btnSendMsg_Click);
@@ -411,7 +406,7 @@
 			this.bSetClientTime.Location = new System.Drawing.Point(859, 390);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(173, 37);
-			this.bSetClientTime.TabIndex = 27;
+			this.bSetClientTime.TabIndex = 12;
 			this.bSetClientTime.Text = "Set Time";
 			this.bSetClientTime.UseVisualStyleBackColor = true;
 			this.bSetClientTime.Click += new System.EventHandler(this.bSetClientTime_Click);
@@ -422,7 +417,7 @@
 			this.btnReportTimeUp.Location = new System.Drawing.Point(859, 490);
 			this.btnReportTimeUp.Name = "btnReportTimeUp";
 			this.btnReportTimeUp.Size = new System.Drawing.Size(173, 37);
-			this.btnReportTimeUp.TabIndex = 28;
+			this.btnReportTimeUp.TabIndex = 14;
 			this.btnReportTimeUp.Text = "Time Up";
 			this.btnReportTimeUp.UseVisualStyleBackColor = true;
 			this.btnReportTimeUp.Click += new System.EventHandler(this.btnReportTimeUp_Click);
@@ -434,7 +429,7 @@
 			this.btnExit2Shell.Location = new System.Drawing.Point(859, 240);
 			this.btnExit2Shell.Name = "btnExit2Shell";
 			this.btnExit2Shell.Size = new System.Drawing.Size(173, 37);
-			this.btnExit2Shell.TabIndex = 22;
+			this.btnExit2Shell.TabIndex = 9;
 			this.btnExit2Shell.Text = "Exit to Shell";
 			this.btnExit2Shell.UseVisualStyleBackColor = false;
 			this.btnExit2Shell.Click += new System.EventHandler(this.Exit2Shell_Click);
@@ -455,7 +450,7 @@
 			this.btnTestBench.Location = new System.Drawing.Point(1056, 586);
 			this.btnTestBench.Name = "btnTestBench";
 			this.btnTestBench.Size = new System.Drawing.Size(274, 38);
-			this.btnTestBench.TabIndex = 7;
+			this.btnTestBench.TabIndex = 19;
 			this.btnTestBench.Text = "Test Bench";
 			this.btnTestBench.UseVisualStyleBackColor = false;
 			this.btnTestBench.Click += new System.EventHandler(this.btnTestBench_Click);
@@ -515,7 +510,7 @@
 			this.btnFnc2.Location = new System.Drawing.Point(89, 12);
 			this.btnFnc2.Name = "btnFnc2";
 			this.btnFnc2.Size = new System.Drawing.Size(52, 47);
-			this.btnFnc2.TabIndex = 10;
+			this.btnFnc2.TabIndex = 23;
 			this.btnFnc2.Text = "F2";
 			this.btnFnc2.UseVisualStyleBackColor = false;
 			this.btnFnc2.Click += new System.EventHandler(this.Function2Click);
@@ -527,7 +522,7 @@
 			this.btnMinimize.Location = new System.Drawing.Point(270, 303);
 			this.btnMinimize.Name = "btnMinimize";
 			this.btnMinimize.Size = new System.Drawing.Size(235, 61);
-			this.btnMinimize.TabIndex = 14;
+			this.btnMinimize.TabIndex = 7;
 			this.btnMinimize.Text = "Minimize";
 			this.btnMinimize.UseVisualStyleBackColor = false;
 			this.btnMinimize.Click += new System.EventHandler(this.Minimize_Click);
@@ -539,7 +534,7 @@
 			this.btnSunriseSunset.Location = new System.Drawing.Point(20, 28);
 			this.btnSunriseSunset.Name = "btnSunriseSunset";
 			this.btnSunriseSunset.Size = new System.Drawing.Size(117, 37);
-			this.btnSunriseSunset.TabIndex = 58;
+			this.btnSunriseSunset.TabIndex = 0;
 			this.btnSunriseSunset.Text = "Refresh";
 			this.btnSunriseSunset.UseVisualStyleBackColor = false;
 			this.btnSunriseSunset.Click += new System.EventHandler(this.btnSunriseSunset_Click);
@@ -591,7 +586,7 @@
 			this.btnTimerSchedules.Location = new System.Drawing.Point(21, 303);
 			this.btnTimerSchedules.Name = "btnTimerSchedules";
 			this.btnTimerSchedules.Size = new System.Drawing.Size(235, 61);
-			this.btnTimerSchedules.TabIndex = 63;
+			this.btnTimerSchedules.TabIndex = 3;
 			this.btnTimerSchedules.Text = "Timer Schedules";
 			this.btnTimerSchedules.UseVisualStyleBackColor = false;
 			this.btnTimerSchedules.Click += new System.EventHandler(this.btnTimer_Click);
@@ -604,7 +599,7 @@
 			this.btnOutdoor.Location = new System.Drawing.Point(1056, 539);
 			this.btnOutdoor.Name = "btnOutdoor";
 			this.btnOutdoor.Size = new System.Drawing.Size(274, 38);
-			this.btnOutdoor.TabIndex = 64;
+			this.btnOutdoor.TabIndex = 18;
 			this.btnOutdoor.Text = "Outdoor";
 			this.btnOutdoor.UseVisualStyleBackColor = false;
 			this.btnOutdoor.Click += new System.EventHandler(this.btnOutdoor_Click);
@@ -615,7 +610,7 @@
 			this.btnSaveJournalEntry.Location = new System.Drawing.Point(401, 373);
 			this.btnSaveJournalEntry.Name = "btnSaveJournalEntry";
 			this.btnSaveJournalEntry.Size = new System.Drawing.Size(104, 37);
-			this.btnSaveJournalEntry.TabIndex = 65;
+			this.btnSaveJournalEntry.TabIndex = 21;
 			this.btnSaveJournalEntry.Text = "Save";
 			this.btnSaveJournalEntry.UseVisualStyleBackColor = true;
 			this.btnSaveJournalEntry.Click += new System.EventHandler(this.btnSave_Click);
@@ -690,48 +685,10 @@
 			this.btnGetTime.Location = new System.Drawing.Point(859, 440);
 			this.btnGetTime.Name = "btnGetTime";
 			this.btnGetTime.Size = new System.Drawing.Size(173, 37);
-			this.btnGetTime.TabIndex = 72;
+			this.btnGetTime.TabIndex = 13;
 			this.btnGetTime.Text = "Get Time";
 			this.btnGetTime.UseVisualStyleBackColor = true;
 			this.btnGetTime.Click += new System.EventHandler(this.btnGetTime_Click);
-			// 
-			// tbAddHours
-			// 
-			this.tbAddHours.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.tbAddHours.Location = new System.Drawing.Point(770, 602);
-			this.tbAddHours.Name = "tbAddHours";
-			this.tbAddHours.Size = new System.Drawing.Size(48, 29);
-			this.tbAddHours.TabIndex = 73;
-			this.tbAddHours.Text = "0";
-			// 
-			// tbAddMinutes
-			// 
-			this.tbAddMinutes.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.tbAddMinutes.Location = new System.Drawing.Point(770, 570);
-			this.tbAddMinutes.Name = "tbAddMinutes";
-			this.tbAddMinutes.Size = new System.Drawing.Size(48, 29);
-			this.tbAddMinutes.TabIndex = 74;
-			this.tbAddMinutes.Text = "0";
-			// 
-			// label8
-			// 
-			this.label8.AutoSize = true;
-			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label8.Location = new System.Drawing.Point(727, 570);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(37, 20);
-			this.label8.TabIndex = 76;
-			this.label8.Text = "Min";
-			// 
-			// label9
-			// 
-			this.label9.AutoSize = true;
-			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label9.Location = new System.Drawing.Point(727, 608);
-			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(37, 20);
-			this.label9.TabIndex = 75;
-			this.label9.Text = "Hrs";
 			// 
 			// tbQuoteOfTheDay
 			// 
@@ -778,7 +735,7 @@
 			this.btnFnc4.Location = new System.Drawing.Point(221, 12);
 			this.btnFnc4.Name = "btnFnc4";
 			this.btnFnc4.Size = new System.Drawing.Size(52, 47);
-			this.btnFnc4.TabIndex = 80;
+			this.btnFnc4.TabIndex = 25;
 			this.btnFnc4.Text = "F4";
 			this.btnFnc4.UseVisualStyleBackColor = false;
 			this.btnFnc4.Click += new System.EventHandler(this.btnFnc4_Click);
@@ -790,7 +747,7 @@
 			this.btnFnc5.Location = new System.Drawing.Point(287, 12);
 			this.btnFnc5.Name = "btnFnc5";
 			this.btnFnc5.Size = new System.Drawing.Size(52, 47);
-			this.btnFnc5.TabIndex = 81;
+			this.btnFnc5.TabIndex = 26;
 			this.btnFnc5.Text = "F5";
 			this.btnFnc5.UseVisualStyleBackColor = false;
 			this.btnFnc5.Click += new System.EventHandler(this.btnFcn5_Click);
@@ -808,7 +765,7 @@
 			this.groupBox3.Location = new System.Drawing.Point(1056, 157);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(278, 220);
-			this.groupBox3.TabIndex = 82;
+			this.groupBox3.TabIndex = 0;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Sunrise Sunset";
 			// 
@@ -819,7 +776,7 @@
 			this.NextSrssLabel.Location = new System.Drawing.Point(17, 182);
 			this.NextSrssLabel.Name = "NextSrssLabel";
 			this.NextSrssLabel.Size = new System.Drawing.Size(0, 20);
-			this.NextSrssLabel.TabIndex = 64;
+			this.NextSrssLabel.TabIndex = 1;
 			// 
 			// btnNextSunrise
 			// 
@@ -828,7 +785,7 @@
 			this.btnNextSunrise.Location = new System.Drawing.Point(143, 28);
 			this.btnNextSunrise.Name = "btnNextSunrise";
 			this.btnNextSunrise.Size = new System.Drawing.Size(117, 37);
-			this.btnNextSunrise.TabIndex = 63;
+			this.btnNextSunrise.TabIndex = 1;
 			this.btnNextSunrise.Text = "Next";
 			this.btnNextSunrise.UseVisualStyleBackColor = false;
 			this.btnNextSunrise.Click += new System.EventHandler(this.btnNextSunrise_Click);
@@ -840,14 +797,13 @@
 			this.btnSendSort.Location = new System.Drawing.Point(1060, 396);
 			this.btnSendSort.Name = "btnSendSort";
 			this.btnSendSort.Size = new System.Drawing.Size(274, 38);
-			this.btnSendSort.TabIndex = 83;
+			this.btnSendSort.TabIndex = 15;
 			this.btnSendSort.Text = "Sort";
 			this.btnSendSort.UseVisualStyleBackColor = false;
 			this.btnSendSort.Click += new System.EventHandler(this.btnSendSort_Click);
 			// 
 			// timer3
 			// 
-			this.timer3.Enabled = true;
 			this.timer3.Interval = 6000000;
 			this.timer3.Tick += new System.EventHandler(this.timer3_tick);
 			// 
@@ -873,16 +829,6 @@
 			this.label12.TabIndex = 85;
 			this.label12.Text = "Daily Journal";
 			// 
-			// label13
-			// 
-			this.label13.AutoSize = true;
-			this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.label13.Location = new System.Drawing.Point(553, 570);
-			this.label13.Name = "label13";
-			this.label13.Size = new System.Drawing.Size(161, 20);
-			this.label13.TabIndex = 86;
-			this.label13.Text = "Modify Target Time";
-			// 
 			// btnUnused
 			// 
 			this.btnUnused.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -890,7 +836,7 @@
 			this.btnUnused.Location = new System.Drawing.Point(23, 224);
 			this.btnUnused.Name = "btnUnused";
 			this.btnUnused.Size = new System.Drawing.Size(235, 61);
-			this.btnUnused.TabIndex = 87;
+			this.btnUnused.TabIndex = 2;
 			this.btnUnused.Text = "Unused";
 			this.btnUnused.UseVisualStyleBackColor = false;
 			// 
@@ -901,7 +847,6 @@
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1356, 642);
 			this.Controls.Add(this.btnUnused);
-			this.Controls.Add(this.label13);
 			this.Controls.Add(this.label12);
 			this.Controls.Add(this.tbJournalEntry);
 			this.Controls.Add(this.btnSendSort);
@@ -911,10 +856,6 @@
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.label11);
 			this.Controls.Add(this.tbQuoteOfTheDay);
-			this.Controls.Add(this.label8);
-			this.Controls.Add(this.label9);
-			this.Controls.Add(this.tbAddMinutes);
-			this.Controls.Add(this.tbAddHours);
 			this.Controls.Add(this.btnGetTime);
 			this.Controls.Add(this.btnSaveJournalEntry);
 			this.Controls.Add(this.btnOutdoor);
@@ -1031,10 +972,6 @@
 		private System.Windows.Forms.Timer timer2;
 		private System.Windows.Forms.TextBox tbAlarmTick;
 		private System.Windows.Forms.Button btnGetTime;
-		private System.Windows.Forms.TextBox tbAddHours;
-		private System.Windows.Forms.TextBox tbAddMinutes;
-		private System.Windows.Forms.Label label8;
-		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.TextBox tbQuoteOfTheDay;
 		private System.Windows.Forms.Label label11;
 		private System.Windows.Forms.GroupBox groupBox2;
@@ -1047,7 +984,6 @@
 		private System.Windows.Forms.Timer timer3;
 		private System.Windows.Forms.TextBox tbJournalEntry;
 		private System.Windows.Forms.Label label12;
-		private System.Windows.Forms.Label label13;
 		private System.Windows.Forms.Button btnUnused;
 	}
 }

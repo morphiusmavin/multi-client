@@ -131,6 +131,7 @@ namespace EpServerEngineSampleClient
 			}
 			tbStatus.Text = "300";
 			timer_tick = 300;
+			timer1.Enabled = false;
 		}
 
 		private void btnTimer_Click(object sender, EventArgs e)
@@ -150,7 +151,8 @@ namespace EpServerEngineSampleClient
 					}
 				timer1.Enabled = false;
 				//timer_tick = int.Parse(tbStatus.Text);
-				this.Close();
+				if(this.Visible)
+					this.Close();
 			}
 			tbStatus.Text = timer_tick.ToString();
 
