@@ -97,6 +97,8 @@
 			this.tbJournalEntry = new System.Windows.Forms.TextBox();
 			this.label12 = new System.Windows.Forms.Label();
 			this.btnUnused = new System.Windows.Forms.Button();
+			this.tbFactoid = new System.Windows.Forms.TextBox();
+			this.label8 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -184,9 +186,9 @@
 			// 
 			this.btnAssignFunc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnAssignFunc.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnAssignFunc.Location = new System.Drawing.Point(358, 12);
+			this.btnAssignFunc.Location = new System.Drawing.Point(318, 12);
 			this.btnAssignFunc.Name = "btnAssignFunc";
-			this.btnAssignFunc.Size = new System.Drawing.Size(200, 46);
+			this.btnAssignFunc.Size = new System.Drawing.Size(163, 46);
 			this.btnAssignFunc.TabIndex = 27;
 			this.btnAssignFunc.Text = "Assign Func";
 			this.btnAssignFunc.UseVisualStyleBackColor = false;
@@ -271,7 +273,7 @@
 			// 
 			this.btnFnc3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnFnc3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnFnc3.Location = new System.Drawing.Point(155, 12);
+			this.btnFnc3.Location = new System.Drawing.Point(139, 12);
 			this.btnFnc3.Name = "btnFnc3";
 			this.btnFnc3.Size = new System.Drawing.Size(52, 47);
 			this.btnFnc3.TabIndex = 24;
@@ -307,7 +309,7 @@
 			// 
 			this.btnGarageForm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnGarageForm.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnGarageForm.Location = new System.Drawing.Point(1056, 491);
+			this.btnGarageForm.Location = new System.Drawing.Point(1185, 491);
 			this.btnGarageForm.Name = "btnGarageForm";
 			this.btnGarageForm.Size = new System.Drawing.Size(274, 38);
 			this.btnGarageForm.TabIndex = 17;
@@ -331,7 +333,7 @@
 			// 
 			this.btnCabin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnCabin.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCabin.Location = new System.Drawing.Point(1056, 445);
+			this.btnCabin.Location = new System.Drawing.Point(1185, 445);
 			this.btnCabin.Name = "btnCabin";
 			this.btnCabin.Size = new System.Drawing.Size(274, 38);
 			this.btnCabin.TabIndex = 16;
@@ -349,7 +351,7 @@
 			this.lbAvailClients.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbAvailClients.FormattingEnabled = true;
 			this.lbAvailClients.ItemHeight = 15;
-			this.lbAvailClients.Location = new System.Drawing.Point(859, 84);
+			this.lbAvailClients.Location = new System.Drawing.Point(909, 184);
 			this.lbAvailClients.Name = "lbAvailClients";
 			this.lbAvailClients.Size = new System.Drawing.Size(173, 94);
 			this.lbAvailClients.TabIndex = 35;
@@ -359,7 +361,7 @@
 			// 
 			this.btnRebootClient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnRebootClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnRebootClient.Location = new System.Drawing.Point(859, 190);
+			this.btnRebootClient.Location = new System.Drawing.Point(909, 290);
 			this.btnRebootClient.Name = "btnRebootClient";
 			this.btnRebootClient.Size = new System.Drawing.Size(173, 37);
 			this.btnRebootClient.TabIndex = 8;
@@ -370,7 +372,7 @@
 			// btnShutdownClient
 			// 
 			this.btnShutdownClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnShutdownClient.Location = new System.Drawing.Point(859, 290);
+			this.btnShutdownClient.Location = new System.Drawing.Point(909, 390);
 			this.btnShutdownClient.Name = "btnShutdownClient";
 			this.btnShutdownClient.Size = new System.Drawing.Size(173, 37);
 			this.btnShutdownClient.TabIndex = 10;
@@ -381,7 +383,7 @@
 			// btnSendStatus
 			// 
 			this.btnSendStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendStatus.Location = new System.Drawing.Point(859, 340);
+			this.btnSendStatus.Location = new System.Drawing.Point(909, 440);
 			this.btnSendStatus.Name = "btnSendStatus";
 			this.btnSendStatus.Size = new System.Drawing.Size(173, 37);
 			this.btnSendStatus.TabIndex = 11;
@@ -403,7 +405,7 @@
 			// bSetClientTime
 			// 
 			this.bSetClientTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.bSetClientTime.Location = new System.Drawing.Point(859, 390);
+			this.bSetClientTime.Location = new System.Drawing.Point(909, 490);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(173, 37);
 			this.bSetClientTime.TabIndex = 12;
@@ -414,7 +416,7 @@
 			// btnReportTimeUp
 			// 
 			this.btnReportTimeUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnReportTimeUp.Location = new System.Drawing.Point(859, 490);
+			this.btnReportTimeUp.Location = new System.Drawing.Point(909, 590);
 			this.btnReportTimeUp.Name = "btnReportTimeUp";
 			this.btnReportTimeUp.Size = new System.Drawing.Size(173, 37);
 			this.btnReportTimeUp.TabIndex = 14;
@@ -426,7 +428,7 @@
 			// 
 			this.btnExit2Shell.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnExit2Shell.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnExit2Shell.Location = new System.Drawing.Point(859, 240);
+			this.btnExit2Shell.Location = new System.Drawing.Point(909, 340);
 			this.btnExit2Shell.Name = "btnExit2Shell";
 			this.btnExit2Shell.Size = new System.Drawing.Size(173, 37);
 			this.btnExit2Shell.TabIndex = 9;
@@ -447,7 +449,7 @@
 			// 
 			this.btnTestBench.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnTestBench.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnTestBench.Location = new System.Drawing.Point(1056, 586);
+			this.btnTestBench.Location = new System.Drawing.Point(1185, 586);
 			this.btnTestBench.Name = "btnTestBench";
 			this.btnTestBench.Size = new System.Drawing.Size(274, 38);
 			this.btnTestBench.TabIndex = 19;
@@ -480,7 +482,7 @@
 			// tbTodaysDate
 			// 
 			this.tbTodaysDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.tbTodaysDate.Location = new System.Drawing.Point(658, 25);
+			this.tbTodaysDate.Location = new System.Drawing.Point(563, 22);
 			this.tbTodaysDate.Name = "tbTodaysDate";
 			this.tbTodaysDate.Size = new System.Drawing.Size(103, 26);
 			this.tbTodaysDate.TabIndex = 15;
@@ -489,7 +491,7 @@
 			// 
 			this.label10.AutoSize = true;
 			this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label10.Location = new System.Drawing.Point(590, 31);
+			this.label10.Location = new System.Drawing.Point(495, 28);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(62, 20);
 			this.label10.TabIndex = 57;
@@ -498,7 +500,7 @@
 			// tbTime
 			// 
 			this.tbTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.tbTime.Location = new System.Drawing.Point(772, 25);
+			this.tbTime.Location = new System.Drawing.Point(677, 22);
 			this.tbTime.Name = "tbTime";
 			this.tbTime.Size = new System.Drawing.Size(103, 26);
 			this.tbTime.TabIndex = 16;
@@ -507,7 +509,7 @@
 			// 
 			this.btnFnc2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnFnc2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnFnc2.Location = new System.Drawing.Point(89, 12);
+			this.btnFnc2.Location = new System.Drawing.Point(81, 12);
 			this.btnFnc2.Name = "btnFnc2";
 			this.btnFnc2.Size = new System.Drawing.Size(52, 47);
 			this.btnFnc2.TabIndex = 23;
@@ -596,7 +598,7 @@
 			this.btnOutdoor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnOutdoor.Enabled = false;
 			this.btnOutdoor.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnOutdoor.Location = new System.Drawing.Point(1056, 539);
+			this.btnOutdoor.Location = new System.Drawing.Point(1185, 539);
 			this.btnOutdoor.Name = "btnOutdoor";
 			this.btnOutdoor.Size = new System.Drawing.Size(274, 38);
 			this.btnOutdoor.TabIndex = 18;
@@ -682,7 +684,7 @@
 			// btnGetTime
 			// 
 			this.btnGetTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnGetTime.Location = new System.Drawing.Point(859, 440);
+			this.btnGetTime.Location = new System.Drawing.Point(909, 540);
 			this.btnGetTime.Name = "btnGetTime";
 			this.btnGetTime.Size = new System.Drawing.Size(173, 37);
 			this.btnGetTime.TabIndex = 13;
@@ -693,18 +695,18 @@
 			// tbQuoteOfTheDay
 			// 
 			this.tbQuoteOfTheDay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbQuoteOfTheDay.Location = new System.Drawing.Point(1056, 25);
+			this.tbQuoteOfTheDay.Location = new System.Drawing.Point(1189, 22);
 			this.tbQuoteOfTheDay.Multiline = true;
 			this.tbQuoteOfTheDay.Name = "tbQuoteOfTheDay";
 			this.tbQuoteOfTheDay.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbQuoteOfTheDay.Size = new System.Drawing.Size(286, 92);
+			this.tbQuoteOfTheDay.Size = new System.Drawing.Size(286, 109);
 			this.tbQuoteOfTheDay.TabIndex = 77;
 			// 
 			// label11
 			// 
 			this.label11.AutoSize = true;
 			this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label11.Location = new System.Drawing.Point(1052, 120);
+			this.label11.Location = new System.Drawing.Point(1185, 134);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(115, 20);
 			this.label11.TabIndex = 78;
@@ -732,7 +734,7 @@
 			// 
 			this.btnFnc4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnFnc4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnFnc4.Location = new System.Drawing.Point(221, 12);
+			this.btnFnc4.Location = new System.Drawing.Point(197, 12);
 			this.btnFnc4.Name = "btnFnc4";
 			this.btnFnc4.Size = new System.Drawing.Size(52, 47);
 			this.btnFnc4.TabIndex = 25;
@@ -744,7 +746,7 @@
 			// 
 			this.btnFnc5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnFnc5.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnFnc5.Location = new System.Drawing.Point(287, 12);
+			this.btnFnc5.Location = new System.Drawing.Point(255, 12);
 			this.btnFnc5.Name = "btnFnc5";
 			this.btnFnc5.Size = new System.Drawing.Size(52, 47);
 			this.btnFnc5.TabIndex = 26;
@@ -762,7 +764,7 @@
 			this.groupBox3.Controls.Add(this.SunriseLabel);
 			this.groupBox3.Controls.Add(this.btnSunriseSunset);
 			this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox3.Location = new System.Drawing.Point(1056, 157);
+			this.groupBox3.Location = new System.Drawing.Point(1185, 157);
 			this.groupBox3.Name = "groupBox3";
 			this.groupBox3.Size = new System.Drawing.Size(278, 220);
 			this.groupBox3.TabIndex = 0;
@@ -794,7 +796,7 @@
 			// 
 			this.btnSendSort.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnSendSort.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSendSort.Location = new System.Drawing.Point(1060, 396);
+			this.btnSendSort.Location = new System.Drawing.Point(1189, 396);
 			this.btnSendSort.Name = "btnSendSort";
 			this.btnSendSort.Size = new System.Drawing.Size(274, 38);
 			this.btnSendSort.TabIndex = 15;
@@ -840,12 +842,34 @@
 			this.btnUnused.Text = "Unused";
 			this.btnUnused.UseVisualStyleBackColor = false;
 			// 
+			// tbFactoid
+			// 
+			this.tbFactoid.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbFactoid.Location = new System.Drawing.Point(866, 22);
+			this.tbFactoid.Multiline = true;
+			this.tbFactoid.Name = "tbFactoid";
+			this.tbFactoid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			this.tbFactoid.Size = new System.Drawing.Size(286, 115);
+			this.tbFactoid.TabIndex = 86;
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label8.Location = new System.Drawing.Point(862, 142);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(69, 20);
+			this.label8.TabIndex = 87;
+			this.label8.Text = "Factoid";
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(1356, 642);
+			this.ClientSize = new System.Drawing.Size(1487, 642);
+			this.Controls.Add(this.label8);
+			this.Controls.Add(this.tbFactoid);
 			this.Controls.Add(this.btnUnused);
 			this.Controls.Add(this.label12);
 			this.Controls.Add(this.tbJournalEntry);
@@ -985,6 +1009,8 @@
 		private System.Windows.Forms.TextBox tbJournalEntry;
 		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.Button btnUnused;
+		private System.Windows.Forms.TextBox tbFactoid;
+		private System.Windows.Forms.Label label8;
 	}
 }
 

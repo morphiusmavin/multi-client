@@ -80,6 +80,7 @@ namespace EpServerEngineSampleClient
         private int minute_before_sunset;
         //private string[] Todo_List;
         private string[] Quote_of_the_Day_List;
+        private string[] Factoid_List;
         private DateTime now;
         /* remove the min/max/close buttons in the 'frame' */
         /* or you can just set 'Control Box' to false in the properties pane for the form */
@@ -87,6 +88,7 @@ namespace EpServerEngineSampleClient
         private const int WS_CAPTION = 0x00C00000;
         // Removes the close button in the caption bar
         string str_quote_of_the_day_file = @"C:\Users\Daniel\Documents\Quote of the Day.txt";
+        string str_factoid_file = @"C:\Users\Daniel\Documents\Factoid_List.txt";
         protected override CreateParams CreateParams
         {
             get
@@ -336,17 +338,32 @@ namespace EpServerEngineSampleClient
                 Quote_of_the_Day_List = System.IO.File.ReadAllLines(str_quote_of_the_day_file);
                 DisplayQuoteOfTheDay();
             }
+            if (File.Exists(str_factoid_file))
+            {
+                Factoid_List = System.IO.File.ReadAllLines(str_factoid_file);
+                DisplayFactoid();
+            }
 
             // turn off east light because it is on by default (relay is wired nc)
             svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
         }
         private void DisplayQuoteOfTheDay()
 		{
-            if (DateTime.Now.DayOfYear <= Quote_of_the_Day_List.Length)
-            {
-                //AddMsg(Quote_of_the_Day_List[DateTime.Now.DayOfYear]);
-                tbQuoteOfTheDay.Text = Quote_of_the_Day_List[DateTime.Now.DayOfYear];
-            }
+            int iter = (int)Properties.Settings.Default["Quote_iter"];
+            if (++iter > 365)
+                iter = 0;
+            tbQuoteOfTheDay.Text = Quote_of_the_Day_List[iter];
+            Properties.Settings.Default["Quote_iter"] = iter;
+            //AddMsg("quote: " + iter.ToString());
+        }
+        private void DisplayFactoid()
+        {
+            int iter = (int)Properties.Settings.Default["Factoid_iter"];
+            if (++iter > 354)
+                iter = 0;
+            tbFactoid.Text = Factoid_List[iter];
+            Properties.Settings.Default["Factoid_iter"] = iter;
+            //AddMsg("factoid: " + iter.ToString());
         }
         private int getMinutes(string time)
 		{
@@ -967,12 +984,14 @@ namespace EpServerEngineSampleClient
                     clk_oneoff = false;
                     clk_oneoff2 = true;
                     clock_chime(xhour);
+                    /*
                     if(xhour == 0)
                         AddMsg("The time is 12 midnight");
                     else if(xhour == 12)
                         AddMsg("The time is: 12 noon");
                     else
                         AddMsg("The time is: " + xhour.ToString() + " O'Clock");
+                    */
                 }
                 if (minute == 1 && clk_oneoff2)
                 {
@@ -994,21 +1013,23 @@ namespace EpServerEngineSampleClient
                     play_tone(2);
                     AddMsg("start of Civil Twilight");
                 }
+                /*
                 else if (hour == hour_before_sunrise && minute == minutes_before_sunrise_1 && second == 0)
                 {
                     play_tone(9);
                     AddMsg("One Minutes before sunrise");
                 }
+                */
                 else if (hour == hour_before_sunrise && minute == minutes_before_sunrise_5 && second == 0)
                 {
                     play_tone(7);
                     AddMsg("Five Minutes before sunrise");
                 }
-                else if (hour == curr_srss_day.SunriseHour && minute == curr_srss_day.SunriseMinute && second == 30)
+                else if (hour == curr_srss_day.SunriseHour && minute == curr_srss_day.SunriseMinute && second == 0)
                 {
                     play_sunrise_clip();
                     AddMsg("sunrise");
-                    AddMsg(now.Day.ToString());
+                    //AddMsg(now.Day.ToString());
                     //AddMsg(sunrise_sunsets[now.Day].sunrise);
                     //SunriseLabel.Text = sunrise_sunsets[now.Day].sunrise + " tomorrow";
                 }
@@ -1069,6 +1090,7 @@ namespace EpServerEngineSampleClient
                         calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 10);
                     }
                     DisplayQuoteOfTheDay();
+                    DisplayFactoid();
                 }
             }
             if (tick == 3)
