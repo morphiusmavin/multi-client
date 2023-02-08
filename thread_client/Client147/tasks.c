@@ -109,7 +109,6 @@ enum output_types
 	BENCH_3V3_1a,
 	BENCH_3V3_2a,
 	TEST_OUTPUT1,		// these are unused 
-	TEST_OUTPUT2,		// these are unused 
 
 	BENCH_LIGHT1a,
 	BENCH_LIGHT2a,
@@ -550,6 +549,13 @@ UCHAR monitor_fake_input_task(int test)
 			return 0;
 	}
 #endif
+
+	while(TRUE)		// do this to avoid "bad mask" error
+	{
+		uSleep(1,0);
+		if(shutdown_all)
+			return 0;
+	}
 
 	for(i = 0;i < 6;i++)
 	{
@@ -1297,7 +1303,6 @@ int avg_raw_data(int prev_data)
 	temp_data /= RAW_DATA_ARRAY_SIZE;
 	return temp_data;
 }
-
 float convertF(int raw_data)
 {
 	float T_F, T_celcius;

@@ -84,6 +84,7 @@ namespace EpServerEngineSampleClient
 			testbench_list.Add("BENCH_3V3_2");
 			testbench_list.Add("BENCH_LIGHT1");
 			testbench_list.Add("BENCH_LIGHT2");
+			testbench_list.Add("BATTERY_HEATER");
 
 			cabin_list.Add("CABIN1");
 			cabin_list.Add("CABIN2");

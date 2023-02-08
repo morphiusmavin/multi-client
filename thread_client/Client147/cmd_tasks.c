@@ -371,6 +371,7 @@ UCHAR get_host_cmd_task2(int test)
 								&& ctp->off_minute == 0 && ctp->off_second == 0)
 							ctp->port = -1;
 						cllist_change_data(index,ctp,&cll);
+						memset(tempx,0,sizeof(tempx));
 						printf("done\n");
 					break;
 
@@ -386,7 +387,7 @@ UCHAR get_host_cmd_task2(int test)
 								break;
 							if(ctp->port > -1)
 							{
-								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
+								sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->index, ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
 										ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
 								printf("%s\n",tempx);
 								cmd = REPLY_CLLIST;
