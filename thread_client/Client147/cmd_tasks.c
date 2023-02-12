@@ -214,7 +214,7 @@ UCHAR get_host_cmd_task2(int test)
 			printf("%s\r\n",errmsg);
 		}
 		
-		cllist_show(&cll);
+		//cllist_show(&cll);
 	}
 
 	init_ips();

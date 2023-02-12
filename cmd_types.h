@@ -11,11 +11,11 @@ enum cmd_types
 	WEST_LIGHT,
 	NORTHEAST_LIGHT,
 	SOUTHWEST_LIGHT,
-	WATER_HEATER,
 	WATER_PUMP,
 	WATER_VALVE1,
 	WATER_VALVE2,
-	WATER_VALVE3,		// last one on garage
+	WATER_VALVE3,
+	WATER_HEATER,		// last one on garage
 	BENCH_24V_1,		// start of 147
 	BENCH_24V_2,
 	BENCH_12V_1,

@@ -345,7 +345,7 @@ namespace EpServerEngineSampleClient
             }
 
             // turn off east light because it is on by default (relay is wired nc)
-            svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
+            //svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
         }
         private void DisplayQuoteOfTheDay()
 		{
@@ -1495,7 +1495,6 @@ namespace EpServerEngineSampleClient
                         Properties.Settings.Default["func1_type"] = easyButton.getType();
                         Properties.Settings.Default["func1_port"] = easyButton.getPort();
                         //btnFnc1.Text = easyButton.getType().ToString() + " " + easyButton.getPort().ToString();
-
                         break;
                     case 2:
                         //AddMsg("func 2");
@@ -1544,8 +1543,6 @@ namespace EpServerEngineSampleClient
         private void Function2Click(object sender, EventArgs e)
 		{
             int type, port;
-            //AddMsg(Properties.Settings.Default["func2_type"].ToString());
-            //AddMsg(Properties.Settings.Default["func2_port"].ToString());
             type = (int)Properties.Settings.Default["func2_type"];
             port = (int)Properties.Settings.Default["func2_port"];
             svrcmd.Change_PortCmd(port, type);
@@ -1553,8 +1550,6 @@ namespace EpServerEngineSampleClient
         private void Function3Click(object sender, EventArgs e)
         {
             int type, port;
-			//AddMsg(Properties.Settings.Default["func3_type"].ToString());
-			//AddMsg(Properties.Settings.Default["func3_port"].ToString());
             type = (int)Properties.Settings.Default["func3_type"];
             port = (int)Properties.Settings.Default["func3_port"];
             svrcmd.Change_PortCmd(port, type);
@@ -1562,8 +1557,6 @@ namespace EpServerEngineSampleClient
         private void btnFnc4_Click(object sender, EventArgs e)
         {
             int type, port;
-            //AddMsg(Properties.Settings.Default["func3_type"].ToString());
-            //AddMsg(Properties.Settings.Default["func3_port"].ToString());
             type = (int)Properties.Settings.Default["func4_type"];
             port = (int)Properties.Settings.Default["func4_port"];
             svrcmd.Change_PortCmd(port, type);
@@ -1571,8 +1564,6 @@ namespace EpServerEngineSampleClient
         private void btnFcn5_Click(object sender, EventArgs e)
         {
             int type, port;
-            //AddMsg(Properties.Settings.Default["func3_type"].ToString());
-            //AddMsg(Properties.Settings.Default["func3_port"].ToString());
             type = (int)Properties.Settings.Default["func5_type"];
             port = (int)Properties.Settings.Default["func5_port"];
             svrcmd.Change_PortCmd(port, type);
@@ -1804,8 +1795,6 @@ namespace EpServerEngineSampleClient
                 if (cl.socket > 0 && cl.type != 0)
                 {
                     dest = cl.index;
-                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_TIME"), dest, "test");
-                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SORT_CLLIST"), dest, "test");
                     SetTime(dest);
                 }
             }

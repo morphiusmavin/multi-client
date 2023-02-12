@@ -52,6 +52,11 @@ namespace EpServerEngineSampleClient
 			garage_list.Add("WEST_LIGHT");
 			garage_list.Add("NORTHEAST_LIGHT");
 			garage_list.Add("SOUTHWEST_LIGHT");
+			garage_list.Add("WATER_HEATER");
+			garage_list.Add("WATER_PUMP");
+			garage_list.Add("WATER_VALVE1");
+			garage_list.Add("WATER_VALVE2");
+			garage_list.Add("WATER_VALVE3");
 
 			cabin_list.Add("BENCH_24V_1");
 			cabin_list.Add("BENCH_24V_2");
@@ -63,6 +68,7 @@ namespace EpServerEngineSampleClient
 			cabin_list.Add("BENCH_3V3_2");
 			cabin_list.Add("BENCH_LIGHT1");
 			cabin_list.Add("BENCH_LIGHT2");
+			cabin_list.Add("BATTERY_HEATER");
 
 			testbench_list.Add("CABIN1");
 			testbench_list.Add("CABIN2");
@@ -187,7 +193,6 @@ namespace EpServerEngineSampleClient
 					break;
 			}
 		}
-
 		private void lbPort_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			port = lbPort.SelectedIndex;
@@ -215,45 +220,37 @@ namespace EpServerEngineSampleClient
 			}
 			AddMsg(port.ToString());
 		}
-
 		private void btnAssign_Click(object sender, EventArgs e)
 		{
 			AddMsg("func: " + func.ToString());
 			AddMsg("type: " + type.ToString());
 			AddMsg("port: " + port.ToString());
 		}
-
 		private void rbFunc1_CheckedChanged(object sender, EventArgs e)
 		{
 			func = 1;
 		}
-
 		private void rbFunc2_CheckedChanged(object sender, EventArgs e)
 		{
 			func = 2;
 		}
-
 		private void rbFunc3_CheckedChanged(object sender, EventArgs e)
 		{
 			func = 3;
 		}
-
 		private void rbFunc4_CheckChanged(object sender, EventArgs e)
 		{
 			func = 4;
 		}
-
 		private void rbFunc5_CheckChanged(object sender, EventArgs e)
 		{
 			func = 5;
 		}
-
 		private void btnQuit_Click(object sender, EventArgs e)
 		{
 			this.DialogResult = DialogResult.OK;
             this.Close();
 		}
-
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
 			this.DialogResult = DialogResult.Cancel;

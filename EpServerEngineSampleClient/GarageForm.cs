@@ -57,10 +57,10 @@ namespace EpServerEngineSampleClient
 			on_label_list.Add("NORTHEAST_LIGHT");
 			on_label_list.Add("SOUTHWEST_LIGHT");
 			on_label_list.Add("WATER_HEATER");
-			on_label_list.Add("WATER_PUMP");
 			on_label_list.Add("WATER_VALVE1");
 			on_label_list.Add("WATER_VALVE2");
 			on_label_list.Add("WATER_VALVE3");
+			on_label_list.Add("WATER_PUMP");
 
 			button_list = new List<ButtonList>();
 			Control sCtl = this.btnDesk;
@@ -80,7 +80,7 @@ namespace EpServerEngineSampleClient
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
-			tbTimer.Text = "20";
+			tbTimer.Text = "300";
 		}
 		public void Enable_Dlg(bool wait)
 		{
@@ -332,19 +332,19 @@ namespace EpServerEngineSampleClient
 		{
 			ToggleButton(8, SendCmd(8));
 		}
-		private void btnWaterPump_Click(object sender, EventArgs e)
+		private void btnWaterValve1_Click(object sender, EventArgs e)
 		{
 			ToggleButton(9, SendCmd(9));
 		}
-		private void btnWaterValve1_Click(object sender, EventArgs e)
+		private void btnWaterValve2_Click(object sender, EventArgs e)
 		{
 			ToggleButton(10, SendCmd(10));
 		}
-		private void btnWaterValve2_Click(object sender, EventArgs e)
+		private void btnWaterValve3_Click(object sender, EventArgs e)
 		{
 			ToggleButton(11, SendCmd(11));
 		}
-		private void btnWaterValve3_Click(object sender, EventArgs e)
+		private void btnWaterPump_Click(object sender, EventArgs e)
 		{
 			ToggleButton(12, SendCmd(12));
 		}
@@ -389,14 +389,18 @@ namespace EpServerEngineSampleClient
 			{
 				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}
-			tbTimer.Text = "20";
-			timer_tick = 20;
+			tbTimer.Text = "300";
+			timer_tick = 300;
 			timer1.Enabled = false;
 
 		}
 		private void tbTimerChanged(object sender, EventArgs e)
 		{
 			timer_tick = int.Parse(tbTimer.Text);
+		}
+		private void label14_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

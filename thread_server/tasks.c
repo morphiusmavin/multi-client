@@ -121,11 +121,11 @@ enum output_types
 	TESTOUTPUT8,			// these are unused
 	TESTOUTPUT9,
 	
-	WATER_HEATERa,			// bank 1
 	WATER_PUMPa,
 	WATER_VALVE1a,
 	WATER_VALVE2a,			// these are unused
 	WATER_VALVE3a,			// but the relay 
+	WATER_HEATERa,			// bank 1
 	TESTOUTPUT10,			// has wires to the
 	TESTOUTPUT11,			// <- io card up to here
 	TESTOUTPUT12,

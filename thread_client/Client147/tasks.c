@@ -765,7 +765,7 @@ void sort_countdown(void)
 	COUNTDOWN *ct;
 	COUNTDOWN tct;
 	int current_seconds = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
-	printf("curr sec: %d\n",current_seconds);
+	//printf("curr sec: %d\n",current_seconds);
 	k = 0;
 	for(i = 0;i < 20;i++)
 	{

@@ -99,6 +99,7 @@
 			this.btnUnused = new System.Windows.Forms.Button();
 			this.tbFactoid = new System.Windows.Forms.TextBox();
 			this.label8 = new System.Windows.Forms.Label();
+			this.label9 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -205,7 +206,7 @@
 			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Controls.Add(this.tbPort);
 			this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox1.Location = new System.Drawing.Point(529, 67);
+			this.groupBox1.Location = new System.Drawing.Point(528, 143);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(300, 204);
 			this.groupBox1.TabIndex = 34;
@@ -351,9 +352,9 @@
 			this.lbAvailClients.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbAvailClients.FormattingEnabled = true;
 			this.lbAvailClients.ItemHeight = 15;
-			this.lbAvailClients.Location = new System.Drawing.Point(909, 184);
+			this.lbAvailClients.Location = new System.Drawing.Point(909, 199);
 			this.lbAvailClients.Name = "lbAvailClients";
-			this.lbAvailClients.Size = new System.Drawing.Size(173, 94);
+			this.lbAvailClients.Size = new System.Drawing.Size(173, 79);
 			this.lbAvailClients.TabIndex = 35;
 			this.lbAvailClients.SelectedIndexChanged += new System.EventHandler(this.AvailClientSelIndexChanged);
 			// 
@@ -394,7 +395,7 @@
 			// btnSendMsg
 			// 
 			this.btnSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendMsg.Location = new System.Drawing.Point(533, 475);
+			this.btnSendMsg.Location = new System.Drawing.Point(532, 551);
 			this.btnSendMsg.Name = "btnSendMsg";
 			this.btnSendMsg.Size = new System.Drawing.Size(198, 37);
 			this.btnSendMsg.TabIndex = 20;
@@ -439,7 +440,7 @@
 			// tbSendMsg
 			// 
 			this.tbSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbSendMsg.Location = new System.Drawing.Point(533, 518);
+			this.tbSendMsg.Location = new System.Drawing.Point(532, 594);
 			this.tbSendMsg.Name = "tbSendMsg";
 			this.tbSendMsg.Size = new System.Drawing.Size(285, 26);
 			this.tbSendMsg.TabIndex = 20;
@@ -481,28 +482,28 @@
 			// 
 			// tbTodaysDate
 			// 
-			this.tbTodaysDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.tbTodaysDate.Location = new System.Drawing.Point(563, 22);
+			this.tbTodaysDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbTodaysDate.Location = new System.Drawing.Point(664, 25);
 			this.tbTodaysDate.Name = "tbTodaysDate";
-			this.tbTodaysDate.Size = new System.Drawing.Size(103, 26);
+			this.tbTodaysDate.Size = new System.Drawing.Size(164, 44);
 			this.tbTodaysDate.TabIndex = 15;
 			// 
 			// label10
 			// 
 			this.label10.AutoSize = true;
 			this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label10.Location = new System.Drawing.Point(495, 28);
+			this.label10.Location = new System.Drawing.Point(607, 38);
 			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(62, 20);
+			this.label10.Size = new System.Drawing.Size(53, 20);
 			this.label10.TabIndex = 57;
-			this.label10.Text = "Today:";
+			this.label10.Text = "Date:";
 			// 
 			// tbTime
 			// 
-			this.tbTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.tbTime.Location = new System.Drawing.Point(677, 22);
+			this.tbTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tbTime.Location = new System.Drawing.Point(664, 82);
 			this.tbTime.Name = "tbTime";
-			this.tbTime.Size = new System.Drawing.Size(103, 26);
+			this.tbTime.Size = new System.Drawing.Size(164, 44);
 			this.tbTime.TabIndex = 16;
 			// 
 			// btnFnc2
@@ -695,18 +696,18 @@
 			// tbQuoteOfTheDay
 			// 
 			this.tbQuoteOfTheDay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbQuoteOfTheDay.Location = new System.Drawing.Point(1189, 22);
+			this.tbQuoteOfTheDay.Location = new System.Drawing.Point(1189, 49);
 			this.tbQuoteOfTheDay.Multiline = true;
 			this.tbQuoteOfTheDay.Name = "tbQuoteOfTheDay";
 			this.tbQuoteOfTheDay.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbQuoteOfTheDay.Size = new System.Drawing.Size(286, 109);
+			this.tbQuoteOfTheDay.Size = new System.Drawing.Size(286, 115);
 			this.tbQuoteOfTheDay.TabIndex = 77;
 			// 
 			// label11
 			// 
 			this.label11.AutoSize = true;
 			this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label11.Location = new System.Drawing.Point(1185, 134);
+			this.label11.Location = new System.Drawing.Point(1185, 18);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(115, 20);
 			this.label11.TabIndex = 78;
@@ -723,7 +724,7 @@
 			this.groupBox2.Controls.Add(this.cbAlarm);
 			this.groupBox2.Controls.Add(this.tbAlarmHours);
 			this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox2.Location = new System.Drawing.Point(533, 297);
+			this.groupBox2.Location = new System.Drawing.Point(532, 373);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(285, 146);
 			this.groupBox2.TabIndex = 79;
@@ -764,9 +765,9 @@
 			this.groupBox3.Controls.Add(this.SunriseLabel);
 			this.groupBox3.Controls.Add(this.btnSunriseSunset);
 			this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox3.Location = new System.Drawing.Point(1185, 157);
+			this.groupBox3.Location = new System.Drawing.Point(1185, 177);
 			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(278, 220);
+			this.groupBox3.Size = new System.Drawing.Size(278, 208);
 			this.groupBox3.TabIndex = 0;
 			this.groupBox3.TabStop = false;
 			this.groupBox3.Text = "Sunrise Sunset";
@@ -845,22 +846,32 @@
 			// tbFactoid
 			// 
 			this.tbFactoid.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbFactoid.Location = new System.Drawing.Point(866, 22);
+			this.tbFactoid.Location = new System.Drawing.Point(866, 49);
 			this.tbFactoid.Multiline = true;
 			this.tbFactoid.Name = "tbFactoid";
 			this.tbFactoid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbFactoid.Size = new System.Drawing.Size(286, 115);
+			this.tbFactoid.Size = new System.Drawing.Size(286, 128);
 			this.tbFactoid.TabIndex = 86;
 			// 
 			// label8
 			// 
 			this.label8.AutoSize = true;
 			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label8.Location = new System.Drawing.Point(862, 142);
+			this.label8.Location = new System.Drawing.Point(866, 18);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(69, 20);
 			this.label8.TabIndex = 87;
 			this.label8.Text = "Factoid";
+			// 
+			// label9
+			// 
+			this.label9.AutoSize = true;
+			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label9.Location = new System.Drawing.Point(606, 93);
+			this.label9.Name = "label9";
+			this.label9.Size = new System.Drawing.Size(52, 20);
+			this.label9.TabIndex = 88;
+			this.label9.Text = "Time:";
 			// 
 			// FrmSampleClient
 			// 
@@ -868,6 +879,7 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1487, 642);
+			this.Controls.Add(this.label9);
 			this.Controls.Add(this.label8);
 			this.Controls.Add(this.tbFactoid);
 			this.Controls.Add(this.btnUnused);
@@ -1011,6 +1023,7 @@
 		private System.Windows.Forms.Button btnUnused;
 		private System.Windows.Forms.TextBox tbFactoid;
 		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label label9;
 	}
 }
 

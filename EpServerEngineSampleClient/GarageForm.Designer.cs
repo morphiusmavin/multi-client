@@ -143,7 +143,7 @@
 			this.tbAddMsg.ReadOnly = true;
 			this.tbAddMsg.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
 			this.tbAddMsg.Size = new System.Drawing.Size(266, 197);
-			this.tbAddMsg.TabIndex = 12;
+			this.tbAddMsg.TabIndex = 14;
 			this.tbAddMsg.TabStop = false;
 			// 
 			// btnDesk
@@ -229,7 +229,7 @@
 			this.btnClear.Location = new System.Drawing.Point(162, 519);
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(118, 39);
-			this.btnClear.TabIndex = 15;
+			this.btnClear.TabIndex = 16;
 			this.btnClear.Text = "Rotate";
 			this.btnClear.UseVisualStyleBackColor = true;
 			this.btnClear.Click += new System.EventHandler(this.btnClear_Click_1);
@@ -240,7 +240,7 @@
 			this.btnClrScr.Location = new System.Drawing.Point(26, 519);
 			this.btnClrScr.Name = "btnClrScr";
 			this.btnClrScr.Size = new System.Drawing.Size(118, 39);
-			this.btnClrScr.TabIndex = 14;
+			this.btnClrScr.TabIndex = 15;
 			this.btnClrScr.Text = "Clr Scr";
 			this.btnClrScr.UseVisualStyleBackColor = true;
 			this.btnClrScr.Click += new System.EventHandler(this.btnClrScr_Click);
@@ -256,7 +256,7 @@
 			this.btnTimer.Location = new System.Drawing.Point(303, 519);
 			this.btnTimer.Name = "btnTimer";
 			this.btnTimer.Size = new System.Drawing.Size(118, 39);
-			this.btnTimer.TabIndex = 16;
+			this.btnTimer.TabIndex = 17;
 			this.btnTimer.Text = "Timer";
 			this.btnTimer.UseVisualStyleBackColor = true;
 			this.btnTimer.Click += new System.EventHandler(this.btnTimer_Click);
@@ -317,10 +317,10 @@
 			// btnWaterPump
 			// 
 			this.btnWaterPump.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWaterPump.Location = new System.Drawing.Point(451, 67);
+			this.btnWaterPump.Location = new System.Drawing.Point(451, 220);
 			this.btnWaterPump.Name = "btnWaterPump";
 			this.btnWaterPump.Size = new System.Drawing.Size(118, 39);
-			this.btnWaterPump.TabIndex = 9;
+			this.btnWaterPump.TabIndex = 12;
 			this.btnWaterPump.Text = "OFF";
 			this.btnWaterPump.UseVisualStyleBackColor = true;
 			this.btnWaterPump.Click += new System.EventHandler(this.btnWaterPump_Click);
@@ -328,10 +328,10 @@
 			// btnWaterValve1
 			// 
 			this.btnWaterValve1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWaterValve1.Location = new System.Drawing.Point(451, 122);
+			this.btnWaterValve1.Location = new System.Drawing.Point(451, 61);
 			this.btnWaterValve1.Name = "btnWaterValve1";
 			this.btnWaterValve1.Size = new System.Drawing.Size(118, 39);
-			this.btnWaterValve1.TabIndex = 10;
+			this.btnWaterValve1.TabIndex = 9;
 			this.btnWaterValve1.Text = "OFF";
 			this.btnWaterValve1.UseVisualStyleBackColor = true;
 			this.btnWaterValve1.Click += new System.EventHandler(this.btnWaterValve1_Click);
@@ -339,10 +339,10 @@
 			// btnWaterValve2
 			// 
 			this.btnWaterValve2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWaterValve2.Location = new System.Drawing.Point(451, 177);
+			this.btnWaterValve2.Location = new System.Drawing.Point(451, 114);
 			this.btnWaterValve2.Name = "btnWaterValve2";
 			this.btnWaterValve2.Size = new System.Drawing.Size(118, 39);
-			this.btnWaterValve2.TabIndex = 11;
+			this.btnWaterValve2.TabIndex = 10;
 			this.btnWaterValve2.Text = "OFF";
 			this.btnWaterValve2.UseVisualStyleBackColor = true;
 			this.btnWaterValve2.Click += new System.EventHandler(this.btnWaterValve2_Click);
@@ -350,10 +350,10 @@
 			// btnWaterValve3
 			// 
 			this.btnWaterValve3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWaterValve3.Location = new System.Drawing.Point(451, 232);
+			this.btnWaterValve3.Location = new System.Drawing.Point(451, 167);
 			this.btnWaterValve3.Name = "btnWaterValve3";
 			this.btnWaterValve3.Size = new System.Drawing.Size(118, 39);
-			this.btnWaterValve3.TabIndex = 12;
+			this.btnWaterValve3.TabIndex = 11;
 			this.btnWaterValve3.Text = "OFF";
 			this.btnWaterValve3.UseVisualStyleBackColor = true;
 			this.btnWaterValve3.Click += new System.EventHandler(this.btnWaterValve3_Click);
@@ -372,7 +372,7 @@
 			// 
 			this.label11.AutoSize = true;
 			this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label11.Location = new System.Drawing.Point(313, 74);
+			this.label11.Location = new System.Drawing.Point(313, 229);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(124, 24);
 			this.label11.TabIndex = 27;
@@ -382,7 +382,7 @@
 			// 
 			this.label12.AutoSize = true;
 			this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label12.Location = new System.Drawing.Point(331, 129);
+			this.label12.Location = new System.Drawing.Point(331, 70);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(79, 24);
 			this.label12.TabIndex = 28;
@@ -392,21 +392,22 @@
 			// 
 			this.label13.AutoSize = true;
 			this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label13.Location = new System.Drawing.Point(331, 239);
+			this.label13.Location = new System.Drawing.Point(331, 174);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(79, 24);
 			this.label13.TabIndex = 29;
-			this.label13.Text = "Valve 2";
+			this.label13.Text = "Valve 3";
 			// 
 			// label14
 			// 
 			this.label14.AutoSize = true;
 			this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label14.Location = new System.Drawing.Point(331, 184);
+			this.label14.Location = new System.Drawing.Point(331, 123);
 			this.label14.Name = "label14";
 			this.label14.Size = new System.Drawing.Size(79, 24);
 			this.label14.TabIndex = 30;
 			this.label14.Text = "Valve 2";
+			this.label14.Click += new System.EventHandler(this.label14_Click);
 			// 
 			// tbTimer
 			// 
@@ -422,7 +423,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(581, 570);
+			this.ClientSize = new System.Drawing.Size(614, 570);
 			this.Controls.Add(this.tbTimer);
 			this.Controls.Add(this.label14);
 			this.Controls.Add(this.label13);

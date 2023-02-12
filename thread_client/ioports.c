@@ -60,7 +60,7 @@ int init_mem(void)
 {
 	int key;
 #ifdef USE_CARDS
-	printf("starting init_mem...\n");
+	//printf("starting init_mem...\n");
 	fd = open("/dev/mem", O_RDWR|O_SYNC);
 	
 	assert(fd != -1);
@@ -88,7 +88,7 @@ int init_mem(void)
 		perror("error writing to last byte of file\n");
 		//exit(1);
 		return -1;
-	}else printf("init_mem ok\n");
+	}//else printf("init_mem ok\n");
 /*
 	int i, onoff;		// using this to test the memory access of 4600
 	UCHAR mask = 1;
