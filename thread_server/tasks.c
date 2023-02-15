@@ -1127,11 +1127,7 @@ UCHAR serial_recv_task(int test)
 	}
 	return 1;
 }
-// client calls 'connect' to get accept call below to stop
-// blocking and return sd2 socket descriptor
-
 static int sock_open;
-
 /*********************************************************************/
 void close_tcp(void)
 {

@@ -16,6 +16,13 @@ todo:
 	monitor_fake_input_task reacts to change_input() used in old Truck_Project1 
 10) If moonrise is about an hour after sunset, then alert when moon will rise (5 minutes before)
 	(so I can go out on the porch and watch the moonrise)
+11) Need a 'gate' for all ports controlled by timer schedule, and possibly the same 
+		for each port so I can turn it off if I need to conserve power because of
+		cloudy days ahead.
+12) Look into wheather I can use DIO on 4600 boards to do io for ADC & DS1620 chips
+13) get rid of the 'state' field in the cdata. 
+14) See if I can fix the problem with 147 by reformatting disk. (Problem is I have to have a 
+	ssh screen to run the startup script - it won't work on reboot by itself)
 
 to add new commands:
 
