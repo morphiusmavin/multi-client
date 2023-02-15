@@ -35,10 +35,10 @@ git add thread_client/Client147/cmd_tasks.c
 git add thread_client/Client150/tasks.c
 git add thread_client/Client150/cmd_tasks.c
 git add thread_client/ioports.c
-git add thread_client/make154.mak
-git add thread_client/make147.mak
-git add thread_client/make150.mak
-git add thread_client/sockmake.mak
+git add thread_client/ts4600sock.mak
+git add thread_client/ts4600.mak
+git add thread_client/test150.sh
+git add thread_client/4600sock.sh
 git add thread_client/sched.c
 git add thread_client/ioports.h
 git add thread_client/tasks.h
@@ -50,10 +50,6 @@ git add thread_client/serial_io.c
 git add thread_client/serial_io.h
 git add thread_client/sock_mgt.c
 git add thread_client/sock_sched.c
-git add thread_client/testsock.sh 
-git add thread_client/test154.sh 
-git add thread_client/test147.sh 
-git add thread_client/test150.sh
 
 git add thread_client/cs_client/config_file.c
 git add thread_client/cs_client/config_file.h
