@@ -53,9 +53,9 @@ char password[PASSWORD_SIZE];
 
 static int serial_rec;
 static void set_output(O_DATA *otp, int onoff);
-static UCHAR inportstatus[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
-static UCHAR fake_inportstatus1[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
-static UCHAR fake_inportstatus2[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
+static UCHAR inportstatus[OUTPORTC_OFFSET-OUTPORTA_OFFSET+1];
+static UCHAR fake_inportstatus1[OUTPORTC_OFFSET-OUTPORTA_OFFSET+1];
+static UCHAR fake_inportstatus2[OUTPORTC_OFFSET-OUTPORTA_OFFSET+1];
 static int mask2int(UCHAR mask);
 extern int shutdown_all;
 static int raw_data_array[RAW_DATA_ARRAY_SIZE];
@@ -196,7 +196,7 @@ void init_ips(void)
 	if(i < 0)
 	{
 //		printf("%s\r\n",errmsg);
-		
+
 	}
 	i = 0;
 }
@@ -389,20 +389,15 @@ UCHAR monitor_input_task(int test)
 
 	pthread_mutex_lock( &io_mem_lock);
 
-/*
+
 	inportstatus[0] =  ~InPortByteA();
 	inportstatus[1] =  ~InPortByteB();
 	inportstatus[2] =  ~InPortByteC();
-
+/*
 	inportstatus[3] =  ~InPortByteD();
 	inportstatus[4] =  ~InPortByteE();
 	inportstatus[5] =  ~InPortByteF();
 */
-
-	inportstatus[0] =  ~InPortByteD();
-	inportstatus[1] =  ~InPortByteE();
-	inportstatus[2] =  ~InPortByteF();
-
 	pthread_mutex_unlock( &io_mem_lock);
 
 //	printf("monitor\r\n");
@@ -414,7 +409,7 @@ UCHAR monitor_input_task(int test)
 			usleep(_500MS);
 			usleep(_500MS);
 			pthread_mutex_lock( &io_mem_lock);
-			result = InPortByte(bank);
+			//result = InPortByte(bank);
 			//printf("%d: %02x ",bank-3, result);
 			//if(bank == 5)
 				//printf("\r\n");
@@ -655,9 +650,11 @@ int change_output(int index, int onoff)
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
 	//printf("bank: %d index: %d\r\n",bank,index);
+	// for this application, there's only 1 card and the 2nd address
+	// doesn't work, so bank 0 is the 1st 8 bits and bank 2 is the 
+	// last 4 - 280 & 282 (281 doesn't work)
 	switch(bank)
 	{
-/*
 		case 0:
 			OutPortA(onoff, index);			  // 0-7
 			break;
@@ -667,7 +664,7 @@ int change_output(int index, int onoff)
 		case 2:
 			OutPortC(onoff, index);			  // 0-3
 			break;
-*/
+/*
 		case 0:
 			OutPortD(onoff, index);			  // 0-7
 			break;
@@ -677,6 +674,7 @@ int change_output(int index, int onoff)
 		case 2:
 			OutPortF(onoff, index);			  // 0-3
 			break;
+*/
 		default:
 			break;
 	}

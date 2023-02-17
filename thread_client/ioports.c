@@ -9,22 +9,6 @@
 #include <sys/time.h>
 #include "../mytypes.h"
 #include "ioports.h"
-/*
-Physical Address Region 	Emulates x86 cycle
-
-11E0_0000 thru 11E0_03FF 	8-bit I/O cycles
-21E0_0000 thru 21E0_03FE 	16-bit I/O cycles
-11A0_0000 thru 11AF_FFFF 	8-bit Memory cycles
-21A0_0000 thru 21AF_FFFE 	16-bit Memory cycles
-
-I/O cycles on the PC/104 expansion bus strobe either IOR# or IOW#,
- while memory cycles strobe the MEMR# or MEMW# signals. For example,
-a TS-SER1 peripheral board can be jumper-selected as COM3, which would
-correspond to a PC I/O base address of 0x3E8. Since this is an 8-bit
-peripheral, this COM port must be accessed at the physical base
-address of 0x11E0_03E8. */
-
-//#define			PORTBASEADD	0x11E00240 // this give an assertion at ports = mmap...
 
 /**********************************************************************************************************/
 struct timeval tv;
@@ -34,11 +18,7 @@ static double curtime(void)
 	gettimeofday (&tv, NULL);
 	return tv.tv_sec + tv.tv_usec / 1000000.0;
 }
-
-
-// param i is miliseconds to delay
 /**********************************************************************************************************/
-
 static void mydelay(unsigned long i)
 {
 	unsigned long j;
@@ -52,347 +32,81 @@ static void mydelay(unsigned long i)
 
 	}
 }
-
-
 /**********************************************************************************************************/
-
-int init_mem(void)
+void OutPortA(int onoff, int bit)
 {
-	int key;
-#ifdef USE_CARDS
-	//printf("starting init_mem...\n");
-	fd = open("/dev/mem", O_RDWR|O_SYNC);
-	
-	assert(fd != -1);
-
-	setvbuf(stdout, NULL, _IONBF, 0);
-
-	pagesize = getpagesize();
-	card_ports = (VUCHAR *)mmap(0, pagesize, PROT_READ|PROT_WRITE, MAP_SHARED, fd, PORTBASEADD);
-	assert(card_ports != MAP_FAILED);
-
-	key = lseek(fd, pagesize - 1,SEEK_SET);
-	if(key == -1)
-	{
-		close(fd);
-		perror("error calling lseek\n");
-		//exit(1);
-		return -1;
-	}
-	key = write(fd,"",1);
-	//printf("key: %d\n",key);
-	
-	if(key != 1)
-	{
-		close(fd);
-		perror("error writing to last byte of file\n");
-		//exit(1);
-		return -1;
-	}//else printf("init_mem ok\n");
-/*
-	int i, onoff;		// using this to test the memory access of 4600
-	UCHAR mask = 1;
-	onoff = 1;
-	for(i = 0;i < 8;i++)
-	{
-		OutPortD(onoff,mask);
-		mask <<= 1;
-		usleep(10000);
-	}
-	onoff = 0;
-	mask = 1;
-	for(i = 0;i < 8;i++)
-	{
-		OutPortD(onoff,mask);
-		mask <<= 1;
-		usleep(10000);
-	}
-	onoff = 1;
-	mask = 1;
-	for(i = 0;i < 8;i++)
-	{
-		OutPortE(onoff,mask);
-		mask <<= 1;
-		usleep(10000);
-	}
-	onoff = 0;
-	mask = 1;
-	for(i = 0;i < 8;i++)
-	{
-		OutPortE(onoff,mask);
-		mask <<= 1;
-		usleep(10000);
-	}
-*/
-	return 0;
-#else
-	printf("cards not used\n");
-	return 0;
-#endif
-}
-
-
-/**********************************************************************************************************/
-void OutPortA(int onoff, UCHAR bit)
-{
-	UCHAR mask;
-	UCHAR *pstate;
-// TODO: state needs to be set to the current state of the output register
-	UCHAR state = 0;
-
-	state = outportstatus[OUTPORTA_OFFSET];
-	mask = 1;
-	mask <<= bit;
-	if(onoff)
-		state |= mask;
+	//printf("OutPortA: %d %d\n",onoff,bit);
+	UCHAR val;
+	UINT val2 = 0x300;
+	nbuslock();
+	val = winpeek8(val2);
+	if(onoff == 1)
+		winpoke8(val2, val | (1 << bit));
 	else
-		state &= ~mask;
-	pstate = &state;
-	outportstatus[OUTPORTA_OFFSET] = state;
-	*(card_ports + ROC_1) = *pstate;
-	printf("%2x\n ",state);
+		winpoke8(val2, val & ~(1 << bit));
+	nbusunlock();
 }
 /**********************************************************************************************************/
-void OutPortB(int onoff, UCHAR bit)
+void OutPortB(int onoff, int bit)
 {
-	UCHAR mask;
-	UCHAR *pstate;
-	UCHAR state = 0;
-
-	state = outportstatus[OUTPORTB_OFFSET];
-	mask = 1;
-	mask <<= bit;
-	if(onoff)
-		state |= mask;
+	//printf("OutPortB: %d %d\n",onoff,bit);
+	UCHAR val;
+	UINT val2 = 0x301;
+	nbuslock();
+	val = winpeek8(val2);
+	if(onoff == 1)
+		winpoke8(val2, val | (1 << bit));
 	else
-		state &= ~mask;
-	pstate = &state;
-	outportstatus[OUTPORTB_OFFSET] = state;
-	*(card_ports + ROC_2) = *pstate;
-	printf("%2x\n ",state);
+		winpoke8(val2, val & ~(1 << bit));
+	nbusunlock();
 }
 /**********************************************************************************************************/
-void OutPortC(int onoff, UCHAR bit)
+void OutPortC(int onoff, int bit)
 {
-	UCHAR mask;
-	UCHAR *pstate;
-	UCHAR state = 0;
-
-	state = outportstatus[OUTPORTC_OFFSET];
-	mask = 1;
-	mask <<= bit;
-	if(onoff)
-		state |= mask;
+	//printf("OutPortC: %d %d\n",onoff,bit);
+	UCHAR val;
+	UINT val2 = 0x302;
+	nbuslock();
+	val = winpeek8(val2);
+	if(onoff == 1)
+		winpoke8(val2, val | (1 << bit));
 	else
-		state &= ~mask;
-	pstate = &state;
-	outportstatus[OUTPORTC_OFFSET] = state;
-	*(card_ports + ROC_3) = *pstate;
-	printf("%2x\n ",state);
-}
-/**********************************************************************************************************/
-void OutPortD(int onoff, UCHAR bit)
-{
-	UCHAR mask;
-	UCHAR *pstate;
-	UCHAR state = 0;
-//printf("out D\n");
-	state = outportstatus[OUTPORTD_OFFSET];
-	mask = 1;
-	mask <<= bit;
-	if(onoff)
-		state |= mask;
-	else
-		state &= ~mask;
-	pstate = &state;
-	outportstatus[OUTPORTD_OFFSET] = state;
-	*(card_ports + ROC_4) = *pstate;
-	//printf("state: %2x\n ",state);
-}
-/**********************************************************************************************************/
-void OutPortE(int onoff, UCHAR bit)
-{
-	UCHAR mask;
-	UCHAR *pstate;
-	UCHAR state = 0;
-//printf("out E\n");
-	state = outportstatus[OUTPORTE_OFFSET];
-	mask = 1;
-	mask <<= bit;
-	if(onoff)
-		state |= mask;
-	else
-		state &= ~mask;
-	pstate = &state;
-	outportstatus[OUTPORTE_OFFSET] = state;
-	*(card_ports + ROC_5) = *pstate;
-	//printf("state: %2x\n ",state);
-}
-/**********************************************************************************************************/
-void OutPortF(int onoff, UCHAR bit)
-{
-	UCHAR mask;
-	UCHAR *pstate;
-	UCHAR state = 0;
-//printf("out F\n");
-	state = outportstatus[OUTPORTF_OFFSET];
-	mask = 1;
-	mask <<= bit;
-	if(onoff)
-		state |= mask;
-	else
-		state &= ~mask;
-	pstate = &state;
-	outportstatus[OUTPORTF_OFFSET] = state;
-	*(card_ports + ROC_6) = *pstate;
-	//printf("state: %2x\n ",state);
-}
-/**********************************************************************************************************/
-#if 0
-void TurnOffAllOutputs(void)
-{
-	OutPortByteA(0);
-	OutPortByteB(0);
-	OutPortByteC(0);
-	OutPortByteD(0);
-	OutPortByteE(0);
-	OutPortByteF(0);
-}
-/**********************************************************************************************************/
-void ToggleOutPortA(int port)
-{
-	UCHAR mask;
-	UCHAR *pstate;
-	UCHAR state = 0;
-	UCHAR temp;
-
-	mask = 1;
-	port = (port<7?port:7);
-	mask <<= port;
-	temp = outportstatus[OUTPORTA_OFFSET] & mask;
-	temp = ~temp;
-	temp &= (mask | outportstatus[OUTPORTA_OFFSET]);
-
-	outportstatus[OUTPORTA_OFFSET] = temp;
-	state = temp;
-	pstate = &state;
-//	printf("outportstatus: %x\n",outportstatus[OUTPORTA_OFFSET]);
-	pstate = &state;
-	*(card_ports + ROC_1) = *pstate;
-}
-
-
-/**********************************************************************************************************/
-void OutPortByteA(UCHAR byte)
-{
-//	pms->outportstatus[OUTPORTA_OFFSET] = byte;
-	*(card_ports + ROC_1) = byte;
-}
-
-
-/**********************************************************************************************************/
-void OutPortByteB(UCHAR byte)
-{
-//	pms->outportstatus[OUTPORTB_OFFSET] = byte;
-	*(card_ports + ROC_2) = byte;
-}
-
-
-/**********************************************************************************************************/
-void OutPortByteC(UCHAR byte)
-{
-//	pms->outportstatus[OUTPORTC_OFFSET] = byte;
-	*(card_ports + ROC_3) = byte;
-}
-
-
-/**********************************************************************************************************/
-void OutPortByteD(UCHAR byte)
-{
-//	pms->outportstatus[OUTPORTA_OFFSET] = byte;
-	*(card_ports + ROC_4) = byte;
-}
-
-
-/**********************************************************************************************************/
-void OutPortByteE(UCHAR byte)
-{
-//	pms->outportstatus[OUTPORTB_OFFSET] = byte;
-	*(card_ports + ROC_5) = byte;
-}
-
-
-/**********************************************************************************************************/
-void OutPortByteF(UCHAR byte)
-{
-//	pms->outportstatus[OUTPORTC_OFFSET] = byte;
-	*(card_ports + ROC_6) = byte;
-}
-#endif
-/***********************************************************************************************************/
-UCHAR InPortByte(int bank)
-{
-	UCHAR state;
-	if(bank > 2)
-		state = *(card_ports + DIR_4 + bank-3);
-	else
-		state = *(card_ports + DIR_1 + bank);
-	return state;
+		winpoke8(val2, val & ~(1 << bit));
+	nbusunlock();
 }
 /***********************************************************************************************************/
 UCHAR InPortByteA(void)
 {
-	UCHAR state;
-	state = *(card_ports + DIR_1);
-	return state;
+	UCHAR val;
+	UINT val2 = 0x304;
+	nbuslock();
+	val = winpeek8(val2);
+	nbusunlock();
+	return val;
 }
 /***********************************************************************************************************/
 UCHAR InPortByteB(void)
 {
-	UCHAR state;
-	state = *(card_ports + DIR_2);
-	return state;
+	UCHAR val;
+	UINT val2 = 0x305;
+	nbuslock();
+	val = winpeek8(val2);
+	nbusunlock();
+	return val;
 }
 /***********************************************************************************************************/
 UCHAR InPortByteC(void)
 {
-	UCHAR state;
-	state = *(card_ports + DIR_3);
-	return state;
+	UCHAR val;
+	UINT val2 = 0x306;
+	nbuslock();
+	val = winpeek8(val2);
+	nbusunlock();
+	return val;
 }
 /***********************************************************************************************************/
-UCHAR InPortByteD(void)
+/*	used for monitor_input_task
+UCHAR InPortByte(int bank)
 {
-	UCHAR state;
-	state = *(card_ports + DIR_4);
-	return state;
-}
-/***********************************************************************************************************/
-UCHAR InPortByteE(void)
-{
-	UCHAR state;
-/*
-#ifdef MAKE_TARGET
-	printf("ouch port e access\n");
-	return state;
-#endif
+	UCHAR state 
 */
-	state = *(card_ports + DIR_5);
-	return state;
-}
-/***********************************************************************************************************/
-UCHAR InPortByteF(void)
-{
-	UCHAR state;
-	state = *(card_ports + DIR_6);
-	return state;
-}
-/**********************************************************************************************************/
-void close_mem(void)
-{
-#ifdef USE_CARDS
-	if(munmap((void *)card_ports,pagesize) == -1)
-		perror("error un-mapping file\n");
-	close(fd);
-#endif
-}

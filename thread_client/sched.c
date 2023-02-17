@@ -35,8 +35,6 @@
 #include "tasks.h"
 #include "queue/ollist_threads_rw.h"
 
-extern int init_mem(void);
-extern void close_mem(void);
 pthread_cond_t       threads_ready;
 int threads_ready_count=0;
 pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
@@ -148,14 +146,6 @@ int main(int argc, char **argv)
 
 	id_arg = (int *)malloc(NUM_SCHED_TASKS*sizeof(int));
 
-	i = init_mem();
-	if(i != 0)
-	{
-		printf("no card found\r\n");
-		exit(1);
-//	}else printf("card ok\r\n");
-	}
-	
 	basic_controls_key = BASIC_CONTROLS_QKEY;
 	sock_key = SEND_CMD_HOST_QKEY;
 	sched_key = RECV_CMD_HOST_QKEY;
@@ -280,7 +270,6 @@ int main(int argc, char **argv)
 		}
 //		printf("closing task :%d %s\r\n",i,_threads[i].label);
 	}
-	close_mem();
 
 //	RS232_CloseComport(1);
 //	strcpy(str2,"close");

@@ -155,12 +155,51 @@ UCHAR get_host_cmd_task2(int test)
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
 	// inportstatus array, representing 3 byts of each 2 (3x8x2 = 48) to
 	// one of the 40 actual bits as index
+	// 2/15/23 - working with 4600 w/ just one card - 
 
 	// the check_inputs & change_outputs functions
 	// use the array to adjust from index to bank
 	// since there are only 4 bits in banks 3 & 5
 	//printf("starting...\n");
 
+	real_banks[0].i = 0;
+	real_banks[0].bank = 0;
+	real_banks[0].index = 0;
+	real_banks[1].i = 1;
+	real_banks[1].bank = 0;
+	real_banks[1].index = 1;
+	real_banks[2].i = 2;
+	real_banks[2].bank = 0;
+	real_banks[2].index = 2;
+	real_banks[3].i = 3;
+	real_banks[3].bank = 0;
+	real_banks[3].index = 3;
+	real_banks[4].i = 4;
+	real_banks[4].bank = 0;
+	real_banks[4].index = 4;
+	real_banks[5].i = 5;
+	real_banks[5].bank = 0;
+	real_banks[5].index = 5;
+	real_banks[6].i = 6;
+	real_banks[6].bank = 0;
+	real_banks[6].index = 6;
+	real_banks[7].i = 7;
+	real_banks[7].bank = 0;
+	real_banks[7].index = 7;
+	real_banks[8].i = 8;
+	real_banks[8].bank = 2;
+	real_banks[8].index = 0;
+	real_banks[9].i = 9;
+	real_banks[9].bank = 2;
+	real_banks[9].index = 1;
+	real_banks[10].i = 10;
+	real_banks[10].bank = 2;
+	real_banks[10].index = 2;
+	real_banks[11].i = 11;
+	real_banks[11].bank = 2;
+	real_banks[11].index = 3;
+
+/*
 	for(i = 0;i < 20;i++)
 	{
 		real_banks[i].i = i;
@@ -174,7 +213,7 @@ UCHAR get_host_cmd_task2(int test)
 		real_banks[i].bank = (i+4)/8;
 		real_banks[i].index = i - (real_banks[i].bank*8)+4;
 	}
-/*
+
 	i = NUM_PORT_BITS;
 	isize = sizeof(I_DATA);
 	isize *= i;
@@ -277,12 +316,14 @@ UCHAR get_host_cmd_task2(int test)
 					case UNUSED150_2:
 					case UNUSED150_3:
 					case UNUSED150_4:
+/*
 					case UNUSED150_5:
 					case UNUSED150_6:
 					case UNUSED150_7:
 					case UNUSED150_8:
 					case UNUSED150_9:
 					case UNUSED150_10:
+*/
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
 					case SHELL_AND_RENAME:
