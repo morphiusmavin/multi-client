@@ -37,7 +37,7 @@ void OutPortA(int onoff, int bit)
 {
 	//printf("OutPortA: %d %d\n",onoff,bit);
 	UCHAR val;
-	UINT val2 = 0x300;
+	UINT val2 = 0x10300;
 	nbuslock();
 	val = winpeek8(val2);
 	if(onoff == 1)
@@ -51,7 +51,7 @@ void OutPortB(int onoff, int bit)
 {
 	//printf("OutPortB: %d %d\n",onoff,bit);
 	UCHAR val;
-	UINT val2 = 0x301;
+	UINT val2 = 0x10301;
 	nbuslock();
 	val = winpeek8(val2);
 	if(onoff == 1)
@@ -65,7 +65,7 @@ void OutPortC(int onoff, int bit)
 {
 	//printf("OutPortC: %d %d\n",onoff,bit);
 	UCHAR val;
-	UINT val2 = 0x302;
+	UINT val2 = 0x10302;
 	nbuslock();
 	val = winpeek8(val2);
 	if(onoff == 1)
@@ -78,7 +78,7 @@ void OutPortC(int onoff, int bit)
 UCHAR InPortByteA(void)
 {
 	UCHAR val;
-	UINT val2 = 0x304;
+	UINT val2 = 0x10304;
 	nbuslock();
 	val = winpeek8(val2);
 	nbusunlock();
@@ -88,7 +88,7 @@ UCHAR InPortByteA(void)
 UCHAR InPortByteB(void)
 {
 	UCHAR val;
-	UINT val2 = 0x305;
+	UINT val2 = 0x10305;
 	nbuslock();
 	val = winpeek8(val2);
 	nbusunlock();
@@ -98,7 +98,7 @@ UCHAR InPortByteB(void)
 UCHAR InPortByteC(void)
 {
 	UCHAR val;
-	UINT val2 = 0x306;
+	UINT val2 = 0x10306;
 	nbuslock();
 	val = winpeek8(val2);
 	nbusunlock();
