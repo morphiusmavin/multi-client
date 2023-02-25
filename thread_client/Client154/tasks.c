@@ -773,7 +773,7 @@ void sort_countdown(void)
 	for(i = 0;i < 20;i++)
 	{
 		j = cllist_find_data(i, ctpp, &cll);
-		if(ctp->port > -1)
+		if(ctp->port > -1 && ctp->state > 0)
 		{
 			count_down[k].port = ctp->port;
 			count_down[k].hour = ctp->on_hour;
