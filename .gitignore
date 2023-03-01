@@ -28,5 +28,18 @@ ODBMgmt/bin/
 ODBMgmt/obj/
 new 1.txt
 sort_example.txt
-
+adc_7250.c
+ep93xx_adc.h
+lcd_func.c
+lcd_func.h
+nbus/gpiolib.c
+nbus/test_ports.c
+nbus/dio.c
+nbus/dio2.c
+nbus/example.c
+nbus/gpiolib.c
+nbus/irq.c
+nbus/mapdump_mak
+nbus/test_serial.c
+test_ports.c
 thread_client/cdata.dat

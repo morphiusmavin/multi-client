@@ -104,7 +104,13 @@ git add ODBMgmt/Form1.Designer.cs
 git add ODBMgmt/Form1.resx
 git add ODBMgmt/Properties/*
 
-git add nbus/*
+git add nbus/nbus.c
+git add nbus/nbus.h
+git add nbus/dio2.c
+git add nbus/example.c
+git add nbus/MUXBUS.txt
+git add nbus/peekpoke.h
+git add nbus/dio_ds1620.h
 
 git status
 
