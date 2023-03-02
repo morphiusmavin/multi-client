@@ -125,7 +125,7 @@ typedef struct
 	int seconds_away;
 }COUNTDOWN;
 
-#define COUNTDOWN_SIZE 40
+#define COUNTDOWN_SIZE NUM_DATA_RECS
 
 // global variables
 int trunning_days, trunning_hours, trunning_minutes, trunning_seconds;

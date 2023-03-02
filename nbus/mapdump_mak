@@ -1,4 +1,0 @@
-MapDump: $(DIR)/MapDump
-       @true
-
-$(DIR)/MapDump: $(addprefix $(DIR)/,MapDump.o Arch.o NoThread.o $(ARCHLIBS) libtsctl.a) -lbz2 

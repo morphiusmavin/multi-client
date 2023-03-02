@@ -9,7 +9,7 @@ typedef unsigned long ULONG;
 #define TIME_DELAY   990000000L
 
 // this is the same as NUM_PORT_BITS (should be...)
-#define NUM_DATA_RECS 40
+#define NUM_DATA_RECS 20
 
 #define NUM_DAT_NAMES 45
 #define DAT_NAME_STR_LEN 25
@@ -21,8 +21,8 @@ typedef unsigned long ULONG;
 #define RAW_DATA_ARRAY_SIZE 15
 #define MAX_CLIENTS	9
 #define NO_CMDS 87
-#define NO_CLLIST_RECS 20
-
+#define NO_CLLIST_RECS NUM_DATA_RECS
+UCHAR inportstatus[NUM_DATA_RECS];
 // format of message queue (msgsnd & msgrcv)
 struct msgqbuf 
 {

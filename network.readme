@@ -23,6 +23,8 @@ todo:
 13) get rid of the 'state' field in the cdata. 
 14) See if I can fix the problem with 147 by reformatting disk. (Problem is I have to have a 
 	ssh screen to run the startup script - it won't work on reboot by itself)
+15) Move coop heaters, lights & outdoor lights to 147, replace 147 w/4600 and put 150 in NW corner 
+16) change COUNTDOWN_SIZE to NUMDB_RECS and set to 20 and fix real_banks
 	
 note to self:
 	there is now a branch called '4600' on both the windows machine multi-client directory and 
@@ -275,3 +277,6 @@ case SEND_NEXT_CLIENT:
 	if(j > 10)
 		j = 0;
 	break;
+
+
+git ls-tree --full-tree -r --name-only HEAD

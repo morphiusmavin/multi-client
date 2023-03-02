@@ -84,7 +84,7 @@ static void shiftOutByte( UCHAR val )
 	for( i = 0; i < 8; i++ )
 	{
 		set_pin(CLK,LOW);
-		
+
 		// Set bit
 		if( val & (1 << i))
 		{
@@ -101,12 +101,12 @@ static void shiftOutByte( UCHAR val )
 }
 /*********************************************************************************/
 // call this about 30ms before a call to readTempFrom1620
-void writeByteTo1620( UCHAR cmd )		
+void writeByteTo1620( UCHAR cmd )
 {
 	set_pin(current_ds,HIGH);
 
 	shiftOutByte( cmd );
-	
+
 	set_pin(current_ds,LOW);
 }
 /*********************************************************************************/
@@ -114,10 +114,10 @@ void writeByteTo1620( UCHAR cmd )
 static void writeCommandTo1620( UCHAR cmd, UCHAR data )
 {
 	set_pin(current_ds,HIGH);
-	
+
 	shiftOutByte( cmd );	// send command
 	shiftOutByte( data );	// send 8 bit data
-	
+
 	set_pin(current_ds,LOW);
 }
 /*********************************************************************************/
@@ -126,13 +126,13 @@ static void writeTempTo1620( UCHAR reg, int temp )
 {
 	UCHAR lsb = temp;					// truncate to high UCHAR
 	UCHAR msb = temp >> 8;				// shift high -> low UCHAR
-	
+
 	set_pin(current_ds,HIGH);
-	
+
 	shiftOutByte( reg );	// send register select
 	shiftOutByte( lsb );	// send LSB 8 bit data
 	shiftOutByte( msb );	// send MSB 8 bit data (only bit 0 is used)
-	
+
 	set_pin(current_ds,LOW);
 }
 /*********************************************************************************/
@@ -140,14 +140,14 @@ int readTempFrom1620()
 {
 	int i;
 	int state;
-	
+
 	set_pin(current_ds,HIGH);
-	
+
 	shiftOutByte( DS1620_CMD_READTEMP );						// send register select
-	
+
 	set_dir(DQ,IN);
 	int raw = 0;
-	
+
 	for( i=0; i<9; i++ )										// read 9 bits
 	{
 		set_pin(CLK,LOW);
@@ -158,9 +158,9 @@ int readTempFrom1620()
 			raw |= (1 << i);									// add value
 		set_pin(CLK,HIGH);
 	}
-	
+
 	set_pin(current_ds,LOW);
-	
+
 	set_dir(DQ,OUT);
 //	return (double)(raw/(double)2);								// divide by 2 and return
 	return raw;
@@ -170,11 +170,22 @@ int main(void)
 {
 	int i;
 	int val;
-	for(i = 0;i < 20;i++)
+
+	mydelay(1000);
+
+	initDS1620();
+
+	mydelay(1000);
+	printf("starting...\n");
+	for(i = 0;i < 100;i++)
 	{
+		writeByteTo1620(DS1620_CMD_STARTCONV);
+		mydelay(50);
 		val = readTempFrom1620();
-		printf("%d\n",val);
-		mydelay(1000);
+		printf("%d: %d\n",i,val);
+		mydelay(50);
+		writeByteTo1620(DS1620_CMD_STOPCONV);
+		mydelay(100);
 	}
 
 	return 0;

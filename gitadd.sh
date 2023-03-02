@@ -111,6 +111,7 @@ git add nbus/example.c
 git add nbus/MUXBUS.txt
 git add nbus/peekpoke.h
 git add nbus/dio_ds1620.h
+git add nbus/dio_ds1620.c
 
 git status
 
