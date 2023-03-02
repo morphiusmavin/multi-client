@@ -22,15 +22,15 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "../../cmd_types.h"
-#include "../../mytypes.h"
-#include "../tasks.h"
-#include "../ioports.h"
-#include "../serial_io.h"
-#include "../queue/ollist_threads_rw.h"
-#include "../queue/cllist_threads_rw.h"
-#include "../tasks.h"
-#include "../cs_client/config_file.h"
+#include "../cmd_types.h"
+#include "../mytypes.h"
+#include "tasks.h"
+#include "ioports.h"
+#include "serial_io.h"
+#include "queue/ollist_threads_rw.h"
+#include "queue/cllist_threads_rw.h"
+#include "tasks.h"
+#include "cs_client/config_file.h"
 
 static struct  sockaddr_in sad;  /* structure to hold server's address  */
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
@@ -48,6 +48,7 @@ extern char password[PASSWORD_SIZE];
 int shutdown_all;
 struct msgqbuf msg;
 int msgtype = 1;
+
 extern int curr_countdown_size;
 extern void sort_countdown(void);
 extern void display_sort(void);
@@ -106,8 +107,8 @@ UCHAR get_host_cmd_task2(int test)
 	O_DATA tempo1;
 //	RI_DATA tempr1;
 //	I_DATA *itp;
-//	O_DATA *otp;
-//	O_DATA **otpp = &otp;
+	O_DATA *otp;
+	O_DATA **otpp = &otp;
 	C_DATA *ctp;
 	C_DATA **ctpp = &ctp;
 	int rc = 0; 
@@ -135,29 +136,113 @@ UCHAR get_host_cmd_task2(int test)
 	off_t fsize;
 	long cur_fsize;
 	struct timeval mtv;
-	struct tm t,tm;
-	struct tm *pt = &t;
+	struct tm t;
+	struct tm tm;
 	time_t T;
+	struct tm *pt = &t;
 	int msg_len;
 	serial_recv_on = 1;
 //	time_set = 0;
 	shutdown_all = 0;
 	char version[15] = "sched v1.03\0";
 	UINT utemp;
+//	UCHAR time_buffer[20];
 	next_client = 0;
 	char label[30];
 	int index;
-	
+
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
 	// inportstatus array, representing 3 byts of each 2 (3x8x2 = 48) to
 	// one of the 40 actual bits as index
+	// 2/15/23 - working with 4600 w/ just one card - 
 
 	// the check_inputs & change_outputs functions
 	// use the array to adjust from index to bank
 	// since there are only 4 bits in banks 3 & 5
 	//printf("starting...\n");
 
+	real_banks[0].i = 0;
+	real_banks[0].bank = 0;
+	real_banks[0].index = 0;
+
+	real_banks[1].i = 1;
+	real_banks[1].bank = 0;
+	real_banks[1].index = 1;
+
+	real_banks[2].i = 2;
+	real_banks[2].bank = 0;
+	real_banks[2].index = 2;
+
+	real_banks[3].i = 3;
+	real_banks[3].bank = 0;
+	real_banks[3].index = 3;
+
+	real_banks[4].i = 4;
+	real_banks[4].bank = 0;
+	real_banks[4].index = 4;
+
+	real_banks[5].i = 5;
+	real_banks[5].bank = 0;
+	real_banks[5].index = 5;
+
+	real_banks[6].i = 6;
+	real_banks[6].bank = 0;
+	real_banks[6].index = 6;
+
+	real_banks[7].i = 7;
+	real_banks[7].bank = 0;
+	real_banks[7].index = 7;
+
+	real_banks[8].i = 8;
+	real_banks[8].bank = 1;
+	real_banks[8].index = 0;
+
+	real_banks[9].i = 9;
+	real_banks[9].bank = 1;
+	real_banks[9].index = 1;
+
+	real_banks[10].i = 10;
+	real_banks[10].bank = 1;
+	real_banks[10].index = 2;
+
+	real_banks[11].i = 11;
+	real_banks[11].bank = 1;
+	real_banks[11].index = 3;
+
+	real_banks[12].i = 12;
+	real_banks[12].bank = 1;
+	real_banks[12].index = 4;
+
+	real_banks[13].i = 13;
+	real_banks[13].bank = 1;
+	real_banks[13].index = 5;
+
+	real_banks[14].i = 14;
+	real_banks[14].bank = 1;
+	real_banks[14].index = 6;
+
+	real_banks[15].i = 15;
+	real_banks[15].bank = 1;
+	real_banks[15].index = 7;
+
+	real_banks[16].i = 16;
+	real_banks[16].bank = 2;
+	real_banks[16].index = 0;
+
+	real_banks[17].i = 17;
+	real_banks[17].bank = 2;
+	real_banks[17].index = 1;
+
+	real_banks[18].i = 18;
+	real_banks[18].bank = 2;
+	real_banks[18].index = 2;
+
+	real_banks[19].i = 19;
+	real_banks[19].bank = 2;
+	real_banks[19].index = 3;
+
+/*
 	for(i = 0;i < 20;i++)
 	{
 		real_banks[i].i = i;
@@ -171,7 +256,7 @@ UCHAR get_host_cmd_task2(int test)
 		real_banks[i].bank = (i+4)/8;
 		real_banks[i].index = i - (real_banks[i].bank*8)+4;
 	}
-/*
+
 	i = NUM_PORT_BITS;
 	isize = sizeof(I_DATA);
 	isize *= i;
@@ -183,8 +268,8 @@ UCHAR get_host_cmd_task2(int test)
 	//printf("osize: %d\r\n",osize);
 	i = NO_CLLIST_RECS;
 	//printf("no. port bits: %d\r\n",i);
-//	csize = sizeof(C_DATA);
-//	csize *= i;
+	csize = sizeof(C_DATA);
+	csize *= i;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 /*
@@ -204,8 +289,8 @@ UCHAR get_host_cmd_task2(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}
+	
 	cllist_init(&cll);
-
 	if(access(cFileName,F_OK) != -1)
 	{
 		clLoadConfig(cFileName,&cll,csize,errmsg);
@@ -213,8 +298,7 @@ UCHAR get_host_cmd_task2(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
-		
-		//cllist_show(&cll);
+		cllist_show(&cll);
 	}
 
 	init_ips();
@@ -265,6 +349,27 @@ UCHAR get_host_cmd_task2(int test)
 
 				switch(cmd)
 				{
+#ifdef CL_150
+#warning "CL_150 defined"
+					case COOP1_LIGHT:
+					case COOP1_HEATER:
+					case COOP2_LIGHT:
+					case COOP2_HEATER:
+					case OUTDOOR_LIGHT1:
+					case OUTDOOR_LIGHT2:
+					case UNUSED150_1:
+					case UNUSED150_2:
+					case UNUSED150_3:
+					case UNUSED150_4:
+					case UNUSED150_5:
+					case UNUSED150_6:
+					case UNUSED150_7:
+					case UNUSED150_8:
+					case UNUSED150_9:
+					case UNUSED150_10:
+#endif
+#ifdef CL_147
+#warning "CL_147 defined"
 					case BENCH_24V_1:
 					case BENCH_24V_2:
 					case BENCH_12V_1:
@@ -276,6 +381,18 @@ UCHAR get_host_cmd_task2(int test)
 					case BENCH_LIGHT1:
 					case BENCH_LIGHT2:
 					case BATTERY_HEATER:
+#endif 
+#ifdef CL_154
+#warning "CL_154 defined"
+					case CABIN1:
+					case CABIN2:
+					case CABIN3:
+					case CABIN4:
+					case CABIN5:
+					case CABIN6:
+					case CABIN7:
+					case CABIN8:
+#endif 
 					case SHUTDOWN_IOBOX:
 					case REBOOT_IOBOX:
 					case SHELL_AND_RENAME:
@@ -299,6 +416,19 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case RELOAD_CLLIST:
+						cllist_init(&cll);
+						if(access(cFileName,F_OK) != -1)
+						{
+							clLoadConfig(cFileName,&cll,csize,errmsg);
+							if(rc > 0)
+							{
+								printf("%s\r\n",errmsg);
+							}
+							cllist_show(&cll);
+						}
+						break;
+
 					case CLEAR_CLLIST:
 						for(i = 0;i < 20;i++)
 						{
@@ -376,6 +506,7 @@ UCHAR get_host_cmd_task2(int test)
 					break;
 
 					case SAVE_CLLIST:
+						printf("%d %s\n",csize,cFileName);
 						clWriteConfig(cFileName,&cll,csize,errmsg);
 						break;
 					
@@ -412,6 +543,10 @@ UCHAR get_host_cmd_task2(int test)
 						}
 						break;
 
+					case AREYOUTHERE:
+						printf("yes im here\n");
+						break;
+
 /*	testing how the winCl sends ints & longs 
 					case DB_LOOKUP:
 						printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
@@ -427,6 +562,8 @@ UCHAR get_host_cmd_task2(int test)
 						trunning_minutes = tempx[2];
 						trunning_seconds = tempx[3];
 */						
+						break;
+
 					case SET_NEXT_CLIENT:
 						next_client = tempx[0];
 						if(next_client == 8)
@@ -604,6 +741,7 @@ UCHAR get_host_cmd_task2(int test)
 						i = atoi(temp_time);
 						pt->tm_sec = i;
 //						printf("sec: %d\r\n",i);
+//						printf("%c %x\n",*pch,*pch);
 						if(*pch == 'P')
 						{
 							printf("PM\n");

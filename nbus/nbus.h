@@ -13,14 +13,10 @@ unsigned short nbus_peek16(unsigned char);
 
 void winpoke16(unsigned int, unsigned short);
 unsigned short winpeek16(unsigned int);
-void winpoke16a(unsigned int, unsigned short);
-unsigned short winpeek16a(unsigned int);
 void winpoke32(unsigned int, unsigned int);
 unsigned int winpeek32(unsigned int);
 void winpoke8(unsigned int, unsigned char);
 unsigned char winpeek8(unsigned int);
-void winpoke8a(unsigned int, unsigned char);
-unsigned char winpeek8a(unsigned int);
 
 //void nbus_pokestream16(unsigned char, unsigned char, unsigned short, unsigned char *, int);
 //void nbus_peekstream16(unsigned char, unsigned char, unsigned short, unsigned char *, int);

@@ -1,5 +1,5 @@
-make -f ts4600_150.mak clean
-make -f ts4600_150.mak &> out.txt
+make -f ts4600_154.mak clean
+make -f ts4600_154.mak &> out.txt
 
 if grep -q error out.txt
  then
@@ -13,5 +13,5 @@ if grep -q undefined out.txt
   exit 1
 fi
 rm *.o
-mv sched150 ../../sched
+mv sched154 ../../sched
 ls -ltr ../../sched

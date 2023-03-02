@@ -22,13 +22,13 @@
 #include <dirent.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "../../cmd_types.h"
-#include "../../mytypes.h"
-#include "../ioports.h"
-#include "../serial_io.h"
-#include "../queue/ollist_threads_rw.h"
-#include "../queue/cllist_threads_rw.h"
-#include "../tasks.h"
+#include "../cmd_types.h"
+#include "../mytypes.h"
+#include "ioports.h"
+#include "serial_io.h"
+#include "queue/ollist_threads_rw.h"
+#include "queue/cllist_threads_rw.h"
+#include "tasks.h"
 //#include "cs_client/config_file.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
@@ -53,9 +53,6 @@ char password[PASSWORD_SIZE];
 
 static int serial_rec;
 static void set_output(O_DATA *otp, int onoff);
-static UCHAR inportstatus[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
-static UCHAR fake_inportstatus1[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
-static UCHAR fake_inportstatus2[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
 static int mask2int(UCHAR mask);
 extern int shutdown_all;
 static int raw_data_array[RAW_DATA_ARRAY_SIZE];
@@ -99,6 +96,27 @@ enum input_types
 
 enum output_types
 {
+#ifdef CL_150
+#warning "CL_150 defined"
+	COOP1_LIGHTa,
+	COOP1_HEATERa,
+	COOP2_LIGHTa,
+	COOP2_HEATERa,
+	OUTDOOR_LIGHT1a,
+	OUTDOOR_LIGHT2a,
+	UNUSED150_1a,
+	UNUSED150_2a,
+	UNUSED150_3a,
+	UNUSED150_4a,
+	UNUSED150_5a,
+	UNUSED150_6a,
+	UNUSED150_7a,
+	UNUSED150_8a,
+	UNUSED150_9a,
+	UNUSED150_10a
+#endif 
+#ifdef CL_147	
+#warning "CL_147 defined"
 	BENCH_24V_1a,
 	BENCH_24V_2a,
 	BENCH_12V_1a,
@@ -118,8 +136,34 @@ enum output_types
 	TEST_OUTPUT5,		// but that's it
 	TEST_OUTPUT6,
 	TEST_OUTPUT7
+#endif 
+#ifdef CL_154
+#warning "CL_154 defined"
+	TEST_OUTPUT1,
+	TEST_OUTPUT2,
+	TEST_OUTPUT3,
+	TEST_OUTPUT4,
+	TEST_OUTPUT5,
+	TEST_OUTPUT6,
+	TEST_OUTPUT7,
+	TEST_OUTPUT8,
+	TEST_OUTPUT9,
+	TEST_OUTPUT10,
+	CABIN1a,
+	CABIN2a,
+	CABIN3a,
+	CABIN4a,
+	CABIN5a,
+	CABIN6a,
+	CABIN7a,
+	CABIN8a,
+	TEST_OUTPUT18,
+	TEST_OUTPUT19
+#endif 
 
 }OUTPUT_TYPES;
+
+int switch_status[10];
 
 /****************************************************************************************************/
 static double curtime(void)
@@ -193,7 +237,7 @@ void init_ips(void)
 	if(i < 0)
 	{
 //		printf("%s\r\n",errmsg);
-		
+
 	}
 	i = 0;
 }
@@ -386,20 +430,15 @@ UCHAR monitor_input_task(int test)
 
 	pthread_mutex_lock( &io_mem_lock);
 
-/*
+
 	inportstatus[0] =  ~InPortByteA();
 	inportstatus[1] =  ~InPortByteB();
 	inportstatus[2] =  ~InPortByteC();
-
+/*
 	inportstatus[3] =  ~InPortByteD();
 	inportstatus[4] =  ~InPortByteE();
 	inportstatus[5] =  ~InPortByteF();
 */
-
-	inportstatus[0] =  ~InPortByteD();
-	inportstatus[1] =  ~InPortByteE();
-	inportstatus[2] =  ~InPortByteF();
-
 	pthread_mutex_unlock( &io_mem_lock);
 
 //	printf("monitor\r\n");
@@ -411,7 +450,7 @@ UCHAR monitor_input_task(int test)
 			usleep(_500MS);
 			usleep(_500MS);
 			pthread_mutex_lock( &io_mem_lock);
-			result = InPortByte(bank);
+			//result = InPortByte(bank);
 			//printf("%d: %02x ",bank-3, result);
 			//if(bank == 5)
 				//printf("\r\n");
@@ -513,7 +552,7 @@ int change_input(int index, int onoff)
 	index = real_banks[index].index;
 
 	mask <<= index;
-
+/*
 	if(onoff)
 	{
 		fake_inportstatus2[bank] |= mask;
@@ -522,6 +561,7 @@ int change_input(int index, int onoff)
 	{
 		fake_inportstatus2[bank] &= ~mask;
 	}
+*/
 }
 /*********************************************************************/
 // do the same thing as monitor_input_tasks but with the fake arrays
@@ -549,86 +589,11 @@ UCHAR monitor_fake_input_task(int test)
 			return 0;
 	}
 #endif
-
-	while(TRUE)		// do this to avoid "bad mask" error
+	while(TRUE)
 	{
 		uSleep(1,0);
 		if(shutdown_all)
 			return 0;
-	}
-
-	for(i = 0;i < 6;i++)
-	{
-		fake_inportstatus1[i] = 0;
-		fake_inportstatus2[i] = 0;
-	}
-
-	while(TRUE)
-	{
-		for(bank = 0;bank < NUM_PORTS;bank++)
-		{
-			result = fake_inportstatus2[bank];
-
-			if(result != fake_inportstatus1[bank])
-			{
-				mask = result ^ fake_inportstatus1[bank];
-//				printf("enter 2: %02x\r\n",fake_inportstatus1[bank]);
-
-//				printf("mask: %02x\r\n",mask);
-				if(mask > 0x80)
-				{
-					printf("bad mask 1 %02x\r\n",mask);
-					continue;
-				}
-				index = mask2int(mask);
-
-				if((mask & result) == mask)
-				{
-					onoff = ON;
-	 				fake_inportstatus2[bank] |= mask;
-				}
-				else
-				{
-					onoff = OFF;
-	 				fake_inportstatus2[bank] &= ~mask;
-				}
-
-				for(i = 0;i < 40;i++)
-				{
-					if(real_banks[i].bank == bank && real_banks[i].index == index)
-					{
-						index = real_banks[i].i;
-					}
-				}
-
-				for(i = 0;i < max_ips;i++)
-				{
-//					printf("%d %d %d\r\n",ip[i].port,ip[i].input,index);
-					if(ip[i].input == index)
-					{
-						if(ip[i].function == 0)
-						{
-							ollist_find_data(ip[i].port,&otp,&oll);
-							set_output(otp, onoff);
-						}else 
-						{
-							add_msg_queue(ip[i].function,0);
-						}
-					}
-				}
- 				fake_inportstatus1[bank] = fake_inportstatus2[bank];
-
-//				printf("leave 2: %02x %02x\r\n\r\n",fake_inportstatus1[bank],fake_inportstatus2[bank]);
-			}
-		}
-		uSleep(0,TIME_DELAY/200);
-		uSleep(0,TIME_DELAY/2);
-		if(shutdown_all)
-		{
-				//printf("done mon fake input tasks\r\n");
-//				myprintf1("done mon input");
-			return 0;
-		}
 	}
 	return 1;
 }
@@ -648,15 +613,17 @@ int change_output(int index, int onoff)
 	return 0;
 #endif
 
-	//printf("change output: %d %d\r\n",index,onoff);
+	//printf("change output: %d\n",index);
 	pthread_mutex_lock( &io_mem_lock);
 
 	bank = real_banks[index].bank;
 	index = real_banks[index].index;
-	//printf("bank: %d\r\n",bank);
+	//printf("bank: %d index: %d\r\n",bank,index);
+	// for this application, there's only 1 card and the 2nd address
+	// doesn't work, so bank 0 is the 1st 8 bits and bank 2 is the 
+	// last 4 - 280 & 282 (281 doesn't work)
 	switch(bank)
 	{
-/*
 		case 0:
 			OutPortA(onoff, index);			  // 0-7
 			break;
@@ -666,7 +633,7 @@ int change_output(int index, int onoff)
 		case 2:
 			OutPortC(onoff, index);			  // 0-3
 			break;
-*/
+/*
 		case 0:
 			OutPortD(onoff, index);			  // 0-7
 			break;
@@ -676,11 +643,12 @@ int change_output(int index, int onoff)
 		case 2:
 			OutPortF(onoff, index);			  // 0-3
 			break;
+*/
 		default:
 			break;
 	}
 	pthread_mutex_unlock(&io_mem_lock);
-//	printf("change output: %d %d\r\n",index,onoff);
+	//printf("change output: %d %d\r\n",index,onoff);
 
 //	sprintf(tempx,"%d %d %d", bank, index, onoff);
 //	myprintf1(tempx);
@@ -733,7 +701,6 @@ UCHAR timer2_task(int test)
 	}
 	return 1;
 }
-/*********************************************************************/
 void swap(COUNTDOWN* xp, COUNTDOWN* yp)
 {
 	COUNTDOWN temp = *xp;
@@ -765,7 +732,7 @@ void sort_countdown(void)
 	COUNTDOWN *ct;
 	COUNTDOWN tct;
 	int current_seconds = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
-	//printf("curr sec: %d\n",current_seconds);
+	printf("curr sec: %d\n",current_seconds);
 	k = 0;
 	for(i = 0;i < 20;i++)
 	{
@@ -794,7 +761,14 @@ void sort_countdown(void)
 	{
 		count_down[i].seconds_away = count_down[i].hour * 3600 + count_down[i].minute * 60 + count_down[i].second;
 	}
-
+/*
+	printf("\n");
+	for(i = 0;i < curr_countdown_size;i++)
+	{
+		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+	}
+	printf("\n");
+*/
 	for (i = 0; i < curr_countdown_size - 1; i++) 		// do the sort
 	{
 		// Find the minimum element in unsorted array
@@ -843,9 +817,9 @@ UCHAR timer_task(int test)
 {
 	int i,j;
 	int onoff;
-
 	time_t T;
 	struct tm tm;
+
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 
 	uSleep(2,0);
@@ -869,7 +843,7 @@ UCHAR timer_task(int test)
 						tm = *localtime(&T);
 						printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
 						onoff = count_down[i].onoff;
-						add_msg_queue(count_down[i].port+14, onoff);
+						add_msg_queue(count_down[i].port+34, onoff);
 						printf("%d\n",onoff);
 						//remove_top_countdown();
 					}
@@ -1129,6 +1103,7 @@ UCHAR basic_controls_task(int test)
 
 //	memset(msg_queue,0,sizeof(msg_queue));
 	msg.mtype = msgtype;
+	memset(switch_status,0,sizeof(switch_status));
 
 /*
 	for(i = 0;i < 10;i++)	// test the 2nd relay module
@@ -1158,11 +1133,91 @@ UCHAR basic_controls_task(int test)
 
 		//printf("basic controls: ");
 		//print_cmd(cmd);
-		//printf("%d\n",onoff);
-		usleep(_5MS);
+		//usleep(_5MS);
 
 		switch(cmd)
 		{
+#ifdef CL_150
+			case  COOP1_LIGHT:
+				change_output(COOP1_LIGHTa,onoff);
+				usleep(_100MS);
+				break;
+
+			case COOP1_HEATER:
+				change_output(COOP1_HEATERa,onoff);
+				usleep(_100MS);
+				break;
+
+			case COOP2_LIGHT:
+				change_output(COOP2_LIGHTa,onoff);
+				usleep(_100MS);
+				break;
+
+			case COOP2_HEATER:
+				change_output(COOP2_HEATERa,onoff);
+				usleep(_100MS);
+				break;
+
+			case OUTDOOR_LIGHT1:
+				change_output(OUTDOOR_LIGHT1a,onoff);
+				usleep(_100MS);
+				break;
+
+			case OUTDOOR_LIGHT2:
+				change_output(OUTDOOR_LIGHT2a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_1:
+				change_output(UNUSED150_1a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_2:
+				change_output(UNUSED150_2a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_3:
+				change_output(UNUSED150_3a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_4:
+				change_output(UNUSED150_4a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_5:
+				change_output(UNUSED150_5a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_6:
+				change_output(UNUSED150_6a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_7:
+				change_output(UNUSED150_7a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_8:
+				change_output(UNUSED150_8a,onoff);
+				usleep(_100MS);
+				break;
+
+			case UNUSED150_9:
+				change_output(UNUSED150_9a,onoff);
+				usleep(_100MS);
+				break;
+			case UNUSED150_10:
+				change_output(UNUSED150_10a,onoff);
+				usleep(_100MS);
+				break;
+#endif 
+#ifdef CL_147
 			case  BENCH_24V_1:
 				change_output(BENCH_24V_1a,onoff);
 				usleep(_100MS);
@@ -1217,7 +1272,48 @@ UCHAR basic_controls_task(int test)
 				change_output(BATTERY_HEATERa,onoff);
 				usleep(_100MS);
 				break;
+#endif 
+#ifdef CL_154 
+			case  CABIN1:
+				index = change_output(CABIN1a,onoff);
+				usleep(_100MS);
+				break;
 
+			case  CABIN2:
+				//index = change_output(CABIN2a,onoff);		currently these are just bare wires 
+				usleep(_100MS);
+				break;
+
+			case  CABIN3:
+				//index = change_output(CABIN3a,onoff);
+				usleep(_100MS);
+				break;
+
+			case  CABIN4:
+				index = change_output(CABIN4a,onoff);
+				usleep(_100MS);
+				break;
+
+			case  CABIN5:
+				index = change_output(CABIN5a,onoff);
+				usleep(_100MS);
+				break;
+
+			case  CABIN6:
+				index = change_output(CABIN6a,onoff);
+				usleep(_100MS);
+				break;
+
+			case  CABIN7:
+				//index = change_output(CABIN7a,onoff);
+				usleep(_100MS);
+				break;
+
+			case  CABIN8:
+				//index = change_output(CABIN8a,onoff);
+				usleep(_100MS);
+				break;
+#endif
 			case EXIT_TO_SHELL:
 				snprintf(tempx, strlen(tempx), "exit to shell");
 //				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
@@ -1303,6 +1399,7 @@ int avg_raw_data(int prev_data)
 	temp_data /= RAW_DATA_ARRAY_SIZE;
 	return temp_data;
 }
+
 float convertF(int raw_data)
 {
 	float T_F, T_celcius;

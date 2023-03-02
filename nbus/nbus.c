@@ -154,36 +154,6 @@ unsigned short winpeek16(unsigned int adr) {
     if(did_lock) nbusunlock();
     return retVal;
 }
-
-void winpoke16a(unsigned int adr, unsigned short dat) {
-
-    int did_lock = 0;
-
-    if(!nbuslocked) {
-        nbuslock();
-        did_lock++;
-    }
-        nbus_poke16(MW_ADR, adr >> 11);
-        nbus_poke16(MW_CONF, (adr & 0x7ff) | (0x12 << 11));
-        nbus_poke16(MW_DAT1, dat);
-    if(did_lock) nbusunlock();
-
-}
-unsigned short winpeek16a(unsigned int adr) {
-    int did_lock = 0;
-   unsigned short retVal;
-
-    if(!nbuslocked) {
-        nbuslock();
-        did_lock++;
-    }
-    nbus_poke16(MW_ADR, adr >> 11);
-    nbus_poke16(MW_CONF, (adr & 0x7ff) | (0x12 << 11));
-    retVal = nbus_peek16(MW_DAT1);
-    if(did_lock) nbusunlock();
-    return retVal;
-}
-
 void winpoke32(unsigned int adr, unsigned int dat) {
 
     int did_lock = 0;
@@ -238,31 +208,6 @@ unsigned char winpeek8(unsigned int adr) {
     if(did_lock) nbusunlock();
     return nbus_peek16(MW_DAT1) & 0xff;
 }
-
-void winpoke8a(unsigned int adr, unsigned char dat) {
-    int did_lock = 0;
-    if(!nbuslocked) {
-        nbuslock();
-        did_lock++;
-    }
-    nbus_poke16(MW_ADR, adr >> 11);
-    nbus_poke16(MW_CONF, (adr & 0x7ff) | (0x1a << 11));
-    nbus_poke16(MW_DAT1, dat);
-    if(did_lock) nbusunlock();
-}
-
-unsigned char winpeek8a(unsigned int adr) {
-    int did_lock = 0;
-    if(!nbuslocked) {
-        nbuslock();
-        did_lock++;
-    }
-    nbus_poke16(MW_ADR, adr >> 11);
-    nbus_poke16(MW_CONF, (adr & 0x7ff) | (0x1a << 11));
-    if(did_lock) nbusunlock();
-    return nbus_peek16(MW_DAT1) & 0xff;
-}
-
 static int semid = -1;
 void nbuslock(void)
 {
@@ -314,10 +259,7 @@ void nbuslock(void)
 		inited = 1;
 		}
 	}
-	
-
 }
-
 void nbusunlock(void) 
 {
 	struct sembuf sop = { 0, 1, SEM_UNDO};
@@ -328,7 +270,6 @@ void nbusunlock(void)
 		nbuslocked = 0;
 	}
 }
-
 void nbuspreempt(void)
 {
 	int r;

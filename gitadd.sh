@@ -28,16 +28,16 @@ git add thread_server/sock_sched.c
 git add thread_server/cs_client/config_file.c
 git add thread_server/cs_client/config_file.h
 
-git add thread_client/Client154/tasks.c
-git add thread_client/Client154/cmd_tasks.c
-git add thread_client/Client147/tasks.c
-git add thread_client/Client147/cmd_tasks.c
-git add thread_client/Client150/tasks.c
-git add thread_client/Client150/cmd_tasks.c
+git add thread_client/tasks.c
+git add thread_client/cmd_tasks.c
 git add thread_client/ioports.c
 git add thread_client/ts4600sock.mak
-git add thread_client/ts4600.mak
+git add thread_client/ts4600_147.mak
+git add thread_client/ts4600_154.mak
+git add thread_client/ts4600_150.mak
 git add thread_client/test150.sh
+git add thread_client/test154.sh
+git add thread_client/test147.sh
 git add thread_client/4600sock.sh
 git add thread_client/sched.c
 git add thread_client/ioports.h
@@ -107,8 +107,6 @@ git add ODBMgmt/Properties/*
 git add nbus/nbus.c
 git add nbus/nbus.h
 git add nbus/dio2.c
-git add nbus/example.c
-git add nbus/MUXBUS.txt
 git add nbus/peekpoke.h
 git add nbus/dio_ds1620.h
 git add nbus/dio_ds1620.c
