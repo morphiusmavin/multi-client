@@ -29,6 +29,7 @@
 #include "queue/ollist_threads_rw.h"
 #include "queue/cllist_threads_rw.h"
 #include "tasks.h"
+#include "../nbus/dio_ds1620.h"
 //#include "cs_client/config_file.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
@@ -60,6 +61,7 @@ static int raw_data_ptr;
 int avg_raw_data(int prev_data);
 int max_ips;
 IP ip[40];
+int valid_ds[7];
 
 static COUNTDOWN count_down[COUNTDOWN_SIZE];
 int curr_countdown_size;
@@ -566,22 +568,13 @@ int change_input(int index, int onoff)
 /*********************************************************************/
 // do the same thing as monitor_input_tasks but with the fake arrays
 // set by change_inputs()
-UCHAR monitor_fake_input_task(int test)
+UCHAR poll_ds1620_task(int test)
 {
-//	I_DATA *itp;
-//	I_DATA **itpp = &itp;
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
-
-	int status = -1;
-	int bank, index;
-	UCHAR result, mask, onoff;
-	int i, rc, flag;
-
+	int val;
+	int i;
 //	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
 #ifndef USE_CARDS
 	printf("not using cards\n");
-
 	while(TRUE)
 	{
 		uSleep(1,0);
@@ -589,9 +582,28 @@ UCHAR monitor_fake_input_task(int test)
 			return 0;
 	}
 #endif
+	for(i = 0;i < 7;i++)
+		valid_ds[i] = 0;
+
+	initDS1620();
+
+	i = 0;
 	while(TRUE)
 	{
-		uSleep(1,0);
+		if(valid_ds[i] > 0)
+		{
+			printf("polling ds: %d\n",i);
+			/*
+			writeByteTo1620(DS1620_CMD_STARTCONV);
+			uSleep(0,TIME_DELAY/16);
+			val = readTempFrom1620(i);
+			printf("%d\n",val);
+			uSleep(0,TIME_DELAY/16);
+			writeByteTo1620(DS1620_CMD_STOPCONV);
+			*/
+		}
+		uSleep(5,0);
+
 		if(shutdown_all)
 			return 0;
 	}

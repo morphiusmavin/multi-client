@@ -43,7 +43,7 @@ pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
 UCHAR (*fptr[NUM_SCHED_TASKS])(int) = { 
 	get_host_cmd_task2, 
 	monitor_input_task, 
-	monitor_fake_input_task, 
+	poll_ds1620_task, 
 	timer_task, 
 	timer2_task, 
 	serial_recv_task, 
@@ -167,7 +167,7 @@ int main(int argc, char **argv)
 
 	strcpy(_threads[GET_HOST_CMD2].label,"GET_HOST_CMD2\0");
 	strcpy(_threads[MONITOR_INPUTS].label,"MONITOR_INPUTS\0");
-	strcpy(_threads[MONITOR_INPUTS2].label,"MONITOR_INPUTS2\0");
+	strcpy(_threads[MONITOR_INPUTS2].label,"poll ds1620\0");
 	strcpy(_threads[TIMER].label,"TIMER\0");
 	strcpy(_threads[TIMER2].label,"TIMER2\0");
 	strcpy(_threads[SERIAL_RECV].label,"SERIAL_RECV\0");

@@ -34,7 +34,6 @@ lcd_func.c
 lcd_func.h
 nbus/gpiolib.c
 nbus/test_ports.c
-nbus/dio.c
 nbus/dio2.c
 nbus/example.c
 nbus/gpiolib.c

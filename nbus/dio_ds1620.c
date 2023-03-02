@@ -11,7 +11,8 @@
 #include "nbus.h"
 #include "dio_ds1620.h"
 
-static int current_ds;
+static int current_ds[7];
+static int current_ds_ptr;
 /*********************************************************************************/
 static void mydelay(unsigned long i)
 {
@@ -54,7 +55,15 @@ void set_pin(int pin, int val)
 /*********************************************************************************/
 void initDS1620(void)
 {
-	// All pins -> output
+	current_ds[0] = RST_0;
+	current_ds[1] = RST_1;
+	current_ds[2] = RST_2;
+	current_ds[3] = RST_3;
+	current_ds[4] = RST_4;
+	current_ds[5] = RST_5;
+	current_ds[6] = RST_6;
+	current_ds_ptr = 0;
+
 	int pin = DQ;
 	set_dir(pin,HIZ);
 	pin = CLK;
@@ -71,7 +80,6 @@ void initDS1620(void)
 	set_dir(pin,OUT);
 	pin = RST_5;
 	set_dir(pin,OUT);
-	current_ds = RST_0;
 
 	writeCommandTo1620( DS1620_CMD_WRITECONF, 0x02 );			// CPU mode; continous conversion
 //	writeByteTo1620( DS1620_CMD_STARTCONV );					// Start conversion
@@ -103,22 +111,22 @@ static void shiftOutByte( UCHAR val )
 // call this about 30ms before a call to readTempFrom1620
 void writeByteTo1620( UCHAR cmd )
 {
-	set_pin(current_ds,HIGH);
+	set_pin(current_ds[current_ds_ptr],HIGH);
 
 	shiftOutByte( cmd );
 
-	set_pin(current_ds,LOW);
+	set_pin(current_ds[current_ds_ptr],LOW);
 }
 /*********************************************************************************/
 // just used in the init function
 static void writeCommandTo1620( UCHAR cmd, UCHAR data )
 {
-	set_pin(current_ds,HIGH);
+	set_pin(current_ds[current_ds_ptr],HIGH);
 
 	shiftOutByte( cmd );	// send command
 	shiftOutByte( data );	// send 8 bit data
 
-	set_pin(current_ds,LOW);
+	set_pin(current_ds[current_ds_ptr],LOW);
 }
 /*********************************************************************************/
 // not currently used btw
@@ -127,21 +135,22 @@ static void writeTempTo1620( UCHAR reg, int temp )
 	UCHAR lsb = temp;					// truncate to high UCHAR
 	UCHAR msb = temp >> 8;				// shift high -> low UCHAR
 
-	set_pin(current_ds,HIGH);
+	set_pin(current_ds[current_ds_ptr],HIGH);
 
 	shiftOutByte( reg );	// send register select
 	shiftOutByte( lsb );	// send LSB 8 bit data
 	shiftOutByte( msb );	// send MSB 8 bit data (only bit 0 is used)
 
-	set_pin(current_ds,LOW);
+	set_pin(current_ds[current_ds_ptr],LOW);
 }
 /*********************************************************************************/
-int readTempFrom1620()
+int readTempFrom1620(int which)
 {
 	int i;
 	int state;
 
-	set_pin(current_ds,HIGH);
+	current_ds_ptr = which;
+	set_pin(current_ds[current_ds_ptr],HIGH);
 
 	shiftOutByte( DS1620_CMD_READTEMP );						// send register select
 
@@ -159,13 +168,14 @@ int readTempFrom1620()
 		set_pin(CLK,HIGH);
 	}
 
-	set_pin(current_ds,LOW);
+	set_pin(current_ds[current_ds_ptr],LOW);
 
 	set_dir(DQ,OUT);
 //	return (double)(raw/(double)2);								// divide by 2 and return
 	return raw;
 }
 /*********************************************************************************/
+#if 0
 int main(void)
 {
 	int i;
@@ -190,3 +200,4 @@ int main(void)
 
 	return 0;
 }
+#endif

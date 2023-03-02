@@ -1,7 +1,8 @@
 typedef unsigned char UCHAR;
 static void writeCommandTo1620( UCHAR cmd, UCHAR data );
 static void writeTempTo1620( UCHAR reg, int temp );
-
+int readTempFrom1620(int which);
+void initDS1620(void);
 /*
 DIO pins on bottom right of card when 
 looking down at it with eth port to 

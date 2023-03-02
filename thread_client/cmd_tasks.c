@@ -40,6 +40,7 @@ CMD_STRUCT cmd_array[NO_CMDS];
 //extern illist_t ill;
 extern ollist_t oll;
 extern cllist_t cll;
+extern int valid_ds[];
 
 UCHAR msg_buf[SERIAL_BUFF_SIZE];
 UCHAR msg_buf2[SERIAL_BUFF_SIZE];
@@ -303,6 +304,8 @@ UCHAR get_host_cmd_task2(int test)
 
 	init_ips();
 	same_msg = 0;
+	for(i = 0;i < 7;i++)
+		valid_ds[i] = 0;
 
 	//printf("%s\n",version);
 	j = k = i = 0;
@@ -416,6 +419,14 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case SET_VALID_DS:
+						i = (int)tempx[0];	
+						valid_ds[i] = (int)tempx[1];
+						for(i = 0;i < 7;i++)
+							printf("%d ",valid_ds[i]);
+						printf("\n");
+						break;
+
 					case RELOAD_CLLIST:
 						cllist_init(&cll);
 						if(access(cFileName,F_OK) != -1)

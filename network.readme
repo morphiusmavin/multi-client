@@ -26,11 +26,6 @@ todo:
 15) Move coop heaters, lights & outdoor lights to 147, replace 147 w/4600 and put 150 in NW corner 
 16) change COUNTDOWN_SIZE to NUMDB_RECS and set to 20 and fix real_banks
 	
-note to self:
-	there is now a branch called '4600' on both the windows machine multi-client directory and 
-	the 148 multi-client directory - so make sure both the same branches are checked out when 
-	making changes - the 4600 must be copied to the 4600 card in order to do a compile 
-
 to add new commands:
 
 1) add to the enum in cmd_types.h 

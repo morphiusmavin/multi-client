@@ -96,6 +96,9 @@ all : sched150
 nbus.o: ../nbus/nbus.c ../nbus/nbus.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../nbus/nbus.c
 
+dio_ds1620.o: ../nbus/dio_ds1620.c ../nbus/dio_ds1620.h
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../nbus/dio_ds1620.c
+
 cmd_tasks.o: cmd_tasks.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cmd_tasks.c
 
@@ -132,8 +135,8 @@ cllist_threads_rw.o: queue/cllist_threads_rw.c queue/cllist_threads_rw.h
 cconfig_file.o: cs_client/cconfig_file.c queue/cllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/cconfig_file.c
 	
-sched150: tasks.o cmd_tasks.o sched.o ioports.o assign_client_table.o load_cmds.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cllist_threads_rw.o cconfig_file.o nbus.o
-	${CC} -static -pthread tasks.o cmd_tasks.o sched.o ioports.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o nbus.o -o sched150 -lm
+sched150: tasks.o cmd_tasks.o sched.o ioports.o assign_client_table.o load_cmds.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cllist_threads_rw.o cconfig_file.o nbus.o dio_ds1620.o
+	${CC} -static -pthread tasks.o cmd_tasks.o sched.o ioports.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o nbus.o dio_ds1620.o -o sched150 -lm
 
 clean :
 	rm -f *.o *~ *# core  sched150

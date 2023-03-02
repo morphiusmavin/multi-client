@@ -13,5 +13,5 @@ if grep -q undefined out.txt
   exit 1
 fi
 rm *.o
-mv sched147 ../../sched
+mv sched147 ../../sched/sched
 ls -ltr ../../sched

@@ -62,7 +62,7 @@ UCHAR recv_msg_task(int test);
 UCHAR get_host_cmd_task1(int test);
 UCHAR get_host_cmd_task2(int test);
 UCHAR monitor_input_task(int test);
-UCHAR monitor_fake_input_task(int test);
+UCHAR poll_ds1620_task(int test);
 UCHAR timer_task(int test);
 UCHAR timer2_task(int test);
 UCHAR serial_recv_task(int test);
