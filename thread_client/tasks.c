@@ -486,7 +486,7 @@ UCHAR monitor_input_task(int test)
 				// 1st card; D & E on 2nd) are 8-bit and the 3rd is only 4-bits, 
 				// so we have to translate the inportstatus array, representing 
 				// 3 byts of each 2 (3x8x2 = 48) to one of the 40 actual bits as index
-				for(i = 20;i < 40;i++)
+				for(i = 0;i < 20;i++)
 				{
 					if(real_banks[i].bank == bank && real_banks[i].index == index)
 					{
@@ -572,6 +572,9 @@ UCHAR poll_ds1620_task(int test)
 {
 	int val;
 	int i;
+	time_t T;
+	struct tm tm;
+	char time_rec[20];
 //	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
 #ifndef USE_CARDS
 	printf("not using cards\n");
@@ -588,11 +591,17 @@ UCHAR poll_ds1620_task(int test)
 	initDS1620();
 
 	i = 0;
+	val = 0;
 	while(TRUE)
 	{
 		if(valid_ds[i] > 0)
 		{
 			printf("polling ds: %d\n",i);
+			T = time(NULL);
+			tm = *localtime(&T);
+			sprintf(time_rec,"%02d:%02d:%02d:%02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
+			printf("%s\n",time_rec);
+			val = i;
 			/*
 			writeByteTo1620(DS1620_CMD_STARTCONV);
 			uSleep(0,TIME_DELAY/16);
@@ -602,6 +611,8 @@ UCHAR poll_ds1620_task(int test)
 			writeByteTo1620(DS1620_CMD_STOPCONV);
 			*/
 		}
+		if(++i > 6)
+			i = 0;
 		uSleep(5,0);
 
 		if(shutdown_all)
@@ -749,6 +760,7 @@ void sort_countdown(void)
 	for(i = 0;i < 20;i++)
 	{
 		j = cllist_find_data(i, ctpp, &cll);
+		//printf("%d %d\n",ctp->port, ctp->state);
 		if(ctp->port > -1 && ctp->state > 0)
 		{
 			count_down[k].port = ctp->port;
