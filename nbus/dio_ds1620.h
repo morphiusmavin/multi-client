@@ -19,7 +19,8 @@ pin 10	RST_2
 pin 11	RST_3
 pin 13	RST_4
 pin 14	RST_5
-pin 15	RST_6
+pin 15	RST_6	// probably won't use this - 2 conv chips 
+				// make only 8 lines 
 
 the DQ & CLK go to all the DS1620's (upto 7)
 and each RST is just the chip enable for 

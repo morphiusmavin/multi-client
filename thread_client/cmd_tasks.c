@@ -151,6 +151,15 @@ UCHAR get_host_cmd_task2(int test)
 	next_client = 0;
 	char label[30];
 	int index;
+#ifdef CL_150
+	printf("starting 150\n");
+#endif
+#ifdef CL_147
+	printf("starting 147\n");
+#endif 
+#ifdef CL_154
+	printf("starting 154\n");
+#endif 
 
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the

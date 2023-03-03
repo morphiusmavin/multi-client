@@ -197,7 +197,6 @@ int main(void)
 		writeByteTo1620(DS1620_CMD_STOPCONV);
 		mydelay(100);
 	}
-
 	return 0;
 }
 #endif

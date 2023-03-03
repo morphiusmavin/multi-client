@@ -594,25 +594,27 @@ UCHAR poll_ds1620_task(int test)
 	val = 0;
 	while(TRUE)
 	{
-		if(valid_ds[i] > 0)
+//		if(valid_ds[i] > 0)
+if(1)
 		{
-			printf("polling ds: %d\n",i);
+			//printf("polling ds: %d\n",i);
 			T = time(NULL);
 			tm = *localtime(&T);
 			sprintf(time_rec,"%02d:%02d:%02d:%02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
-			printf("%s\n",time_rec);
+			//printf("%s\n",time_rec);
 			val = i;
-			/*
+
 			writeByteTo1620(DS1620_CMD_STARTCONV);
 			uSleep(0,TIME_DELAY/16);
 			val = readTempFrom1620(i);
-			printf("%d\n",val);
+			printf("%d ",val);
 			uSleep(0,TIME_DELAY/16);
 			writeByteTo1620(DS1620_CMD_STOPCONV);
-			*/
 		}
+/*
 		if(++i > 6)
 			i = 0;
+*/
 		uSleep(5,0);
 
 		if(shutdown_all)

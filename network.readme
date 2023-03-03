@@ -275,3 +275,24 @@ case SEND_NEXT_CLIENT:
 
 
 git ls-tree --full-tree -r --name-only HEAD
+
+on board with door meant for NW corner, the converter board to the left 
+of the TS-4600 board has 8 wires from DIO1 starting from the right w/ 4
+
+DIO pins on bottom right of card when 
+looking down at it with eth port to 
+the right
+
+gnd	x	x	15	x	x	x	x
+14	13	11	10	8	7	6	4
+
+pin 4	DQ
+pin 6	CLK
+pin 7 	RST_0
+pin 8	RST_1
+pin 10	RST_2
+pin 11	RST_3
+pin 13	RST_4
+pin 14	RST_5
+pin 15	RST_6	// probably won't use this - 2 conv chips 
+				// make only 8 lines 
