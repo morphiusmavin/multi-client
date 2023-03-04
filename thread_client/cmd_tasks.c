@@ -29,6 +29,7 @@
 #include "serial_io.h"
 #include "queue/ollist_threads_rw.h"
 #include "queue/cllist_threads_rw.h"
+#include "queue/dllist_threads_rw.h"
 #include "tasks.h"
 #include "cs_client/config_file.h"
 
@@ -40,6 +41,7 @@ CMD_STRUCT cmd_array[NO_CMDS];
 //extern illist_t ill;
 extern ollist_t oll;
 extern cllist_t cll;
+extern dllist_t dll;
 extern int valid_ds[];
 
 UCHAR msg_buf[SERIAL_BUFF_SIZE];
@@ -104,53 +106,43 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 
 UCHAR get_host_cmd_task2(int test)
 {
-//	I_DATA tempi1;
-	O_DATA tempo1;
-//	RI_DATA tempr1;
-//	I_DATA *itp;
 	O_DATA *otp;
 	O_DATA **otpp = &otp;
 	C_DATA *ctp;
 	C_DATA **ctpp = &ctp;
+	D_DATA *dtp;
+	D_DATA **dtpp = &dtp;
 	int rc = 0; 
-	int rc1 = 0;
 	UCHAR cmd = 0x21;
 	UCHAR onoff;
 	char errmsg[50];
 	char filename[15];
-	size_t size;
 	int i;
 	int j;
 	int k;
 	size_t csize;
 	size_t osize;
+	size_t dsize;
 	UCHAR tempx[SERIAL_BUFF_SIZE];
-	UCHAR tempx2[SERIAL_BUFF_SIZE];
 	char temp_time[5];
 	char *pch, *pch2;
-	int fname_index;
-	UCHAR uch_fname_index;
-	UCHAR mask;
 	time_t curtime2;
 	time_t *pcurtime2 = &curtime2;
 	int fp;
 	off_t fsize;
-	long cur_fsize;
 	struct timeval mtv;
 	struct tm t;
 	struct tm tm;
 	time_t T;
 	struct tm *pt = &t;
 	int msg_len;
-	serial_recv_on = 1;
-//	time_set = 0;
 	shutdown_all = 0;
 	char version[15] = "sched v1.03\0";
 	UINT utemp;
-//	UCHAR time_buffer[20];
 	next_client = 0;
 	char label[30];
 	int index;
+
 #ifdef CL_150
 	printf("starting 150\n");
 #endif
@@ -160,7 +152,7 @@ UCHAR get_host_cmd_task2(int test)
 #ifdef CL_154
 	printf("starting 154\n");
 #endif 
-
+#if 1
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the
 	// inportstatus array, representing 3 byts of each 2 (3x8x2 = 48) to
@@ -308,7 +300,23 @@ UCHAR get_host_cmd_task2(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
-		cllist_show(&cll);
+		//cllist_show(&cll);
+	}
+
+	dllist_init(&dll);
+	if(access(dFileName,F_OK) != -1)
+	{
+		dlLoadConfig(dFileName,&dll,dsize,errmsg);
+		if(rc > 0)
+		{
+			printf("%s\r\n",errmsg);
+		}
+		dllist_show(&dll);
+	}else
+	{
+		memset(dtp,0,sizeof(D_DATA));
+		printf("can't open data.dat\n");
+		dWriteConfig(dFileName, &dll,1,errmsg);
 	}
 
 	init_ips();
@@ -319,7 +327,7 @@ UCHAR get_host_cmd_task2(int test)
 	//printf("%s\n",version);
 	j = k = i = 0;
 	cmd = 0x21;
-
+#endif
 	while(TRUE)
 	{
 		cmd = 0;

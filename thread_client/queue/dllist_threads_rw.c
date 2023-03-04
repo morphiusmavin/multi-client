@@ -17,9 +17,9 @@
 #include <string.h>
 #include "../../mytypes.h"
 #include "../serial_io.h"
-#include "cllist_threads_rw.h"
+#include "dllist_threads_rw.h"
 /******************************************************************************/
-int cllist_init (cllist_t *llistp)
+int dllist_init (dllist_t *llistp)
 {
 	int rtn;
 
@@ -31,15 +31,44 @@ int cllist_init (cllist_t *llistp)
 }
 
 /******************************************************************************/
-int cllist_insert_data(int index, cllist_t *llistp,C_DATA *datap2)
+int dllist_add_data(int index, dllist_t *llistp,D_DATA *datap2)
 {
-	cllist_node_t *cur, *prev, *new;
+	dllist_node_t *cur, *prev, *new;
 	int found = FALSE;
-	C_DATA *datap;
+	D_DATA *datap;
 
 	pthread_rdwr_wlock_np(&(llistp->rwlock));
-	datap = malloc(sizeof(C_DATA));
-	memcpy(datap,datap2,sizeof(C_DATA));
+	datap = malloc(sizeof(D_DATA));
+	memcpy(datap,datap2,sizeof(D_DATA));
+
+	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
+	{
+		//printf("%d ",cur->datap->value);
+	}
+	//printf("\n");
+
+	new = (dllist_node_t *)malloc(sizeof(dllist_node_t));
+	new->index = index;
+	new->datap = datap;
+	new->nextp = cur;
+	if (cur==llistp->first)
+		llistp->first = new;
+	else
+		prev->nextp = new;
+
+	pthread_rdwr_wunlock_np(&(llistp->rwlock));
+	return index;
+}
+/******************************************************************************/
+int dllist_insert_data(int index, dllist_t *llistp,D_DATA *datap2)
+{
+	dllist_node_t *cur, *prev, *new;
+	int found = FALSE;
+	D_DATA *datap;
+
+	pthread_rdwr_wlock_np(&(llistp->rwlock));
+	datap = malloc(sizeof(D_DATA));
+	memcpy(datap,datap2,sizeof(D_DATA));
 
 	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
 	{
@@ -47,7 +76,7 @@ int cllist_insert_data(int index, cllist_t *llistp,C_DATA *datap2)
 		{
 			free(cur->datap);
 			cur->datap = datap;
-			printf("insert: %d %s\r\n",index, cur->datap->label);
+			printf("insert: %d %s\r\n",index, cur->datap->sensor_no);
 			found=TRUE;
 			break;
 		}
@@ -58,7 +87,7 @@ int cllist_insert_data(int index, cllist_t *llistp,C_DATA *datap2)
 	}
 	if (!found)
 	{
-		new = (cllist_node_t *)malloc(sizeof(cllist_node_t));
+		new = (dllist_node_t *)malloc(sizeof(dllist_node_t));
 		new->index = index;
 		new->datap = datap;
 		new->nextp = cur;
@@ -72,12 +101,12 @@ int cllist_insert_data(int index, cllist_t *llistp,C_DATA *datap2)
 }
 
 /******************************************************************************/
-int cllist_remove_data(int index, C_DATA **datapp, cllist_t *llistp)
+int dllist_remove_data(int index, D_DATA **datapp, dllist_t *llistp)
 {
-	cllist_node_t *cur, *prev;
+	dllist_node_t *cur, *prev;
 
 	/* Initialize to "not found" */
-	*datapp = (C_DATA*)NULL;
+	*datapp = (D_DATA*)NULL;
 
 	pthread_rdwr_wlock_np(&(llistp->rwlock));
 
@@ -100,12 +129,12 @@ int cllist_remove_data(int index, C_DATA **datapp, cllist_t *llistp)
 }
 
 /******************************************************************************/
-int cllist_removeall_data(cllist_t *llistp)
+int dllist_removeall_data(dllist_t *llistp)
 {
-	cllist_node_t *cur, *prev;
+	dllist_node_t *cur, *prev;
 
 	/* Initialize to "not found" */
-	C_DATA *datapp = (C_DATA*)NULL;
+	D_DATA *datapp = (D_DATA*)NULL;
 
 	pthread_rdwr_wlock_np(&(llistp->rwlock));
 
@@ -120,13 +149,13 @@ int cllist_removeall_data(cllist_t *llistp)
 	return 0;
 }
 /******************************************************************************/
-int cllist_find_data(int index, C_DATA **datapp, cllist_t *llistp)
+int dllist_find_data(int index, D_DATA **datapp, dllist_t *llistp)
 {
-	cllist_node_t *cur, *prev;
+	dllist_node_t *cur, *prev;
 	int status = -1;
 
 	/* Initialize to "not found" */
-	*datapp = (C_DATA *)NULL;
+	*datapp = (D_DATA *)NULL;
 //printf("index: %d\n",index);
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 
@@ -151,9 +180,9 @@ int cllist_find_data(int index, C_DATA **datapp, cllist_t *llistp)
 	return status;
 }
 /******************************************************************************/
-int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp)
+int dllist_change_data(int index, D_DATA *datap, dllist_t *llistp)
 {
-	cllist_node_t *cur, *prev;
+	dllist_node_t *cur, *prev;
 	int status = -1; /* assume failure */
 	pthread_rdwr_wlock_np(&(llistp->rwlock));
 	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
@@ -176,12 +205,12 @@ int cllist_change_data(int index, C_DATA *datap, cllist_t *llistp)
 	return status;
 }
 /******************************************************************************/
-int cllist_show(cllist_t *llistp)
+int dllist_show(dllist_t *llistp)
 {
 //	char list_buf[100];
 	//char *ptr;
 	//int iptr;
-	cllist_node_t *cur;
+	dllist_node_t *cur;
 	//char list_buf[100];
 	int i = 0;
 
@@ -196,7 +225,7 @@ int cllist_show(cllist_t *llistp)
 	int duration_seconds;		// use these if type 0
 	int duration_minutes;
 */
-	printf("showing C_DATA\r\n");
+	printf("showing D_DATA\r\n");
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 	printf("%02x \n",cur);
 	cur=llistp->first;
@@ -207,12 +236,12 @@ int cllist_show(cllist_t *llistp)
 	for (cur=llistp->first; cur != NULL; cur=cur->nextp)
 	{
 		//printf("%d ",cur->datap->index);
-		if(cur->datap->label[0] != 0)
+		//if(cur->datap->label[0] != 0)
+			if(1)
 		{
-			printf("%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%s\r\n",
-				cur->datap->index, cur->datap->port, cur->datap->state, cur->datap->on_hour, cur->datap->on_minute, 
-				 cur->datap->on_second, cur->datap->off_hour, cur->datap->off_minute, 
-				 cur->datap->off_second, cur->datap->label);
+			printf("%2d\t%2d\t%2d\t%2d\t%2d\t%2d\t%2d\r\n",
+				cur->datap->sensor_no, cur->datap->month, cur->datap->day, cur->datap->hour, cur->datap->minute, 
+				 cur->datap->second, cur->datap->value);
 
 /*
 			printf("%2d\t%2d\t%2d\t\t%2d\t%2d\t%s\r\n",
@@ -244,16 +273,16 @@ int cllist_show(cllist_t *llistp)
 	return 0;
 }
 
-int cllist_reorder(cllist_t *llistp)
+int dllist_reorder(dllist_t *llistp)
 {
 //	char list_buf[100];
 	char *ptr;
 	int iptr;
-	cllist_node_t *cur;
+	dllist_node_t *cur;
 	char list_buf[100];
 	int i = 0;
 
-	printf("re-ordering C_DATA\r\n");
+	printf("re-ordering D_DATA\r\n");
 
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 	cur=llistp->first;
@@ -262,7 +291,8 @@ int cllist_reorder(cllist_t *llistp)
 
 	for (cur=llistp->first; cur != NULL; cur=cur->nextp)
 	{
-		if(cur->datap->label[0] != 0)
+//		if(cur->datap->label[0] != 0)
+	if(0)
 		{
 //			cur->datap->index = i++;
 /*
@@ -275,12 +305,12 @@ int cllist_reorder(cllist_t *llistp)
 	pthread_rdwr_runlock_np(&(llistp->rwlock));
 	return 0;
 }
-int cllist_printfile(int fp, cllist_t *llistp)
+int dllist_printfile(int fp, dllist_t *llistp)
 {
 	char list_buf[50];
 	char *ptr;
 	int iptr;
-	cllist_node_t *cur;
+	dllist_node_t *cur;
 #if 0
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 

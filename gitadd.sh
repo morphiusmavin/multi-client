@@ -73,6 +73,10 @@ git add thread_client/cs_client/odata.csv
 git add thread_client/cs_client/odata.xml
 git add thread_client/queue/cllist_threads_rw.c
 git add thread_client/queue/cllist_threads_rw.h
+git add thread_client/cs_client/dconfig_file.c
+git add thread_client/cs_client/dconfig_file.h
+git add thread_client/queue/dllist_threads_rw.c
+git add thread_client/queue/dllist_threads_rw.h
 
 git add thread_client/cs_client/mod2_cdb.c
 git add thread_client/cs_client/mod_cdb.c

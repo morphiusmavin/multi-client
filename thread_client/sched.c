@@ -92,6 +92,7 @@ void *work_routine(void *arg)
 
 char oFileName[20];
 char cFileName[20];
+char dFileName[20];
 
 key_t send_cmd_host_key;
 key_t recv_cmd_host_key;
@@ -143,6 +144,7 @@ int main(int argc, char **argv)
 		strcpy(oFileName,argv[1]);
 		strcpy(cFileName,argv[2]);
 	}
+	strcpy(dFileName,"ddata.dat");
 
 	id_arg = (int *)malloc(NUM_SCHED_TASKS*sizeof(int));
 

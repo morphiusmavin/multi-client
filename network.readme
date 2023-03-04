@@ -25,6 +25,7 @@ todo:
 	ssh screen to run the startup script - it won't work on reboot by itself)
 15) Move coop heaters, lights & outdoor lights to 147, replace 147 w/4600 and put 150 in NW corner 
 16) change COUNTDOWN_SIZE to NUMDB_RECS and set to 20 and fix real_banks
+17) ds1620 dialog must set valid sensors and time intervals.
 	
 to add new commands:
 

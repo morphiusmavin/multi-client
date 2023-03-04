@@ -136,6 +136,7 @@ static int serial_recv_on;
 float convertF(int raw_data);
 extern char oFileName[20];
 extern char cFileName[20];
+extern char dFileName[20];
 
 UCHAR reboot_on_exit;
 //UCHAR upload_buf[UPLOAD_BUFF_SIZE];

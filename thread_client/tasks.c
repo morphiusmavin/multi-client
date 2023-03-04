@@ -28,9 +28,10 @@
 #include "serial_io.h"
 #include "queue/ollist_threads_rw.h"
 #include "queue/cllist_threads_rw.h"
+#include "queue/dllist_threads_rw.h"
 #include "tasks.h"
 #include "../nbus/dio_ds1620.h"
-//#include "cs_client/config_file.h"
+#include "cs_client/dconfig_file.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
 pthread_mutex_t     io_mem_lock=PTHREAD_MUTEX_INITIALIZER;
@@ -45,6 +46,7 @@ static UCHAR check_inputs(int index, int test);
 //extern CMD_STRUCT cmd_array[NO_CMDS];
 ollist_t oll;
 cllist_t cll;
+dllist_t dll;
 PARAM_STRUCT ps;
 
 static UCHAR read_serial_buffer[SERIAL_BUFF_SIZE];
@@ -566,64 +568,6 @@ int change_input(int index, int onoff)
 */
 }
 /*********************************************************************/
-// do the same thing as monitor_input_tasks but with the fake arrays
-// set by change_inputs()
-UCHAR poll_ds1620_task(int test)
-{
-	int val;
-	int i;
-	time_t T;
-	struct tm tm;
-	char time_rec[20];
-//	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
-#ifndef USE_CARDS
-	printf("not using cards\n");
-	while(TRUE)
-	{
-		uSleep(1,0);
-		if(shutdown_all)
-			return 0;
-	}
-#endif
-	for(i = 0;i < 7;i++)
-		valid_ds[i] = 0;
-
-	initDS1620();
-
-	i = 0;
-	val = 0;
-	while(TRUE)
-	{
-//		if(valid_ds[i] > 0)
-if(1)
-		{
-			//printf("polling ds: %d\n",i);
-			T = time(NULL);
-			tm = *localtime(&T);
-			sprintf(time_rec,"%02d:%02d:%02d:%02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
-			//printf("%s\n",time_rec);
-			val = i;
-
-			writeByteTo1620(DS1620_CMD_STARTCONV);
-			uSleep(0,TIME_DELAY/16);
-			val = readTempFrom1620(i);
-			printf("%d ",val);
-			uSleep(0,TIME_DELAY/16);
-			writeByteTo1620(DS1620_CMD_STOPCONV);
-		}
-/*
-		if(++i > 6)
-			i = 0;
-*/
-		uSleep(5,0);
-
-		if(shutdown_all)
-			return 0;
-	}
-	return 1;
-}
-
-/*********************************************************************/
 // pass in the index into the total list of outputs
 // since each card only has 20 outputs, the last 4 bits of PORT C & F are ignored
 // index 0->19 = PORTA(0:7)->PORTC(0:4)
@@ -681,6 +625,89 @@ int change_output(int index, int onoff)
 	return index;
 }
 #endif
+/*********************************************************************/
+// do the same thing as monitor_input_tasks but with the fake arrays
+// set by change_inputs()
+UCHAR poll_ds1620_task(int test)
+{
+	int val;
+	int i,j;
+	time_t T;
+	struct tm tm;
+	char time_rec[20];
+	char errmsg[20];
+	int index;
+	D_DATA *dtp2;
+	D_DATA **dtpp = &dtp2;
+
+	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
+//	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
+#ifndef USE_CARDS
+	printf("not using cards\n");
+	while(TRUE)
+	{
+		uSleep(1,0);
+		if(shutdown_all)
+			return 0;
+	}
+#endif
+	for(i = 0;i < 7;i++)
+		valid_ds[i] = 0;
+
+	initDS1620();
+
+	valid_ds[0] = 1;
+
+	j = i = 0;
+	val = 0;
+
+	index = dGetnRecs("ddata.dat",errmsg);
+	printf("no recs in ddata.dat: %d\n",index);
+	while(TRUE)
+	{
+		if(valid_ds[i] > 0)
+		{
+			writeByteTo1620(DS1620_CMD_STARTCONV);
+			uSleep(0,TIME_DELAY/16);
+			val = readTempFrom1620(i);
+			//printf("%d\n",val);
+			uSleep(0,TIME_DELAY/16);
+			writeByteTo1620(DS1620_CMD_STOPCONV);
+
+			//printf("polling ds: %d\n",i);
+			T = time(NULL);
+			tm = *localtime(&T);
+			//sprintf(time_rec,"%02d:%02d:%02d - %02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
+			//printf("%s\n",time_rec);
+
+			dtp->sensor_no = i;
+			dtp->month = tm.tm_mon;
+			dtp->day = tm.tm_mday;
+			dtp->hour = tm.tm_hour;
+			dtp->minute = tm.tm_min;
+			dtp->second = tm.tm_sec;
+			dtp->value = val;
+			index++;
+			index = dllist_add_data(index, &dll, dtp);
+			dllist_find_data(index, dtpp, &dll);
+			printf("%d %d %d %d %d %d %d\n",dtp2->sensor_no, dtp2->month, dtp2->day, dtp2->hour, 
+					dtp2->minute, dtp2->second, dtp2->value);
+		}
+
+		if(++i > 6)
+			i = 0;
+
+		uSleep(1,0);
+
+		if(shutdown_all)
+		{
+			free(dtp);
+			dlWriteConfig("ddata.dat", &dll, index, errmsg);
+			return 0;
+		}
+	}
+	return 1;
+}
 /*********************************************************************/
 // this happens 10x a second
 UCHAR timer2_task(int test)
