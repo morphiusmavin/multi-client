@@ -64,7 +64,7 @@ char password[PASSWORD_SIZE];
 
 static int serial_rec;
 static void set_output(O_DATA *otp, int onoff);
-static UCHAR inportstatus[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
+//static UCHAR inportstatus[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
 static UCHAR fake_inportstatus1[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
 static UCHAR fake_inportstatus2[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
 static int mask2int(UCHAR mask);

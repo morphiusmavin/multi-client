@@ -368,23 +368,6 @@ UCHAR get_host_cmd_task(int test)
 					clWriteConfig(cFileName,&cll,csize,errmsg);
 					break;
 
-				case YESIMHERE:
-					msg.mtext[0] = cmd;
-					msg_len = strlen(tempx);
-					msg.mtext[1] = (UCHAR)msg_len;
-					msg.mtext[2] = (UCHAR)(msg_len >> 4);
-					strncpy(msg.mtext+3,tempx,msg_len);
-
-					if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-//					if (msgsnd(sock_qid, (void *) &msg, msg_len, MSG_NOERROR) == -1) 
-					{
-						// keep getting "Invalid Argument" - cause I didn't set the mtype
-						perror("msgsnd error");
-						printf("exit from YESIMHERE list\n");
-						exit(EXIT_FAILURE);
-					}
-					break;
-
 				case SEND_CLIENT_LIST:
 					//printf("SEND_CLIENT_LIST from cmd_task (sched)\n");
 					msg.mtext[0] = cmd;

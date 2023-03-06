@@ -438,11 +438,6 @@ UCHAR get_host_cmd_task2(int test)
 						}
 						break;
 
-					case AREYOUTHERE:
-						sprintf(tempx,"yes im here (154)\0");
-						send_sock_msg(tempx, msg_len, YESIMHERE, 0);
-						break;
-
 					case SET_NEXT_CLIENT:
 						next_client = tempx[0];
 						if(next_client == 8)
