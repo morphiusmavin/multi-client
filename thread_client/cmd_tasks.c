@@ -43,6 +43,8 @@ extern ollist_t oll;
 extern cllist_t cll;
 extern dllist_t dll;
 extern int valid_ds[];
+extern char new_filename[];
+extern int ds_interval;
 
 UCHAR msg_buf[SERIAL_BUFF_SIZE];
 UCHAR msg_buf2[SERIAL_BUFF_SIZE];
@@ -142,6 +144,8 @@ UCHAR get_host_cmd_task2(int test)
 	next_client = 0;
 	char label[30];
 	int index;
+	UCHAR mask;
+	UCHAR mask2;
 
 #ifdef CL_150
 	printf("starting 150\n");
@@ -316,7 +320,7 @@ UCHAR get_host_cmd_task2(int test)
 	{
 		memset(dtp,0,sizeof(D_DATA));
 		printf("can't open data.dat\n");
-		dWriteConfig(dFileName, &dll,1,errmsg);
+		dlWriteConfig(dFileName, &dll,1,errmsg);
 	}
 
 	init_ips();
@@ -436,12 +440,36 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case SET_DS_INTERVAL:
+						ds_interval = (int)tempx[0];
+						printf("ds interval: %d\n",ds_interval);
+						break;
+						
+					case RENAME_D_DATA:
+						//memcpy(new_filename,tempx,strlen(tempx));
+						strcpy(new_filename,tempx);
+						//dWriteConfig(new_filename, &dll,dGetnRecs(),errmsg);
+						//dllist_removeall_data(&dll);
+						printf("new filename: %s\n",new_filename);
+						break;
+
 					case SET_VALID_DS:
-						i = (int)tempx[0];	
-						valid_ds[i] = (int)tempx[1];
+						//printf("set valid ds: %d\n",tempx[0]);
+						mask = 1;
+						//memset(&valid_ds[0],0,sizeof(int)*7);
 						for(i = 0;i < 7;i++)
+							valid_ds[i] = 0;
+						for(i = 0;i < 6;i++)
+						{
+							if((mask & tempx[0]) == mask)
+								valid_ds[i] = 1;
+							mask <<= 1;
+						}
+						/*
+						for(i = 0;i < 6;i++)
 							printf("%d ",valid_ds[i]);
 						printf("\n");
+						*/
 						break;
 
 					case RELOAD_CLLIST:
@@ -569,10 +597,6 @@ UCHAR get_host_cmd_task2(int test)
 								uSleep(0,TIME_DELAY/4);
 							}
 						}
-						break;
-
-					case AREYOUTHERE:
-						printf("yes im here\n");
 						break;
 
 /*	testing how the winCl sends ints & longs 

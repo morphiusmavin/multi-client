@@ -21,11 +21,11 @@ namespace EpServerEngineSampleClient
 			WEST_LIGHT,
 			NORTHEAST_LIGHT,
 			SOUTHWEST_LIGHT,
-			WATER_HEATER,
+			WATER_PUMP,
 			WATER_VALVE1,
 			WATER_VALVE2,
 			WATER_VALVE3,
-			WATER_PUMP,			// last one on garage
+			WATER_HEATER,       // last one on garage
 			BENCH_24V_1,        // start of 147
 			BENCH_24V_2,
 			BENCH_12V_1,
@@ -61,7 +61,7 @@ namespace EpServerEngineSampleClient
 			UNUSED150_7,
 			UNUSED150_8,
 			UNUSED150_9,
-			UNUSED150_10,     // last of 150
+			UNUSED150_10,
 			GET_TEMP4,
 			SHUTDOWN_IOBOX,
 			REBOOT_IOBOX,
@@ -86,8 +86,6 @@ namespace EpServerEngineSampleClient
 			SET_NEXT_CLIENT,
 			SEND_NEXT_CLIENT,
 			UPDATE_CLIENT_INFO,
-			AREYOUTHERE,
-			YESIMHERE,
 			GET_CLLIST,
 			GET_ALL_CLLIST,
 			REPLY_CLLIST,
@@ -98,7 +96,10 @@ namespace EpServerEngineSampleClient
 			CLEAR_CLLIST,
 			SORT_CLLIST,
 			DISPLAY_CLLIST_SORT,
-			RELOAD_CLLIST
+			RELOAD_CLLIST,
+			SET_VALID_DS,
+			SET_DS_INTERVAL,
+			RENAME_D_DATA
 		}
 		public ServerCmds()
 		{

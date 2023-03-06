@@ -37,6 +37,7 @@ namespace EpServerEngineSampleClient
         private Cabin cabin = null;
         private Outdoor outdoor = null;
         private TimerSchedule timer_schedule = null;
+        private DS1620Mgt ds1620 = null;
         private WinCLMsg winclmsg = null;
         private ClientDest clientdest = null;
         private SetNextClient setnextclient = null;
@@ -200,6 +201,7 @@ namespace EpServerEngineSampleClient
             cabin = new Cabin(m_client);
             outdoor = new Outdoor(m_client);
             timer_schedule = new TimerSchedule("c:\\users\\daniel\\dev\\cdata.xml", m_client);
+            ds1620 = new DS1620Mgt(m_client);
             btnGarageForm.Enabled = false;
             btnTestBench.Enabled = false;
             btnCabin.Enabled = false;
@@ -583,18 +585,6 @@ namespace EpServerEngineSampleClient
 
             switch (str)
             {
-                /*
-                case "AREYOUTHERE":
-                    tbServerTime.Text = ret;
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("YESIMHERE"), 8, ret);
-                    connected_tick = 0;
-                    break;
-                */
-                case "YESIMHERE":
-                    //AddMsg(ret);
-                    AddMsg("yes im here");
-                    break;
-
                 case "UPTIME_MSG":
                     string[] words = ret.Split(' ');
                     i = 0;
@@ -1731,21 +1721,15 @@ namespace EpServerEngineSampleClient
         }
 		private void btnRescan_Click(object sender, EventArgs e)
 		{
-/*
-            // modify (for testing) the time of the selected target
-            int dest = -1;
-            foreach (ClientsAvail cl in clients_avail)
+            ds1620.StartPosition = FormStartPosition.Manual;
+            ds1620.Location = new Point(100, 10);
+            if (ds1620.ShowDialog(this) == DialogResult.OK)
             {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                {
-                    dest = cl.index;
-                }
             }
-            //AddMsg("add time: " + dest.ToString() + tbAddHours.Text + " " +  tbAddMinutes.Text);
-            if (tbAddHours.Text != "" && tbAddMinutes.Text != "" && dest != -1)
-                SetTime(dest, int.Parse(tbAddHours.Text), int.Parse(tbAddMinutes.Text));
-*/
-		}
+            else
+            {
+            }
+        }
         private void btnNextSunrise_Click(object sender, EventArgs e)
 		{
             if (next_srss < sunrise_sunsets.Count()-1)

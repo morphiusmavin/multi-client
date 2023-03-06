@@ -220,7 +220,7 @@ int cGetnRecs(char *filename, char *errmsg)
 	fsize = lseek(fp,0,SEEK_END);
 	fsize--;
 	nrecs = fsize/sizeof(C_DATA);
-	printf("fsize: %d nrecs: %d\n",fsize,nrecs);
+	//printf("fsize: %d nrecs: %d\n",fsize,nrecs);
 	fsize = lseek(fp,0,SEEK_SET);
 	i = 0;
 	read(fp,&id,1);

@@ -25,7 +25,21 @@ todo:
 	ssh screen to run the startup script - it won't work on reboot by itself)
 15) Move coop heaters, lights & outdoor lights to 147, replace 147 w/4600 and put 150 in NW corner 
 16) change COUNTDOWN_SIZE to NUMDB_RECS and set to 20 and fix real_banks
-17) ds1620 dialog must set valid sensors and time intervals.
+17) ds1620 dialog must set valid sensors and time intervals. Also, whether to truncate, rename
+	or download the ddata.dat file. 
+	value of ds_interval:
+		0 - 1/2 second
+		1 - 1 second 
+		2 - 5 seconds
+		3 - 15 seconds 
+		4 - 30 seconds 
+		5 - 1 minute 
+		6 - 5 minutes 
+		7 - 10 minutes 
+		default - 1 minute 
+18) could possibly rename the ddata.dat file every hour with the day/month/hour in the filename 
+	to save space, but not worth the trouble, really - until we start running out of space 
+
 	
 to add new commands:
 

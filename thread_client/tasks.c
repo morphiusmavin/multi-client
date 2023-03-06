@@ -47,6 +47,10 @@ static UCHAR check_inputs(int index, int test);
 ollist_t oll;
 cllist_t cll;
 dllist_t dll;
+char new_filename[20];
+int ds_interval;
+int valid_ds[7];
+
 PARAM_STRUCT ps;
 
 static UCHAR read_serial_buffer[SERIAL_BUFF_SIZE];
@@ -61,9 +65,9 @@ extern int shutdown_all;
 static int raw_data_array[RAW_DATA_ARRAY_SIZE];
 static int raw_data_ptr;
 int avg_raw_data(int prev_data);
+static void dsSleep(int interval);
 int max_ips;
 IP ip[40];
-int valid_ds[7];
 
 static COUNTDOWN count_down[COUNTDOWN_SIZE];
 int curr_countdown_size;
@@ -639,6 +643,7 @@ UCHAR poll_ds1620_task(int test)
 	int index;
 	D_DATA *dtp2;
 	D_DATA **dtpp = &dtp2;
+	int bad_ds_count = 5;
 
 	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
 //	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
@@ -654,9 +659,13 @@ UCHAR poll_ds1620_task(int test)
 	for(i = 0;i < 7;i++)
 		valid_ds[i] = 0;
 
+	uSleep(5,0);
+	printf("starting ds\n");
+
 	initDS1620();
 
 	valid_ds[0] = 1;
+	ds_interval = 4;
 
 	j = i = 0;
 	val = 0;
@@ -670,11 +679,11 @@ UCHAR poll_ds1620_task(int test)
 			writeByteTo1620(DS1620_CMD_STARTCONV);
 			uSleep(0,TIME_DELAY/16);
 			val = readTempFrom1620(i);
-			//printf("%d\n",val);
+			printf("%d\n",val);
 			uSleep(0,TIME_DELAY/16);
 			writeByteTo1620(DS1620_CMD_STOPCONV);
 
-			//printf("polling ds: %d\n",i);
+			printf("polling ds: %d\n",i);
 			T = time(NULL);
 			tm = *localtime(&T);
 			//sprintf(time_rec,"%02d:%02d:%02d - %02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
@@ -689,15 +698,17 @@ UCHAR poll_ds1620_task(int test)
 			dtp->value = val;
 			index++;
 			index = dllist_add_data(index, &dll, dtp);
-			dllist_find_data(index, dtpp, &dll);
-			printf("%d %d %d %d %d %d %d\n",dtp2->sensor_no, dtp2->month, dtp2->day, dtp2->hour, 
-					dtp2->minute, dtp2->second, dtp2->value);
+			uSleep(0,TIME_DELAY);
+			//dllist_find_data(index, dtpp, &dll);
+			//printf("%d %d %d %d %d %d %d\n",dtp2->sensor_no, dtp2->month, dtp2->day, dtp2->hour, 
+					//dtp2->minute, dtp2->second, dtp2->value);
 		}
 
 		if(++i > 6)
+		{
 			i = 0;
-
-		uSleep(1,0);
+			dsSleep(ds_interval);		// this is the delay between all acq's 
+		}
 
 		if(shutdown_all)
 		{
@@ -707,6 +718,39 @@ UCHAR poll_ds1620_task(int test)
 		}
 	}
 	return 1;
+}
+static void dsSleep(int interval)
+{
+	switch(interval)
+	{
+		case 0:			// 1/2 second
+			uSleep(0,TIME_DELAY/2);
+			break;
+		case 1:			// 1 second
+			uSleep(1,0);
+			break;
+		case 2:			// 5 seconds
+			uSleep(5,0);
+			break;
+		case 3:			// 15 seconds
+			uSleep(15,0);
+			break;
+		case 4:			// 30 seconds
+			uSleep(30,0);
+			break;
+		case 5:			// 1 minute
+			uSleep(60,0);
+			break;
+		case 6:			// 5 minutes
+			uSleep(300,0);
+			break;
+		case 7:			// 10 minutes
+			uSleep(600,0);
+			break;
+		default:
+			uSleep(60,0);
+			break;
+	}
 }
 /*********************************************************************/
 // this happens 10x a second

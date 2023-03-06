@@ -266,7 +266,7 @@
 			this.btnRescan.Name = "btnRescan";
 			this.btnRescan.Size = new System.Drawing.Size(235, 61);
 			this.btnRescan.TabIndex = 1;
-			this.btnRescan.Text = "Unused";
+			this.btnRescan.Text = "DS1620";
 			this.btnRescan.UseVisualStyleBackColor = false;
 			this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
 			// 

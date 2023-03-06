@@ -266,7 +266,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void LoadEvent(object sender, EventArgs e)
 		{
-			for (int i = 0; i < 16; i++)
+			for (int i = 0; i < 11; i++)
 			{
 				ToggleButton(i, svrcmd.GetState(svrcmd.GetCmdIndexI(on_label_list[i])));
 			}

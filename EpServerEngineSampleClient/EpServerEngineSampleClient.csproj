@@ -113,6 +113,12 @@
     <Compile Include="DlgSetParams.Designer.cs">
       <DependentUpon>DlgSetParams.cs</DependentUpon>
     </Compile>
+    <Compile Include="DS1620Mgt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DS1620Mgt.Designer.cs">
+      <DependentUpon>DS1620Mgt.cs</DependentUpon>
+    </Compile>
     <Compile Include="EasyButtonForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -206,6 +212,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DlgSetParams.resx">
       <DependentUpon>DlgSetParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DS1620Mgt.resx">
+      <DependentUpon>DS1620Mgt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EasyButtonForm.resx">
       <DependentUpon>EasyButtonForm.cs</DependentUpon>
