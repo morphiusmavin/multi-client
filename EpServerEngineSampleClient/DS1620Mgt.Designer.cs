@@ -47,15 +47,17 @@ namespace EpServerEngineSampleClient
 			this.btnValidDS = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.btnApplyInterval = new System.Windows.Forms.Button();
-			this.rbInterval1 = new System.Windows.Forms.RadioButton();
-			this.rbInterval2 = new System.Windows.Forms.RadioButton();
-			this.rbInterval3 = new System.Windows.Forms.RadioButton();
-			this.rbInterval4 = new System.Windows.Forms.RadioButton();
-			this.rbInterval5 = new System.Windows.Forms.RadioButton();
-			this.rbInterval6 = new System.Windows.Forms.RadioButton();
-			this.rbInterval7 = new System.Windows.Forms.RadioButton();
 			this.rbInterval8 = new System.Windows.Forms.RadioButton();
+			this.rbInterval7 = new System.Windows.Forms.RadioButton();
+			this.rbInterval6 = new System.Windows.Forms.RadioButton();
+			this.rbInterval5 = new System.Windows.Forms.RadioButton();
+			this.rbInterval4 = new System.Windows.Forms.RadioButton();
+			this.rbInterval3 = new System.Windows.Forms.RadioButton();
+			this.rbInterval2 = new System.Windows.Forms.RadioButton();
+			this.rbInterval1 = new System.Windows.Forms.RadioButton();
+			this.btnApplyInterval = new System.Windows.Forms.Button();
+			this.btnShow = new System.Windows.Forms.Button();
+			this.btnReset = new System.Windows.Forms.Button();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -260,87 +262,17 @@ namespace EpServerEngineSampleClient
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Interval";
 			// 
-			// btnApplyInterval
+			// rbInterval8
 			// 
-			this.btnApplyInterval.Location = new System.Drawing.Point(19, 297);
-			this.btnApplyInterval.Name = "btnApplyInterval";
-			this.btnApplyInterval.Size = new System.Drawing.Size(133, 32);
-			this.btnApplyInterval.TabIndex = 112;
-			this.btnApplyInterval.Text = "Apply Interval";
-			this.btnApplyInterval.UseVisualStyleBackColor = true;
-			this.btnApplyInterval.Click += new System.EventHandler(this.btnApplyInterval_Click);
-			// 
-			// rbInterval1
-			// 
-			this.rbInterval1.AutoSize = true;
-			this.rbInterval1.Location = new System.Drawing.Point(24, 35);
-			this.rbInterval1.Name = "rbInterval1";
-			this.rbInterval1.Size = new System.Drawing.Size(115, 24);
-			this.rbInterval1.TabIndex = 112;
-			this.rbInterval1.TabStop = true;
-			this.rbInterval1.Text = "1/2 second";
-			this.rbInterval1.UseVisualStyleBackColor = true;
-			this.rbInterval1.CheckedChanged += new System.EventHandler(this.rbInterval1_CheckedChanged);
-			// 
-			// rbInterval2
-			// 
-			this.rbInterval2.AutoSize = true;
-			this.rbInterval2.Location = new System.Drawing.Point(24, 64);
-			this.rbInterval2.Name = "rbInterval2";
-			this.rbInterval2.Size = new System.Drawing.Size(100, 24);
-			this.rbInterval2.TabIndex = 113;
-			this.rbInterval2.TabStop = true;
-			this.rbInterval2.Text = "1 second";
-			this.rbInterval2.UseVisualStyleBackColor = true;
-			this.rbInterval2.CheckedChanged += new System.EventHandler(this.rbInterval2_CheckedChanged);
-			// 
-			// rbInterval3
-			// 
-			this.rbInterval3.AutoSize = true;
-			this.rbInterval3.Location = new System.Drawing.Point(24, 93);
-			this.rbInterval3.Name = "rbInterval3";
-			this.rbInterval3.Size = new System.Drawing.Size(109, 24);
-			this.rbInterval3.TabIndex = 114;
-			this.rbInterval3.TabStop = true;
-			this.rbInterval3.Text = "5 seconds";
-			this.rbInterval3.UseVisualStyleBackColor = true;
-			this.rbInterval3.CheckedChanged += new System.EventHandler(this.rbInterval3_CheckedChanged);
-			// 
-			// rbInterval4
-			// 
-			this.rbInterval4.AutoSize = true;
-			this.rbInterval4.Location = new System.Drawing.Point(24, 122);
-			this.rbInterval4.Name = "rbInterval4";
-			this.rbInterval4.Size = new System.Drawing.Size(119, 24);
-			this.rbInterval4.TabIndex = 115;
-			this.rbInterval4.TabStop = true;
-			this.rbInterval4.Text = "15 seconds";
-			this.rbInterval4.UseVisualStyleBackColor = true;
-			this.rbInterval4.CheckedChanged += new System.EventHandler(this.rbInterval4_CheckedChanged);
-			// 
-			// rbInterval5
-			// 
-			this.rbInterval5.AutoSize = true;
-			this.rbInterval5.Location = new System.Drawing.Point(24, 151);
-			this.rbInterval5.Name = "rbInterval5";
-			this.rbInterval5.Size = new System.Drawing.Size(119, 24);
-			this.rbInterval5.TabIndex = 116;
-			this.rbInterval5.TabStop = true;
-			this.rbInterval5.Text = "30 seconds";
-			this.rbInterval5.UseVisualStyleBackColor = true;
-			this.rbInterval5.CheckedChanged += new System.EventHandler(this.rbInterval5_CheckedChanged);
-			// 
-			// rbInterval6
-			// 
-			this.rbInterval6.AutoSize = true;
-			this.rbInterval6.Location = new System.Drawing.Point(24, 180);
-			this.rbInterval6.Name = "rbInterval6";
-			this.rbInterval6.Size = new System.Drawing.Size(96, 24);
-			this.rbInterval6.TabIndex = 117;
-			this.rbInterval6.TabStop = true;
-			this.rbInterval6.Text = "1 minute";
-			this.rbInterval6.UseVisualStyleBackColor = true;
-			this.rbInterval6.CheckedChanged += new System.EventHandler(this.rbInterval6_CheckedChanged);
+			this.rbInterval8.AutoSize = true;
+			this.rbInterval8.Location = new System.Drawing.Point(24, 238);
+			this.rbInterval8.Name = "rbInterval8";
+			this.rbInterval8.Size = new System.Drawing.Size(115, 24);
+			this.rbInterval8.TabIndex = 119;
+			this.rbInterval8.TabStop = true;
+			this.rbInterval8.Text = "10 minutes";
+			this.rbInterval8.UseVisualStyleBackColor = true;
+			this.rbInterval8.CheckedChanged += new System.EventHandler(this.rbInterval8_CheckedChanged);
 			// 
 			// rbInterval7
 			// 
@@ -354,17 +286,109 @@ namespace EpServerEngineSampleClient
 			this.rbInterval7.UseVisualStyleBackColor = true;
 			this.rbInterval7.CheckedChanged += new System.EventHandler(this.rbInterval7_CheckedChanged);
 			// 
-			// rbInterval8
+			// rbInterval6
 			// 
-			this.rbInterval8.AutoSize = true;
-			this.rbInterval8.Location = new System.Drawing.Point(24, 238);
-			this.rbInterval8.Name = "rbInterval8";
-			this.rbInterval8.Size = new System.Drawing.Size(115, 24);
-			this.rbInterval8.TabIndex = 119;
-			this.rbInterval8.TabStop = true;
-			this.rbInterval8.Text = "10 minutes";
-			this.rbInterval8.UseVisualStyleBackColor = true;
-			this.rbInterval8.CheckedChanged += new System.EventHandler(this.rbInterval8_CheckedChanged);
+			this.rbInterval6.AutoSize = true;
+			this.rbInterval6.Location = new System.Drawing.Point(24, 180);
+			this.rbInterval6.Name = "rbInterval6";
+			this.rbInterval6.Size = new System.Drawing.Size(96, 24);
+			this.rbInterval6.TabIndex = 117;
+			this.rbInterval6.TabStop = true;
+			this.rbInterval6.Text = "1 minute";
+			this.rbInterval6.UseVisualStyleBackColor = true;
+			this.rbInterval6.CheckedChanged += new System.EventHandler(this.rbInterval6_CheckedChanged);
+			// 
+			// rbInterval5
+			// 
+			this.rbInterval5.AutoSize = true;
+			this.rbInterval5.Location = new System.Drawing.Point(24, 151);
+			this.rbInterval5.Name = "rbInterval5";
+			this.rbInterval5.Size = new System.Drawing.Size(119, 24);
+			this.rbInterval5.TabIndex = 116;
+			this.rbInterval5.TabStop = true;
+			this.rbInterval5.Text = "30 seconds";
+			this.rbInterval5.UseVisualStyleBackColor = true;
+			this.rbInterval5.CheckedChanged += new System.EventHandler(this.rbInterval5_CheckedChanged);
+			// 
+			// rbInterval4
+			// 
+			this.rbInterval4.AutoSize = true;
+			this.rbInterval4.Location = new System.Drawing.Point(24, 122);
+			this.rbInterval4.Name = "rbInterval4";
+			this.rbInterval4.Size = new System.Drawing.Size(119, 24);
+			this.rbInterval4.TabIndex = 115;
+			this.rbInterval4.TabStop = true;
+			this.rbInterval4.Text = "15 seconds";
+			this.rbInterval4.UseVisualStyleBackColor = true;
+			this.rbInterval4.CheckedChanged += new System.EventHandler(this.rbInterval4_CheckedChanged);
+			// 
+			// rbInterval3
+			// 
+			this.rbInterval3.AutoSize = true;
+			this.rbInterval3.Location = new System.Drawing.Point(24, 93);
+			this.rbInterval3.Name = "rbInterval3";
+			this.rbInterval3.Size = new System.Drawing.Size(109, 24);
+			this.rbInterval3.TabIndex = 114;
+			this.rbInterval3.TabStop = true;
+			this.rbInterval3.Text = "5 seconds";
+			this.rbInterval3.UseVisualStyleBackColor = true;
+			this.rbInterval3.CheckedChanged += new System.EventHandler(this.rbInterval3_CheckedChanged);
+			// 
+			// rbInterval2
+			// 
+			this.rbInterval2.AutoSize = true;
+			this.rbInterval2.Location = new System.Drawing.Point(24, 64);
+			this.rbInterval2.Name = "rbInterval2";
+			this.rbInterval2.Size = new System.Drawing.Size(100, 24);
+			this.rbInterval2.TabIndex = 113;
+			this.rbInterval2.TabStop = true;
+			this.rbInterval2.Text = "1 second";
+			this.rbInterval2.UseVisualStyleBackColor = true;
+			this.rbInterval2.CheckedChanged += new System.EventHandler(this.rbInterval2_CheckedChanged);
+			// 
+			// rbInterval1
+			// 
+			this.rbInterval1.AutoSize = true;
+			this.rbInterval1.Location = new System.Drawing.Point(24, 35);
+			this.rbInterval1.Name = "rbInterval1";
+			this.rbInterval1.Size = new System.Drawing.Size(115, 24);
+			this.rbInterval1.TabIndex = 112;
+			this.rbInterval1.TabStop = true;
+			this.rbInterval1.Text = "1/2 second";
+			this.rbInterval1.UseVisualStyleBackColor = true;
+			this.rbInterval1.CheckedChanged += new System.EventHandler(this.rbInterval1_CheckedChanged);
+			// 
+			// btnApplyInterval
+			// 
+			this.btnApplyInterval.Location = new System.Drawing.Point(19, 297);
+			this.btnApplyInterval.Name = "btnApplyInterval";
+			this.btnApplyInterval.Size = new System.Drawing.Size(133, 32);
+			this.btnApplyInterval.TabIndex = 112;
+			this.btnApplyInterval.Text = "Apply Interval";
+			this.btnApplyInterval.UseVisualStyleBackColor = true;
+			this.btnApplyInterval.Click += new System.EventHandler(this.btnApplyInterval_Click);
+			// 
+			// btnShow
+			// 
+			this.btnShow.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.btnShow.Location = new System.Drawing.Point(386, 209);
+			this.btnShow.Name = "btnShow";
+			this.btnShow.Size = new System.Drawing.Size(109, 42);
+			this.btnShow.TabIndex = 112;
+			this.btnShow.Text = "Show";
+			this.btnShow.UseVisualStyleBackColor = true;
+			this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
+			// 
+			// btnReset
+			// 
+			this.btnReset.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.btnReset.Location = new System.Drawing.Point(386, 143);
+			this.btnReset.Name = "btnReset";
+			this.btnReset.Size = new System.Drawing.Size(109, 42);
+			this.btnReset.TabIndex = 113;
+			this.btnReset.Text = "Reset";
+			this.btnReset.UseVisualStyleBackColor = true;
+			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
 			// 
 			// DS1620Mgt
 			// 
@@ -372,6 +396,8 @@ namespace EpServerEngineSampleClient
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(800, 524);
+			this.Controls.Add(this.btnReset);
+			this.Controls.Add(this.btnShow);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.btnValidDS);
@@ -428,5 +454,7 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.RadioButton rbInterval2;
 		private System.Windows.Forms.RadioButton rbInterval1;
 		private System.Windows.Forms.RadioButton rbInterval8;
+		private System.Windows.Forms.Button btnShow;
+		private System.Windows.Forms.Button btnReset;
 	}
 }

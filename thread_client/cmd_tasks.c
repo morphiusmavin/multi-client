@@ -45,6 +45,8 @@ extern dllist_t dll;
 extern int valid_ds[];
 extern char new_filename[];
 extern int ds_interval;
+extern int ds_index;
+extern int ds_reset;
 
 UCHAR msg_buf[SERIAL_BUFF_SIZE];
 UCHAR msg_buf2[SERIAL_BUFF_SIZE];
@@ -440,6 +442,15 @@ UCHAR get_host_cmd_task2(int test)
 
  				switch(cmd)
 				{
+					case DLLIST_SAVE:
+						//dlWriteConfig("ddata.dat", &dll, index, errmsg);
+						ds_reset = 1;
+						break;
+
+					case DLLIST_SHOW:
+						dllist_show(&dll);
+						break;
+
 					case SET_DS_INTERVAL:
 						ds_interval = (int)tempx[0];
 						printf("ds interval: %d\n",ds_interval);

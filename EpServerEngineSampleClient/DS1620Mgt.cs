@@ -233,5 +233,15 @@ namespace EpServerEngineSampleClient
 		{
 			interval = 7;
 		}
+
+		private void btnShow_Click(object sender, EventArgs e)
+		{
+			svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SHOW"), target, interval);
+		}
+
+		private void btnReset_Click(object sender, EventArgs e)
+		{
+			svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), target, interval);
+		}
 	}
 }

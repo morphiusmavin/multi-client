@@ -99,7 +99,8 @@ namespace EpServerEngineSampleClient
 			RELOAD_CLLIST,
 			SET_VALID_DS,
 			SET_DS_INTERVAL,
-			RENAME_D_DATA
+			RENAME_D_DATA,
+			DLLIST_SHOW
 		}
 		public ServerCmds()
 		{

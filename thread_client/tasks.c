@@ -50,6 +50,8 @@ dllist_t dll;
 char new_filename[20];
 int ds_interval;
 int valid_ds[7];
+int ds_index;
+int ds_reset;
 
 PARAM_STRUCT ps;
 
@@ -68,6 +70,9 @@ int avg_raw_data(int prev_data);
 static void dsSleep(int interval);
 int max_ips;
 IP ip[40];
+static D_DATA *dtp;
+static D_DATA **dtpp;
+
 
 static COUNTDOWN count_down[COUNTDOWN_SIZE];
 int curr_countdown_size;
@@ -640,12 +645,11 @@ UCHAR poll_ds1620_task(int test)
 	struct tm tm;
 	char time_rec[20];
 	char errmsg[20];
-	int index;
-	D_DATA *dtp2;
-	D_DATA **dtpp = &dtp2;
 	int bad_ds_count = 5;
+	strcpy(new_filename,"ddata2.dat\0");
 
 	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
+	dtpp = &dtp;
 //	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
 #ifndef USE_CARDS
 	printf("not using cards\n");
@@ -669,12 +673,13 @@ UCHAR poll_ds1620_task(int test)
 
 	j = i = 0;
 	val = 0;
+	ds_reset = 0;
 
-	index = dGetnRecs("ddata.dat",errmsg);
-	printf("no recs in ddata.dat: %d\n",index);
+	ds_index = dGetnRecs("ddata.dat",errmsg);
+	printf("no recs in ddata.dat: %d\n",ds_index);
 	while(TRUE)
 	{
-		if(valid_ds[i] > 0)
+		if(valid_ds[i] > 0 && ds_reset == 0)
 		{
 			writeByteTo1620(DS1620_CMD_STARTCONV);
 			uSleep(0,TIME_DELAY/16);
@@ -683,7 +688,7 @@ UCHAR poll_ds1620_task(int test)
 			uSleep(0,TIME_DELAY/16);
 			writeByteTo1620(DS1620_CMD_STOPCONV);
 
-			printf("polling ds: %d\n",i);
+			printf("polling ds: %d %d\n",i,ds_index);
 			T = time(NULL);
 			tm = *localtime(&T);
 			//sprintf(time_rec,"%02d:%02d:%02d - %02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
@@ -696,8 +701,8 @@ UCHAR poll_ds1620_task(int test)
 			dtp->minute = tm.tm_min;
 			dtp->second = tm.tm_sec;
 			dtp->value = val;
-			index++;
-			index = dllist_add_data(index, &dll, dtp);
+			ds_index++;
+			ds_index = dllist_add_data(ds_index, &dll, dtp);
 			uSleep(0,TIME_DELAY);
 			//dllist_find_data(index, dtpp, &dll);
 			//printf("%d %d %d %d %d %d %d\n",dtp2->sensor_no, dtp2->month, dtp2->day, dtp2->hour, 
@@ -706,7 +711,21 @@ UCHAR poll_ds1620_task(int test)
 
 		if(++i > 6)
 		{
+			j = 0;
 			i = 0;
+			if(ds_reset == 1)
+			{
+				dlWriteConfig(new_filename, &dll, index, errmsg);
+				memset(dtp,0,sizeof(D_DATA));
+				remove("ddata.dat");
+				//dllist_remove_data(int index, D_DATA **datapp, dllist_t *llistp)
+				for(j = 0;j < ds_index - 3;j++)
+					dllist_remove_data(j,dtpp,&dll);
+				ds_index = 0;
+				ds_index = dllist_add_data(ds_index, &dll, dtp);
+				printf("reset\n");
+				ds_reset = 0;
+			}
 			dsSleep(ds_interval);		// this is the delay between all acq's 
 		}
 
@@ -719,6 +738,7 @@ UCHAR poll_ds1620_task(int test)
 	}
 	return 1;
 }
+/*********************************************************************/
 static void dsSleep(int interval)
 {
 	switch(interval)
@@ -767,12 +787,14 @@ UCHAR timer2_task(int test)
 	int bank = 0;
 	UCHAR mask;
 	int index = 0;
+	char errmsg[20];
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 
 	while(TRUE)
 	{
 		uSleep(1,0);
+
 		//printf("%d : %d -",trunning_minutes, trunning_seconds);
 		if(++trunning_seconds > 59)
 		{
