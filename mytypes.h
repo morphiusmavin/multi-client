@@ -20,7 +20,7 @@ typedef unsigned long ULONG;
 #define SERIAL_BUFF_SIZE 255
 #define RAW_DATA_ARRAY_SIZE 15
 #define MAX_CLIENTS	9
-#define NO_CMDS 90
+#define NO_CMDS 91
 #define NO_CLLIST_RECS NUM_DATA_RECS
 UCHAR inportstatus[NUM_DATA_RECS];
 // format of message queue (msgsnd & msgrcv)

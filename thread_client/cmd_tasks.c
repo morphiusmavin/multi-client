@@ -151,12 +151,15 @@ UCHAR get_host_cmd_task2(int test)
 
 #ifdef CL_150
 	printf("starting 150\n");
+	this_client_id = 4;
 #endif
 #ifdef CL_147
 	printf("starting 147\n");
+	this_client_id = 3;
 #endif 
 #ifdef CL_154
 	printf("starting 154\n");
+	this_client_id = 2;
 #endif 
 #if 1
 	// since each card only has 20 ports then the 1st 2 port access bytes

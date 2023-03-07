@@ -643,9 +643,10 @@ UCHAR poll_ds1620_task(int test)
 	int i,j;
 	time_t T;
 	struct tm tm;
-	char time_rec[20];
+	char sock_msg[30];
 	char errmsg[20];
 	int bad_ds_count = 5;
+	char date_str[20];
 	strcpy(new_filename,"ddata2.dat\0");
 
 	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
@@ -688,7 +689,7 @@ UCHAR poll_ds1620_task(int test)
 			uSleep(0,TIME_DELAY/16);
 			writeByteTo1620(DS1620_CMD_STOPCONV);
 
-			printf("polling ds: %d %d\n",i,ds_index);
+			//printf("polling ds: %d %d\n",i,ds_index);
 			T = time(NULL);
 			tm = *localtime(&T);
 			//sprintf(time_rec,"%02d:%02d:%02d - %02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
@@ -704,6 +705,8 @@ UCHAR poll_ds1620_task(int test)
 			ds_index++;
 			ds_index = dllist_add_data(ds_index, &dll, dtp);
 			uSleep(0,TIME_DELAY);
+			sprintf(sock_msg, "%0d %0d %0d",this_client_id, i, val);
+			send_sock_msg(sock_msg, strlen(sock_msg), DS1620_MSG, 8);
 			//dllist_find_data(index, dtpp, &dll);
 			//printf("%d %d %d %d %d %d %d\n",dtp2->sensor_no, dtp2->month, dtp2->day, dtp2->hour, 
 					//dtp2->minute, dtp2->second, dtp2->value);
@@ -715,15 +718,24 @@ UCHAR poll_ds1620_task(int test)
 			i = 0;
 			if(ds_reset == 1)
 			{
-				dlWriteConfig(new_filename, &dll, index, errmsg);
 				memset(dtp,0,sizeof(D_DATA));
-				remove("ddata.dat");
+				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+				//printf("%s\n",date_str);
+				//printf("ds_index: %d\n",ds_index);
+				dlWriteConfig(date_str, &dll, ds_index, errmsg);
+				//rename("ddata.dat",date_str);
 				//dllist_remove_data(int index, D_DATA **datapp, dllist_t *llistp)
-				for(j = 0;j < ds_index - 3;j++)
+				uSleep(1,0);
+				//printf("test...\n");
+				/*
+				for(j = 0;j < ds_index;j++)
 					dllist_remove_data(j,dtpp,&dll);
+				*/
+				dllist_init (&dll);
 				ds_index = 0;
 				ds_index = dllist_add_data(ds_index, &dll, dtp);
-				printf("reset\n");
+				ds_index++;
+				//printf("reset\n");
 				ds_reset = 0;
 			}
 			dsSleep(ds_interval);		// this is the delay between all acq's 

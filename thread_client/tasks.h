@@ -149,5 +149,6 @@ key_t sched_key;
 key_t basic_controls_key;
 int this_client_index;
 int next_client;
+int this_client_id;
 
 #endif
