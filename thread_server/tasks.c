@@ -26,7 +26,7 @@
 #include <semaphore.h>
 #include "../cmd_types.h"
 #include "../mytypes.h"
-#include "ioports.h"
+#include "../ioports.h"
 #include "serial_io.h"
 #include "queue/ollist_threads_rw.h"
 #include "queue/cllist_threads_rw.h"
@@ -64,9 +64,6 @@ char password[PASSWORD_SIZE];
 
 static int serial_rec;
 static void set_output(O_DATA *otp, int onoff);
-static UCHAR inportstatus[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
-static UCHAR fake_inportstatus1[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
-static UCHAR fake_inportstatus2[OUTPORTF_OFFSET-OUTPORTA_OFFSET+1];
 static int mask2int(UCHAR mask);
 extern int shutdown_all;
 static int raw_data_array[RAW_DATA_ARRAY_SIZE];
@@ -412,19 +409,9 @@ UCHAR monitor_input_task(int test)
 
 	pthread_mutex_lock( &io_mem_lock);
 
-/*
 	inportstatus[0] =  ~InPortByteA();
 	inportstatus[1] =  ~InPortByteB();
 	inportstatus[2] =  ~InPortByteC();
-
-	inportstatus[3] =  ~InPortByteD();
-	inportstatus[4] =  ~InPortByteE();
-	inportstatus[5] =  ~InPortByteF();
-*/
-
-	inportstatus[0] =  ~InPortByteD();
-	inportstatus[1] =  ~InPortByteE();
-	inportstatus[2] =  ~InPortByteF();
 
 	pthread_mutex_unlock( &io_mem_lock);
 
@@ -437,7 +424,7 @@ UCHAR monitor_input_task(int test)
 			usleep(_500MS);
 			usleep(_500MS);
 			pthread_mutex_lock( &io_mem_lock);
-			result = InPortByte(bank);
+			//result = InPortByte(bank);
 			//printf("%d: %02x ",bank-3, result);
 			//if(bank == 5)
 				//printf("\r\n");
@@ -531,7 +518,7 @@ int change_input(int index, int onoff)
 	index = real_banks[index].index;
 
 	mask <<= index;
-
+/*
 	if(onoff)
 	{
 		fake_inportstatus2[bank] |= mask;
@@ -540,6 +527,7 @@ int change_input(int index, int onoff)
 	{
 		fake_inportstatus2[bank] &= ~mask;
 	}
+*/
 }
 /*********************************************************************/
 // do the same thing as monitor_input_tasks but with the fake arrays
@@ -579,82 +567,6 @@ UCHAR monitor_fake_input_task(int test)
 		if(shutdown_all)
 			return 0;
 	}
-
-//	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
-
-	for(i = 0;i < 6;i++)
-	{
-		fake_inportstatus1[i] = 0;
-		fake_inportstatus2[i] = 0;
-	}
-
-	while(TRUE)
-	{
-		for(bank = 0;bank < NUM_PORTS;bank++)
-		{
-			result = fake_inportstatus2[bank];
-
-			if(result != fake_inportstatus1[bank])
-			{
-				mask = result ^ fake_inportstatus1[bank];
-//				printf("enter 2: %02x\r\n",fake_inportstatus1[bank]);
-
-//				printf("mask: %02x\r\n",mask);
-				if(mask > 0x80)
-				{
-					printf("bad mask 1 %02x\r\n",mask);
-					continue;
-				}
-				index = mask2int(mask);
-
-				if((mask & result) == mask)
-				{
-					onoff = ON;
-	 				fake_inportstatus2[bank] |= mask;
-				}
-				else
-				{
-					onoff = OFF;
-	 				fake_inportstatus2[bank] &= ~mask;
-				}
-
-				for(i = 0;i < 40;i++)
-				{
-					if(real_banks[i].bank == bank && real_banks[i].index == index)
-					{
-						index = real_banks[i].i;
-					}
-				}
-
-				for(i = 0;i < max_ips;i++)
-				{
-//					printf("%d %d %d\r\n",ip[i].port,ip[i].input,index);
-					if(ip[i].input == index)
-					{
-						if(ip[i].function == 0)
-						{
-							ollist_find_data(ip[i].port,&otp,&oll);
-							set_output(otp, onoff);
-						}else 
-						{
-							add_msg_queue(ip[i].function,0);
-						}
-					}
-				}
- 				fake_inportstatus1[bank] = fake_inportstatus2[bank];
-
-//				printf("leave 2: %02x %02x\r\n\r\n",fake_inportstatus1[bank],fake_inportstatus2[bank]);
-			}
-		}
-		uSleep(0,TIME_DELAY/200);
-		uSleep(0,TIME_DELAY/2);
-		if(shutdown_all)
-		{
-//				printf("done mon fake input tasks\r\n");
-//				myprintf1("done mon input");
-			return 0;
-		}
-	}
 	return 1;
 }
 
@@ -681,7 +593,7 @@ int change_output(int index, int onoff)
 	//printf("bank: %d\r\n",bank);
 	switch(bank)
 	{
-/*
+
 		case 0:
 			OutPortA(onoff, index);
 			break;
@@ -691,17 +603,6 @@ int change_output(int index, int onoff)
 		case 2:
 			OutPortC(onoff, index);
 			break;
-*/
-		case 0:
-			OutPortD(onoff, index);
-			break;
-		case 1:
-			OutPortE(onoff, index);
-			break;
-		case 2:
-			OutPortF(onoff, index);
-			break;
-
 		default:
 			break;
 	}

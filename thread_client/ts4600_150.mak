@@ -9,7 +9,8 @@ CPP      = $(GCC_BIN)arm-linux-g++
 LD       = $(GCC_BIN)arm-linux-gcc
 OBJCOPY  = $(GCC_BIN)arm-linux-objcopy
 
-TS-7200_CC_FLAGS = -mcpu=arm920t -mapcs-32 -mthumb-interwork
+#TS-7200_CC_FLAGS = -mcpu=arm920t -mapcs-32 -mthumb-interwork
+TS-7200_CC_FLAGS = -mcpu=arm9
 ASM_FLAGS = -almns=listing.txt
 PROJECT_INC_LIB = -I$(PORT) -I$(SOURCE)
 
@@ -108,8 +109,8 @@ tasks.o: tasks.c tasks.h
 sched.o: sched.c tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
 
-ioports.o: ioports.c ioports.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ioports.c
+ioports.o: ../ioports.c ../ioports.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../ioports.c
 
 assign_client_table.o: ../assign_client_table.c
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../assign_client_table.c

@@ -4,6 +4,8 @@ git add mytypes.h
 git add cmd_types.h
 git add assign_client_table.c
 git add load_cmds.c
+git add ioports.c
+git add ioports.h
 git add README.md
 git add try_sched_client.sh
 git add try_sched_server.sh
@@ -11,9 +13,7 @@ git add network.readme
 
 git add thread_server/tasks.c
 git add thread_server/cmd_tasks.c
-git add thread_server/ioports.c
 git add thread_server/sched.c
-git add thread_server/ioports.h
 git add thread_server/tasks.h
 git add thread_server/queue/rdwr.h
 git add thread_server/queue/rdwr.c
@@ -30,7 +30,6 @@ git add thread_server/cs_client/config_file.h
 
 git add thread_client/tasks.c
 git add thread_client/cmd_tasks.c
-git add thread_client/ioports.c
 git add thread_client/ts4600sock.mak
 git add thread_client/ts4600_147.mak
 git add thread_client/ts4600_154.mak
@@ -40,7 +39,6 @@ git add thread_client/test154.sh
 git add thread_client/test147.sh
 git add thread_client/4600sock.sh
 git add thread_client/sched.c
-git add thread_client/ioports.h
 git add thread_client/tasks.h
 git add thread_client/queue/rdwr.h
 git add thread_client/queue/rdwr.c

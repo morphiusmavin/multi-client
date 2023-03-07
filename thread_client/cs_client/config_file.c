@@ -8,8 +8,9 @@
 #include <ctype.h>
 #include <sys/stat.h>
 #include <assert.h>
+#include "../../mytypes.h"
+#include "../../ioports.h"
 #include "../queue/ollist_threads_rw.h"
-#include "../ioports.h"
 #include "config_file.h"
 
 static char open_br = '<';

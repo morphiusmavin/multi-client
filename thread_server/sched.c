@@ -30,7 +30,6 @@
 #include <netdb.h>
 #include <sys/ipc.h>
 #include "../mytypes.h"
-#include "ioports.h"
 #include "serial_io.h"
 #include "tasks.h"
 #include "queue/ollist_threads_rw.h"
@@ -140,15 +139,6 @@ int main(int argc, char **argv)
 	}
 
 	id_arg = (int *)malloc(NUM_SCHED_TASKS*sizeof(int));
-
-	i = init_mem();
-	if(i != 0)
-	{
-		printf("no card found\r\n");
-		exit(1);
-	}
-	//else printf("card ok\r\n");
-	
 
 	// get the queue id for the get_host_cmd_task
 	// CMD_HOST_QKEY
@@ -287,7 +277,6 @@ int main(int argc, char **argv)
 		}
 //		printf("closing task :%d %s\r\n",i,_threads[i].label);
 	}
-	close_mem();
 
 //	RS232_CloseComport(1);
 //	strcpy(str2,"close");

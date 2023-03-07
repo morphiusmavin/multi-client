@@ -24,7 +24,7 @@
 #include <sys/msg.h>
 #include "../cmd_types.h"
 #include "../mytypes.h"
-#include "ioports.h"
+#include "../ioports.h"
 #include "serial_io.h"
 #include "queue/ollist_threads_rw.h"
 #include "queue/cllist_threads_rw.h"
@@ -705,8 +705,8 @@ UCHAR poll_ds1620_task(int test)
 			ds_index++;
 			ds_index = dllist_add_data(ds_index, &dll, dtp);
 			uSleep(0,TIME_DELAY);
-			sprintf(sock_msg, "%0d %0d %0d",this_client_id, i, val);
-			send_sock_msg(sock_msg, strlen(sock_msg), DS1620_MSG, 8);
+			//sprintf(sock_msg, "%0d %0d %0d",this_client_id, i, val);
+			//send_sock_msg(sock_msg, strlen(sock_msg), DS1620_MSG, 8);
 			//dllist_find_data(index, dtpp, &dll);
 			//printf("%d %d %d %d %d %d %d\n",dtp2->sensor_no, dtp2->month, dtp2->day, dtp2->hour, 
 					//dtp2->minute, dtp2->second, dtp2->value);

@@ -8,8 +8,9 @@
 #include <ctype.h>
 #include <sys/stat.h>
 #include <assert.h>
+#include "../../mytypes.h"
+#include "../../ioports.h"
 #include "../queue/cllist_threads_rw.h"
-#include "../ioports.h"
 #include "cconfig_file.h"
 
 /* change */

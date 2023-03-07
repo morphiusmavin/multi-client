@@ -28,7 +28,6 @@
 #include <semaphore.h>
 #include "../cmd_types.h"
 #include "../mytypes.h"
-#include "ioports.h"
 #include "serial_io.h"
 #include "queue/ollist_threads_rw.h"
 #include "queue/cllist_threads_rw.h"
@@ -265,13 +264,6 @@ UCHAR get_host_cmd_task(int test)
 					//printf("msg_len: %d\n",msg_len);
 					break;
 
-				case AREYOUTHERE:
-					if(client_table[0].socket > 0)
-						send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,YESIMHERE);
-					if(client_table[1].socket > 0)
-						send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,YESIMHERE);
-					break;
-				
 				case SET_TIME:
 					printf("set time\n");
 					break;

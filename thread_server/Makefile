@@ -1,26 +1,18 @@
 ######################################################################################
 # GNU GCC ARM Embeded Toolchain base directories and binaries
 ######################################################################################
-#use this one when compiling on 115
-#GCC_BASE = /home/dan/dev/arm/opt/crosstool/gcc-3.4.4-glibc-2.3.2/arm-linux/
-#or just set the CROSS_COMPILE env var
-GCC_BASE = $(CROSS_COMPILE)
-# use this one when compiling on 103
-#GCC_BASE = /home/dan/dev/arm/crosstool/gcc3/arm-linux/
-# need to use /usr/local/sbin/setARMpath2.sh
 GCC_BIN  = $(GCC_BASE)bin/
 GCC_LIB  = $(GCC_BASE)arm-linux/lib/
-GCC_INC  = $(GCC_BASE)arm-linux/include/
+#GCC_INC  = $(GCC_BASE)arm-linux/include/
+GCC_INC  =	/usr/include/
 AS       = $(GCC_BIN)arm-linux-as
-CC       = $(GCC_BIN)arm-linux-gcc
+#CC       = $(GCC_BIN)arm-linux-gcc
+CC		= gcc
 CPP      = $(GCC_BIN)arm-linux-g++
 LD       = $(GCC_BIN)arm-linux-gcc
 OBJCOPY  = $(GCC_BIN)arm-linux-objcopy
 
-#TS-7200_CC_FLAGS = -mcpu=arm920t -march=armv5t
-#TS-7200_CC_FLAGS = -mcpu=arm920t -mapcs-32 -mthumb-interwork
-#TS-7200_CC_FLAGS = -mcpu=arm920t
-TS-7200_CC_FLAGS = -mcpu=arm920t -mapcs-32 -mthumb-interwork
+TS-7200_CC_FLAGS = -mcpu=arm9
 ASM_FLAGS = -almns=listing.txt
 PROJECT_INC_LIB = -I$(PORT) -I$(SOURCE)
 
@@ -113,11 +105,14 @@ all : sched sock_mgt
 #test_ioports test_inports # test_ports test_spi
 #llist_test_threads llist_test_threads_rw
 
+nbus.o: ../nbus/nbus.c ../nbus/nbus.h
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../nbus/nbus.c
+
 sched.o: sched.c tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
 
-ioports.o: ioports.c ioports.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ioports.c
+ioports.o: ../ioports.c ../ioports.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../ioports.c
 
 assign_client_table.o: ../assign_client_table.c
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../assign_client_table.c
@@ -159,9 +154,9 @@ sock_sched.o : sock_sched.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_sched.c
 
 #sched: sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o rdwr.o serial_io.o config_file.o lcd_func.o
-sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o cconfig_file.o
+sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o cconfig_file.o nbus.o
 # if we don't use -static then the target should have: libpthread.so.0 in the /lib directory
-	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o -o sched -lm
+	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o nbus.o -o sched -lm
 #	${CC} -static -pthread sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o #rdwr.o serial_io.o  lcd_func.o config_file.o -o sched
 
 sock_mgt: sock_mgt.o sock_sched.o load_cmds.o

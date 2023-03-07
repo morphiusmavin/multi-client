@@ -1,28 +1,18 @@
 ######################################################################################
 # GNU GCC ARM Embeded Toolchain base directories and binaries
 ######################################################################################
-#use this one when compiling on 115
-#GCC_BASE = /home/dan/dev/arm/opt/crosstool/gcc-3.4.4-glibc-2.3.2/arm-linux/
-#or just set the CROSS_COMPILE env var
 GCC_BASE = $(CROSS_COMPILE)
 # use this one when compiling on 103
-#GCC_BASE = /home/dan/dev/arm/crosstool/gcc3/arm-linux/
-# need to use /usr/local/sbin/setARMpath2.sh
 GCC_BIN  = $(GCC_BASE)bin/
 GCC_LIB  = $(GCC_BASE)arm-linux/lib/
-#GCC_INC  = $(GCC_BASE)arm-linux/include/
 GCC_INC		= /usr/include
 AS       = $(GCC_BIN)arm-linux-as
-#CC       = $(GCC_BIN)arm-linux-gcc
 CC		= gcc
 CPP      = $(GCC_BIN)arm-linux-g++
 LD       = $(GCC_BIN)arm-linux-gcc
 OBJCOPY  = $(GCC_BIN)arm-linux-objcopy
 
-#TS-7200_CC_FLAGS = -mcpu=arm920t -march=armv5t
-#TS-7200_CC_FLAGS = -mcpu=arm920t -mapcs-32 -mthumb-interwork
-#TS-7200_CC_FLAGS = -mcpu=arm920t
-TS-7200_CC_FLAGS = -mcpu=arm920t -mapcs-32 -mthumb-interwork
+TS-7200_CC_FLAGS = -mcpu=arm9
 ASM_FLAGS = -almns=listing.txt
 PROJECT_INC_LIB = -I$(PORT) -I$(SOURCE)
 
