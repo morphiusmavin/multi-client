@@ -635,8 +635,6 @@ int change_output(int index, int onoff)
 }
 #endif
 /*********************************************************************/
-// do the same thing as monitor_input_tasks but with the fake arrays
-// set by change_inputs()
 UCHAR poll_ds1620_task(int test)
 {
 	int val;
@@ -720,7 +718,7 @@ UCHAR poll_ds1620_task(int test)
 			{
 				memset(dtp,0,sizeof(D_DATA));
 				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-				//printf("%s\n",date_str);
+				printf("%s\n",date_str);
 				//printf("ds_index: %d\n",ds_index);
 				dlWriteConfig(date_str, &dll, ds_index, errmsg);
 				//rename("ddata.dat",date_str);
@@ -735,7 +733,7 @@ UCHAR poll_ds1620_task(int test)
 				ds_index = 0;
 				ds_index = dllist_add_data(ds_index, &dll, dtp);
 				ds_index++;
-				//printf("reset\n");
+				printf("reset\n");
 				ds_reset = 0;
 			}
 			dsSleep(ds_interval);		// this is the delay between all acq's 

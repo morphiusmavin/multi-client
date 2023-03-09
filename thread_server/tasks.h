@@ -79,7 +79,7 @@ typedef struct
 UCHAR sock_timer(int test);
 UCHAR get_host_cmd_task(int test);
 UCHAR monitor_input_task(int test);
-UCHAR monitor_fake_input_task(int test);
+UCHAR poll_ds1620_task(int test);
 UCHAR timer_task(int test);
 UCHAR timer2_task(int test);
 UCHAR WinClReadTask(int test);
@@ -154,6 +154,7 @@ static int serial_recv_on;
 float convertF(int raw_data);
 extern char oFileName[20];
 extern char cFileName[20];
+extern char dFileName[20];
 int sock_qid;
 int sched_qid;
 int basic_controls_qid;

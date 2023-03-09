@@ -108,6 +108,9 @@ all : sched sock_mgt
 nbus.o: ../nbus/nbus.c ../nbus/nbus.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../nbus/nbus.c
 
+dio_ds1620.o: ../nbus/dio_ds1620.c ../nbus/dio_ds1620.h
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../nbus/dio_ds1620.c
+
 sched.o: sched.c tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
 
@@ -147,16 +150,22 @@ cllist_threads_rw.o: queue/cllist_threads_rw.c queue/cllist_threads_rw.h
 cconfig_file.o: cs_client/cconfig_file.c queue/cllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/cconfig_file.c
 
+dllist_threads_rw.o: queue/dllist_threads_rw.c queue/dllist_threads_rw.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c queue/dllist_threads_rw.c
+
 sock_mgt.o : sock_mgt.c 
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_mgt.c
 
 sock_sched.o : sock_sched.c 
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_sched.c
 
+dconfig_file.o: cs_client/dconfig_file.c queue/dllist_threads_rw.h
+	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/dconfig_file.c
+	
 #sched: sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o rdwr.o serial_io.o config_file.o lcd_func.o
-sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o cconfig_file.o nbus.o
+sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o cconfig_file.o nbus.o dio_ds1620.o dllist_threads_rw.o dconfig_file.o
 # if we don't use -static then the target should have: libpthread.so.0 in the /lib directory
-	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o nbus.o -o sched -lm
+	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o nbus.o dio_ds1620.o dllist_threads_rw.o dconfig_file.o -o sched -lm
 #	${CC} -static -pthread sched.o ioports.o tasks.o illist_threads_rw.o ollist_threads_rw.o rt_llist_threads_rw.o #rdwr.o serial_io.o  lcd_func.o config_file.o -o sched
 
 sock_mgt: sock_mgt.o sock_sched.o load_cmds.o
