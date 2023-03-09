@@ -8,10 +8,10 @@
 #include <ctype.h>
 #include <sys/stat.h>
 #include <assert.h>
-#include "../../mytypes.h"
-#include "../../ioports.h"
-#include "../queue/cllist_threads_rw.h"
-#include "cconfig_file.h"
+#include "../mytypes.h"
+#include "../ioports.h"
+#include "../queue/dllist_threads_rw.h"
+#include "dconfig_file.h"
 
 /* change */
 static char open_br = '<';
@@ -29,7 +29,7 @@ static char space = 0x21;
 // so (i/ol)(Load/Write)Config is used by sched/tasks etc
 #ifndef CONFIG_FILE
 /////////////////////////////////////////////////////////////////////////////
-int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
+int dlLoadConfig(char *filename, dllist_t *dll, size_t size,char *errmsg)
 {
 	char *fptr;
 	int fp = -1;
@@ -37,11 +37,13 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 	int j;
 	fptr = (char *)filename;
 	UCHAR id;
-	C_DATA c_data;
+	D_DATA d_data;
+	int no_recs;
 	int ret = 0;
 	//void *ptr;
 	//UCHAR tempx[60];
-
+	no_recs = dGetnRecs(filename, errmsg);
+	
 	fp = open((const char *)fptr, O_RDWR);
 	if(fp < 0)
 	{
@@ -61,11 +63,11 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 		printf("invalid file format\n");
 		return -1;
 	}
-	printf("sizeof: %d\n",sizeof(C_DATA));
-	for(i = 0;i < NO_CLLIST_RECS;i++)
+	printf("sizeof: %d\n",sizeof(D_DATA));
+	for(i = 0;i < no_recs;i++)
 	{
-		ret += read(fp,&c_data,sizeof(C_DATA));
-		//ret += read(fp,&tempx[0],sizeof(C_DATA));
+		ret += read(fp,&d_data,sizeof(D_DATA));
+		//ret += read(fp,&tempx[0],sizeof(D_DATA));
 /*		
 		for(j = 0;j < 52;j++)
 		{
@@ -74,22 +76,22 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 		printf("\n");
 */
 		//printf("%d ",ret);
-		cllist_insert_data(i, oll, &c_data);
+		dllist_insert_data(i, dll, &d_data);
 	}
 	//printf("fp:%d  read: %d bytes in clLoadConfig\n",fp,ret);
 	close(fp);
 	strcpy(errmsg,"Success\0");
-	return 0;
+	return no_recs;
 }
 /////////////////////////////////////////////////////////////////////////////
-int clWriteConfig(char *filename,  cllist_t *oll, size_t size,char *errmsg)
+int dlWriteConfig(char *filename,  dllist_t *dll, int no_recs, char *errmsg)
 {
 	char *fptr;
 	int fp = -1;
 	int i,j,k;
 	fptr = (char *)filename;
-	C_DATA io;
-	C_DATA *pio = &io;
+	D_DATA io;
+	D_DATA *pio = &io;
 	UCHAR id = 0xAA;
 
 //#ifdef NOTARGET
@@ -97,6 +99,7 @@ int clWriteConfig(char *filename,  cllist_t *oll, size_t size,char *errmsg)
 //#else
 //	fp = open((const char *)fptr, O_WRONLY | O_CREAT, 666);
 //#endif
+
 	if(fp < 0)
 	{
 		strcpy(errmsg,strerror(errno));
@@ -109,12 +112,12 @@ int clWriteConfig(char *filename,  cllist_t *oll, size_t size,char *errmsg)
 //	printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
 	i = lseek(fp,0,SEEK_SET);
 	write(fp,&id,1);
-	printf("nrecs: %d\n",size/sizeof(C_DATA));
-	for(i = 0;i < size/sizeof(C_DATA);i++)
+//	printf("nrecs: %d\n",size/sizeof(D_DATA));
+//	for(i = 0;i < size/sizeof(D_DATA);i++)
+	for(i = 0;i < no_recs;i++)
 	{
-		cllist_find_data(i,&pio,oll);
-		j += write(fp,(const void*)pio,sizeof(C_DATA));
-
+		dllist_find_data(i,&pio,dll);
+		j += write(fp,(const void*)pio,sizeof(D_DATA));
 	}
 
 	close(fp);
@@ -123,7 +126,7 @@ int clWriteConfig(char *filename,  cllist_t *oll, size_t size,char *errmsg)
 }
 #endif
 /////////////////////////////////////////////////////////////////////////////
-int cLoadConfig(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
+int dLoadConfig(char *filename, D_DATA *curr_o_array,size_t size,char *errmsg)
 {
 	char *fptr;
 	int fp = -1;
@@ -157,22 +160,25 @@ int cLoadConfig(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
 }
 ///////////////////// Write/LoadConfig functions used by init/list_db start here (see make_db) ///////////////////////
 /////////////////////////////////////////////////////////////////////////////
-int cWriteConfig(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
+int dWriteConfig(char *filename, D_DATA *curr_o_array,size_t size,char *errmsg)
 {
 	char *fptr;
 	int fp = -1;
 	int i,j,k;
 	fptr = (char *)filename;
-	C_DATA io;
-	C_DATA *pio = &io;
-	C_DATA *curr_o_array2 = curr_o_array;
+	D_DATA io;
+	D_DATA *pio = &io;
+	D_DATA *curr_o_array2 = curr_o_array;
 	UCHAR id = 0xAA;
+
+	printf("dWriteConfig - size: %d\n",size);
 
 //#ifdef NOTARGET
 	fp = open((const char *)fptr, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 //#else
 //	fp = open((const char *)fptr, O_WRONLY | O_CREAT, 666);
 //#endif
+/*
 	if(fp < 0)
 	{
 		strcpy(errmsg,strerror(errno));
@@ -180,26 +186,29 @@ int cWriteConfig(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
 		printf("%s  %s\n",errmsg,filename);
 		return -2;
 	}
-
+*/
 	j = 0;
-//	printf("fp = %d\n",fp);
-//	printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
+	//printf("fp = %d\n",fp);
+	//printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
 	i = lseek(fp,0,SEEK_SET);
 	write(fp,&id,1);
-	for(i = 0;i < size/sizeof(C_DATA);i++)
+//	for(i = 0;i < size/sizeof(D_DATA);i++)
+	for(i = 0;i < size;i++)
 	{
 //		memset(pio,0,sizeof(IC_DATA));
 		pio = curr_o_array2;
-		j += write(fp,(const void*)pio,sizeof(C_DATA));
+		j += write(fp,(const void*)pio,sizeof(D_DATA));
+		//printf("%d ",j);
 		curr_o_array2++;
 	}
 
 	close(fp);
 	strcpy(errmsg,"Success\0");
+	//printf("Success\n");
 	return 0;
 }
 /////////////////////////////////////////////////////////////////////////////
-int cGetnRecs(char *filename, char *errmsg)
+int dGetnRecs(char *filename, char *errmsg)
 {
 	char *fptr;
 	int fp = -1;
@@ -220,8 +229,8 @@ int cGetnRecs(char *filename, char *errmsg)
 
 	fsize = lseek(fp,0,SEEK_END);
 	fsize--;
-	nrecs = fsize/sizeof(C_DATA);
-	//printf("fsize: %d nrecs: %d\n",fsize,nrecs);
+	nrecs = fsize/sizeof(D_DATA);
+	printf("fsize: %d nrecs: %d\n",fsize,nrecs);
 	fsize = lseek(fp,0,SEEK_SET);
 	i = 0;
 	read(fp,&id,1);
@@ -238,15 +247,15 @@ int cGetnRecs(char *filename, char *errmsg)
 }
 ///////////////////// Write/LoadConfig functions used by init/list_db start here (see make_db) ///////////////////////
 /////////////////////////////////////////////////////////////////////////////
-int cWriteConfig2(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
+int dWriteConfig2(char *filename, D_DATA *curr_o_array,size_t size,char *errmsg)
 {
 	char *fptr;
 	int fp = -1;
 	int i,j,k;
 	fptr = (char *)filename;
-	C_DATA io;
-	C_DATA *pio = &io;
-	C_DATA *curr_o_array2 = curr_o_array;
+	D_DATA io;
+	D_DATA *pio = &io;
+	D_DATA *curr_o_array2 = curr_o_array;
 	UCHAR id = 0xAA;
 
 //#ifdef NOTARGET
@@ -267,11 +276,11 @@ int cWriteConfig2(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
 //	printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
 	i = lseek(fp,0,SEEK_SET);
 	write(fp,&id,1);
-	for(i = 0;i < size/sizeof(C_DATA);i++)
+	for(i = 0;i < size/sizeof(D_DATA);i++)
 	{
 //		memset(pio,0,sizeof(IC_DATA));
 		pio = curr_o_array2;
-		j += write(fp,(const void*)pio,sizeof(C_DATA));
+		j += write(fp,(const void*)pio,sizeof(D_DATA));
 		curr_o_array2++;
 	}
 
@@ -280,7 +289,7 @@ int cWriteConfig2(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
 	return 0;
 }
 /////////////////////////////////////////////////////////////////////////////
-int GetFileFormat2(char *filename)
+int dGetFileFormat2(char *filename)
 {
 	char *fptr;
 	int fp = -1;
@@ -310,7 +319,7 @@ int GetFileFormat2(char *filename)
 	return 0;
 }
 /////////////////////////////////////////////////////////////////////////////
-int getFileCreationTime2(char *path,char *str)
+int dgetFileCreationTime2(char *path,char *str)
 {
 // MM:DD-HH:MM:SS
     struct stat attr;
@@ -321,16 +330,16 @@ int getFileCreationTime2(char *path,char *str)
 	return 0;
 }
 /////////////////////////////////////////////////////////////////////////////
-int cWriteConfigXML(char *filename, C_DATA *curr_o_array,size_t size,char *errmsg)
+int dWriteConfigXML(char *filename, D_DATA *curr_o_array,size_t size,char *errmsg)
 {
 	char *fptr;
 	int fp = -1;
 	int i,j,k;
 	fptr = (char *)filename;
-	C_DATA io;
-	C_DATA *pio = &io;
-	C_DATA *curr_o_array2 = curr_o_array;
-	char labels[11][20] = {"C_DATA","label","index","port","state","on_hour","on_minute","on_second","off_hour","off_minute","off_second"};
+	D_DATA io;
+	D_DATA *pio = &io;
+	D_DATA *curr_o_array2 = curr_o_array;
+	char labels[11][20] = {"D_DATA","label","index","port","state","on_hour","on_minute","on_second","off_hour","off_minute","off_second"};
 	char temp[5];
 	char tempx[30];
 
@@ -359,7 +368,7 @@ int cWriteConfigXML(char *filename, C_DATA *curr_o_array,size_t size,char *errms
 	write(fp,(const void*)&close_br,1);
 	write(fp,(const void*)&nl,1);
 
-	for(i = 0;i < size/sizeof(C_DATA);i++)
+	for(i = 0;i < size/sizeof(D_DATA);i++)
 	{
 //		memset(pio,0,sizeof(IO_DATA));
 		pio = curr_o_array2;
@@ -377,7 +386,7 @@ int cWriteConfigXML(char *filename, C_DATA *curr_o_array,size_t size,char *errms
 			write(fp,(const void*)&open_br,1);
 			write(fp,(const void*)&labels[j],strlen(labels[j]));
 			write(fp,(const void*)&close_br,1);
-
+/*
 			switch(j)
 			{
 				case 1:
@@ -421,7 +430,7 @@ int cWriteConfigXML(char *filename, C_DATA *curr_o_array,size_t size,char *errms
 				write(fp,(const void*)&temp[0],strlen(temp));
 				break;
 			}
-
+*/
 			write(fp,(const void*)&open_br_slash,2);
 			write(fp,(const void*)&labels[j],strlen(labels[j]));
 			write(fp,(const void*)&close_br,1);

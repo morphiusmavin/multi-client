@@ -27,22 +27,15 @@
 #include "tasks.h"
 #include "../ioports.h"
 #include "serial_io.h"
-#include "queue/ollist_threads_rw.h"
-#include "queue/cllist_threads_rw.h"
-#include "queue/dllist_threads_rw.h"
-#include "cs_client/config_file.h"
+#include "../queue/ollist_threads_rw.h"
+#include "../queue/cllist_threads_rw.h"
+#include "../cs_client/config_file.h"
 
 CLIENT_TABLE client_table[MAX_CLIENTS];
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
 extern ollist_t oll;
 extern cllist_t cll;
-extern dllist_t dll;
-extern int valid_ds[];
-extern char new_filename[];
-extern int ds_interval;
-extern int ds_index;
-extern int ds_reset;
 
 extern PARAM_STRUCT ps;
 extern char password[PASSWORD_SIZE];
@@ -67,10 +60,15 @@ void print_cmd(UCHAR cmd)
 // task to get commands from the host
 UCHAR get_host_cmd_task(int test)
 {
+//	I_DATA tempi1;
+	O_DATA tempo1;
+//	RI_DATA tempr1;
+//	I_DATA *itp;
+//	O_DATA *otp;
+//	O_DATA **otpp = &otp;
 	C_DATA *ctp;
 	C_DATA **ctpp = &ctp;
-	D_DATA *dtp;
-	D_DATA **dtpp = &dtp;
+	//C_DATA *cdata_temp;
 	int rc = 0; 
 	int rc1 = 0;
 	UCHAR cmd = 0x21;
@@ -84,7 +82,6 @@ UCHAR get_host_cmd_task(int test)
 	int k;
 	size_t osize;
 	size_t csize;
-	size_t dsize;
 	time_t T;
 	struct tm tm;
 	UCHAR tempx[UPLOAD_BUFF_SIZE];
@@ -128,86 +125,19 @@ UCHAR get_host_cmd_task(int test)
 	// use the array to adjust from index to bank
 	// since there are only 4 bits in banks 3 & 5
 
-	real_banks[0].i = 0;
-	real_banks[0].bank = 0;
-	real_banks[0].index = 0;
+	for(i = 0;i < 20;i++)
+	{
+		real_banks[i].i = i;
+		real_banks[i].bank = i/8;
+		real_banks[i].index = i - real_banks[i].bank*8;
+	}
 
-	real_banks[1].i = 1;
-	real_banks[1].bank = 0;
-	real_banks[1].index = 1;
-
-	real_banks[2].i = 2;
-	real_banks[2].bank = 0;
-	real_banks[2].index = 2;
-
-	real_banks[3].i = 3;
-	real_banks[3].bank = 0;
-	real_banks[3].index = 3;
-
-	real_banks[4].i = 4;
-	real_banks[4].bank = 0;
-	real_banks[4].index = 4;
-
-	real_banks[5].i = 5;
-	real_banks[5].bank = 0;
-	real_banks[5].index = 5;
-
-	real_banks[6].i = 6;
-	real_banks[6].bank = 0;
-	real_banks[6].index = 6;
-
-	real_banks[7].i = 7;
-	real_banks[7].bank = 0;
-	real_banks[7].index = 7;
-
-	real_banks[8].i = 8;
-	real_banks[8].bank = 1;
-	real_banks[8].index = 0;
-
-	real_banks[9].i = 9;
-	real_banks[9].bank = 1;
-	real_banks[9].index = 1;
-
-	real_banks[10].i = 10;
-	real_banks[10].bank = 1;
-	real_banks[10].index = 2;
-
-	real_banks[11].i = 11;
-	real_banks[11].bank = 1;
-	real_banks[11].index = 3;
-
-	real_banks[12].i = 12;
-	real_banks[12].bank = 1;
-	real_banks[12].index = 4;
-
-	real_banks[13].i = 13;
-	real_banks[13].bank = 1;
-	real_banks[13].index = 5;
-
-	real_banks[14].i = 14;
-	real_banks[14].bank = 1;
-	real_banks[14].index = 6;
-
-	real_banks[15].i = 15;
-	real_banks[15].bank = 1;
-	real_banks[15].index = 7;
-
-	real_banks[16].i = 16;
-	real_banks[16].bank = 2;
-	real_banks[16].index = 0;
-
-	real_banks[17].i = 17;
-	real_banks[17].bank = 2;
-	real_banks[17].index = 1;
-
-	real_banks[18].i = 18;
-	real_banks[18].bank = 2;
-	real_banks[18].index = 2;
-
-	real_banks[19].i = 19;
-	real_banks[19].bank = 2;
-	real_banks[19].index = 3;
-
+	for(i = 20;i < 40;i++)
+	{
+		real_banks[i].i = i;
+		real_banks[i].bank = (i+4)/8;
+		real_banks[i].index = i - (real_banks[i].bank*8)+4;
+	}
 	i = NUM_PORT_BITS;
 	//printf("no. port bits: %d\r\n",i);
 	osize = sizeof(O_DATA);
@@ -245,22 +175,6 @@ UCHAR get_host_cmd_task(int test)
 		}
 		//cllist_show(&cll);
 	}else printf("can't find %s\n",cFileName);
-
-	dllist_init(&dll);
-	if(access(dFileName,F_OK) != -1)
-	{
-		dlLoadConfig(dFileName,&dll,dsize,errmsg);
-		if(rc > 0)
-		{
-			printf("%s\r\n",errmsg);
-		}
-		dllist_show(&dll);
-	}else
-	{
-		memset(dtp,0,sizeof(D_DATA));
-		printf("can't open data.dat\n");
-		dlWriteConfig(dFileName, &dll,1,errmsg);
-	}
 
 	init_ips();
 	same_msg = 0;
@@ -323,42 +237,6 @@ UCHAR get_host_cmd_task(int test)
 
 			switch(cmd)
 			{
-				case DLLIST_SAVE:
-					//dlWriteConfig("ddata.dat", &dll, index, errmsg);
-					ds_reset = 1;
-					break;
-
-				case DLLIST_SHOW:
-					dllist_show(&dll);
-					break;
-
-				case SET_DS_INTERVAL:
-					ds_interval = (int)tempx[0];
-					printf("ds interval: %d\n",ds_interval);
-					break;
-					
-				case RENAME_D_DATA:
-					//memcpy(new_filename,tempx,strlen(tempx));
-					strcpy(new_filename,tempx);
-					//dWriteConfig(new_filename, &dll,dGetnRecs(),errmsg);
-					//dllist_removeall_data(&dll);
-					printf("new filename: %s\n",new_filename);
-					break;
-
-				case SET_VALID_DS:
-					//printf("set valid ds: %d\n",tempx[0]);
-					mask = 1;
-					//memset(&valid_ds[0],0,sizeof(int)*7);
-					for(i = 0;i < 7;i++)
-						valid_ds[i] = 0;
-					for(i = 0;i < 6;i++)
-					{
-						if((mask & tempx[0]) == mask)
-							valid_ds[i] = 1;
-						mask <<= 1;
-					}
-					break;
-
 				case RELOAD_CLLIST:
 					cllist_init(&cll);
 					if(access(cFileName,F_OK) != -1)

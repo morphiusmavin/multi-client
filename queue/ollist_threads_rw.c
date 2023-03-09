@@ -15,8 +15,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../../mytypes.h"
-#include "../serial_io.h"
+#include "../mytypes.h"
+//#include "../serial_io.h"
 #include "ollist_threads_rw.h"
 #ifdef MAKE_TARGET
 extern int send_tcp(UCHAR *str,int len);
@@ -32,7 +32,6 @@ int ollist_init (ollist_t *llistp)
 //	printf("sizeof O_DATA: %lu\n",sizeof(O_DATA));
 	return 0;
 }
-
 /******************************************************************************/
 int ollist_insert_data (int index, ollist_t *llistp,O_DATA *datap2)
 {
@@ -255,8 +254,6 @@ int ollist_toggle_output(int index, ollist_t *llistp)
 	pthread_rdwr_wunlock_np(&(llistp->rwlock));
 	return onoff;
 }
-
-
 /******************************************************************************/
 // I think this is crashing the program on exit
 int ollist_change_output(int index, ollist_t *llistp, int onoff)
@@ -288,7 +285,6 @@ int ollist_change_output(int index, ollist_t *llistp, int onoff)
 	pthread_rdwr_wunlock_np(&(llistp->rwlock));
 	return status;
 }
-
 /******************************************************************************/
 int ollist_change_data(int index, O_DATA *datap, ollist_t *llistp)
 {

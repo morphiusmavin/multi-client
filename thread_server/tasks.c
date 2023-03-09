@@ -28,11 +28,9 @@
 #include "../mytypes.h"
 #include "../ioports.h"
 #include "serial_io.h"
-#include "queue/ollist_threads_rw.h"
-#include "queue/cllist_threads_rw.h"
-#include "queue/dllist_threads_rw.h"
+#include "../queue/ollist_threads_rw.h"
+#include "../queue/cllist_threads_rw.h"
 #include "tasks.h"
-#include "../nbus/dio_ds1620.h"
 //#include "cs_client/config_file.h"
 #include "lcd_func.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
@@ -56,15 +54,6 @@ static UCHAR check_inputs(int index, int test);
 //extern CMD_STRUCT cmd_array[58];
 ollist_t oll;
 cllist_t cll;
-dllist_t dll;
-
-char new_filename[20];
-int ds_interval;
-int valid_ds[7];
-int ds_index;
-int ds_reset;
-static D_DATA *dtp;
-static D_DATA **dtpp;
 
 PARAM_STRUCT ps;
 
@@ -80,7 +69,6 @@ extern int shutdown_all;
 static int raw_data_array[RAW_DATA_ARRAY_SIZE];
 static int raw_data_ptr;
 int avg_raw_data(int prev_data);
-static void dsSleep(int interval);
 int max_ips;
 IP ip[40];
 static COUNTDOWN count_down[COUNTDOWN_SIZE];
@@ -248,154 +236,6 @@ int uSleep(time_t sec, long nanosec)
 	return 0;									  /* Return success */
 }
 
-/*********************************************************************/
-UCHAR poll_ds1620_task(int test)
-{
-	int val;
-	int i,j;
-	time_t T;
-	struct tm tm;
-	char sock_msg[30];
-	char errmsg[20];
-	int bad_ds_count = 5;
-	char date_str[20];
-	strcpy(new_filename,"ddata2.dat\0");
-
-	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
-	dtpp = &dtp;
-//	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
-#ifndef USE_CARDS
-	printf("not using cards\n");
-	while(TRUE)
-	{
-		uSleep(1,0);
-		if(shutdown_all)
-			return 0;
-	}
-#endif
-	for(i = 0;i < 7;i++)
-		valid_ds[i] = 0;
-
-	uSleep(5,0);
-	printf("starting ds\n");
-
-	initDS1620();
-
-	valid_ds[0] = 1;
-	ds_interval = 4;
-
-	j = i = 0;
-	val = 0;
-	ds_reset = 0;
-
-	ds_index = dGetnRecs("ddata.dat",errmsg);
-	printf("no recs in ddata.dat: %d\n",ds_index);
-	while(TRUE)
-	{
-		if(valid_ds[i] > 0 && ds_reset == 0)
-		{
-			writeByteTo1620(DS1620_CMD_STARTCONV);
-			uSleep(0,TIME_DELAY/16);
-			val = readTempFrom1620(i);
-			printf("%d\n",val);
-			uSleep(0,TIME_DELAY/16);
-			writeByteTo1620(DS1620_CMD_STOPCONV);
-
-			//printf("polling ds: %d %d\n",i,ds_index);
-			T = time(NULL);
-			tm = *localtime(&T);
-			//sprintf(time_rec,"%02d:%02d:%02d - %02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
-			//printf("%s\n",time_rec);
-
-			dtp->sensor_no = i;
-			dtp->month = tm.tm_mon;
-			dtp->day = tm.tm_mday;
-			dtp->hour = tm.tm_hour;
-			dtp->minute = tm.tm_min;
-			dtp->second = tm.tm_sec;
-			dtp->value = val;
-			ds_index++;
-			ds_index = dllist_add_data(ds_index, &dll, dtp);
-			uSleep(0,TIME_DELAY);
-			//sprintf(sock_msg, "%0d %0d %0d",this_client_id, i, val);
-			//send_sock_msg(sock_msg, strlen(sock_msg), DS1620_MSG, 8);
-			//dllist_find_data(index, dtpp, &dll);
-			//printf("%d %d %d %d %d %d %d\n",dtp2->sensor_no, dtp2->month, dtp2->day, dtp2->hour, 
-					//dtp2->minute, dtp2->second, dtp2->value);
-		}
-
-		if(++i > 6)
-		{
-			j = 0;
-			i = 0;
-			if(ds_reset == 1)
-			{
-				memset(dtp,0,sizeof(D_DATA));
-				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-				//printf("%s\n",date_str);
-				//printf("ds_index: %d\n",ds_index);
-				dlWriteConfig(date_str, &dll, ds_index, errmsg);
-				//rename("ddata.dat",date_str);
-				//dllist_remove_data(int index, D_DATA **datapp, dllist_t *llistp)
-				uSleep(1,0);
-				//printf("test...\n");
-				/*
-				for(j = 0;j < ds_index;j++)
-					dllist_remove_data(j,dtpp,&dll);
-				*/
-				dllist_init (&dll);
-				ds_index = 0;
-				ds_index = dllist_add_data(ds_index, &dll, dtp);
-				ds_index++;
-				//printf("reset\n");
-				ds_reset = 0;
-			}
-			dsSleep(ds_interval);		// this is the delay between all acq's 
-		}
-
-		if(shutdown_all)
-		{
-			free(dtp);
-			dlWriteConfig("ddata.dat", &dll, index, errmsg);
-			return 0;
-		}
-	}
-	return 1;
-}
-/*********************************************************************/
-static void dsSleep(int interval)
-{
-	switch(interval)
-	{
-		case 0:			// 1/2 second
-			uSleep(0,TIME_DELAY/2);
-			break;
-		case 1:			// 1 second
-			uSleep(1,0);
-			break;
-		case 2:			// 5 seconds
-			uSleep(5,0);
-			break;
-		case 3:			// 15 seconds
-			uSleep(15,0);
-			break;
-		case 4:			// 30 seconds
-			uSleep(30,0);
-			break;
-		case 5:			// 1 minute
-			uSleep(60,0);
-			break;
-		case 6:			// 5 minutes
-			uSleep(300,0);
-			break;
-		case 7:			// 10 minutes
-			uSleep(600,0);
-			break;
-		default:
-			uSleep(60,0);
-			break;
-	}
-}
 
 /*********************************************************************/
 static int mask2int(UCHAR mask)
@@ -689,6 +529,47 @@ int change_input(int index, int onoff)
 	}
 */
 }
+/*********************************************************************/
+// do the same thing as monitor_input_tasks but with the fake arrays
+// set by change_inputs()
+UCHAR monitor_fake_input_task(int test)
+{
+//	I_DATA *itp;
+//	I_DATA **itpp = &itp;
+	O_DATA *otp;
+	O_DATA **otpp = &otp;
+
+	int status = -1;
+	int bank, index;
+	UCHAR result, mask, onoff;
+	int i, rc, flag;
+
+#ifndef USE_CARDS
+
+	for(;;)
+	{
+		uSleep(0,TIME_DELAY/2);
+//		uSleep(0,TIME_DELAY/2);
+		if(shutdown_all)
+		{
+//				printf("done mon input tasks\r\n"); 
+//				myprintf1("done mon input");
+				//printString2("done mon");
+			return 0;
+		}
+	}
+	return 1;
+#endif
+
+	while(TRUE)
+	{
+		uSleep(1,0);
+		if(shutdown_all)
+			return 0;
+	}
+	return 1;
+}
+
 /*********************************************************************/
 // pass in the index into the total list of outputs
 // since each card only has 20 outputs, the last 4 bits of PORT C & F are ignored

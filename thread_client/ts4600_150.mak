@@ -118,29 +118,29 @@ assign_client_table.o: ../assign_client_table.c
 serial_io.o: serial_io.c serial_io.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c serial_io.c
 
-ollist_threads_rw.o: queue/ollist_threads_rw.c queue/ollist_threads_rw.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c queue/ollist_threads_rw.c
+ollist_threads_rw.o: ../queue/ollist_threads_rw.c ../queue/ollist_threads_rw.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/ollist_threads_rw.c
 
-rdwr.o: queue/rdwr.c queue/rdwr.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c queue/rdwr.c
+rdwr.o: ../queue/rdwr.c ../queue/rdwr.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/rdwr.c
 
-config_file.o: cs_client/config_file.c  queue/ollist_threads_rw.h
-	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/config_file.c
+config_file.o: ../cs_client/config_file.c  ../queue/ollist_threads_rw.h
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/config_file.c
 
 load_cmds.o: ../load_cmds.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../load_cmds.c
 
-cllist_threads_rw.o: queue/cllist_threads_rw.c queue/cllist_threads_rw.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c queue/cllist_threads_rw.c
+cllist_threads_rw.o: ../queue/cllist_threads_rw.c ../queue/cllist_threads_rw.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/cllist_threads_rw.c
 
-cconfig_file.o: cs_client/cconfig_file.c queue/cllist_threads_rw.h
-	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/cconfig_file.c
+cconfig_file.o: ../cs_client/cconfig_file.c ../queue/cllist_threads_rw.h
+	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/cconfig_file.c
 	
-dllist_threads_rw.o: queue/dllist_threads_rw.c queue/dllist_threads_rw.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c queue/dllist_threads_rw.c
+dllist_threads_rw.o: ../queue/dllist_threads_rw.c ../queue/dllist_threads_rw.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/dllist_threads_rw.c
 
-dconfig_file.o: cs_client/dconfig_file.c queue/dllist_threads_rw.h
-	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c cs_client/dconfig_file.c
+dconfig_file.o: ../cs_client/dconfig_file.c ../queue/dllist_threads_rw.h
+	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/dconfig_file.c
 	
 sched150: tasks.o cmd_tasks.o sched.o ioports.o assign_client_table.o load_cmds.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cllist_threads_rw.o dllist_threads_rw.o dconfig_file.o cconfig_file.o nbus.o dio_ds1620.o
 	${CC} -static -pthread tasks.o cmd_tasks.o sched.o ioports.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o dllist_threads_rw.o dconfig_file.o nbus.o dio_ds1620.o -o sched150 -lm

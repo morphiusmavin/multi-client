@@ -26,12 +26,12 @@
 #include "../mytypes.h"
 #include "../ioports.h"
 #include "serial_io.h"
-#include "queue/ollist_threads_rw.h"
-#include "queue/cllist_threads_rw.h"
-#include "queue/dllist_threads_rw.h"
+#include "../queue/ollist_threads_rw.h"
+#include "../queue/cllist_threads_rw.h"
+#include "../queue/dllist_threads_rw.h"
 #include "tasks.h"
 #include "../nbus/dio_ds1620.h"
-#include "cs_client/dconfig_file.h"
+#include "../cs_client/dconfig_file.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
 pthread_mutex_t     io_mem_lock=PTHREAD_MUTEX_INITIALIZER;
@@ -635,6 +635,8 @@ int change_output(int index, int onoff)
 }
 #endif
 /*********************************************************************/
+// do the same thing as monitor_input_tasks but with the fake arrays
+// set by change_inputs()
 UCHAR poll_ds1620_task(int test)
 {
 	int val;
@@ -718,7 +720,7 @@ UCHAR poll_ds1620_task(int test)
 			{
 				memset(dtp,0,sizeof(D_DATA));
 				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-				printf("%s\n",date_str);
+				//printf("%s\n",date_str);
 				//printf("ds_index: %d\n",ds_index);
 				dlWriteConfig(date_str, &dll, ds_index, errmsg);
 				//rename("ddata.dat",date_str);
@@ -733,7 +735,7 @@ UCHAR poll_ds1620_task(int test)
 				ds_index = 0;
 				ds_index = dllist_add_data(ds_index, &dll, dtp);
 				ds_index++;
-				printf("reset\n");
+				//printf("reset\n");
 				ds_reset = 0;
 			}
 			dsSleep(ds_interval);		// this is the delay between all acq's 

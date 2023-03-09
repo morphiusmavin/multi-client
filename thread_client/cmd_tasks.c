@@ -1,4 +1,4 @@
-#if 1
+ #if 1
 #include <unistd.h>
 #include <sys/mman.h>
 #include <fcntl.h>
@@ -27,11 +27,11 @@
 #include "tasks.h"
 #include "../ioports.h"
 #include "serial_io.h"
-#include "queue/ollist_threads_rw.h"
-#include "queue/cllist_threads_rw.h"
-#include "queue/dllist_threads_rw.h"
+#include "../queue/ollist_threads_rw.h"
+#include "../queue/cllist_threads_rw.h"
+#include "../queue/dllist_threads_rw.h"
 #include "tasks.h"
-#include "cs_client/config_file.h"
+#include "../cs_client/config_file.h"
 
 static struct  sockaddr_in sad;  /* structure to hold server's address  */
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
