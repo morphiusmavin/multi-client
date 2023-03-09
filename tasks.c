@@ -22,16 +22,17 @@
 #include <dirent.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "../cmd_types.h"
-#include "../mytypes.h"
-#include "../ioports.h"
+#include "cmd_types.h"
+#include "mytypes.h"
+#include "ioports.h"
 #include "serial_io.h"
-#include "../queue/ollist_threads_rw.h"
-#include "../queue/cllist_threads_rw.h"
-#include "../queue/dllist_threads_rw.h"
+#include "queue/ollist_threads_rw.h"
+#include "queue/cllist_threads_rw.h"
+#include "queue/dllist_threads_rw.h"
 #include "tasks.h"
-#include "../nbus/dio_ds1620.h"
-#include "../cs_client/dconfig_file.h"
+#include "nbus/dio_ds1620.h"
+#include "cs_client/dconfig_file.h"
+#include "raw_data.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
 pthread_mutex_t     io_mem_lock=PTHREAD_MUTEX_INITIALIZER;
@@ -68,11 +69,11 @@ static int raw_data_array[RAW_DATA_ARRAY_SIZE];
 static int raw_data_ptr;
 int avg_raw_data(int prev_data);
 static void dsSleep(int interval);
+char *lookup_raw_data(int val);
 int max_ips;
 IP ip[40];
 static D_DATA *dtp;
 static D_DATA **dtpp;
-
 
 static COUNTDOWN count_down[COUNTDOWN_SIZE];
 int curr_countdown_size;
@@ -109,6 +110,28 @@ enum input_types
 
 enum output_types
 {
+#ifdef SERVER_146
+	DESK_LIGHTa,
+	EAST_LIGHTa,			// bank 0
+	NORTHWEST_LIGHTa,
+	SOUTHEAST_LIGHTa,
+	MIDDLE_LIGHTa,
+	WEST_LIGHTa,
+	NORTHEAST_LIGHTa,
+	SOUTHWEST_LIGHTa,
+	TESTOUTPUT8,			// these are unused
+	TESTOUTPUT9,
+	
+	WATER_PUMPa,
+	WATER_VALVE1a,
+	WATER_VALVE2a,			// these are unused
+	WATER_VALVE3a,			// but the relay 
+	WATER_HEATERa,			// bank 1
+	TESTOUTPUT10,			// has wires to the
+	TESTOUTPUT11,			// <- io card up to here
+	TESTOUTPUT12,
+	TESTOUTPUT13
+#endif 
 #ifdef CL_150
 #warning "CL_150 defined"
 	COOP1_LIGHTa,
@@ -685,7 +708,7 @@ UCHAR poll_ds1620_task(int test)
 			writeByteTo1620(DS1620_CMD_STARTCONV);
 			uSleep(0,TIME_DELAY/16);
 			val = readTempFrom1620(i);
-			printf("%d\n",val);
+			printf("%s\n",lookup_raw_data(val));
 			uSleep(0,TIME_DELAY/16);
 			writeByteTo1620(DS1620_CMD_STOPCONV);
 
@@ -749,6 +772,13 @@ UCHAR poll_ds1620_task(int test)
 		}
 	}
 	return 1;
+}
+/*********************************************************************/
+char *lookup_raw_data(int val)
+{
+	int i = 0;
+	while(raw_data[i].raw != val && i++ < 360);
+	return raw_data[i].str;
 }
 /*********************************************************************/
 static void dsSleep(int interval)
@@ -1268,6 +1298,75 @@ UCHAR basic_controls_task(int test)
 
 		switch(cmd)
 		{
+#ifdef SERVER_146
+			case DESK_LIGHT:
+				change_output(DESK_LIGHTa,(int)onoff);
+				usleep(_100MS);
+				break;
+
+			case EAST_LIGHT:	//  relay is wired nc while all others are no 
+				if(onoff == 0)
+					onoff = 1;
+				else onoff = 0;
+				change_output(EAST_LIGHTa,(int)onoff);
+				usleep(_100MS);
+				break;
+
+			case NORTHWEST_LIGHT:
+				change_output(NORTHWEST_LIGHTa,(int)onoff);
+				usleep(_100MS);
+				break;
+
+			case SOUTHEAST_LIGHT:
+				change_output(SOUTHEAST_LIGHTa,(int)onoff);
+				usleep(_100MS);
+				break;
+
+			case MIDDLE_LIGHT:
+				change_output(MIDDLE_LIGHTa,(int)onoff);
+				usleep(_100MS);
+				break;
+
+			case WEST_LIGHT:
+				change_output(WEST_LIGHTa,(int)onoff);
+				usleep(_100MS);
+				break;
+				
+			case NORTHEAST_LIGHT:
+				change_output(NORTHEAST_LIGHTa,(int)onoff);
+				usleep(_100MS);
+				break;
+
+			case SOUTHWEST_LIGHT:
+				change_output(SOUTHWEST_LIGHTa,(int)onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_HEATER:
+				change_output(WATER_HEATERa,onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_PUMP:
+				change_output(WATER_PUMPa,onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_VALVE1:
+				change_output(WATER_VALVE1a,onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_VALVE2:
+				change_output(WATER_VALVE2a,onoff);
+				usleep(_100MS);
+				break;
+
+			case WATER_VALVE3:
+				change_output(WATER_VALVE3a,onoff);
+				usleep(_100MS);
+				break;
+#endif
 #ifdef CL_150
 			case  COOP1_LIGHT:
 				change_output(COOP1_LIGHTa,onoff);
@@ -1452,7 +1551,13 @@ UCHAR basic_controls_task(int test)
 				printf("tasks: exit to shell\n");
 				shutdown_all = 1;
 				reboot_on_exit = 1;
-//				close_tcp();
+				msg.mtype = msgtype;
+				msg.mtext[0] = cmd;
+				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
 				break;
 
 			case REBOOT_IOBOX:
@@ -1462,7 +1567,13 @@ UCHAR basic_controls_task(int test)
 				printf("tasks: reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;
-//				close_tcp();
+				msg.mtype = msgtype;
+				msg.mtext[0] = cmd;
+				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
 				break;
 
 			case SHUTDOWN_IOBOX:
@@ -1472,7 +1583,13 @@ UCHAR basic_controls_task(int test)
 				printf("tasks: shutdown iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 3;
-//				close_tcp();
+				msg.mtype = msgtype;
+				msg.mtext[0] = cmd;
+				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
 				break;
 
 			case SHELL_AND_RENAME:
@@ -1482,7 +1599,13 @@ UCHAR basic_controls_task(int test)
 				printf("tasks: shell and rename\n");
 				shutdown_all = 1;
 				reboot_on_exit = 6;
-//				close_tcp();
+				msg.mtype = msgtype;
+				msg.mtext[0] = cmd;
+				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
+				{
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
 				break;
 
 			default:

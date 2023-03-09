@@ -165,7 +165,6 @@ UCHAR get_host_cmd_task1(int test)
 	struct tm t;
 	struct tm *pt = &t;
 	int msg_len;
-	shutdown_all = 0;
 	char version[15] = "sched v1.03\0";
 	struct msgqbuf msg;
 	int msgtype = 1;

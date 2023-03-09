@@ -31,8 +31,8 @@
 #include <netdb.h>
 #include <sys/ipc.h>
 #include "../mytypes.h"
-#include "serial_io.h"
-#include "tasks.h"
+#include "../serial_io.h"
+#include "../tasks.h"
 
 extern void *work_routine(void *arg);
 

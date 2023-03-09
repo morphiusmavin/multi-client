@@ -24,7 +24,7 @@
 #include <sys/msg.h>
 #include "../cmd_types.h"
 #include "../mytypes.h"
-#include "tasks.h"
+#include "../tasks.h"
 #include "../ioports.h"
 #include "serial_io.h"
 #include "../queue/ollist_threads_rw.h"

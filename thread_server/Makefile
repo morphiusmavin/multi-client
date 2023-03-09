@@ -86,7 +86,7 @@ LD_SYS_LIBS = $(SYS_LIBRARIES)
 # gcc3 and gcc4 doesn't support thumb-interworking, but compiles anyway
 # gcc3/4 doesn't work with -mapcs-32
 # use the USE_CARDS define when using a 20-port pc-104 daughter card
-CC_FLAGS = -static -g -DTS_7800 -DUSE_CARDS -Wstrict-prototypes -mcpu=arm920t
+CC_FLAGS = -static -g -DSERVER_146 -DTS_7800 -DUSE_CARDS -Wstrict-prototypes -mcpu=arm920t
 #CC_FLAGS = -static -g -DTS_7800 -Wstrict-prototypes -mcpu=arm920t
 #CC_FLAGS = -static -g -Wstrict-prototypes -mcpu=arm920t
 GNULDFLAGS_T = ${GNULDFLAGS} -pthread
@@ -108,7 +108,10 @@ all : sched sock_mgt
 nbus.o: ../nbus/nbus.c ../nbus/nbus.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../nbus/nbus.c
 
-sched.o: sched.c tasks.h
+dio_ds1620.o: ../nbus/dio_ds1620.c ../nbus/dio_ds1620.h
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../nbus/dio_ds1620.c
+
+sched.o: sched.c ../tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
 
 ioports.o: ../ioports.c ../ioports.h
@@ -117,8 +120,8 @@ ioports.o: ../ioports.c ../ioports.h
 assign_client_table.o: ../assign_client_table.c
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../assign_client_table.c
 
-tasks.o: tasks.c tasks.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c tasks.c
+tasks.o: ../tasks.c ../tasks.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../tasks.c
 
 serial_io.o: serial_io.c serial_io.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c serial_io.c
@@ -144,8 +147,14 @@ load_cmds.o: ../load_cmds.c
 cllist_threads_rw.o: ../queue/cllist_threads_rw.c ../queue/cllist_threads_rw.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/cllist_threads_rw.c
 
+dllist_threads_rw.o: ../queue/cllist_threads_rw.c ../queue/dllist_threads_rw.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/dllist_threads_rw.c
+
 cconfig_file.o: ../cs_client/cconfig_file.c ../queue/cllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/cconfig_file.c
+
+dconfig_file.o: ../cs_client/cconfig_file.c ../queue/dllist_threads_rw.h
+	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/dconfig_file.c
 
 sock_mgt.o : sock_mgt.c 
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_mgt.c
@@ -153,9 +162,9 @@ sock_mgt.o : sock_mgt.c
 sock_sched.o : sock_sched.c 
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_sched.c
 
-sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o cconfig_file.o nbus.o
+sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o dllist_threads_rw.o cconfig_file.o dconfig_file.o nbus.o dio_ds1620.o
 # if we don't use -static then the target should have: libpthread.so.0 in the /lib directory
-	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o cconfig_file.o nbus.o -o sched -lm
+	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o dllist_threads_rw.o cconfig_file.o dconfig_file.o nbus.o dio_ds1620.o -o sched -lm
 
 sock_mgt: sock_mgt.o sock_sched.o load_cmds.o
 	${CC} -static -pthread sock_sched.o assign_client_table.o sock_mgt.o load_cmds.o -o sock_mgt

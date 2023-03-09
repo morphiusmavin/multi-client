@@ -103,10 +103,10 @@ dio_ds1620.o: ../nbus/dio_ds1620.c ../nbus/dio_ds1620.h
 cmd_tasks.o: cmd_tasks.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cmd_tasks.c
 
-tasks.o: tasks.c tasks.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c tasks.c
+tasks.o: ../tasks.c ../tasks.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../tasks.c
 
-sched.o: sched.c tasks.h
+sched.o: sched.c ../tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
 
 ioports.o: ../ioports.c ../ioports.h

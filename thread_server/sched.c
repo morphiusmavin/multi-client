@@ -30,8 +30,8 @@
 #include <netdb.h>
 #include <sys/ipc.h>
 #include "../mytypes.h"
-#include "serial_io.h"
-#include "tasks.h"
+#include "../serial_io.h"
+#include "../tasks.h"
 //#include "queue/ollist_threads_rw.h"
 
 extern int init_mem(void);
@@ -64,7 +64,7 @@ typedef struct
 UCHAR (*fptr[NUM_SCHED_TASKS])(int) = { 
 	get_host_cmd_task, 
 	monitor_input_task, 
-	monitor_fake_input_task, 
+	poll_ds1620_task, 
 	timer_task, 
 	timer2_task, 
 	serial_recv_task, 
