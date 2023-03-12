@@ -30,8 +30,8 @@
 #include <netdb.h>
 #include <sys/ipc.h>
 #include "../mytypes.h"
-#include "serial_io.h"
-#include "tasks.h"
+#include "../serial_io.h"
+#include "../tasks.h"
 int threads_ready_count=0;
 pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
 pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;

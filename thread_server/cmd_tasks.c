@@ -26,7 +26,7 @@
 #include "../mytypes.h"
 #include "../tasks.h"
 #include "../ioports.h"
-#include "serial_io.h"
+#include "../serial_io.h"
 #include "../queue/ollist_threads_rw.h"
 #include "../queue/cllist_threads_rw.h"
 #include "../queue/dllist_threads_rw.h"

@@ -25,7 +25,7 @@
 #include <semaphore.h>
 #include "../cmd_types.h"
 #include "../mytypes.h"
-#include "serial_io.h"
+#include "../serial_io.h"
 #include "../queue/ollist_threads_rw.h"
 #include "../queue/cllist_threads_rw.h"
 #include "../tasks.h"

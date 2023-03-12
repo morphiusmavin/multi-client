@@ -7,19 +7,18 @@ git add load_cmds.c
 git add ioports.c
 git add ioports.h
 git add README.md
-git add try_sched_client.sh
-git add try_sched_server.sh
 git add network.readme
 git add tasks.c 
 git add tasks.h
+git add serial_io.c
+git add serial_io.h
 
 git add thread_server/cmd_tasks.c
 git add thread_server/sched.c
-git add thread_server/serial_io.c
-git add thread_server/serial_io.h
 git add thread_server/Makefile
 git add thread_server/sock_mgt.c
 git add thread_server/sock_sched.c
+git add thread_server/do1.sh
 
 git add cs_client/config_file.c
 git add cs_client/config_file.h
@@ -41,15 +40,10 @@ git add thread_client/ts4600sock.mak
 git add thread_client/ts4600_147.mak
 git add thread_client/ts4600_154.mak
 git add thread_client/ts4600_150.mak
-git add thread_client/test150.sh
-git add thread_client/test154.sh
-git add thread_client/test147.sh
-git add thread_client/4600sock.sh
 git add thread_client/sched.c
-git add thread_client/serial_io.c
-git add thread_client/serial_io.h
 git add thread_client/sock_mgt.c
 git add thread_client/sock_sched.c
+git add thread_client/do1.sh
 
 git add EpServerEngineSampleClient/*
 

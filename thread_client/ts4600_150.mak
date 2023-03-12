@@ -115,8 +115,8 @@ ioports.o: ../ioports.c ../ioports.h
 assign_client_table.o: ../assign_client_table.c
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../assign_client_table.c
 
-serial_io.o: serial_io.c serial_io.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c serial_io.c
+serial_io.o: ../serial_io.c ../serial_io.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../serial_io.c
 
 ollist_threads_rw.o: ../queue/ollist_threads_rw.c ../queue/ollist_threads_rw.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/ollist_threads_rw.c

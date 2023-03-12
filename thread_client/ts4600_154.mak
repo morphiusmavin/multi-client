@@ -102,10 +102,10 @@ dio_ds1620.o: ../nbus/dio_ds1620.c ../nbus/dio_ds1620.h
 cmd_tasks.o: cmd_tasks.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cmd_tasks.c
 
-tasks.o: tasks.c tasks.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c tasks.c
+tasks.o: ../tasks.c ../tasks.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../tasks.c
 
-sched.o: sched.c tasks.h
+sched.o: sched.c ../tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
 
 ioports.o: ../ioports.c ../ioports.h
@@ -114,8 +114,8 @@ ioports.o: ../ioports.c ../ioports.h
 assign_client_table.o: ../assign_client_table.c
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../assign_client_table.c
 
-serial_io.o: serial_io.c serial_io.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c serial_io.c
+serial_io.o: ../serial_io.c ../serial_io.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../serial_io.c
 
 ollist_threads_rw.o: ../queue/ollist_threads_rw.c ../queue/ollist_threads_rw.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/ollist_threads_rw.c

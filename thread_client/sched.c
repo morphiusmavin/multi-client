@@ -30,7 +30,7 @@
 #include <netdb.h>
 #include <sys/ipc.h>
 #include "../mytypes.h"
-#include "serial_io.h"
+#include "../serial_io.h"
 #include "../tasks.h"
 #include "../queue/ollist_threads_rw.h"
 

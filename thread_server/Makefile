@@ -123,8 +123,8 @@ assign_client_table.o: ../assign_client_table.c
 tasks.o: ../tasks.c ../tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../tasks.c
 
-serial_io.o: serial_io.c serial_io.h
-	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c serial_io.c
+serial_io.o: ../serial_io.c ../serial_io.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../serial_io.c
 
 ollist_threads_rw.o: ../queue/ollist_threads_rw.c ../queue/ollist_threads_rw.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/ollist_threads_rw.c
@@ -134,9 +134,6 @@ rdwr.o: ../queue/rdwr.c ../queue/rdwr.h
 
 config_file.o: ../cs_client/config_file.c  ../queue/ollist_threads_rw.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/config_file.c
-
-#lcd_func.o: lcd_func.c lcd_func.h
-#	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c lcd_func.c
 
 cmd_tasks.o: cmd_tasks.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cmd_tasks.c

@@ -1,6 +1,5 @@
-make -f ts4600_154.mak clean
-make -f ts4600_154.mak &> out.txt
-
+make clean
+make &> out.txt
 if grep -q error out.txt
  then
   find2 error out.txt
@@ -13,5 +12,5 @@ if grep -q undefined out.txt
   exit 1
 fi
 rm *.o
-mv sched154 ../../sched/sched
-ls -ltr ../../sched
+tar cf server.tar sched sock_mgt
+scp server.tar 192.168.88.146:/home/dan
