@@ -279,7 +279,7 @@ UCHAR get_host_cmd_task(int test)
 		//printf("sched cmd host: ");
 		memset(tempx, 0, sizeof(tempx));
 		cmd = msg.mtext[0];
-		print_cmd(cmd);
+		//print_cmd(cmd);
 		msg_len |= (int)(msg.mtext[2] << 4);
 		msg_len = (int)msg.mtext[1];
 		

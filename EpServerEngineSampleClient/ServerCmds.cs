@@ -101,6 +101,7 @@ namespace EpServerEngineSampleClient
 			SET_DS_INTERVAL,
 			RENAME_D_DATA,
 			DLLIST_SHOW,
+			DLLIST_SAVE,
 			DS1620_MSG
 		}
 		public ServerCmds()

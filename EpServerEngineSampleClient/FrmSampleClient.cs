@@ -585,6 +585,10 @@ namespace EpServerEngineSampleClient
 
             switch (str)
             {
+                case "DS1620_MSG":
+                    //AddMsg(ret.ToString());
+                    break;
+
                 case "UPTIME_MSG":
                     string[] words = ret.Split(' ');
                     i = 0;
@@ -1372,7 +1376,7 @@ namespace EpServerEngineSampleClient
                         cl.socket = -1;
                     }
                     svrcmd.Send_ClCmd(msg, cl.index, param);
-                    //AddMsg(cl.index.ToString());
+                    AddMsg(cl.index.ToString());
                     // if cl.index == server then set disconnected flag
 
                     //if ((cl.index == 8) && (msg == REBOOT_IOBOX))

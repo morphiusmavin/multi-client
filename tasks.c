@@ -1551,13 +1551,6 @@ UCHAR basic_controls_task(int test)
 				printf("tasks: exit to shell\n");
 				shutdown_all = 1;
 				reboot_on_exit = 1;
-				msg.mtype = msgtype;
-				msg.mtext[0] = cmd;
-				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
-				{
-					perror("msgsnd error");
-					exit(EXIT_FAILURE);
-				}
 				break;
 
 			case REBOOT_IOBOX:
@@ -1567,13 +1560,6 @@ UCHAR basic_controls_task(int test)
 				printf("tasks: reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;
-				msg.mtype = msgtype;
-				msg.mtext[0] = cmd;
-				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
-				{
-					perror("msgsnd error");
-					exit(EXIT_FAILURE);
-				}
 				break;
 
 			case SHUTDOWN_IOBOX:
@@ -1583,13 +1569,6 @@ UCHAR basic_controls_task(int test)
 				printf("tasks: shutdown iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 3;
-				msg.mtype = msgtype;
-				msg.mtext[0] = cmd;
-				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
-				{
-					perror("msgsnd error");
-					exit(EXIT_FAILURE);
-				}
 				break;
 
 			case SHELL_AND_RENAME:
@@ -1599,13 +1578,6 @@ UCHAR basic_controls_task(int test)
 				printf("tasks: shell and rename\n");
 				shutdown_all = 1;
 				reboot_on_exit = 6;
-				msg.mtype = msgtype;
-				msg.mtext[0] = cmd;
-				if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), IPC_NOWAIT) == -1) 
-				{
-					perror("msgsnd error");
-					exit(EXIT_FAILURE);
-				}
 				break;
 
 			default:
