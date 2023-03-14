@@ -40,7 +40,7 @@ pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
 pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
 
 UCHAR (*fptr[NUM_SCHED_TASKS])(int) = { 
-	get_host_cmd_task2, 
+	get_host_cmd_task, 
 	monitor_input_task, 
 	poll_ds1620_task, 
 	timer_task, 

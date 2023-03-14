@@ -181,7 +181,6 @@ UCHAR get_host_cmd_task(int test)
 	UCHAR cmd = 0x21;
 	char errmsg[50];
 	char filename[15];
-	char *fptr;
 	size_t size;
 	int i;
 	int j;
@@ -204,13 +203,6 @@ UCHAR get_host_cmd_task(int test)
 	msg.mtype = msgtype;
 	int temp;
 	int dest;
-/*
-	char filename[20] = "
-	fptr = (char *)filename;
-
-	fp = open((const char *)fptr, O_RDWR);
-*/
-	//printf("sock_mgnt starting %d\n",test);
 
 	while(TRUE)
 	{

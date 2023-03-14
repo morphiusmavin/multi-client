@@ -108,7 +108,7 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 /*********************************************************************/
 // task to get commands from the host
 
-UCHAR get_host_cmd_task2(int test)
+UCHAR get_host_cmd_task(int test)
 {
 	O_DATA *otp;
 	O_DATA **otpp = &otp;

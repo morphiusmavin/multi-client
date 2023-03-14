@@ -142,21 +142,17 @@ UCHAR recv_msg_task(int test)
 
 /*********************************************************************/
 // get msg from tcp and relay onto sched's host cmd loop using queue
-UCHAR get_host_cmd_task1(int test)
+UCHAR get_host_cmd_task(int test)
 {
 	int rc = 0; 
 	int rc1 = 0;
 	UCHAR cmd = 0x21;
 	char errmsg[50];
-	char filename[15];
-	char *fptr;
-	size_t size;
 	int i;
 	int j;
 	int k;
 	UCHAR tempx[200];
 	UCHAR write_serial_buff[SERIAL_BUFF_SIZE];
-	char temp_time[5];
 	char *pch;
 	time_t curtime2;
 	time_t *pcurtime2 = &curtime2;

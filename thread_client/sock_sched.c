@@ -37,7 +37,7 @@ pthread_cond_t    threads_ready=PTHREAD_COND_INITIALIZER;
 pthread_mutex_t   threads_ready_lock=PTHREAD_MUTEX_INITIALIZER;
 
 UCHAR (*fptr[NUM_SOCK_TASKS])(int) = { 
-	get_host_cmd_task1,
+	get_host_cmd_task,
 	tcp_monitor_task,
 	recv_msg_task };
 

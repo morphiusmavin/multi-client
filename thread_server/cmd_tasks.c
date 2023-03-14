@@ -78,9 +78,6 @@ UCHAR get_host_cmd_task(int test)
 	UCHAR cmd = 0x21;
 	UCHAR onoff, port;
 	char errmsg[50];
-	char filename[15];
-	char *fptr;
-	size_t size;
 	int i;
 	int j;
 	int k;
@@ -90,17 +87,11 @@ UCHAR get_host_cmd_task(int test)
 	time_t T;
 	struct tm tm;
 	UCHAR tempx[UPLOAD_BUFF_SIZE];
-	char tempy[30];
 	char temp_time[5];
 	char *pch, *pch2;
-	int fname_index;
-	UCHAR uch_fname_index;
 	UCHAR mask;
 	time_t curtime2;
 	time_t *pcurtime2 = &curtime2;
-	int fp;
-	off_t fsize;
-	long cur_fsize;
 	struct timeval mtv;
 	struct tm t;
 	struct tm *pt = &t;

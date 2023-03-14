@@ -50,6 +50,7 @@ UCHAR timer2_task(int test);
 UCHAR serial_recv_task(int test);
 UCHAR serial_recv_task2(int test);
 UCHAR basic_controls_task(int test);
+UCHAR get_host_cmd_task(int test);
 int change_output(int index, int onoff);
 int change_input(int index, int onoff);
 void basic_controls(UCHAR code);
@@ -130,8 +131,6 @@ enum sched_task_types
 
 void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest);
 UCHAR recv_msg_task(int test);
-UCHAR get_host_cmd_task1(int test);
-UCHAR get_host_cmd_task2(int test);
 //void send_serialother2(UCHAR cmd, int size, UCHAR *buf);
 int put_sock(UCHAR *buf,int buflen, int block, char *errmsg);
 int get_sock(UCHAR *buf, int buflen, int block, char *errmsg);
@@ -190,7 +189,6 @@ enum sched_task_types
 } SCHED_TASK_TYPES;
 
 UCHAR sock_timer(int test);
-UCHAR get_host_cmd_task(int test);
 UCHAR WinClReadTask(int test);
 UCHAR ReadTask(int test);
 UCHAR SendTask(int test);
