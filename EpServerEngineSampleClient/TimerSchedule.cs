@@ -182,6 +182,7 @@ namespace EpServerEngineSampleClient
 			int type_msg = chars[0];
 			System.Buffer.BlockCopy(bytes, 2, chars2, 0, bytes.Length - 2);
 			ret = new string(chars2);
+			//AddMsg(ret);
 			string str = svrcmd.GetName(type_msg);
 			switch (str)
 			{
@@ -234,7 +235,7 @@ namespace EpServerEngineSampleClient
 								break;
 							case 9:
 								cdata_temp.label = word;
-								//AddMsg(word);
+								AddMsg(word);
 								//AddMsg("");
 								//cdata_temp.label += '\n';
 								break;
@@ -354,13 +355,14 @@ namespace EpServerEngineSampleClient
 		private void btnUpdateChart_Click(object sender, EventArgs e)
 		{
 			DataTable dt = GetDataTable();
+			AddMsg(mycdata.Count.ToString());
 			foreach (Cdata td in mycdata)
 			{
 				dt.Rows.Add(td.index.ToString(), td.port.ToString(), td.state.ToString(), td.on_hour.ToString(),
 					td.on_minute.ToString(), td.on_second.ToString(), td.off_hour.ToString(), td.off_minute.ToString(),
 					td.off_second.ToString(), td.label);
 				//td.label += '\n';
-				//AddMsg(td.label);
+				AddMsg(td.label);
 			}
 			CGridView.DataSource = dt;
 		}

@@ -30,6 +30,7 @@
 #include "queue/cllist_threads_rw.h"
 #include "queue/dllist_threads_rw.h"
 #include "tasks.h"
+#include "raw_data.h"
 #include "cs_client/config_file.h"
 
 static struct  sockaddr_in sad;  /* structure to hold server's address  */
@@ -56,6 +57,7 @@ int shutdown_all;
 extern int curr_countdown_size;
 extern void sort_countdown(void);
 extern void display_sort(void);
+extern char *lookup_raw_data(int val);
 
 inline int pack4chars(char c1, char c2, char c3, char c4) {
     return ((int)(((unsigned char)c1) << 24)
@@ -65,10 +67,13 @@ inline int pack4chars(char c1, char c2, char c3, char c4) {
 }
 #endif
 
+struct msgqbuf msg;
+int msgtype = 1;
+
 void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
-	
+
 	if(cmd > NO_CMDS)
 		printf("unknown cmd: %d\n",cmd);
 
@@ -81,17 +86,15 @@ void print_cmd(UCHAR cmd)
 void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 {
 	int i;
-	struct msgqbuf msg;
-	int msgtype = 1;
 	memset(msg.mtext,0,sizeof(msg.mtext));
 	msg.mtext[0] = cmd;
 	msg.mtext[1] = dest;
-	msg.mtext[3] = (UCHAR)msg_len;
-	msg.mtext[4] = (UCHAR)(msg_len >> 4);
-	printf("send_sock_msg\n");
+	msg.mtext[2] = (UCHAR)msg_len;
+	msg.mtext[3] = (UCHAR)(msg_len >> 4);
+	//printf("send_sock_msg :");
 	print_cmd(cmd);
 	//printf("msg_len: %d\n",msg_len);
-	memcpy(msg.mtext + 3,send_msg,msg_len);
+	memcpy(msg.mtext + 4,send_msg,msg_len);
 	//printf("msg to cmd_host from client %d\n",dest);
 /*
 	for(i = 0;i < msg_len+3;i++)
@@ -147,8 +150,6 @@ UCHAR get_host_cmd_task(int test)
 	int index;
 	UCHAR mask;
 	UCHAR mask2;
-	struct msgqbuf msg;
-	int msgtype = 1;
 
 #ifdef SERVER_146
 	printf("starting server\n");
@@ -309,7 +310,7 @@ UCHAR get_host_cmd_task(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}
-	
+
 	cllist_init(&cll);
 	if(access(cFileName,F_OK) != -1)
 	{
@@ -371,7 +372,7 @@ UCHAR get_host_cmd_task(int test)
 			//print_cmd(cmd);
 			msg_len |= (int)(msg.mtext[2] << 4);
 			msg_len = (int)msg.mtext[1];
-			
+
 			//printf("msg_len: %d\n",msg_len);
 			memset(tempx,0,sizeof(tempx));
 			memcpy(tempx,msg.mtext+3,msg_len);
@@ -468,7 +469,14 @@ UCHAR get_host_cmd_task(int test)
 
  				switch(cmd)
 				{
+					case GET_TEMP4:
+						dllist_find_data(ds_index, dtpp, &dll);
+
+						printf("%d:%d:%d - %s\n",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
+						break;
+
 					case SEND_CLIENT_LIST:
+						//printf("send client list :");
 						send_sock_msg(tempx, msg_len, SEND_CLIENT_LIST, 8);
 						break;
 
@@ -485,7 +493,7 @@ UCHAR get_host_cmd_task(int test)
 						ds_interval = (int)tempx[0];
 						printf("ds interval: %d\n",ds_interval);
 						break;
-						
+
 					case RENAME_D_DATA:
 						//memcpy(new_filename,tempx,strlen(tempx));
 						strcpy(new_filename,tempx);
@@ -568,7 +576,7 @@ UCHAR get_host_cmd_task(int test)
 						break;
 
 					case SET_CLLIST:
-/*					
+/*
 						printf("set cllist\n");
 						printf("msg_len: %d\n",msg_len);
 						for(i = 0;i < msg_len/2;i++)
@@ -606,7 +614,7 @@ UCHAR get_host_cmd_task(int test)
 						printf("%d %s\n",csize,cFileName);
 						clWriteConfig(cFileName,&cll,csize,errmsg);
 						break;
-					
+
 					case GET_ALL_CLLIST:
 						for(i = 0;i < 20;i++)
 						{
@@ -654,7 +662,7 @@ UCHAR get_host_cmd_task(int test)
 						trunning_hours = tempx[1];
 						trunning_minutes = tempx[2];
 						trunning_seconds = tempx[3];
-*/						
+*/
 						break;
 
 					case SET_NEXT_CLIENT:
@@ -690,7 +698,7 @@ UCHAR get_host_cmd_task(int test)
 						this_client_index = tempx[0];
 						printf("this client index: %d\n",this_client_index);
 						break;
-					
+
 					case SEND_TIMEUP:
 						memset(tempx,0,sizeof(tempx));
 						sprintf(tempx,"%d %d %d %d %d",this_client_index, trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
@@ -727,19 +735,15 @@ UCHAR get_host_cmd_task(int test)
 							printf("%c",tempx[i]);
 						printf("\n");
 						send_sock_msg(tempx, msg_len, cmd, 8);
-/*						
+/*
 						for(i = msg_len;i > 0;i--)
 							tempx2[i] = tempx[i];
-						
+
 						for(i = 0;i < msg_len;i++)
 							printf("%02x ",tempx[i]);
 						printf("\n");
 						send_msg(strlen((char*)tempx2),(UCHAR*)tempx2, SEND_STATUS, _SERVER);
 */
-						break;
-
-					case GET_TEMP4:
-						printf("%s\n",tempx);
 						break;
 
 					case SET_PARAMS:
@@ -942,7 +946,7 @@ UCHAR get_host_cmd_task(int test)
 						utemp <<= 8;
 						utemp |= (UINT)msg_buf[22];
 						ps.lights_on_delay = utemp;
-					
+
 						utemp = (UINT)msg_buf[25];
 						utemp <<= 8;
 						utemp |= (UINT)msg_buf[24];

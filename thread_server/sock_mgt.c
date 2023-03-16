@@ -204,13 +204,14 @@ UCHAR get_host_cmd_task(int test)
 	int temp;
 	int dest;
 
+	//printf("starting get_host_cmd_task...\n");
+
 	while(TRUE)
 	{
 		cmd = 0;
+		//printf("sock_mgt get_host_cmd_task\n");
 		// recv msg's from sched
-		if (msgrcv(sock_qid, (void *) &msg, sizeof(msg.mtext), msgtype,
-//		MSG_NOERROR | IPC_NOWAIT) == -1) 
-		MSG_NOERROR) == -1) 
+		if (msgrcv(sock_qid, (void *) &msg, sizeof(msg.mtext), msgtype, MSG_NOERROR) == -1) 
 		{
 			if (errno != ENOMSG) 
 			{
@@ -221,21 +222,22 @@ UCHAR get_host_cmd_task(int test)
 		}
 		memset(write_serial_buff,0,sizeof(write_serial_buff));
 		cmd = msg.mtext[0];							// first byte is cmd
-													// 2nd is dest which is ignored here
+		printf("%d\n",msg.mtext[1]);				// 2nd is dest which is ignored here
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte
 		write_serial_buff[0] = cmd;
-		//printf("msg_len: %d\n",msg_len);
+		printf("msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+4,msg_len);
-
+/*
 		for(i = 1;i < msg_len+1;i++)
 			printf("%02x ",write_serial_buff[i]);
+*/
 
 //		if(cmd > 0)
 		if(1)
 		{
 			rc = 0;
-			printf("server get_cmd_host\n");
+			//printf("server get_cmd_host :");
 			print_cmd(cmd);
 			switch(cmd)
 			{
@@ -255,7 +257,7 @@ UCHAR get_host_cmd_task(int test)
 
 				case REPLY_CLLIST:
 					send_msgb(client_table[0].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
-					
+
 					printf("msg_len: %d\n",msg_len);
 					break;
 
@@ -264,7 +266,7 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_CLIENT_LIST:
-					//printf("SEND_CLIENT_LIST from sock_mgt\n");
+					printf("SEND_CLIENT_LIST from sock_mgt\n");
 					k = -1;
 					if(client_table[0].socket > 0)
 					{
@@ -279,7 +281,7 @@ UCHAR get_host_cmd_task(int test)
 								//printf("%d\n",strlen(write_serial_buff));
 
 								send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
-								uSleep(0,TIME_DELAY/2);
+								uSleep(0,TIME_DELAY/8);
 								//printf("client sock: %d\n",client_table[j].socket);
 							}
 						}
@@ -360,7 +362,6 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_STATUS:
-					//printf("sock_mgt send status\n");
 					temp = 0;
 					temp = (int)(write_serial_buff[3] << 4);
 					temp |= (int)write_serial_buff[2];
@@ -371,6 +372,7 @@ UCHAR get_host_cmd_task(int test)
 //						shutdown_all = 1;
 					break;
 
+/*
 				case GET_TEMP4:
 					if(client_table[dest].socket > 0)
 					{
@@ -378,7 +380,7 @@ UCHAR get_host_cmd_task(int test)
 						send_msg(client_table[dest].socket, msg_len, (UCHAR*)&write_serial_buff[0],cmd);
 					}
 					break;
-
+*/
 				case GET_VERSION:
 					//send_status_msg(version);
 					break;

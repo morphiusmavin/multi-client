@@ -645,14 +645,13 @@ namespace EpServerEngineSampleClient
 
                 case "SEND_CLIENT_LIST":
                     string[] words = ret.Split(' ');
-                    words = ret.Split(' ');
                     i = 0;
                     int j = 0;
                     int sock = -1;
                     AddMsg(ret);
                     string clmsg = " ";
                     bool avail = false;
-                    AddMsg("SEND_CLIENT_LIST ");
+                    //AddMsg("SEND_CLIENT_LIST ");
                     foreach (var word in words)
                     {
                         switch (i)
@@ -1060,7 +1059,7 @@ namespace EpServerEngineSampleClient
                     DisplayFactoid();
                 }
             }
-            if (tick == 3)
+            if (tick == 4)
             {
                 if (m_client.IsConnectionAlive)
                 {
@@ -1070,7 +1069,7 @@ namespace EpServerEngineSampleClient
                 }
 
             }
-            if (clients_inited == false && tick == 4)
+            if (clients_inited == false && tick == 6)
             {
                 //AddMsg("set time");
                 if (m_client.IsConnectionAlive)
@@ -1085,7 +1084,7 @@ namespace EpServerEngineSampleClient
                     }
                 }
             }
-            if (clients_inited == false && tick == 5)
+            if (clients_inited == false && tick == 8)
             {
                 if (m_client.IsConnectionAlive)
                 {
@@ -1764,8 +1763,19 @@ namespace EpServerEngineSampleClient
 		private void btnUnused_Click(object sender, EventArgs e)
 		{
             svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
-            AddMsg("send client list");
-            RedrawClientListBox();
+            //AddMsg("send client list");
+            //RedrawClientListBox();
+        }
+
+		private void btnGetTemp_Click(object sender, EventArgs e)
+		{
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_TEMP4"), cl.index, " ");
+                }
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)

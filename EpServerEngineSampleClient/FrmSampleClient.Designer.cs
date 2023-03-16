@@ -100,6 +100,7 @@
 			this.tbFactoid = new System.Windows.Forms.TextBox();
 			this.label8 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
+			this.btnGetTemp = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -352,7 +353,7 @@
 			this.lbAvailClients.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbAvailClients.FormattingEnabled = true;
 			this.lbAvailClients.ItemHeight = 15;
-			this.lbAvailClients.Location = new System.Drawing.Point(909, 199);
+			this.lbAvailClients.Location = new System.Drawing.Point(909, 158);
 			this.lbAvailClients.Name = "lbAvailClients";
 			this.lbAvailClients.Size = new System.Drawing.Size(173, 79);
 			this.lbAvailClients.TabIndex = 35;
@@ -362,7 +363,7 @@
 			// 
 			this.btnRebootClient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnRebootClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnRebootClient.Location = new System.Drawing.Point(909, 290);
+			this.btnRebootClient.Location = new System.Drawing.Point(909, 246);
 			this.btnRebootClient.Name = "btnRebootClient";
 			this.btnRebootClient.Size = new System.Drawing.Size(173, 37);
 			this.btnRebootClient.TabIndex = 8;
@@ -373,7 +374,7 @@
 			// btnShutdownClient
 			// 
 			this.btnShutdownClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnShutdownClient.Location = new System.Drawing.Point(909, 390);
+			this.btnShutdownClient.Location = new System.Drawing.Point(909, 346);
 			this.btnShutdownClient.Name = "btnShutdownClient";
 			this.btnShutdownClient.Size = new System.Drawing.Size(173, 37);
 			this.btnShutdownClient.TabIndex = 10;
@@ -384,7 +385,7 @@
 			// btnSendStatus
 			// 
 			this.btnSendStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendStatus.Location = new System.Drawing.Point(909, 440);
+			this.btnSendStatus.Location = new System.Drawing.Point(909, 396);
 			this.btnSendStatus.Name = "btnSendStatus";
 			this.btnSendStatus.Size = new System.Drawing.Size(173, 37);
 			this.btnSendStatus.TabIndex = 11;
@@ -406,7 +407,7 @@
 			// bSetClientTime
 			// 
 			this.bSetClientTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.bSetClientTime.Location = new System.Drawing.Point(909, 490);
+			this.bSetClientTime.Location = new System.Drawing.Point(909, 446);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(173, 37);
 			this.bSetClientTime.TabIndex = 12;
@@ -429,7 +430,7 @@
 			// 
 			this.btnExit2Shell.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnExit2Shell.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnExit2Shell.Location = new System.Drawing.Point(909, 340);
+			this.btnExit2Shell.Location = new System.Drawing.Point(909, 296);
 			this.btnExit2Shell.Name = "btnExit2Shell";
 			this.btnExit2Shell.Size = new System.Drawing.Size(173, 37);
 			this.btnExit2Shell.TabIndex = 9;
@@ -685,7 +686,7 @@
 			// btnGetTime
 			// 
 			this.btnGetTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnGetTime.Location = new System.Drawing.Point(909, 540);
+			this.btnGetTime.Location = new System.Drawing.Point(909, 496);
 			this.btnGetTime.Name = "btnGetTime";
 			this.btnGetTime.Size = new System.Drawing.Size(173, 37);
 			this.btnGetTime.TabIndex = 13;
@@ -851,7 +852,7 @@
 			this.tbFactoid.Multiline = true;
 			this.tbFactoid.Name = "tbFactoid";
 			this.tbFactoid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbFactoid.Size = new System.Drawing.Size(286, 128);
+			this.tbFactoid.Size = new System.Drawing.Size(286, 98);
 			this.tbFactoid.TabIndex = 86;
 			// 
 			// label8
@@ -874,12 +875,24 @@
 			this.label9.TabIndex = 88;
 			this.label9.Text = "Time:";
 			// 
+			// btnGetTemp
+			// 
+			this.btnGetTemp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
+			this.btnGetTemp.Location = new System.Drawing.Point(909, 540);
+			this.btnGetTemp.Name = "btnGetTemp";
+			this.btnGetTemp.Size = new System.Drawing.Size(173, 37);
+			this.btnGetTemp.TabIndex = 89;
+			this.btnGetTemp.Text = "Get Temp";
+			this.btnGetTemp.UseVisualStyleBackColor = true;
+			this.btnGetTemp.Click += new System.EventHandler(this.btnGetTemp_Click);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1487, 642);
+			this.Controls.Add(this.btnGetTemp);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.label8);
 			this.Controls.Add(this.tbFactoid);
@@ -1025,6 +1038,7 @@
 		private System.Windows.Forms.TextBox tbFactoid;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label9;
+		private System.Windows.Forms.Button btnGetTemp;
 	}
 }
 
