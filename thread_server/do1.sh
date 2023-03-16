@@ -1,4 +1,7 @@
-make clean
+#make clean
+rm *.o
+rm sched
+rm sock_mgt
 make &> out.txt
 if grep -q error out.txt
  then

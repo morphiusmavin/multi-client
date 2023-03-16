@@ -590,6 +590,8 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "UPTIME_MSG":
+                    AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
+                    /*
                     string[] words = ret.Split(' ');
                     i = 0;
                     int j = 0;
@@ -600,7 +602,7 @@ namespace EpServerEngineSampleClient
                             case 0:
                                 j = int.Parse(word);
                                 //AddMsg(word + " " + j.ToString());
-                                AddMsg(clients_avail[j].label + " uptime:");
+                                //AddMsg(clients_avail[j].label + " uptime:");
                                 //AddMsg(word);
                                 break;
                             case 1:
@@ -627,6 +629,7 @@ namespace EpServerEngineSampleClient
                         }
                         i++;
                     }//AddMsg("uptime_msg");
+                    */
                     break;
 
                 case "SEND_MESSAGE":
@@ -640,46 +643,16 @@ namespace EpServerEngineSampleClient
                     ListMsg(ret, true);
                     break;
 
-                case "SERVER_UPTIME":
-                    substr = ret.Substring(0, 2);
-                    server_up_seconds++;
-                    if (substr == "0h")
-                    {
-                        substr = ret.Substring(3, ret.Length - 3);
-                        //tbServerTime.Text = substr;
-                    }
-
-                    if (server_up_seconds == 2)
-                        SetTime(9);
-
-                    if (client_params[selected_address].AutoConn == true && server_up_seconds == 4)
-                    {
-                        if (dlgsetparams == null)
-                        {
-                            AddMsg("newing dlgsetparams: " + cfg_params.engine_temp_limit.ToString());
-                            dlgsetparams = new DlgSetParams(cfg_params);
-                            dlgsetparams.SetClient(m_client);
-                            dlgsetparams.SetParams(cfg_params);
-                            // SET_PARAMS asks the server to load all the params from the config file
-                            // and send them back to here via the SEND_CONFIG msg
-                            timer_offset = svrcmd.GetCmdIndexI("SET_PARAMS");
-                            svrcmd.Send_Cmd(timer_offset);
-                            AddMsg(cfg_params.engine_temp_limit.ToString());
-                            AddMsg("cfg_params in dlgsetparams set: " + dlgsetparams.GetSet());
-                            btnFnc3.Enabled = true;
-                        }
-                    }
-                    break;
-
                 case "SEND_CLIENT_LIST":
+                    string[] words = ret.Split(' ');
                     words = ret.Split(' ');
                     i = 0;
-                    j = 0;
+                    int j = 0;
                     int sock = -1;
-                    //AddMsg(ret);
+                    AddMsg(ret);
                     string clmsg = " ";
                     bool avail = false;
-                    //AddMsg("SEND_CLIENT_LIST ");
+                    AddMsg("SEND_CLIENT_LIST ");
                     foreach (var word in words)
                     {
                         switch (i)
@@ -1787,7 +1760,15 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
-		private void btnSave_Click(object sender, EventArgs e)
+
+		private void btnUnused_Click(object sender, EventArgs e)
+		{
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
+            AddMsg("send client list");
+            RedrawClientListBox();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
 		{
             SaveJournalEntry();
             tbJournalEntry.Clear();

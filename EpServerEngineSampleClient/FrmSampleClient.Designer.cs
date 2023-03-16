@@ -842,6 +842,7 @@
 			this.btnUnused.TabIndex = 2;
 			this.btnUnused.Text = "Unused";
 			this.btnUnused.UseVisualStyleBackColor = false;
+			this.btnUnused.Click += new System.EventHandler(this.btnUnused_Click);
 			// 
 			// tbFactoid
 			// 

@@ -44,7 +44,6 @@ pthread_mutex_t     msg_queue_lock=PTHREAD_MUTEX_INITIALIZER;
 int total_count;
 
 static UCHAR check_inputs(int index, int test);
-//extern CMD_STRUCT cmd_array[NO_CMDS];
 ollist_t oll;
 cllist_t cll;
 dllist_t dll;
@@ -693,7 +692,7 @@ UCHAR poll_ds1620_task(int test)
 	initDS1620();
 
 	valid_ds[0] = 1;
-	ds_interval = 4;
+	ds_interval = 2;
 
 	j = i = 0;
 	val = 0;

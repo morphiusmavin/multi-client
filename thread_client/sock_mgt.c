@@ -38,7 +38,7 @@ static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
 UCHAR msg_buf[SERIAL_BUFF_SIZE];
 UCHAR msg_buf2[SERIAL_BUFF_SIZE];
-CMD_STRUCT cmd_array[NO_CMDS];
+extern CMD_STRUCT cmd_array[];
 
 pthread_mutex_t     tcp_write_lock=PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t     tcp_read_lock=PTHREAD_MUTEX_INITIALIZER;

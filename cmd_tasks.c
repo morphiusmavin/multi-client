@@ -22,21 +22,20 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "../cmd_types.h"
-#include "../mytypes.h"
-#include "../tasks.h"
-#include "../ioports.h"
-#include "../serial_io.h"
-#include "../queue/ollist_threads_rw.h"
-#include "../queue/cllist_threads_rw.h"
-#include "../queue/dllist_threads_rw.h"
-#include "../tasks.h"
-#include "../cs_client/config_file.h"
+#include "cmd_types.h"
+#include "mytypes.h"
+#include "ioports.h"
+#include "serial_io.h"
+#include "queue/ollist_threads_rw.h"
+#include "queue/cllist_threads_rw.h"
+#include "queue/dllist_threads_rw.h"
+#include "tasks.h"
+#include "cs_client/config_file.h"
 
 static struct  sockaddr_in sad;  /* structure to hold server's address  */
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
-CMD_STRUCT cmd_array[NO_CMDS];
+extern CMD_STRUCT cmd_array[];
 
 //extern illist_t ill;
 extern ollist_t oll;
@@ -89,8 +88,8 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	msg.mtext[1] = dest;
 	msg.mtext[2] = (UCHAR)msg_len;
 	msg.mtext[3] = (UCHAR)(msg_len >> 4);
-	//printf("send_sock_msg\n");
-	//print_cmd(cmd);
+	printf("send_sock_msg\n");
+	print_cmd(cmd);
 	//printf("msg_len: %d\n",msg_len);
 	memcpy(msg.mtext + 4,send_msg,msg_len);
 	//printf("msg to cmd_host from client %d\n",dest);
@@ -149,6 +148,10 @@ UCHAR get_host_cmd_task(int test)
 	UCHAR mask;
 	UCHAR mask2;
 
+#ifdef SERVER_146
+	printf("starting server\n");
+	this_client_id = 8;
+#endif
 #ifdef CL_150
 	printf("starting 150\n");
 	this_client_id = 4;
@@ -320,7 +323,7 @@ UCHAR get_host_cmd_task(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
-		dllist_show(&dll);
+		//dllist_show(&dll);
 	}else
 	{
 		memset(dtp,0,sizeof(D_DATA));
@@ -358,9 +361,9 @@ UCHAR get_host_cmd_task(int test)
 					exit(EXIT_FAILURE);
 				}
 			}
-			//printf("sched cmd host: ");
+			printf("sched cmd host: ");
 			cmd = msg.mtext[0];
-			//print_cmd(cmd);
+			print_cmd(cmd);
 			msg_len |= (int)(msg.mtext[2] << 4);
 			msg_len = (int)msg.mtext[1];
 			
@@ -378,6 +381,21 @@ UCHAR get_host_cmd_task(int test)
 
 				switch(cmd)
 				{
+#ifdef SERVER_146
+					case DESK_LIGHT:
+					case EAST_LIGHT:
+					case NORTHWEST_LIGHT:
+					case SOUTHEAST_LIGHT:
+					case MIDDLE_LIGHT:
+					case WEST_LIGHT:
+					case NORTHEAST_LIGHT:
+					case SOUTHWEST_LIGHT:
+					case WATER_HEATER:
+					case WATER_PUMP:
+					case WATER_VALVE1:
+					case WATER_VALVE2:
+					case WATER_VALVE3:
+#endif
 #ifdef CL_150
 #warning "CL_150 defined"
 					case COOP1_LIGHT:
@@ -445,6 +463,10 @@ UCHAR get_host_cmd_task(int test)
 
  				switch(cmd)
 				{
+					case SEND_CLIENT_LIST:
+						send_sock_msg(tempx, msg_len, SEND_CLIENT_LIST, 8);
+						break;
+
 					case DLLIST_SAVE:
 						//dlWriteConfig("ddata.dat", &dll, index, errmsg);
 						ds_reset = 1;

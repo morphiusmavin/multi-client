@@ -1,1 +1,0 @@
-git show $1:thread_server/$2

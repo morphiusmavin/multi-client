@@ -68,7 +68,7 @@ static UCHAR check_inputs(int index, int test);
 extern CMD_STRUCT cmd_array[];
 int shutdown_all;
 
-CLIENT_TABLE client_table[MAX_CLIENTS];
+extern CLIENT_TABLE client_table[];
 
 #define ON 1
 #define OFF 0
@@ -80,7 +80,7 @@ void print_cmd(UCHAR cmd)
 
 	if(cmd > NO_CMDS)
 		printf("unknown cmd: %d\n",cmd);
-	
+
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
 	printf("%s\r\n",cmd_array[cmd].cmd_str);
 }
@@ -148,7 +148,7 @@ UCHAR sock_timer(int test)
 //		if(client_table[0].socket > 0 && client_table[0].type != WINDOWS_CLIENT)
 		s_tick++;
 		//printf("%d \n",s_tick);
-/*		
+/*
 		if(client_table[0].socket > 0)
 		{
 			sprintf(tempx,"%03d",s_tick);
@@ -185,8 +185,8 @@ UCHAR get_host_cmd_task(int test)
 	int i;
 	int j;
 	int k;
-	UCHAR tempx[200];
-	UCHAR write_serial_buff[SERIAL_BUFF_SIZE];
+	//UCHAR tempx[200];
+	UCHAR write_serial_buff[SERIAL_BUFF_SIZE/2];
 	char temp_time[5];
 	char *pch;
 	time_t curtime2;
@@ -224,7 +224,7 @@ UCHAR get_host_cmd_task(int test)
 		msg_len = (int)msg.mtext[1];				// 2nd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[2] << 4);		// 3rd is high byte
 		write_serial_buff[0] = cmd;
-		//printf("msg_len: %d\n",msg_len);
+		printf("msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+3,msg_len);
 /*
 		for(i = 1;i < msg_len+1;i++)
@@ -234,7 +234,8 @@ UCHAR get_host_cmd_task(int test)
 		if(1)
 		{
 			rc = 0;
-			//print_cmd(cmd);
+			printf("server get_cmd_host\n");
+			print_cmd(cmd);
 			switch(cmd)
 			{
 				case SORT_CLLIST:
@@ -259,7 +260,7 @@ UCHAR get_host_cmd_task(int test)
 				case SET_TIME:
 					printf("set time\n");
 					break;
-					
+
 				case SEND_CLIENT_LIST:
 					//printf("SEND_CLIENT_LIST from sock_mgt\n");
 					k = -1;
@@ -267,19 +268,21 @@ UCHAR get_host_cmd_task(int test)
 					{
 						for(i = 0;i < MAX_CLIENTS;i++)
 						{
-							//printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
+							//printf("...%d %s %d %d\n", i, client_table[i].ip, client_table[i].socket, client_table[i].type);
 							if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 							{
-								memset(tempx,0,sizeof(tempx));
-								sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-								//printf("%s\n",tempx);
+								memset(write_serial_buff,0,sizeof(write_serial_buff));
+								sprintf(write_serial_buff,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+								//printf("%s\n",write_serial_buff);
+								//printf("%d\n",strlen(write_serial_buff));
 
-								send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+								send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
 								uSleep(0,TIME_DELAY/2);
-								//printf("client sock: %d %s\n",client_table[j].socket,tempx);
+								//printf("client sock: %d\n",client_table[j].socket);
 							}
 						}
 					}
+/*
 					if(client_table[1].socket > 0)
 					{
 						for(i = 0;i < MAX_CLIENTS;i++)
@@ -297,16 +300,18 @@ UCHAR get_host_cmd_task(int test)
 							}
 						}
 					}
+*/
 					break;
-				
+
 				case UPTIME_MSG:	// sent from client
 					//printf("uptime msg (sock): %s\n",write_serial_buff);
 					//printf("%ld %ld\n",ttrunning_minutes, ttrunning_seconds);
-					//printf("%d %d\n",client_table[0].socket, client_table[1].socket);
 					if(client_table[0].socket > 0)
-						send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
-					if(client_table[1].socket > 0)
-						send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
+					{
+						send_msgb(client_table[0].socket,18,(UCHAR *)&write_serial_buff[1],UPTIME_MSG);
+					}
+					//if(client_table[1].socket > 0)
+						//send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
 					//printf("uptime: %s\n",write_serial_buff);
 					break;
 
@@ -331,7 +336,7 @@ UCHAR get_host_cmd_task(int test)
 
 				case SEND_MESSAGE:
 					for(i = 0;i < msg_len;i++)
-						printf("%c",tempx[i]);
+						printf("%c",write_serial_buff[i]);
 					printf("\n");
 
 					msg.mtype = msgtype;
@@ -375,7 +380,7 @@ UCHAR get_host_cmd_task(int test)
 				case GET_VERSION:
 					//send_status_msg(version);
 					break;
-					
+
 				case SHUTDOWN_IOBOX:
 				case REBOOT_IOBOX:
 				case SHELL_AND_RENAME:
@@ -488,12 +493,13 @@ if(cmd == DB_LOOKUP)
 				send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,cmd);
 				//printf("%s\n",tempx);
 			}
+/*
 			else if(win_client_to_client_sock == 1 && client_table[1].socket > 0)
 			{
 				send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,cmd);
 				//printf("%s\n",tempx);
 			}
-
+*/
 			else if(win_client_to_client_sock == _SERVER)
 			{
 				//printf("msg to cmd_host on server: %s %d\n",msg.mtext + 3,cmd);
@@ -541,7 +547,7 @@ if(cmd == DB_LOOKUP)
 				{
 					send_msg(client_table[win_client_to_client_sock].socket, msg_len, (UCHAR*)tempx,cmd);
 				}else printf("bad socket\n");
-				//printf("sent: %s\n", msg.mtext);				
+				//printf("sent: %s\n", msg.mtext);
 				//printf("\n");
 			}
 		}
@@ -687,7 +693,7 @@ startover1:
 					if(client_table[dest].socket > 0)
 						send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 					break;
-			}		
+			}
 		}
 
 		if(shutdown_all)
@@ -800,7 +806,7 @@ UCHAR tcp_monitor_task(int test)
 	address.sin_addr.s_addr = INADDR_ANY;		  /* set the local IP address */
 
 	address.sin_port = htons((u_short)port);
-	
+
 	for (i = 0; i < MAX_CLIENTS; i++)
 	{
 		client_socket[i] = 0;
@@ -866,7 +872,7 @@ UCHAR tcp_monitor_task(int test)
 //		printf("test %d ",k++);
 		//clear the socket set
 		FD_ZERO(&readfds);
-	
+
 		//add master socket to set
 		FD_SET(master_socket, &readfds);
 		max_sd = master_socket;
@@ -887,22 +893,22 @@ UCHAR tcp_monitor_task(int test)
 			//if valid socket descriptor then add to read list
 			if(sd > 0)
 				FD_SET( sd , &readfds);
-				
+
 			//highest file descriptor number, need it for the select function
 			if(sd > max_sd)
 				max_sd = sd;
 		}
-	
+
 		//wait for an activity on one of the sockets , timeout is NULL ,
 		//so wait indefinitely
 //		printf("wait for activity\n");
 		activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
-	
+
 		if ((activity < 0) && (errno!=EINTR))
 		{
 			printf("select error");
 		}
-			
+
 		//If something happened on the master socket ,
 		//then its an incoming connection
 		if (FD_ISSET(master_socket, &readfds))
@@ -954,8 +960,8 @@ UCHAR tcp_monitor_task(int test)
 					// send msg to 1st win client (149)
 					if(client_table[0].socket > 0)
 						send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-					if(client_table[1].socket > 0)
-						send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+					//if(client_table[1].socket > 0)
+						//send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 
 					if(client_table[i].qid == 0)
 					{

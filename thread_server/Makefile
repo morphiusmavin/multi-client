@@ -135,8 +135,8 @@ rdwr.o: ../queue/rdwr.c ../queue/rdwr.h
 config_file.o: ../cs_client/config_file.c  ../queue/ollist_threads_rw.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/config_file.c
 
-cmd_tasks.o: cmd_tasks.c
-	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c cmd_tasks.c
+cmd_tasks.o: ../cmd_tasks.c
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cmd_tasks.c
 
 load_cmds.o: ../load_cmds.c
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../load_cmds.c

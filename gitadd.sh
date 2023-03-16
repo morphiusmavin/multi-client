@@ -12,8 +12,8 @@ git add tasks.c
 git add tasks.h
 git add serial_io.c
 git add serial_io.h
+git add cmd_tasks.c
 
-git add thread_server/cmd_tasks.c
 git add thread_server/sched.c
 git add thread_server/Makefile
 git add thread_server/sock_mgt.c
@@ -35,7 +35,6 @@ git add queue/dllist_threads_rw.c
 git add queue/rdwr.h
 git add queue/rdwr.c
 
-git add thread_client/cmd_tasks.c
 git add thread_client/ts4600sock.mak
 git add thread_client/ts4600_147.mak
 git add thread_client/ts4600_154.mak
@@ -47,29 +46,6 @@ git add thread_client/do1.sh
 
 git add EpServerEngineSampleClient/*
 
-git add CDBMgmt/App.config
-git add CDBMgmt/CDBMgmt.sln
-git add CDBMgmt/Program.cs
-git add CDBMgmt/Tdata.cs
-git add CDBMgmt/CDBMgmt.csproj
-git add CDBMgmt/Form1.cs
-git add CDBMgmt/Form1.Designer.cs
-git add CDBMgmt/Form1.resx
-git add CDBMgmt/AddRecord.cs
-git add CDBMgmt/AddRecord.Designer.cs
-git add CDBMgmt/AddRecord.resx
-git add CDBMgmt/Properties/*
-
-git add ODBMgmt/App.config
-git add ODBMgmt/ODBMgmt.sln
-git add ODBMgmt/Program.cs
-git add ODBMgmt/Odata.cs
-git add ODBMgmt/ODBMgmt.csproj
-git add ODBMgmt/Form1.cs
-git add ODBMgmt/Form1.Designer.cs
-git add ODBMgmt/Form1.resx
-git add ODBMgmt/Properties/*
-
 git add nbus/nbus.c
 git add nbus/nbus.h
 git add nbus/dio2.c
@@ -78,5 +54,3 @@ git add nbus/dio_ds1620.h
 git add nbus/dio_ds1620.c
 
 git status
-
-

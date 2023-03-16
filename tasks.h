@@ -58,6 +58,7 @@ void send_serialother(UCHAR cmd, UCHAR *buf);
 void add_msg_queue(UCHAR cmd, UCHAR onoff);
 void send_param_msg(void);
 UCHAR get_msg_queue(void);
+void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest);
 int tcp_connect(void);
 int uSleep(time_t sec, long nanosec);
 UCHAR tcp_monitor_task(int test);
@@ -129,7 +130,6 @@ enum sched_task_types
 	BASIC_CONTROLS
 } SCHED_TASK_TYPES;
 
-void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest);
 UCHAR recv_msg_task(int test);
 //void send_serialother2(UCHAR cmd, int size, UCHAR *buf);
 int put_sock(UCHAR *buf,int buflen, int block, char *errmsg);

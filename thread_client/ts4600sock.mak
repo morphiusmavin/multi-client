@@ -127,7 +127,7 @@ load_cmds.o: ../load_cmds.c
 sock_mgt.o : sock_mgt.c 
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_mgt.c
 
-sock_sched.o : sock_sched.c 
+sock_sched.o : sock_sched.c ../tasks.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_sched.c
 
 sock_mgt: sock_mgt.o sock_sched.o load_cmds.o assign_client_table.o
