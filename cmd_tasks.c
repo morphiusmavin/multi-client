@@ -166,6 +166,10 @@ UCHAR get_host_cmd_task(int test)
 	printf("starting 154\n");
 	this_client_id = 2;
 #endif 
+#ifdef CL_151
+	printf("starting 151\n");
+	this_client_id = 5;
+#endif 
 #if 1
 	// since each card only has 20 ports then the 1st 2 port access bytes
 	// are 8-bit and the 3rd is only 4-bits, so we have to translate the

@@ -195,7 +195,11 @@ enum output_types
 	TEST_OUTPUT18,
 	TEST_OUTPUT19
 #endif 
-
+#ifdef CL_151
+	TEST_OUTPUT10,
+	TEST_OUTPUT11
+	
+#endif 
 }OUTPUT_TYPES;
 
 int switch_status[10];
