@@ -979,6 +979,20 @@ UCHAR timer_task(int test)
 	int onoff;
 	time_t T;
 	struct tm tm;
+	int offset;
+	
+#ifdef SERVER_146
+	offset = 1;
+#endif 
+#ifdef CL_147
+	offset = 14;
+#endif 
+#ifdef CL_154
+	offset = 26;
+#endif 
+#ifdef CL_150
+	offset = 34;
+#endif	
 
 	memset(write_serial_buffer,0,SERIAL_BUFF_SIZE);
 
@@ -1003,7 +1017,7 @@ UCHAR timer_task(int test)
 						tm = *localtime(&T);
 						printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
 						onoff = count_down[i].onoff;
-						add_msg_queue(count_down[i].port+34, onoff);
+						add_msg_queue(count_down[i].port+offset, onoff);
 						printf("%d\n",onoff);
 						//remove_top_countdown();
 					}
@@ -1291,8 +1305,8 @@ UCHAR basic_controls_task(int test)
 		cmd = msg.mtext[0];
 		onoff = msg.mtext[1];
 
-		//printf("basic controls: ");
-		//print_cmd(cmd);
+		printf("basic controls: ");
+		print_cmd(cmd);
 		//usleep(_5MS);
 
 		switch(cmd)

@@ -171,7 +171,7 @@ int main(int argc, char **argv)
 			default:
 				break;
 		}
-		printf("%d %s \n", i, _threads[i].label);
+		//printf("%d %s \n", i, _threads[i].label);
 //		printf("%d %s %d %d \n", i, _threads[i].label,_threads[i].prio_min, _threads[i].prio_max);
 //			if(i == 5)
 //				priority_param.sched_priority = _threads[i].prio_max;

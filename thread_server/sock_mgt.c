@@ -224,12 +224,12 @@ UCHAR get_host_cmd_task(int test)
 		msg_len = (int)msg.mtext[1];				// 2nd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[2] << 4);		// 3rd is high byte
 		write_serial_buff[0] = cmd;
-		printf("msg_len: %d\n",msg_len);
+		//printf("msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+3,msg_len);
-/*
+
 		for(i = 1;i < msg_len+1;i++)
 			printf("%02x ",write_serial_buff[i]);
-*/
+
 //		if(cmd > 0)
 		if(1)
 		{
@@ -254,7 +254,8 @@ UCHAR get_host_cmd_task(int test)
 
 				case REPLY_CLLIST:
 					send_msgb(client_table[0].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
-					//printf("msg_len: %d\n",msg_len);
+					
+					printf("msg_len: %d\n",msg_len);
 					break;
 
 				case SET_TIME:

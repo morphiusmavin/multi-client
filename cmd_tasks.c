@@ -79,19 +79,19 @@ void print_cmd(UCHAR cmd)
 }
 
 /*********************************************************************/
-// send a msg back to the sock to send out to tcp
+#ifdef SERVER_146
+// send a msg back to the sock to send to server sock
 void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 {
 	int i;
 	memset(msg.mtext,0,sizeof(msg.mtext));
 	msg.mtext[0] = cmd;
-	msg.mtext[1] = dest;
-	msg.mtext[2] = (UCHAR)msg_len;
-	msg.mtext[3] = (UCHAR)(msg_len >> 4);
+	msg.mtext[1] = (UCHAR)msg_len;
+	msg.mtext[2] = (UCHAR)(msg_len >> 4);
 	printf("send_sock_msg\n");
 	print_cmd(cmd);
-	//printf("msg_len: %d\n",msg_len);
-	memcpy(msg.mtext + 4,send_msg,msg_len);
+	printf("msg_len: %d\n",msg_len);
+	memcpy(msg.mtext + 3,send_msg,msg_len);
 	//printf("msg to cmd_host from client %d\n",dest);
 /*
 	for(i = 0;i < msg_len+3;i++)
@@ -104,6 +104,33 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 		exit(EXIT_FAILURE);
 	}
 }
+#endif
+#ifndef SERVER_146
+void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
+{
+	int i;
+	memset(msg.mtext,0,sizeof(msg.mtext));
+	msg.mtext[0] = cmd;
+	msg.mtext[1] = dest;
+	msg.mtext[3] = (UCHAR)msg_len;
+	msg.mtext[4] = (UCHAR)(msg_len >> 4);
+	printf("send_sock_msg\n");
+	print_cmd(cmd);
+	printf("msg_len: %d\n",msg_len);
+	memcpy(msg.mtext + 3,send_msg,msg_len);
+	//printf("msg to cmd_host from client %d\n",dest);
+/*
+	for(i = 0;i < msg_len+3;i++)
+		printf("%02x ",msg.mtext[i]);
+	printf("\n");
+*/
+	if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+	{
+		perror("msgsnd error");
+		exit(EXIT_FAILURE);
+	}
+}
+#endif
 /*********************************************************************/
 // task to get commands from the host
 
@@ -361,9 +388,8 @@ UCHAR get_host_cmd_task(int test)
 					exit(EXIT_FAILURE);
 				}
 			}
-			printf("sched cmd host: ");
 			cmd = msg.mtext[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 			msg_len |= (int)(msg.mtext[2] << 4);
 			msg_len = (int)msg.mtext[1];
 			
