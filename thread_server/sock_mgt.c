@@ -221,11 +221,12 @@ UCHAR get_host_cmd_task(int test)
 		}
 		memset(write_serial_buff,0,sizeof(write_serial_buff));
 		cmd = msg.mtext[0];							// first byte is cmd
-		msg_len = (int)msg.mtext[1];				// 2nd is low byte of msg_len
-		msg_len |= (int)(msg.mtext[2] << 4);		// 3rd is high byte
+													// 2nd is dest which is ignored here
+		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
+		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte
 		write_serial_buff[0] = cmd;
 		//printf("msg_len: %d\n",msg_len);
-		memcpy(write_serial_buff,msg.mtext+3,msg_len);
+		memcpy(write_serial_buff,msg.mtext+4,msg_len);
 
 		for(i = 1;i < msg_len+1;i++)
 			printf("%02x ",write_serial_buff[i]);

@@ -687,7 +687,7 @@ UCHAR poll_ds1620_task(int test)
 		valid_ds[i] = 0;
 
 	uSleep(5,0);
-	printf("starting ds\n");
+	//printf("starting ds\n");
 
 	initDS1620();
 
@@ -698,8 +698,8 @@ UCHAR poll_ds1620_task(int test)
 	val = 0;
 	ds_reset = 0;
 
-	ds_index = dGetnRecs("ddata.dat",errmsg);
-	printf("no recs in ddata.dat: %d\n",ds_index);
+	//ds_index = dGetnRecs("ddata.dat",errmsg);
+	//printf("no recs in ddata.dat: %d\n",ds_index);
 	while(TRUE)
 	{
 		if(valid_ds[i] > 0 && ds_reset == 0)
@@ -707,7 +707,7 @@ UCHAR poll_ds1620_task(int test)
 			writeByteTo1620(DS1620_CMD_STARTCONV);
 			uSleep(0,TIME_DELAY/16);
 			val = readTempFrom1620(i);
-			printf("%s\n",lookup_raw_data(val));
+			//printf("%s\n",lookup_raw_data(val));
 			uSleep(0,TIME_DELAY/16);
 			writeByteTo1620(DS1620_CMD_STOPCONV);
 

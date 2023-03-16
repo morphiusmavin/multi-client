@@ -52,8 +52,6 @@ UCHAR msg_buf2[SERIAL_BUFF_SIZE];
 extern PARAM_STRUCT ps;
 extern char password[PASSWORD_SIZE];
 int shutdown_all;
-struct msgqbuf msg;
-int msgtype = 1;
 
 extern int curr_countdown_size;
 extern void sort_countdown(void);
@@ -79,36 +77,12 @@ void print_cmd(UCHAR cmd)
 }
 
 /*********************************************************************/
-#ifdef SERVER_146
 // send a msg back to the sock to send to server sock
 void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 {
 	int i;
-	memset(msg.mtext,0,sizeof(msg.mtext));
-	msg.mtext[0] = cmd;
-	msg.mtext[1] = (UCHAR)msg_len;
-	msg.mtext[2] = (UCHAR)(msg_len >> 4);
-	printf("send_sock_msg\n");
-	print_cmd(cmd);
-	printf("msg_len: %d\n",msg_len);
-	memcpy(msg.mtext + 3,send_msg,msg_len);
-	//printf("msg to cmd_host from client %d\n",dest);
-/*
-	for(i = 0;i < msg_len+3;i++)
-		printf("%02x ",msg.mtext[i]);
-	printf("\n");
-*/
-	if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-	{
-		perror("msgsnd error");
-		exit(EXIT_FAILURE);
-	}
-}
-#endif
-#ifndef SERVER_146
-void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
-{
-	int i;
+	struct msgqbuf msg;
+	int msgtype = 1;
 	memset(msg.mtext,0,sizeof(msg.mtext));
 	msg.mtext[0] = cmd;
 	msg.mtext[1] = dest;
@@ -116,7 +90,7 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	msg.mtext[4] = (UCHAR)(msg_len >> 4);
 	printf("send_sock_msg\n");
 	print_cmd(cmd);
-	printf("msg_len: %d\n",msg_len);
+	//printf("msg_len: %d\n",msg_len);
 	memcpy(msg.mtext + 3,send_msg,msg_len);
 	//printf("msg to cmd_host from client %d\n",dest);
 /*
@@ -130,7 +104,6 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 		exit(EXIT_FAILURE);
 	}
 }
-#endif
 /*********************************************************************/
 // task to get commands from the host
 
@@ -174,6 +147,8 @@ UCHAR get_host_cmd_task(int test)
 	int index;
 	UCHAR mask;
 	UCHAR mask2;
+	struct msgqbuf msg;
+	int msgtype = 1;
 
 #ifdef SERVER_146
 	printf("starting server\n");
