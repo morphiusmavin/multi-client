@@ -44,6 +44,7 @@ namespace EpServerEngineSampleClient
         private int AvailClientCurrentSection = 0;
         private bool clients_inited = false;
         private bool[] status = new bool[8];
+        private List<DS1620_conversions> ds1620_list;
         private List<ClientParams> client_params;
         private List<ClientsAvail> clients_avail;
         private List<Sunrise_sunset> sunrise_sunsets;
@@ -116,14 +117,17 @@ namespace EpServerEngineSampleClient
             tbPort.Enabled = true;
             timer1.Enabled = true;
             btnNextSunrise.Enabled = false;
-
+/*
+            ds.raw_value = 1;
+            ds.temp = "asdf";
+*/
             for (int i = 0; i < 8; i++)
             {
                 status[i] = false;
             }
             tbReceived.Clear();
             cbWhichWinClient.SelectedIndex = 0;
-           
+
             Sunrise_sunset item2 = null;
             if (!File.Exists(sunrisesunset_location))
             {
@@ -345,6 +349,22 @@ namespace EpServerEngineSampleClient
                 Factoid_List = System.IO.File.ReadAllLines(str_factoid_file);
                 DisplayFactoid();
             }
+            DS1620_conversions ds1 = null;
+            ds1620_list = new List<DS1620_conversions>();
+            string dslist_filename = @"C:\Users\Daniel\ClientProgramData\dslist.txt";
+            String[] file = File.ReadAllLines(dslist_filename);
+            // make sure not to change dslist.txt or this won't work
+            for (i = 0; i < 360; i++)
+            {
+                ds1 = new DS1620_conversions();
+                
+                string[] words2 = file[i].Split(',');
+                ds1.temp = words2[0];
+                ds1.raw_value = int.Parse(words2[1]);
+                ds1620_list.Add(ds1);
+            }
+            //foreach (DS1620_conversions d1 in ds1620_list)
+                //AddMsg(d1.raw_value.ToString() + " " + d1.temp.ToString());
 
             // turn off east light because it is on by default (relay is wired nc)
             //svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
@@ -546,6 +566,16 @@ namespace EpServerEngineSampleClient
             else
                 Process_Msg(receivedPacket.PacketRaw);
         }
+        private string lookup_DS1620(string val)
+		{
+            string ret = "";
+            foreach(var raw in ds1620_list)
+			{
+                if (val == raw.raw_value.ToString())
+                    ret = raw.temp;
+			}
+            return ret;
+		}
         private void RedrawClientListBox()
         {
             lbAvailClients.Items.Clear();
@@ -586,7 +616,25 @@ namespace EpServerEngineSampleClient
             switch (str)
             {
                 case "DS1620_MSG":
-                    //AddMsg(ret.ToString());
+                    AddMsg(ret.ToString());
+                    string[] words = ret.Split(' ');
+                    i = 0;
+                    foreach(var word in words)
+					{
+                        switch(i)
+						{
+                            case 0:
+                                AddMsg("client id: " + word);
+                                break;
+                            case 1:
+                                AddMsg("sensor: " + word);
+                                break;
+                            case 2:
+                                AddMsg("val: " + lookup_DS1620(word));
+                                break;
+						}
+                        i++;
+					}
                     break;
 
                 case "UPTIME_MSG":
@@ -635,7 +683,7 @@ namespace EpServerEngineSampleClient
                 case "SEND_MESSAGE":
                     //AddMsg("str: " + str + " " + str.Length.ToString());
                     //AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
-                    //AddMsg(ret);
+                    AddMsg(ret);
                     ListMsg(ret, false);
                     break;
 
@@ -644,14 +692,14 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "SEND_CLIENT_LIST":
-                    string[] words = ret.Split(' ');
+                    words = ret.Split(' ');
                     i = 0;
                     int j = 0;
                     int sock = -1;
                     AddMsg(ret);
                     string clmsg = " ";
                     bool avail = false;
-                    //AddMsg("SEND_CLIENT_LIST ");
+                    AddMsg("SEND_CLIENT_LIST ");
                     foreach (var word in words)
                     {
                         switch (i)
@@ -963,6 +1011,10 @@ namespace EpServerEngineSampleClient
                 {
                     clk_oneoff = true;
                     clk_oneoff2 = false;
+                    foreach (ClientsAvail cl in clients_avail)
+                    {
+                        svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
+                    }
                 }
                 if (hour == curr_srss_day.AstTwiStartHour && minute == curr_srss_day.AstTwiStartMinute && second == 0)
                 {
@@ -1079,7 +1131,7 @@ namespace EpServerEngineSampleClient
                         if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
                         {
                             AddMsg(cl.label);
-                            SetTime(cl.index);
+                            //SetTime(cl.index);
                         }
                     }
                 }
@@ -1088,7 +1140,8 @@ namespace EpServerEngineSampleClient
             {
                 if (m_client.IsConnectionAlive)
                 {
-                    UpdateClientInfo();
+                    //UpdateClientInfo();
+                    AddMsg("update client info");
                     clients_inited = true;
                 }
             }
@@ -1250,7 +1303,7 @@ namespace EpServerEngineSampleClient
                 String cultureName = "en-US";
                 var culture = new CultureInfo(cultureName);
                 //AddMsg(clients_avail[dest].label);
-                AddMsg(localDate.ToString(culture));
+                //AddMsg(localDate.ToString(culture));
                 int temp1 = dest;
                 byte[] bytes1 = BitConverter.GetBytes(temp1);
                 byte[] bytes2 = BytesFromString(localDate.ToString(culture));
@@ -1348,7 +1401,7 @@ namespace EpServerEngineSampleClient
                         cl.socket = -1;
                     }
                     svrcmd.Send_ClCmd(msg, cl.index, param);
-                    AddMsg(cl.index.ToString());
+                    //AddMsg(cl.index.ToString());
                     // if cl.index == server then set disconnected flag
 
                     //if ((cl.index == 8) && (msg == REBOOT_IOBOX))

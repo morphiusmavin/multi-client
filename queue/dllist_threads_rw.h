@@ -47,6 +47,7 @@ typedef struct dllist {
 } dllist_t;
 
 int dllist_init (dllist_t *llistp);
+int dllist_get_size(dllist_t *llistp);
 int dllist_insert_data (int index, dllist_t *llistp,D_DATA *datap);
 int dllist_add_data(int index, dllist_t *llistp,D_DATA *datap2);
 int dllist_remove_data(int index, D_DATA **datapp, dllist_t *llistp);

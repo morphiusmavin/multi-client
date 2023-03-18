@@ -119,6 +119,7 @@
     <Compile Include="DS1620Mgt.Designer.cs">
       <DependentUpon>DS1620Mgt.cs</DependentUpon>
     </Compile>
+    <Compile Include="DS1620_conversions.cs" />
     <Compile Include="EasyButtonForm.cs">
       <SubType>Form</SubType>
     </Compile>

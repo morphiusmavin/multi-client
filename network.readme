@@ -5,27 +5,21 @@ todo:
 2) input for motion sensors (use odata database?)
 3) if both win clients are up one should be doing some things - have a way for win clients 
 	to talk to each other 
-4) days in client gets reset from 2 to 1 (happened just once)
-5) strlen() in some msg's may not send data w/ 0's 
-6) SEND_CLIENT_LIST from cmd_tasks to sock_mgt shouldn't need any params (line 306 in cmd_tasks.c) 
-7) Hook up temp sensors and use as triggers for ports (heat strips) or warnings 
-8) Clients/Server should send a msg back to Winclient after Winclient logs in saying that they 
+4) SEND_CLIENT_LIST from cmd_tasks to sock_mgt shouldn't need any params (line 306 in cmd_tasks.c) 
+5) Hook up temp sensors and use as triggers for ports (heat strips) or warnings 
+6) Clients/Server should send a msg back to Winclient after Winclient logs in saying that they 
 	already have their time set 
-9) 154 turns on ports it's not supposed to (fixed - see line 21 in ioports.h )
+7) 154 turns on ports it's not supposed to (fixed - see line 21 in ioports.h )
 	but had to disable monitor_fake_input_task() because of 'bad mask 1' error 
 	monitor_fake_input_task reacts to change_input() used in old Truck_Project1 
-10) If moonrise is about an hour after sunset, then alert when moon will rise (5 minutes before)
+8) If moonrise is about an hour after sunset, then alert when moon will rise (5 minutes before)
 	(so I can go out on the porch and watch the moonrise)
-11) Need a 'gate' for all ports controlled by timer schedule, and possibly the same 
+9) Need a 'gate' for all ports controlled by timer schedule, and possibly the same 
 		for each port so I can turn it off if I need to conserve power because of
-		cloudy days ahead.
-12) Look into wheather I can use DIO on 4600 boards to do io for ADC & DS1620 chips
-13) get rid of the 'state' field in the cdata. 
-14) See if I can fix the problem with 147 by reformatting disk. (Problem is I have to have a 
-	ssh screen to run the startup script - it won't work on reboot by itself)
-15) Move coop heaters, lights & outdoor lights to 147, replace 147 w/4600 and put 150 in NW corner 
-16) change COUNTDOWN_SIZE to NUMDB_RECS and set to 20 and fix real_banks
-17) ds1620 dialog must set valid sensors and time intervals. Also, whether to truncate, rename
+		cloudy days ahead. (use 'state' field in db)
+10) Move coop heaters, lights & outdoor lights to 147, replace 147 w/4600 and put 150 in NW corner 
+11) change COUNTDOWN_SIZE to NUMDB_RECS and set to 20 and fix real_banks
+12) ds1620 dialog must set valid sensors and time intervals. Also, whether to truncate, rename
 	or download the ddata.dat file. 
 	value of ds_interval:
 		0 - 1/2 second
@@ -37,10 +31,11 @@ todo:
 		6 - 5 minutes 
 		7 - 10 minutes 
 		default - 1 minute 
-18) could possibly rename the ddata.dat file every hour with the day/month/hour in the filename 
+13) could possibly rename the ddata.dat file every hour with the day/month/hour in the filename 
 	to save space, but not worth the trouble, really - until we start running out of space 
+14) be nice if clients could just log off (but how they gonna log back in?)
+15) win client is now eating up memory for some reason
 
-	
 to add new commands:
 
 1) add to the enum in cmd_types.h 

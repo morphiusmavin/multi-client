@@ -29,7 +29,21 @@ int dllist_init (dllist_t *llistp)
 //	printf("sizeof O_DATA: %lu\n",sizeof(O_DATA));
 	return 0;
 }
+/******************************************************************************/
+int dllist_get_size(dllist_t *llistp)
+{
+	int size = 0;
+	dllist_node_t *cur, *prev;
 
+	pthread_rdwr_wlock_np(&(llistp->rwlock));
+
+	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
+	{
+		size++;
+	}
+	pthread_rdwr_wunlock_np(&(llistp->rwlock));
+	return size;
+}
 /******************************************************************************/
 int dllist_add_data(int index, dllist_t *llistp,D_DATA *datap2)
 {

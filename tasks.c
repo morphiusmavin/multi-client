@@ -47,7 +47,6 @@ static UCHAR check_inputs(int index, int test);
 ollist_t oll;
 cllist_t cll;
 dllist_t dll;
-char new_filename[20];
 int ds_interval;
 int valid_ds[7];
 int ds_index;
@@ -66,13 +65,11 @@ static int mask2int(UCHAR mask);
 extern int shutdown_all;
 static int raw_data_array[RAW_DATA_ARRAY_SIZE];
 static int raw_data_ptr;
-int avg_raw_data(int prev_data);
+int avg_raw_data(int sample_size);
 static void dsSleep(int interval);
 char *lookup_raw_data(int val);
 int max_ips;
 IP ip[40];
-static D_DATA *dtp;
-static D_DATA **dtpp;
 
 static COUNTDOWN count_down[COUNTDOWN_SIZE];
 int curr_countdown_size;
@@ -673,11 +670,10 @@ UCHAR poll_ds1620_task(int test)
 	char errmsg[20];
 	int bad_ds_count = 5;
 	char date_str[20];
-	strcpy(new_filename,"ddata2.dat\0");
 
 	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
-	dtpp = &dtp;
-//	TODO: what if more than 1 button is pushed in same bank or diff bank at same time?
+	D_DATA **dtpp = &dtp;
+
 #ifndef USE_CARDS
 	printf("not using cards\n");
 	while(TRUE)
@@ -693,17 +689,25 @@ UCHAR poll_ds1620_task(int test)
 	uSleep(5,0);
 	//printf("starting ds\n");
 
+	while(TRUE)
+	{
+		uSleep(1,0);
+		if(shutdown_all)
+			return 0;
+	}
+
 	initDS1620();
 
 	valid_ds[0] = 1;
-	ds_interval = 2;
+	ds_interval = 4;
 
 	j = i = 0;
 	val = 0;
 	ds_reset = 0;
 
 	//ds_index = dGetnRecs("ddata.dat",errmsg);
-	//printf("no recs in ddata.dat: %d\n",ds_index);
+	ds_index = dllist_get_size(&dll);
+	printf("no recs in ddata.dat: %d\n",ds_index);
 	while(TRUE)
 	{
 		if(valid_ds[i] > 0 && ds_reset == 0)
@@ -730,9 +734,12 @@ UCHAR poll_ds1620_task(int test)
 			dtp->value = val;
 			ds_index++;
 			ds_index = dllist_add_data(ds_index, &dll, dtp);
-			uSleep(0,TIME_DELAY);
-			//sprintf(sock_msg, "%0d %0d %0d",this_client_id, i, val);
-			//send_sock_msg(sock_msg, strlen(sock_msg), DS1620_MSG, 8);
+			uSleep(0,TIME_DELAY/16);
+			sprintf(sock_msg, "%0d %0d %0d",this_client_id, i, val);
+			printf("%s\n",sock_msg);
+			send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _149);	// to win cl
+			//uSleep(0,TIME_DELAY/16);
+			//send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, 4);
 			//dllist_find_data(index, dtpp, &dll);
 			//printf("%d %d %d %d %d %d %d\n",dtp2->sensor_no, dtp2->month, dtp2->day, dtp2->hour, 
 					//dtp2->minute, dtp2->second, dtp2->value);
@@ -745,7 +752,7 @@ UCHAR poll_ds1620_task(int test)
 			if(ds_reset == 1)
 			{
 				memset(dtp,0,sizeof(D_DATA));
-				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 				//printf("%s\n",date_str);
 				//printf("ds_index: %d\n",ds_index);
 				dlWriteConfig(date_str, &dll, ds_index, errmsg);
@@ -1309,8 +1316,8 @@ UCHAR basic_controls_task(int test)
 		cmd = msg.mtext[0];
 		onoff = msg.mtext[1];
 
-		printf("basic controls: ");
-		print_cmd(cmd);
+		//printf("basic controls: ");
+		//print_cmd(cmd);
 		//usleep(_5MS);
 
 		switch(cmd)
@@ -1610,39 +1617,34 @@ UCHAR basic_controls_task(int test)
 	}
 	return 1;
 }
-
-int avg_raw_data(int prev_data)
+/*********************************************************************/
+int avg_raw_data(int sample_size)
 {
 	int i;
 	int temp_data = 0;
-/*
-	int high, low;
-	high = 0;
-	low = 500;
-	int high_index, low_index;
-	for(i = 0;i < RAW_DATA_ARRAY_SIZE;i++)
+	int first_sample_index;
+	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
+	D_DATA **dtpp = &dtp;
+	
+	int actual_size = dllist_get_size(&dll);
+	//printf("actual size: %d %d\n",actual_size,ds_index);
+	if(sample_size > actual_size)
+		sample_size = actual_size - 1;
+	first_sample_index =  ds_index - sample_size;
+	
+	//printf("%d %d %d\n",first_sample_index, sample_size,ds_index);
+	for(i = first_sample_index;i < ds_index-1;i++)
 	{
-		if(raw_data_array[i] > high)
-		{
-			high = raw_data_array[i];
-			high_index = i;
-		}
-		if(raw_data_array[i] < low)
-		{
-			low = raw_data_array[i];
-			low_index = i;
-		}
+		//printf("%d: \n",i);
+		dllist_find_data(i, dtpp, &dll);
+		//printf("%d:%d\n",temp_data,dtp->value);
+		temp_data += dtp->value;
 	}
-	raw_data_array[low_index] = raw_data_array[high_index] = prev_data;
-*/
-	for(i = 0;i < RAW_DATA_ARRAY_SIZE;i++)
-	{
-		temp_data += raw_data_array[i];
-	}
-	temp_data /= RAW_DATA_ARRAY_SIZE;
+	temp_data /= sample_size;
+	free(dtp);
 	return temp_data;
 }
-
+/*********************************************************************/
 float convertF(int raw_data)
 {
 	float T_F, T_celcius;

@@ -96,12 +96,14 @@ UCHAR recv_msg_task(int test)
 	int dest;
 	UCHAR cmd;
 	int msg_len;
+	int i;
 
 	//printf("starting recv_msg_task\n");
 
 	while(TRUE)
 	{
 		uSleep(0,TIME_DELAY/16);
+		// get msg from client sched 
 		if (msgrcv(sock_qid, (void *) &msg, sizeof(msg.mtext), msgtype,	MSG_NOERROR) == -1) 
 		{
 			if (errno != ENOMSG) 
@@ -112,13 +114,18 @@ UCHAR recv_msg_task(int test)
 			}
 		}
 		cmd = msg.mtext[0];							// first byte is cmd
-		//printf("cmd in recv msg task: ");
-		//print_cmd(cmd);
-		dest = (int)msg.mtext[1];					// 2nd byte is dest
-		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
-		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
+		printf("cmd in recv msg task: ");
+		print_cmd(cmd);
+		//dest = (int)msg.mtext[1];					// 2nd byte is dest
+		msg_len = (int)msg.mtext[1];				// 3rd is low byte of msg_len
+		msg_len |= (int)(msg.mtext[2] << 4);		// 4th is high byte of msg_len
 		msg_buf[0] = cmd;
-		//printf("msg_len: %d dest: %d\n",msg_len,dest);
+		printf("msg_len: %d dest: %d\n",msg_len,dest);
+
+		for(i = 0;i < msg_len;i++)
+			printf("%c",msg.mtext[i+3]);
+		printf("\n");
+
 		memcpy(msg_buf,msg.mtext+4,msg_len);
 		msg_len = msg_len>255?255:msg_len;
 
@@ -152,55 +159,24 @@ UCHAR get_host_cmd_task(int test)
 	int j;
 	int k;
 	UCHAR tempx[200];
-	UCHAR write_serial_buff[SERIAL_BUFF_SIZE];
-	char *pch;
-	time_t curtime2;
-	time_t *pcurtime2 = &curtime2;
-	int fp;
-	struct timeval mtv;
 	struct tm t;
-	struct tm *pt = &t;
 	int msg_len;
-	char version[15] = "sched v1.03\0";
 	struct msgqbuf msg;
 	int msgtype = 1;
 	msg.mtype = msgtype;
-	int temp;
-	int dest;
 	shutdown_all = 0;
-/*
-	this_client_index = -1;
-	printf("this client index: %d\n",this_client_index);
-	printf("this label: %s\n",client_table[this_client_index].label);
 
-	memset(msg.mtext,0,sizeof(msg.mtext));
-	msg.mtext[0] = UPDATE_CLIENT_INFO;
-	msg_len = 1;
-	msg.mtext[1] = (UCHAR)msg_len;
-	msg.mtext[2] = (UCHAR)(msg_len >> 4);
-	msg.mtext[3] = (UCHAR)this_client_index;
-	memcpy(msg.mtext + 3,tempx,msg_len);
-
-	if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-	{
-		perror("msgsnd error");
-		exit(EXIT_FAILURE);
-	}
-	uSleep(1,0);
-*/
-	uSleep(1,0);
+	uSleep(2,0);
+	printf("starting sock_mtg\n");
 	while(TRUE)
 	{
 		cmd = 0;
 		memset(msg_buf,0,sizeof(msg_buf));
 		//printf("wait for msg_len\n");
 		msg_len = get_msg();
-/*
+		printf("sock_mgt\n");
 		printf("msg_len: %d\n",msg_len);
 
-		for(i = 1;i < msg_len+1;i++)
-			printf("%02x ",tempx[i]);
-*/
 		if(msg_len < 0)
 		{
 			//printf("bad msg\r\n");
@@ -210,19 +186,16 @@ UCHAR get_host_cmd_task(int test)
 		}else
 		{
 			rc = recv_tcp(&msg_buf[0],msg_len+1,1);
-			//printf("rc: %d\n",rc);
-/*
-			rc = cllist_find_data(msg_buf[0],ctpp,&cll);
-			printf("%d %d %d %d %s\n",ctp->index,ctp->client_no,ctp->cmd, ctp-> dest, ctp->label);
-			printf("this: %s %s\n",client_table[ctp->dest].ip, client_table[ctp->dest].label);
-			printf("dest: %s %s\n",client_table[ctp->client_no].ip, client_table[ctp->client_no].label);
-			cmd = ctp->cmd;
-*/
+			printf("rc: %d\n",rc);
 			cmd = msg_buf[0];
-			//print_cmd(cmd);
+			print_cmd(cmd);
 			memset(tempx,0,sizeof(tempx));
 			memcpy(tempx,msg_buf+1,msg_len);
 
+			for(i = 0;i < msg_len;i++)
+				printf("%c",tempx[i]);
+
+			printf("\n");
 			memset(msg.mtext,0,sizeof(msg.mtext));
 			msg.mtext[0] = cmd;
 			msg.mtext[1] = (UCHAR)msg_len;
@@ -363,7 +336,7 @@ UCHAR tcp_monitor_task(int test)
 			}
 			uSleep(0,TIME_DELAY/16);
 		}
-		uSleep(0,TIME_DELAY/2);
+		uSleep(2,0);
 	}
 	return 1;
 }

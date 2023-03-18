@@ -173,7 +173,7 @@ UCHAR sock_timer(int test)
 	}
 }
 /*********************************************************************/
-// task to get commands from the host
+// task to get commands from sched
 UCHAR get_host_cmd_task(int test)
 {
 	int rc = 0; 
@@ -202,7 +202,6 @@ UCHAR get_host_cmd_task(int test)
 	int msgtype = 1;
 	msg.mtype = msgtype;
 	int temp;
-	int dest;
 
 	//printf("starting get_host_cmd_task...\n");
 
@@ -220,13 +219,14 @@ UCHAR get_host_cmd_task(int test)
 				exit(EXIT_FAILURE);
 			}
 		}
+
 		memset(write_serial_buff,0,sizeof(write_serial_buff));
 		cmd = msg.mtext[0];							// first byte is cmd
-		printf("%d\n",msg.mtext[1]);				// 2nd is dest which is ignored here
+		//printf("%d\n",msg.mtext[1]);				// 2nd is dest which is ignored here
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte
 		write_serial_buff[0] = cmd;
-		printf("msg_len: %d\n",msg_len);
+		//printf("msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+4,msg_len);
 /*
 		for(i = 1;i < msg_len+1;i++)
@@ -234,167 +234,164 @@ UCHAR get_host_cmd_task(int test)
 */
 
 //		if(cmd > 0)
-		if(1)
+		rc = 0;
+		printf("server get_cmd_host :");
+		print_cmd(cmd);
+		switch(cmd)
 		{
-			rc = 0;
-			//printf("server get_cmd_host :");
-			print_cmd(cmd);
-			switch(cmd)
-			{
-				case SORT_CLLIST:
-					msg_len = 0;
-					// 2 is start of clients (skipping win cl) and 8 is server 
-					for(i = 2;i < 8;i++)
+			case DS1620_MSG:
+				send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
+				break;
+
+			case SORT_CLLIST:
+				msg_len = 0;
+				// 2 is start of clients (skipping win cl) and 8 is server 
+				for(i = 2;i < 8;i++)
+				{
+					if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 					{
+						//printf("dest: %d sock: %d type: %d\n",i,client_table[i].socket,client_table[i].type);
+						send_msg(client_table[i].socket, msg_len, (UCHAR*)&write_serial_buff[0],cmd);
+					}
+				}
+				break;
+
+			case REPLY_CLLIST:
+				send_msgb(client_table[0].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
+				break;
+
+			case SET_TIME:
+				printf("set time\n");
+				break;
+
+			case SEND_CLIENT_LIST:
+				printf("SEND_CLIENT_LIST from sock_mgt\n");
+				k = -1;
+				if(client_table[0].socket > 0)
+				{
+					for(i = 0;i < MAX_CLIENTS;i++)
+					{
+						//printf("...%d %s %d %d\n", i, client_table[i].ip, client_table[i].socket, client_table[i].type);
 						if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 						{
-							//printf("dest: %d sock: %d type: %d\n",i,client_table[i].socket,client_table[i].type);
-							send_msg(client_table[i].socket, msg_len, (UCHAR*)&write_serial_buff[0],cmd);
+							memset(write_serial_buff,0,sizeof(write_serial_buff));
+							sprintf(write_serial_buff,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+							printf("%s\n",write_serial_buff);
+							//printf("%d\n",strlen(write_serial_buff));
+
+							send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
+							uSleep(0,TIME_DELAY/8);
+							//printf("client sock: %d\n",client_table[i].socket);
 						}
 					}
-					break;
-
-
-				case REPLY_CLLIST:
-					send_msgb(client_table[0].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
-
-					printf("msg_len: %d\n",msg_len);
-					break;
-
-				case SET_TIME:
-					printf("set time\n");
-					break;
-
-				case SEND_CLIENT_LIST:
-					printf("SEND_CLIENT_LIST from sock_mgt\n");
-					k = -1;
-					if(client_table[0].socket > 0)
-					{
-						for(i = 0;i < MAX_CLIENTS;i++)
-						{
-							//printf("...%d %s %d %d\n", i, client_table[i].ip, client_table[i].socket, client_table[i].type);
-							if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
-							{
-								memset(write_serial_buff,0,sizeof(write_serial_buff));
-								sprintf(write_serial_buff,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-								//printf("%s\n",write_serial_buff);
-								//printf("%d\n",strlen(write_serial_buff));
-
-								send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
-								uSleep(0,TIME_DELAY/8);
-								//printf("client sock: %d\n",client_table[j].socket);
-							}
-						}
-					}
+				}
 /*
-					if(client_table[1].socket > 0)
+				if(client_table[1].socket > 0)
+				{
+					for(i = 0;i < MAX_CLIENTS;i++)
 					{
-						for(i = 0;i < MAX_CLIENTS;i++)
+						//printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
+						if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 						{
-							//printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
-							if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
-							{
-								memset(tempx,0,sizeof(tempx));
-								sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-								//printf("%s\n",tempx);
+							memset(tempx,0,sizeof(tempx));
+							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+							//printf("%s\n",tempx);
 
-								send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-								uSleep(0,TIME_DELAY/2);
-								//printf("client sock: %d\n",client_table[j].socket);
-							}
+							send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+							uSleep(0,TIME_DELAY/2);
+							//printf("client sock: %d\n",client_table[j].socket);
 						}
 					}
+				}
 */
-					break;
+				break;
 
-				case UPTIME_MSG:	// sent from client
-					//printf("uptime msg (sock): %s\n",write_serial_buff);
-					//printf("%ld %ld\n",ttrunning_minutes, ttrunning_seconds);
-					if(client_table[0].socket > 0)
-					{
-						send_msgb(client_table[0].socket,18,(UCHAR *)&write_serial_buff[1],UPTIME_MSG);
-					}
-					//if(client_table[1].socket > 0)
-						//send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
-					//printf("uptime: %s\n",write_serial_buff);
-					break;
+			case UPTIME_MSG:	// sent from client
+				//printf("uptime msg (sock): %s\n",write_serial_buff);
+				//printf("%ld %ld\n",ttrunning_minutes, ttrunning_seconds);
+				if(client_table[0].socket > 0)
+				{
+					send_msgb(client_table[0].socket,18,(UCHAR *)&write_serial_buff[1],UPTIME_MSG);
+				}
+				//if(client_table[1].socket > 0)
+					//send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
+				//printf("uptime: %s\n",write_serial_buff);
+				break;
 
-				case SEND_TIMEUP:
-					msg.mtype = msgtype;
-					memset(msg.mtext,0,sizeof(msg.mtext));
+			case SEND_TIMEUP:
+				msg.mtype = msgtype;
+				memset(msg.mtext,0,sizeof(msg.mtext));
 /*
-					msg.mtext[0] = cmd;
-					msg.mtext[1] = (UCHAR)msg_len;
-					msg.mtext[2] = (UCHAR)(msg_len >> 4);
+				msg.mtext[0] = cmd;
+				msg.mtext[1] = (UCHAR)msg_len;
+				msg.mtext[2] = (UCHAR)(msg_len >> 4);
 */
-					memcpy(msg.mtext,write_serial_buff,msg_len);
+				memcpy(msg.mtext,write_serial_buff,msg_len);
 //					uSleep(1,0);
 
-					if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-					{
-						// keep getting "Invalid Argument" - cause I didn't set the mtype
-						perror("msgsnd error");
-						exit(EXIT_FAILURE);
-					}
-					break;
-
-				case SEND_MESSAGE:
-					for(i = 0;i < msg_len;i++)
-						printf("%c",write_serial_buff[i]);
-					printf("\n");
-
-					msg.mtype = msgtype;
-					memset(msg.mtext,0,sizeof(msg.mtext));
+				if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+				{
+					// keep getting "Invalid Argument" - cause I didn't set the mtype
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+				break;
 /*
-					msg.mtext[0] = cmd;
-					msg.mtext[1] = (UCHAR)msg_len;
-					msg.mtext[2] = (UCHAR)(msg_len >> 4);
-*/
-					memcpy(msg.mtext,write_serial_buff,msg_len);
+			case SEND_MESSAGE:
+				for(i = 0;i < msg_len;i++)
+					printf("%c",write_serial_buff[i]);
+				printf("\n");
+
+				msg.mtype = msgtype;
+				memset(msg.mtext,0,sizeof(msg.mtext));
+
+				msg.mtext[0] = cmd;
+				msg.mtext[1] = (UCHAR)msg_len;
+				msg.mtext[2] = (UCHAR)(msg_len >> 4);
+
+				memcpy(msg.mtext+3, write_serial_buff, msg_len);
 //					uSleep(1,0);
 
-					if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-					{
-						// keep getting "Invalid Argument" - cause I didn't set the mtype
-						perror("msgsnd error");
-						exit(EXIT_FAILURE);
-					}
-					break;
+				if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+				{
+					// keep getting "Invalid Argument" - cause I didn't set the mtype
+					perror("msgsnd error");
+					exit(EXIT_FAILURE);
+				}
+				break;
+*/
+			case SEND_STATUS:
+				temp = 0;
+				temp = (int)(write_serial_buff[3] << 4);
+				temp |= (int)write_serial_buff[2];
+				printf("temp: %d\n",temp);
+				break;
 
-				case SEND_STATUS:
-					temp = 0;
-					temp = (int)(write_serial_buff[3] << 4);
-					temp |= (int)write_serial_buff[2];
-					printf("temp: %d\n",temp);
-					break;
-
-				case BAD_MSG:
+			case BAD_MSG:
 //						shutdown_all = 1;
-					break;
+				break;
 
 /*
-				case GET_TEMP4:
-					if(client_table[dest].socket > 0)
-					{
-						//printf("dest: %d sock: %d msg_len: %d\n",dest,client_table[dest].socket,msg_len);
-						send_msg(client_table[dest].socket, msg_len, (UCHAR*)&write_serial_buff[0],cmd);
-					}
-					break;
+			case GET_TEMP4:
+				if(client_table[dest].socket > 0)
+				{
+					//printf("dest: %d sock: %d msg_len: %d\n",dest,client_table[dest].socket,msg_len);
+					send_msg(client_table[dest].socket, msg_len, (UCHAR*)&write_serial_buff[0],cmd);
+				}
+				break;
 */
-				case GET_VERSION:
-					//send_status_msg(version);
-					break;
+			case GET_VERSION:
+				//send_status_msg(version);
+				break;
 
-				case SHUTDOWN_IOBOX:
-				case REBOOT_IOBOX:
-				case SHELL_AND_RENAME:
-				case EXIT_TO_SHELL:
-					shutdown_all = 1;
-					return 0;
-					break;
-
-			}								  // end of switch
-		}									  // if rc > 0
+			case SHUTDOWN_IOBOX:
+			case REBOOT_IOBOX:
+			case SHELL_AND_RENAME:
+			case EXIT_TO_SHELL:
+				shutdown_all = 1;
+				return 0;
+				break;
+		}	// end of switch
 		uSleep(0,TIME_DELAY/16);
 		if(shutdown_all == 1)
 		{
@@ -402,10 +399,9 @@ UCHAR get_host_cmd_task(int test)
 			printf("cmd_host shutdown\n");
 			return 0;
 		}
-	}
+	}		// end of while(TRUE)
 	return test + 1;
 }
-
 /*********************************************************************/
 UCHAR WinClReadTask(int test)
 {
@@ -448,8 +444,9 @@ for(i = 0;i < rc;i++)
 printf("\n");
 */
 			win_client_to_client_sock = msg_buf[2];		// offset into client table (destination)
-			//printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 /*
+			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
+
 			for(i = 2;i < rc;i+=2)
 				printf("%02x ",msg_buf[i]);
 			printf("\n");
@@ -460,6 +457,8 @@ printf("\n");
 				tempx[k++] = msg_buf[j];
 			msg_len /= 2;
 			msg_len -= 3;
+
+//			printf("msg_len: %d\n",msg_len);
 
 //if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
 
@@ -491,20 +490,20 @@ if(cmd == DB_LOOKUP)
 			msg.mtext[2] = (UCHAR)(msg_len >> 4);
 			memcpy(msg.mtext + 3,tempx,msg_len);
 			// send msg's to sched 
-
-			if(win_client_to_client_sock == 0 && client_table[0].socket > 0)
+/*
+			if(win_client_to_client_sock == 0 && client_table[0].socket > 0)	why would this ever happen?
 			{
 				send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,cmd);
 				//printf("%s\n",tempx);
 			}
-/*
+
 			else if(win_client_to_client_sock == 1 && client_table[1].socket > 0)
 			{
 				send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,cmd);
 				//printf("%s\n",tempx);
 			}
 */
-			else if(win_client_to_client_sock == _SERVER)
+			if(win_client_to_client_sock == _SERVER)
 			{
 				//printf("msg to cmd_host on server: %s %d\n",msg.mtext + 3,cmd);
 				//print_cmd(cmd);
@@ -616,10 +615,10 @@ startover1:
 			//printf("read task %d\n",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+2,1);
-			//printf("ret: %d msg_len: %d\n",ret,msg_len);
+			printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			//printf("dest: %d\n",dest);
+			printf("dest: %d (ReadTask)\n",dest);
 /*
 			for(i = 0;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);
@@ -694,6 +693,7 @@ startover1:
 						send_msgb(client_table[dest].socket, strlen(tempx)*2,tempx,cmd);
 					break;
 				default:
+					printf("read task sending to tcp\n");
 					if(client_table[dest].socket > 0)
 						send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 					break;

@@ -103,9 +103,9 @@ int this_client_id;
 #define NUM_SOCK_TASKS			3
 #define NUM_SCHED_TASKS			7
 //#define MSG_QUEUE_SIZE		50
-#define SEND_CMD_HOST_QKEY	1234
-#define RECV_CMD_HOST_QKEY	1300
-#define BASIC_CONTROLS_QKEY	1301
+#define SEND_CMD_HOST_QKEY	1235
+#define RECV_CMD_HOST_QKEY	1309
+#define BASIC_CONTROLS_QKEY	1303
 
 
 // uSleep(0,100000000L); - roughly 100ms using uSleep();
