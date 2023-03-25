@@ -1,1 +1,1 @@
-git ls-tree --full-tree -r --name-only HEAD
+git ls-tree --full-tree -r --name-only $1

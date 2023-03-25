@@ -37,7 +37,6 @@ int shutdown_all;
 static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
 UCHAR msg_buf[SERIAL_BUFF_SIZE];
-UCHAR msg_buf2[SERIAL_BUFF_SIZE];
 extern CMD_STRUCT cmd_array[];
 
 pthread_mutex_t     tcp_write_lock=PTHREAD_MUTEX_INITIALIZER;
@@ -89,6 +88,7 @@ int uSleep(time_t sec, long nanosec)
 
 /*********************************************************************/
 // task to get commands from the sched cmd host
+// send tcp cmds to ReadTask in server
 UCHAR recv_msg_task(int test)
 {
 	struct msgqbuf msg;
@@ -99,7 +99,18 @@ UCHAR recv_msg_task(int test)
 	int i;
 
 	//printf("starting recv_msg_task\n");
-
+/*
+	while(TRUE)
+	{
+		if(shutdown_all == 1)
+		{
+			uSleep(0,TIME_DELAY/16);
+			printf("recv msg task shutdown 2\n");
+			return 0;
+		}
+		uSleep(0,TIME_DELAY/16);
+	}
+*/
 	while(TRUE)
 	{
 		uSleep(0,TIME_DELAY/16);
@@ -113,22 +124,29 @@ UCHAR recv_msg_task(int test)
 				exit(EXIT_FAILURE);
 			}
 		}
-		cmd = msg.mtext[0];							// first byte is cmd
-		printf("cmd in recv msg task: ");
-		print_cmd(cmd);
-		//dest = (int)msg.mtext[1];					// 2nd byte is dest
-		msg_len = (int)msg.mtext[1];				// 3rd is low byte of msg_len
-		msg_len |= (int)(msg.mtext[2] << 4);		// 4th is high byte of msg_len
-		msg_buf[0] = cmd;
-		printf("msg_len: %d dest: %d\n",msg_len,dest);
-
-		for(i = 0;i < msg_len;i++)
-			printf("%c",msg.mtext[i+3]);
+/*
+		for(i = 0;i < 4;i++)
+			printf("%02x ",msg.mtext[i]);
 		printf("\n");
+*/
+		cmd = msg.mtext[0];							// first byte is cmd
+		//printf("cmd in recv msg task: ");
+		//print_cmd(cmd);
+		dest = (int)msg.mtext[1];					// 2nd byte is dest
+		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
+		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
+		msg_buf[0] = cmd;
+		//printf("msg_len: %d dest: %d\n",msg_len,dest);
 
 		memcpy(msg_buf,msg.mtext+4,msg_len);
 		msg_len = msg_len>255?255:msg_len;
+/*
+		for(i = 0;i < msg_len;i++)
+			printf("%02x ",msg_buf[i]);
+		printf("\n");
+*/
 
+		// dest is used in ReadTask to know where to send msg 
 		send_msg(msg_len, msg_buf, cmd, dest);
 
 		if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
@@ -174,8 +192,8 @@ UCHAR get_host_cmd_task(int test)
 		memset(msg_buf,0,sizeof(msg_buf));
 		//printf("wait for msg_len\n");
 		msg_len = get_msg();
-		printf("sock_mgt\n");
-		printf("msg_len: %d\n",msg_len);
+		//printf("sock_mgt\n");
+		//printf("msg_len: %d\n",msg_len);
 
 		if(msg_len < 0)
 		{
@@ -186,16 +204,17 @@ UCHAR get_host_cmd_task(int test)
 		}else
 		{
 			rc = recv_tcp(&msg_buf[0],msg_len+1,1);
-			printf("rc: %d\n",rc);
+			//printf("rc: %d\n",rc);
 			cmd = msg_buf[0];
-			print_cmd(cmd);
+			//print_cmd(cmd);
 			memset(tempx,0,sizeof(tempx));
 			memcpy(tempx,msg_buf+1,msg_len);
-
+/*
 			for(i = 0;i < msg_len;i++)
-				printf("%c",tempx[i]);
+				printf("%02x ",tempx[i]);
 
 			printf("\n");
+*/
 			memset(msg.mtext,0,sizeof(msg.mtext));
 			msg.mtext[0] = cmd;
 			msg.mtext[1] = (UCHAR)msg_len;

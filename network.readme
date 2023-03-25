@@ -35,6 +35,10 @@ todo:
 	to save space, but not worth the trouble, really - until we start running out of space 
 14) be nice if clients could just log off (but how they gonna log back in?)
 15) win client is now eating up memory for some reason
+16) try getting the mqtt library working with the 4600 cards
+17) need a config file for each client/server which stores:
+	a) params for DS1620: enabled, which ones are valid, frequency of samples 
+	b) 
 
 to add new commands:
 
@@ -69,11 +73,11 @@ be limited to 255 total commands.
 
 146 (server) is where the pi used to be (controlling garage lights)	(offset 8 in client_table[])
 154 is cabin	(offset 2 in client_table)
-147 is other io card in garage near RE system (testbench)	(offset 3 in client_table)
-150 is io card outside garage mounted on back of chicken coop* 
-151	"
-155	"
-145	"
+147 is other io card in garage near RE system (testbench)	(offset 3)
+150 is io card outside garage mounted on back of chicken coop* (offset 4)
+151	" offset 5
+155	" offset 6
+145	" offset 7
 
 146	8
 154 2
@@ -103,11 +107,42 @@ array must be 2x what's needed
 	svrcmd.Send_ClCmd(offset, 3, bytes);
 
 
-OUTLINE OF SERVER
+OUTLINE OF CLIENT/SERVER SOCK/SCHED
+
+both client and server use same copy of cmd_tasks.c & tasks.c 
+in main directory (dev/multi-client)
+the differences are determined by the #ifdef/#endif statements
+so the sched for both are essentially the same but the 
+handling of sockets are in sock_mgt.c of the thread_client & 
+thread_server directories - the sched.c handles the startup & shutdown 
+of the sched program while the sock_sched handles the startup & shutdown 
+of the sock_mgt. The sched program does all the hardware type work like 
+the ports for the io card and serial ports.
+
+get_host_cmd_task in cmd_tasks.c: 
+
+waits for msg from sock_mgt:
+if (msgrcv(sched_qid, (void *) &msg, ...
+does switch/case and can use send_sock_msg() to send a message back to 
+the sock_mgt 
+
+get_host_cmd_task in both server/client's sock_mgt wait for msg 
+from their sched programs:
+if (msgrcv(sock_qid, (void *) &msg, ...
+
+both of these can either send a msg back to sched, to one of the clients 
+using the tcp send_msg() or to the windows client using send_msgb() 
+
+UCHAR recv_msg_task() in client sock_mgt waits for msg from sched and 
+relays it to tcp (send_msg())
+
+the get_host_cmd_task in the server's sock_mgt has switch/case statements 
+while the get_host_cmd_task in the client's sock_mgt just relays the 
+messages onto the sched 
 
 WinClReadTask gets msg from windows client 
 	if dest = client send tcp msg to client 
-	if dest = server send msg to sched_qid get_host_cmd_task (cmd_tasks.c) 
+	if dest = server send queue msg to sched_qid get_host_cmd_task (cmd_tasks.c) 
 
 	get_host_cmd_task of sock_mgt:
 		sock_mgt: msgrcv(sock_qid...
@@ -123,16 +158,9 @@ ReadTask (1 for each client)
 	if dest = client, 
 		send_msg(client_table[dest].socket... (tcp)
 
-OUTLINE OF CLIENT
+need to know the destination because it's used by ReadTask in server 
 
-get_host_cmd_task2() in cmd_tasks.c of each client waits for msg from sched:
-	msgrcv(sched_qid...
-		can send msg via send_sock_msg() which does: msgsnd(sock_qid...
-	otherwise does IO 	
 
-recv_msg_task in sock_mgt waits for msg: msgrcv(sock_qid...
-get_host_cmd_task1 in sock_mgt waits for tcp msg and sends to 
-	sched in cmd_tasks.c: msgsnd(sched_qid,
 	
 idea for detecting if client is still up:
 	use START_TIMER/STOP_TIMER msg's to send AREYOUTHERE msg to 
@@ -306,3 +334,21 @@ pin 13	RST_4
 pin 14	RST_5
 pin 15	RST_6	// probably won't use this - 2 conv chips 
 				// make only 8 lines 
+
+this was in get_host_cmd_task of cmd_tasks.c but not being used 
+
+/*	testing how the winCl sends ints & longs 
+				case DB_LOOKUP:
+					printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
+					long temp = pack4chars(tempx[3],tempx[2],tempx[1],tempx[0]);
+					printf("%d\n",temp);
+					break;
+
+testing how winCl sends var. no. of bytes 
+				case DB_LOOKUP:
+					printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
+					trunning_days = tempx[0];
+					trunning_hours = tempx[1];
+					trunning_minutes = tempx[2];
+					trunning_seconds = tempx[3];
+*/

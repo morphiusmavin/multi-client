@@ -58,6 +58,7 @@ namespace EpServerEngineSampleClient
 			this.btnApplyInterval = new System.Windows.Forms.Button();
 			this.btnShow = new System.Windows.Forms.Button();
 			this.btnReset = new System.Windows.Forms.Button();
+			this.rbInterval9 = new System.Windows.Forms.RadioButton();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -245,6 +246,7 @@ namespace EpServerEngineSampleClient
 			// 
 			// groupBox1
 			// 
+			this.groupBox1.Controls.Add(this.rbInterval9);
 			this.groupBox1.Controls.Add(this.rbInterval8);
 			this.groupBox1.Controls.Add(this.rbInterval7);
 			this.groupBox1.Controls.Add(this.rbInterval6);
@@ -360,7 +362,7 @@ namespace EpServerEngineSampleClient
 			// 
 			// btnApplyInterval
 			// 
-			this.btnApplyInterval.Location = new System.Drawing.Point(19, 297);
+			this.btnApplyInterval.Location = new System.Drawing.Point(19, 304);
 			this.btnApplyInterval.Name = "btnApplyInterval";
 			this.btnApplyInterval.Size = new System.Drawing.Size(133, 32);
 			this.btnApplyInterval.TabIndex = 112;
@@ -389,6 +391,18 @@ namespace EpServerEngineSampleClient
 			this.btnReset.Text = "Reset";
 			this.btnReset.UseVisualStyleBackColor = true;
 			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+			// 
+			// rbInterval9
+			// 
+			this.rbInterval9.AutoSize = true;
+			this.rbInterval9.Location = new System.Drawing.Point(24, 268);
+			this.rbInterval9.Name = "rbInterval9";
+			this.rbInterval9.Size = new System.Drawing.Size(49, 24);
+			this.rbInterval9.TabIndex = 120;
+			this.rbInterval9.TabStop = true;
+			this.rbInterval9.Text = "off";
+			this.rbInterval9.UseVisualStyleBackColor = true;
+			this.rbInterval9.CheckedChanged += new System.EventHandler(this.rbInterval9_CheckedChanged);
 			// 
 			// DS1620Mgt
 			// 
@@ -456,5 +470,6 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.RadioButton rbInterval8;
 		private System.Windows.Forms.Button btnShow;
 		private System.Windows.Forms.Button btnReset;
+		private System.Windows.Forms.RadioButton rbInterval9;
 	}
 }

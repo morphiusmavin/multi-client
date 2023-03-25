@@ -12,5 +12,5 @@ int oWriteConfigXML(char *filename, O_DATA *curr_o_array,size_t size,char *errms
 int GetFileFormat(char *filename);
 int getFileCreationTime(char *path,char *str);
 int WriteParams(char *filename, PARAM_STRUCT *ps, char *password, char *errmsg);
-int LoadParams(char *filename, PARAM_STRUCT *ps, char *password, char *errmsg);
+char *LoadParams(char *filename, PARAM_STRUCT *ps, char *password, char *errmsg);
 int LoadSpecialInputFunctions(IP *ip, int no_current_ips);

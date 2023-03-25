@@ -184,13 +184,15 @@ int oWriteConfig(char *filename, O_DATA *curr_o_array,size_t size,char *errmsg)
 }
 #ifndef CONFIG_FILE
 /////////////////////////////////////////////////////////////////////////////
-int LoadParams(char *filename, PARAM_STRUCT *ps, char *password, char *errmsg)
+char *LoadParams(char *filename, PARAM_STRUCT *ps, char *password, char *errmsg)
 {
 	char *fptr;
 	int fp = -1;
 	int i = 0;
 	fptr = (char *)filename;
 	UCHAR id;
+	char tpassword[PASSWORD_SIZE];
+	memset(errmsg,0,sizeof(errmsg));
 
 	fp = open((const char *)fptr, O_RDWR);
 	if(fp < 0)
@@ -198,31 +200,41 @@ int LoadParams(char *filename, PARAM_STRUCT *ps, char *password, char *errmsg)
 		strcpy(errmsg,strerror(errno));
 		close(fp);
 		printf("%s  %s\n",errmsg,filename);
-		return -2;
+		memset(ps,0,sizeof(PARAM_STRUCT));
+		i = WriteParams(filename, &ps, password, errmsg);
+		//printf("created new config file\n");
+		strcpy(errmsg,"created new config file\0");
+		//printf("%s\n",errmsg);
+		return (char *)0;
 	}
 
 	i = lseek(fp,0,SEEK_SET);
 	i = 0;
 	read(fp,&id,1);
+	printf("id: %02x\n",id);
 	if(id != 0xAA)
 	{
 		close(fp);
 		printf("bad file marker at begin\n");
-		return -3;
+		strcpy(errmsg,"bad file marker at begin\0");
+		return (char *)0;
 	}
 	i = read(fp,(void*)ps,sizeof(PARAM_STRUCT));
-	read(fp,(void*)&password[0],4);
+	printf("read param struct: %d\n",i);
+	i = read(fp,(void*)&tpassword[0],PASSWORD_SIZE);
+	printf("read password: %d %s\n",i,tpassword);
 //	printf("fp:%d  read: %d bytes in oLoadConfig\n",fp,i);
 	read(fp,&id,1);
 	if(id != 0x55)
 	{
 		close(fp);
-		printf("bad file marker at begin\n");
-		return -4;
+		printf("bad file marker at end\n");
+		strcpy(errmsg,"bad file marker at end\0");
+		return (char *)0;
 	}
 	close(fp);
-	strcpy(errmsg,"Success\0");
-	return 0;
+	strcpy(errmsg,"Success (loaded config file)\0");
+	return tpassword;
 }
 ///////////////////// Write/LoadConfig functions used by init/list_db start here (see make_db) ///////////////////////
 
@@ -251,7 +263,7 @@ int WriteParams(char *filename, PARAM_STRUCT *ps, char *password, char *errmsg)
 	j = 0;
 	write(fp,&id,1);
 	write(fp,(const void*)ps,sizeof(PARAM_STRUCT));
-	write(fp,(const void*)&password[0],4);
+	write(fp,(const void*)&password[0],PASSWORD_SIZE);
 	id = 0x55;
 	write(fp,&id,1);
 	close(fp);

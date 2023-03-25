@@ -47,8 +47,8 @@ static UCHAR check_inputs(int index, int test);
 ollist_t oll;
 cllist_t cll;
 dllist_t dll;
-int ds_interval;
-int valid_ds[7];
+//int ds_interval;
+//int valid_ds[7];
 int ds_index;
 int ds_reset;
 
@@ -634,22 +634,11 @@ int change_output(int index, int onoff)
 		case 2:
 			OutPortC(onoff, index);			  // 0-3
 			break;
-/*
-		case 0:
-			OutPortD(onoff, index);			  // 0-7
-			break;
-		case 1:
-			OutPortE(onoff, index);			  // 0-7
-			break;
-		case 2:
-			OutPortF(onoff, index);			  // 0-3
-			break;
-*/
 		default:
 			break;
 	}
 	pthread_mutex_unlock(&io_mem_lock);
-	//printf("change output: %d %d\r\n",index,onoff);
+//	printf("change output: %d %d\r\n",index,onoff);
 
 //	sprintf(tempx,"%d %d %d", bank, index, onoff);
 //	myprintf1(tempx);
@@ -674,43 +663,43 @@ UCHAR poll_ds1620_task(int test)
 	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
 	D_DATA **dtpp = &dtp;
 
-#ifndef USE_CARDS
-	printf("not using cards\n");
-	while(TRUE)
-	{
-		uSleep(1,0);
-		if(shutdown_all)
-			return 0;
-	}
-#endif
 	for(i = 0;i < 7;i++)
-		valid_ds[i] = 0;
+		ps.valid_ds[i] = 0;
 
 	uSleep(5,0);
 	//printf("starting ds\n");
-
+/*
 	while(TRUE)
 	{
 		uSleep(1,0);
 		if(shutdown_all)
 			return 0;
 	}
-
+*/
 	initDS1620();
 
-	valid_ds[0] = 1;
-	ds_interval = 4;
+	ps.valid_ds[0] = 1;
+	ps.ds_interval = 4;
 
 	j = i = 0;
 	val = 0;
-	ds_reset = 0;
+	ds_reset = 2;
 
 	//ds_index = dGetnRecs("ddata.dat",errmsg);
 	ds_index = dllist_get_size(&dll);
 	printf("no recs in ddata.dat: %d\n",ds_index);
 	while(TRUE)
 	{
-		if(valid_ds[i] > 0 && ds_reset == 0)
+		while(ps.ds_enable == 0)
+		{
+			uSleep(1,0);
+			if(shutdown_all)
+			{
+				free(dtp);
+				return 0;
+			}
+		}
+		if(ps.valid_ds[i] > 0 && ds_reset == 0)
 		{
 			writeByteTo1620(DS1620_CMD_STARTCONV);
 			uSleep(0,TIME_DELAY/16);
@@ -771,7 +760,7 @@ UCHAR poll_ds1620_task(int test)
 				//printf("reset\n");
 				ds_reset = 0;
 			}
-			dsSleep(ds_interval);		// this is the delay between all acq's 
+			dsSleep(ps.ds_interval);		// this is the delay between all acq's 
 		}
 
 		if(shutdown_all)
@@ -1315,7 +1304,7 @@ UCHAR basic_controls_task(int test)
 		}
 		cmd = msg.mtext[0];
 		onoff = msg.mtext[1];
-
+		
 		//printf("basic controls: ");
 		//print_cmd(cmd);
 		//usleep(_5MS);
@@ -1572,7 +1561,7 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "exit to shell");
 //				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
 				uSleep(0,TIME_DELAY/16);
-				printf("tasks: exit to shell\n");
+				//printf("tasks: exit to shell\n");
 				shutdown_all = 1;
 				reboot_on_exit = 1;
 				break;
@@ -1581,7 +1570,7 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "reboot iobox");
 //				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,REBOOT_IOBOX, _SERVER);
 				uSleep(0,TIME_DELAY/16);
-				printf("tasks: reboot iobox\n");
+				//printf("tasks: reboot iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 2;
 				break;
@@ -1590,7 +1579,7 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "shutdown iobox");
 //				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
 				uSleep(0,TIME_DELAY/16);
-				printf("tasks: shutdown iobox\n");
+				//printf("tasks: shutdown iobox\n");
 				shutdown_all = 1;
 				reboot_on_exit = 3;
 				break;
@@ -1599,7 +1588,7 @@ UCHAR basic_controls_task(int test)
 				snprintf(tempx, strlen(tempx), "shell and rename");
 //				send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx,SHUTDOWN_IOBOX,_SERVER);
 				uSleep(0,TIME_DELAY/16);
-				printf("tasks: shell and rename\n");
+				//printf("tasks: shell and rename\n");
 				shutdown_all = 1;
 				reboot_on_exit = 6;
 				break;

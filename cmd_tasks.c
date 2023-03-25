@@ -42,13 +42,10 @@ extern CMD_STRUCT cmd_array[];
 extern ollist_t oll;
 extern cllist_t cll;
 extern dllist_t dll;
-extern int valid_ds[];
-extern int ds_interval;
 extern int ds_index;
 extern int ds_reset;
 
-UCHAR msg_buf[SERIAL_BUFF_SIZE];
-UCHAR msg_buf2[SERIAL_BUFF_SIZE];
+//UCHAR msg_buf[SERIAL_BUFF_SIZE];
 extern PARAM_STRUCT ps;
 extern char password[PASSWORD_SIZE];
 int shutdown_all;
@@ -93,9 +90,9 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	msg.mtext[2] = (UCHAR)msg_len;
 	msg.mtext[3] = (UCHAR)(msg_len >> 4);
 	
-	printf("send_sock_msg :");
-	print_cmd(cmd);
-	printf("msg_len: %d\n",msg_len);
+	//printf("send_sock_msg :");
+	//print_cmd(cmd);
+	//printf("msg_len: %d\n",msg_len);
 	memcpy(msg.mtext + 4,send_msg,msg_len);
 	//printf("msg to cmd_host from client %d\n",dest);
 /*
@@ -159,23 +156,23 @@ UCHAR get_host_cmd_task(int test)
 
 #ifdef SERVER_146
 	printf("starting server\n");
-	this_client_id = 8;
+	this_client_id = _SERVER;
 #endif
 #ifdef CL_150
 	printf("starting 150\n");
-	this_client_id = 4;
+	this_client_id = _150;
 #endif
 #ifdef CL_147
 	printf("starting 147\n");
-	this_client_id = 3;
+	this_client_id = _147;
 #endif 
 #ifdef CL_154
 	printf("starting 154\n");
-	this_client_id = 2;
+	this_client_id = _154;
 #endif 
 #ifdef CL_151
 	printf("starting 151\n");
-	this_client_id = 5;
+	this_client_id = _151;
 #endif 
 #if 1
 	// since each card only has 20 ports then the 1st 2 port access bytes
@@ -346,12 +343,14 @@ UCHAR get_host_cmd_task(int test)
 
 	init_ips();
 	same_msg = 0;
-	for(i = 0;i < 7;i++)
-		valid_ds[i] = 0;
 
 	//printf("%s\n",version);
 	j = k = i = 0;
 	cmd = 0x21;
+	strcpy(password,"asdf1234\0");
+	LoadParams("config.bin", &ps, password, errmsg);
+	printf("%s\n",errmsg);
+	printf("%d %d\n",ps.ds_interval, ps.ds_enable);
 #endif
 
 	while(TRUE)
@@ -374,16 +373,29 @@ UCHAR get_host_cmd_task(int test)
 			}
 		}
 		cmd = msg.mtext[0];
-		printf("sched cmd host: ");
-		print_cmd(cmd);
+		//printf("sched cmd host: ");
+		//print_cmd(cmd);
 		msg_len = (int)msg.mtext[1];
 		msg_len |= (int)(msg.mtext[2] << 4);
 
-		printf("msg_len: %d\n",msg_len);
+		//printf("msg_len: %d\n",msg_len);
 		memset(tempx,0,sizeof(tempx));
 		memcpy(tempx,msg.mtext+3,msg_len);
 		onoff = tempx[0];
 
+/*
+printf("onoff: %d\n",onoff);
+
+for(i = 0;i < msg_len;i++)
+	printf("%02x ",tempx[i]);
+
+printf("\n");
+
+for(i = 0;i < 4;i++)
+	printf("%02x ",msg.mtext[i]);
+
+printf("\n");
+*/
 		if(cmd > 0)
 		{
 //				printf("cmd: %d %s\n",cmd,cmd_array[cmd].cmd_str);
@@ -460,6 +472,7 @@ UCHAR get_host_cmd_task(int test)
 					memset(tempx,0,sizeof(tempx));
 					//send_serialother(cmd,(UCHAR *)tempx);
 					add_msg_queue(cmd, onoff);
+					WriteParams("config.bin", &ps, password, errmsg);
 					break;
 				default:
 					break;
@@ -469,7 +482,7 @@ UCHAR get_host_cmd_task(int test)
 			{
 				//printf("sending shutdown send sock msg: ");
 				//print_cmd(cmd);
-				send_sock_msg(tempx, 1, cmd, 8);
+				send_sock_msg(tempx, 1, cmd, _SERVER);
 				return 1;
 			}
 
@@ -482,8 +495,8 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SEND_CLIENT_LIST:
-					//printf("send client list :");
-					send_sock_msg(tempx, msg_len, SEND_CLIENT_LIST, 8);
+					printf("send client list :");
+					send_sock_msg(tempx, msg_len, SEND_CLIENT_LIST, _SERVER);
 					break;
 
 				case DLLIST_SAVE:
@@ -496,8 +509,11 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SET_DS_INTERVAL:
-					ds_interval = (int)tempx[0];
-					printf("ds interval: %d\n",ds_interval);
+					ps.ds_interval = (int)tempx[0];
+					if(ps.ds_interval == 8)
+						ps.ds_enable = 0;
+					else ps.ds_enable = 1;
+					printf("ds interval: %d\n",ps.ds_interval);
 					break;
 
 				case SET_VALID_DS:
@@ -505,11 +521,11 @@ UCHAR get_host_cmd_task(int test)
 					mask = 1;
 					//memset(&valid_ds[0],0,sizeof(int)*7);
 					for(i = 0;i < 7;i++)
-						valid_ds[i] = 0;
+						ps.valid_ds[i] = 0;
 					for(i = 0;i < 6;i++)
 					{
 						if((mask & tempx[0]) == mask)
-							valid_ds[i] = 1;
+							ps.valid_ds[i] = 1;
 						mask <<= 1;
 					}
 					/*
@@ -626,7 +642,7 @@ UCHAR get_host_cmd_task(int test)
 							printf("%s\n",tempx);
 							cmd = REPLY_CLLIST;
 							msg_len = strlen(tempx);
-							send_sock_msg(tempx, msg_len, cmd, 8);
+							send_sock_msg(tempx, msg_len, cmd, _SERVER);
 							/*
 							msg.mtext[0] = cmd;
 							msg_len = strlen(tempx);
@@ -646,22 +662,6 @@ UCHAR get_host_cmd_task(int test)
 					}
 					break;
 #if 1
-/*	testing how the winCl sends ints & longs 
-				case DB_LOOKUP:
-					printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
-					long temp = pack4chars(tempx[3],tempx[2],tempx[1],tempx[0]);
-					printf("%d\n",temp);
-					break;
-
-testing how winCl sends var. no. of bytes 
-				case DB_LOOKUP:
-					printf("tempx: %02x %02x %02x %02x\n",tempx[0],tempx[1],tempx[2],tempx[3]);
-					trunning_days = tempx[0];
-					trunning_hours = tempx[1];
-					trunning_minutes = tempx[2];
-					trunning_seconds = tempx[3];
-*/
-					break;
 
 				case SET_NEXT_CLIENT:
 					next_client = tempx[0];
@@ -703,7 +703,7 @@ testing how winCl sends var. no. of bytes
 					//printf("send timeup: %s\n",tempx);
 					msg_len = strlen(tempx);
 					uSleep(0,TIME_DELAY/8);
-					send_sock_msg(tempx, msg_len, UPTIME_MSG, 8);
+					send_sock_msg(tempx, msg_len, UPTIME_MSG, _SERVER);
 					break;
 
 				case UPTIME_MSG:
@@ -732,7 +732,7 @@ testing how winCl sends var. no. of bytes
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");
-					send_sock_msg(tempx, msg_len, cmd, 8);
+					send_sock_msg(tempx, msg_len, cmd, _SERVER);
 					break;
 
 				case SET_PARAMS:
@@ -993,7 +993,7 @@ testing how winCl sends var. no. of bytes
 void send_param_msg(void)
 {
 	char tempx[40];
-
+/*
 	sprintf(tempx, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %s\0",
 														ps.rpm_mph_update_rate,
 														ps.fpga_xmit_rate,
@@ -1013,6 +1013,7 @@ void send_param_msg(void)
 														ps.password_retries,
 														ps.baudrate3,
 														password);
+*/
 //	send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SEND_CONFIG);
 }
 /*********************************************************************/

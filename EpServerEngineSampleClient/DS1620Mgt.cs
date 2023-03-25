@@ -243,5 +243,10 @@ namespace EpServerEngineSampleClient
 		{
 			svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), target, interval);
 		}
+
+		private void rbInterval9_CheckedChanged(object sender, EventArgs e)
+		{
+			interval = 8;
+		}
 	}
 }

@@ -153,6 +153,7 @@ int main(int argc, char **argv)
 
 	basic_controls_qid = msgget(basic_controls_key, IPC_CREAT | 0666);
 	sock_qid = msgget(sock_key, IPC_CREAT | 0666);
+	printf("sock_qid: %d\n",sock_qid);
 	sched_qid = msgget(sched_key, IPC_CREAT | 0666);
 
 	for(i = 0;i < NUM_SCHED_TASKS;i++)

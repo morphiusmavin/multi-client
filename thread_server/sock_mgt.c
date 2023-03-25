@@ -186,7 +186,7 @@ UCHAR get_host_cmd_task(int test)
 	int j;
 	int k;
 	//UCHAR tempx[200];
-	UCHAR write_serial_buff[SERIAL_BUFF_SIZE/2];
+	UCHAR write_serial_buff[SERIAL_BUFF_SIZE];
 	char temp_time[5];
 	char *pch;
 	time_t curtime2;
@@ -202,6 +202,7 @@ UCHAR get_host_cmd_task(int test)
 	int msgtype = 1;
 	msg.mtype = msgtype;
 	int temp;
+	int dest;
 
 	//printf("starting get_host_cmd_task...\n");
 
@@ -222,7 +223,7 @@ UCHAR get_host_cmd_task(int test)
 
 		memset(write_serial_buff,0,sizeof(write_serial_buff));
 		cmd = msg.mtext[0];							// first byte is cmd
-		//printf("%d\n",msg.mtext[1]);				// 2nd is dest which is ignored here
+		dest = msg.mtext[1];						// dest is the 2nd
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte
 		write_serial_buff[0] = cmd;
@@ -235,8 +236,8 @@ UCHAR get_host_cmd_task(int test)
 
 //		if(cmd > 0)
 		rc = 0;
-		printf("server get_cmd_host :");
-		print_cmd(cmd);
+		//printf("server get_cmd_host :");
+		//print_cmd(cmd);
 		switch(cmd)
 		{
 			case DS1620_MSG:
@@ -265,7 +266,7 @@ UCHAR get_host_cmd_task(int test)
 				break;
 
 			case SEND_CLIENT_LIST:
-				printf("SEND_CLIENT_LIST from sock_mgt\n");
+				//printf("SEND_CLIENT_LIST from sock_mgt\n");
 				k = -1;
 				if(client_table[0].socket > 0)
 				{
@@ -285,25 +286,6 @@ UCHAR get_host_cmd_task(int test)
 						}
 					}
 				}
-/*
-				if(client_table[1].socket > 0)
-				{
-					for(i = 0;i < MAX_CLIENTS;i++)
-					{
-						//printf("...%d %s %d\n", i, client_table[i].ip, client_table[i].socket);
-						if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
-						{
-							memset(tempx,0,sizeof(tempx));
-							sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-							//printf("%s\n",tempx);
-
-							send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-							uSleep(0,TIME_DELAY/2);
-							//printf("client sock: %d\n",client_table[j].socket);
-						}
-					}
-				}
-*/
 				break;
 
 			case UPTIME_MSG:	// sent from client
@@ -437,12 +419,9 @@ startover:
 
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
-			//print_cmd(cmd);
-/*
-for(i = 0;i < rc;i++)
-	printf("%02x ",msg_buf[i]);
-printf("\n");
-*/
+//print_cmd(cmd);
+//printf("win cl read task\n");
+
 			win_client_to_client_sock = msg_buf[2];		// offset into client table (destination)
 /*
 			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
@@ -458,6 +437,12 @@ printf("\n");
 			msg_len /= 2;
 			msg_len -= 3;
 
+/*
+printf("msg_len: %d\n",msg_len);
+for(i = 0;i < msg_len;i++)
+	printf("%02x ",tempx[i]);
+printf("\n");
+*/
 //			printf("msg_len: %d\n",msg_len);
 
 //if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
@@ -607,18 +592,29 @@ UCHAR ReadTask(int test)
 //	printf("readtask: %s\n",client_table[index].label);
 //	return 0;
 
+/*
+	while(TRUE)
+	{
+		if(shutdown_all)
+		{
+			printf("leaving read task\n");
+			return 0;
+		}
+		uSleep(0,TIME_DELAY/16);
+	}
+*/
 	while(TRUE)
 	{
 startover1:
 		if(client_table[index].socket > 0)
 		{
-			//printf("read task %d\n",index);
+//			printf("read task %d: ",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+2,1);
-			printf("ret: %d msg_len: %d\n",ret,msg_len);
+			//printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			printf("dest: %d (ReadTask)\n",dest);
+			printf("dest: %d\n",dest);
 /*
 			for(i = 0;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);
@@ -629,8 +625,8 @@ startover1:
 			printf("\n");
 */
 			//printf("cmd: %d\n",cmd);
-			//printf("read task: %d\n",index);
-			//print_cmd(cmd);
+			printf("read task: %d\n",index);
+			print_cmd(cmd);
 			memmove(tempx,tempx+2,msg_len);
 /*
 			for(i = 0;i < msg_len;i++)
@@ -694,15 +690,15 @@ startover1:
 					break;
 				default:
 					printf("read task sending to tcp\n");
-					if(client_table[dest].socket > 0)
-						send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
+//					if(client_table[dest].socket > 0)
+//						send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 					break;
 			}
 		}
 
 		if(shutdown_all)
 		{
-			printf("leaving read task\n");
+			//printf("leaving read task\n");
 			uSleep(0,TIME_DELAY/16);
 			return 0;
 		}

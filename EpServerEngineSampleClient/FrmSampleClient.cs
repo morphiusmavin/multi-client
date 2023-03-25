@@ -572,7 +572,10 @@ namespace EpServerEngineSampleClient
             foreach(var raw in ds1620_list)
 			{
                 if (val == raw.raw_value.ToString())
+                {
                     ret = raw.temp;
+                    return ret;     // if I don't return here it causes a huge memory leak
+                }
 			}
             return ret;
 		}
@@ -617,6 +620,7 @@ namespace EpServerEngineSampleClient
             {
                 case "DS1620_MSG":
                     AddMsg(ret.ToString());
+                    
                     string[] words = ret.Split(' ');
                     i = 0;
                     foreach(var word in words)
@@ -631,10 +635,12 @@ namespace EpServerEngineSampleClient
                                 break;
                             case 2:
                                 AddMsg("val: " + lookup_DS1620(word));
+                                //AddMsg("val: " + word);
                                 break;
 						}
                         i++;
 					}
+                    
                     break;
 
                 case "UPTIME_MSG":
@@ -1131,7 +1137,7 @@ namespace EpServerEngineSampleClient
                         if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
                         {
                             AddMsg(cl.label);
-                            //SetTime(cl.index);
+                            SetTime(cl.index);
                         }
                     }
                 }
@@ -1140,7 +1146,7 @@ namespace EpServerEngineSampleClient
             {
                 if (m_client.IsConnectionAlive)
                 {
-                    //UpdateClientInfo();
+                    UpdateClientInfo();
                     AddMsg("update client info");
                     clients_inited = true;
                 }
