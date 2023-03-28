@@ -211,7 +211,7 @@ char *LoadParams(char *filename, PARAM_STRUCT *ps, char *password, char *errmsg)
 	i = lseek(fp,0,SEEK_SET);
 	i = 0;
 	read(fp,&id,1);
-	printf("id: %02x\n",id);
+	//printf("id: %02x\n",id);
 	if(id != 0xAA)
 	{
 		close(fp);
@@ -220,9 +220,9 @@ char *LoadParams(char *filename, PARAM_STRUCT *ps, char *password, char *errmsg)
 		return (char *)0;
 	}
 	i = read(fp,(void*)ps,sizeof(PARAM_STRUCT));
-	printf("read param struct: %d\n",i);
+	//printf("read param struct: %d\n",i);
 	i = read(fp,(void*)&tpassword[0],PASSWORD_SIZE);
-	printf("read password: %d %s\n",i,tpassword);
+	//printf("read password: %d %s\n",i,tpassword);
 //	printf("fp:%d  read: %d bytes in oLoadConfig\n",fp,i);
 	read(fp,&id,1);
 	if(id != 0x55)

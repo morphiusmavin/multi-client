@@ -47,8 +47,6 @@ static UCHAR check_inputs(int index, int test);
 ollist_t oll;
 cllist_t cll;
 dllist_t dll;
-//int ds_interval;
-//int valid_ds[7];
 int ds_index;
 int ds_reset;
 
@@ -663,27 +661,13 @@ UCHAR poll_ds1620_task(int test)
 	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
 	D_DATA **dtpp = &dtp;
 
-	for(i = 0;i < 7;i++)
-		ps.valid_ds[i] = 0;
-
 	uSleep(5,0);
-	//printf("starting ds\n");
-/*
-	while(TRUE)
-	{
-		uSleep(1,0);
-		if(shutdown_all)
-			return 0;
-	}
-*/
-	initDS1620();
 
-	ps.valid_ds[0] = 1;
-	ps.ds_interval = 4;
+	initDS1620();
 
 	j = i = 0;
 	val = 0;
-	ds_reset = 2;
+	ds_reset = 0;
 
 	//ds_index = dGetnRecs("ddata.dat",errmsg);
 	ds_index = dllist_get_size(&dll);
@@ -702,10 +686,10 @@ UCHAR poll_ds1620_task(int test)
 		if(ps.valid_ds[i] > 0 && ds_reset == 0)
 		{
 			writeByteTo1620(DS1620_CMD_STARTCONV);
-			uSleep(0,TIME_DELAY/16);
+			uSleep(0,TIME_DELAY/8);
 			val = readTempFrom1620(i);
 			//printf("%s\n",lookup_raw_data(val));
-			uSleep(0,TIME_DELAY/16);
+			uSleep(0,TIME_DELAY/8);
 			writeByteTo1620(DS1620_CMD_STOPCONV);
 
 			//printf("polling ds: %d %d\n",i,ds_index);
@@ -726,7 +710,7 @@ UCHAR poll_ds1620_task(int test)
 			uSleep(0,TIME_DELAY/16);
 			sprintf(sock_msg, "%0d %0d %0d",this_client_id, i, val);
 			printf("%s\n",sock_msg);
-			send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _149);	// to win cl
+			//send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _149);	// to win cl
 			//uSleep(0,TIME_DELAY/16);
 			//send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, 4);
 			//dllist_find_data(index, dtpp, &dll);
@@ -738,13 +722,15 @@ UCHAR poll_ds1620_task(int test)
 		{
 			j = 0;
 			i = 0;
+			dsSleep(ps.ds_interval);		// this is the delay between all acq's 
 			if(ds_reset == 1)
 			{
+				T = time(NULL);
+				tm = *localtime(&T);
 				memset(dtp,0,sizeof(D_DATA));
 				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-				//printf("%s\n",date_str);
-				//printf("ds_index: %d\n",ds_index);
-				dlWriteConfig(date_str, &dll, ds_index, errmsg);
+				printf("reset: %s\n",date_str);
+				printf("ds_index: %d\n",ds_index);
 				//rename("ddata.dat",date_str);
 				//dllist_remove_data(int index, D_DATA **datapp, dllist_t *llistp)
 				uSleep(1,0);
@@ -755,12 +741,19 @@ UCHAR poll_ds1620_task(int test)
 				*/
 				dllist_init (&dll);
 				ds_index = 0;
+				dtp->sensor_no = i;
+				dtp->month = tm.tm_mon;
+				dtp->day = tm.tm_mday;
+				dtp->hour = tm.tm_hour;
+				dtp->minute = tm.tm_min;
+				dtp->second = tm.tm_sec;
+				dtp->value = val;
 				ds_index = dllist_add_data(ds_index, &dll, dtp);
+				dlWriteConfig(date_str, &dll, ds_index, errmsg);
 				ds_index++;
 				//printf("reset\n");
 				ds_reset = 0;
 			}
-			dsSleep(ps.ds_interval);		// this is the delay between all acq's 
 		}
 
 		if(shutdown_all)
@@ -782,54 +775,50 @@ char *lookup_raw_data(int val)
 /*********************************************************************/
 static void dsSleep(int interval)
 {
+	int end_sec = 0;
+	int i;
 	switch(interval)
 	{
 		case 0:			// 1/2 second
-			uSleep(0,TIME_DELAY/2);
+			end_sec = trunning_seconds + 1;
 			break;
 		case 1:			// 1 second
-			uSleep(1,0);
+			end_sec = 1;
 			break;
 		case 2:			// 5 seconds
-			uSleep(5,0);
+			end_sec = 5;
 			break;
 		case 3:			// 15 seconds
-			uSleep(15,0);
+			end_sec = 15;
 			break;
 		case 4:			// 30 seconds
-			uSleep(30,0);
+			end_sec = 30;
 			break;
 		case 5:			// 1 minute
-			uSleep(60,0);
+			end_sec = 60;
 			break;
 		case 6:			// 5 minutes
-			uSleep(300,0);
+			end_sec = 300;
 			break;
 		case 7:			// 10 minutes
-			uSleep(600,0);
+			end_sec = 600;
 			break;
 		default:
 			uSleep(60,0);
 			break;
 	}
+	for(i = 0;i < end_sec;i++)
+	{
+		uSleep(1,0);
+		if(shutdown_all == 1 || ds_reset > 0)
+			return;
+	}
+	
 }
 /*********************************************************************/
 // this happens 10x a second
 UCHAR timer2_task(int test)
 {
-	int i,j;
-	char tempx[20];
-	static int prev_light_sensor_value;
-	static int time_lapse;
-	O_DATA *otp;
-	O_DATA **otpp = &otp;
-	O_DATA *otp2;
-	O_DATA **otpp2 = &otp2;
-	int bank = 0;
-	UCHAR mask;
-	int index = 0;
-	char errmsg[20];
-
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
 
 	while(TRUE)
@@ -843,6 +832,7 @@ UCHAR timer2_task(int test)
 			if(++trunning_minutes > 59)
 			{
 				trunning_minutes = 0;
+				ds_reset = 1;
 				if(++trunning_hours > 23)
 				{
 					trunning_hours = 0;

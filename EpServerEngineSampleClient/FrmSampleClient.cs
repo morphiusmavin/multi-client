@@ -568,7 +568,7 @@ namespace EpServerEngineSampleClient
         }
         private string lookup_DS1620(string val)
 		{
-            string ret = "";
+            string ret = "N/A";
             foreach(var raw in ds1620_list)
 			{
                 if (val == raw.raw_value.ToString())
@@ -603,7 +603,7 @@ namespace EpServerEngineSampleClient
             int type_msg;
             string ret = null;
             int i = 0;
-
+            string[] words;
             char[] chars = new char[bytes.Length / sizeof(char) + 2];
             char[] chars2 = new char[bytes.Length / sizeof(char)];
             // src srcoffset dest destoffset len
@@ -621,17 +621,17 @@ namespace EpServerEngineSampleClient
                 case "DS1620_MSG":
                     AddMsg(ret.ToString());
                     
-                    string[] words = ret.Split(' ');
+                    words = ret.Split(' ');
                     i = 0;
                     foreach(var word in words)
 					{
                         switch(i)
 						{
                             case 0:
-                                AddMsg("client id: " + word);
+                                //AddMsg("client id: " + word);
                                 break;
                             case 1:
-                                AddMsg("sensor: " + word);
+                                //AddMsg("sensor: " + word);
                                 break;
                             case 2:
                                 AddMsg("val: " + lookup_DS1620(word));
@@ -1019,7 +1019,10 @@ namespace EpServerEngineSampleClient
                     clk_oneoff2 = false;
                     foreach (ClientsAvail cl in clients_avail)
                     {
-                        svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
+                        if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
+                        {
+                            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
+                        }
                     }
                 }
                 if (hour == curr_srss_day.AstTwiStartHour && minute == curr_srss_day.AstTwiStartMinute && second == 0)

@@ -347,10 +347,10 @@ UCHAR get_host_cmd_task(int test)
 	//printf("%s\n",version);
 	j = k = i = 0;
 	cmd = 0x21;
-	strcpy(password,"asdf1234\0");
+	//strcpy(password,"asdf1234\0");
 	LoadParams("config.bin", &ps, password, errmsg);
-	printf("%s\n",errmsg);
-	printf("%d %d\n",ps.ds_interval, ps.ds_enable);
+	//printf("%s\n",errmsg);
+	//printf("%d %d\n",ps.ds_interval, ps.ds_enable);
 #endif
 
 	while(TRUE)
@@ -489,13 +489,18 @@ printf("\n");
 			switch(cmd)
 			{
 				case GET_TEMP4:
-					dllist_find_data(ds_index, dtpp, &dll);
-					printf("%d:%d:%d - %s\n",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
+					printf("ds_index: %d\n",ds_index);
+					if(ds_index > 1)
+					{
+						dllist_find_data(ds_index, dtpp, &dll);
+						printf("%d:%d:%d - %s\n",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
+						//printf("%d:%d:%d %d\n",dtp->hour, dtp->minute, dtp->second, dtp->value);
+					}
 					//printf("avg: %d\n",avg_raw_data(sample_size));	not working yet
 					break;
 
 				case SEND_CLIENT_LIST:
-					printf("send client list :");
+					//printf("send client list :");
 					send_sock_msg(tempx, msg_len, SEND_CLIENT_LIST, _SERVER);
 					break;
 
@@ -519,7 +524,6 @@ printf("\n");
 				case SET_VALID_DS:
 					//printf("set valid ds: %d\n",tempx[0]);
 					mask = 1;
-					//memset(&valid_ds[0],0,sizeof(int)*7);
 					for(i = 0;i < 7;i++)
 						ps.valid_ds[i] = 0;
 					for(i = 0;i < 6;i++)
@@ -528,11 +532,6 @@ printf("\n");
 							ps.valid_ds[i] = 1;
 						mask <<= 1;
 					}
-					/*
-					for(i = 0;i < 6;i++)
-						printf("%d ",valid_ds[i]);
-					printf("\n");
-					*/
 					break;
 
 				case RELOAD_CLLIST:
@@ -740,7 +739,7 @@ printf("\n");
 					break;
 
 				case SET_TIME:
-					printf("set time\n");
+					//printf("set time\n");
 					curtime2 = 0L;
 					j = 0;
 

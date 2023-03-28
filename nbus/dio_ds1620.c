@@ -97,12 +97,12 @@ static void shiftOutByte( UCHAR val )
 		if( val & (1 << i))
 		{
 			set_pin(DQ,HIGH);
-			mydelay(2);
+			mydelay(4);
 		}
 		else
 		{
 			set_pin(DQ,LOW);
-			mydelay(2);
+			mydelay(4);
 		}
 		set_pin(CLK,HIGH);
 	}
@@ -161,7 +161,7 @@ int readTempFrom1620(int which)
 	{
 		set_pin(CLK,LOW);
 
-		mydelay(10);
+		mydelay(5);
 		state = get_pin(DQ);
 		if(state == HIGH)
 			raw |= (1 << i);									// add value
