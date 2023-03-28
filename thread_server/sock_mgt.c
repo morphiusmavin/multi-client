@@ -281,7 +281,7 @@ UCHAR get_host_cmd_task(int test)
 							//printf("%d\n",strlen(write_serial_buff));
 
 							send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
-							uSleep(0,TIME_DELAY/8);
+							uSleep(0,TIME_DELAY/2);
 							//printf("client sock: %d\n",client_table[i].socket);
 						}
 					}
@@ -800,7 +800,7 @@ UCHAR tcp_monitor_task(int test)
 //	if(s != 0)
 //		handle_err_en(s, "pthread_setcancelstate");
 //		printf("setcancelstate\r\n");
-	printf("starting tcp_monitor_task %d\n",test);
+	//printf("starting tcp_monitor_task %d\n",test);
 	memset((char  *)&address,0,sizeof(address));	  /* clear sockaddr structure   */
 	address.sin_family = AF_INET;				  /* set family to Internet     */
 	address.sin_addr.s_addr = INADDR_ANY;		  /* set the local IP address */

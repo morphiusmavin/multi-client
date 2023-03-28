@@ -671,7 +671,7 @@ UCHAR poll_ds1620_task(int test)
 
 	//ds_index = dGetnRecs("ddata.dat",errmsg);
 	ds_index = dllist_get_size(&dll);
-	printf("no recs in ddata.dat: %d\n",ds_index);
+	//printf("no recs in ddata.dat: %d\n",ds_index);
 	while(TRUE)
 	{
 		while(ps.ds_enable == 0)
@@ -731,6 +731,7 @@ UCHAR poll_ds1620_task(int test)
 				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 				printf("reset: %s\n",date_str);
 				printf("ds_index: %d\n",ds_index);
+				dlWriteConfig(date_str, &dll, ds_index, errmsg);
 				//rename("ddata.dat",date_str);
 				//dllist_remove_data(int index, D_DATA **datapp, dllist_t *llistp)
 				uSleep(1,0);
@@ -740,7 +741,6 @@ UCHAR poll_ds1620_task(int test)
 					dllist_remove_data(j,dtpp,&dll);
 				*/
 				dllist_init (&dll);
-				ds_index = 0;
 				dtp->sensor_no = i;
 				dtp->month = tm.tm_mon;
 				dtp->day = tm.tm_mday;
@@ -748,9 +748,8 @@ UCHAR poll_ds1620_task(int test)
 				dtp->minute = tm.tm_min;
 				dtp->second = tm.tm_sec;
 				dtp->value = val;
+				ds_index = 0;
 				ds_index = dllist_add_data(ds_index, &dll, dtp);
-				dlWriteConfig(date_str, &dll, ds_index, errmsg);
-				ds_index++;
 				//printf("reset\n");
 				ds_reset = 0;
 			}
@@ -881,7 +880,7 @@ void sort_countdown(void)
 	COUNTDOWN *ct;
 	COUNTDOWN tct;
 	int current_seconds = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
-	printf("curr sec: %d\n",current_seconds);
+	//printf("curr sec: %d\n",current_seconds);
 	k = 0;
 	for(i = 0;i < 20;i++)
 	{

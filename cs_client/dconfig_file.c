@@ -63,7 +63,7 @@ int dlLoadConfig(char *filename, dllist_t *dll, size_t size,char *errmsg)
 		printf("invalid file format\n");
 		return -1;
 	}
-	printf("sizeof: %d\n",sizeof(D_DATA));
+	//printf("sizeof: %d\n",sizeof(D_DATA));
 	for(i = 0;i < no_recs;i++)
 	{
 		ret += read(fp,&d_data,sizeof(D_DATA));
@@ -230,7 +230,7 @@ int dGetnRecs(char *filename, char *errmsg)
 	fsize = lseek(fp,0,SEEK_END);
 	fsize--;
 	nrecs = fsize/sizeof(D_DATA);
-	printf("fsize: %d nrecs: %d\n",fsize,nrecs);
+	//printf("fsize: %d nrecs: %d\n",fsize,nrecs);
 	fsize = lseek(fp,0,SEEK_SET);
 	i = 0;
 	read(fp,&id,1);

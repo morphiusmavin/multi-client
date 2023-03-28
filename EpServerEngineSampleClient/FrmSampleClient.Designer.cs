@@ -48,7 +48,6 @@
 			this.btnClear = new System.Windows.Forms.Button();
 			this.btnFnc1 = new System.Windows.Forms.Button();
 			this.btnGarageForm = new System.Windows.Forms.Button();
-			this.btnSettings = new System.Windows.Forms.Button();
 			this.btnCabin = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.lbAvailClients = new System.Windows.Forms.ListBox();
@@ -68,14 +67,8 @@
 			this.tbTime = new System.Windows.Forms.TextBox();
 			this.btnFnc2 = new System.Windows.Forms.Button();
 			this.btnMinimize = new System.Windows.Forms.Button();
-			this.btnSunriseSunset = new System.Windows.Forms.Button();
-			this.SunriseLabel = new System.Windows.Forms.Label();
-			this.SunsetLabel = new System.Windows.Forms.Label();
-			this.MoonriseLabel = new System.Windows.Forms.Label();
-			this.MoonsetLabel = new System.Windows.Forms.Label();
 			this.btnTimerSchedules = new System.Windows.Forms.Button();
 			this.btnOutdoor = new System.Windows.Forms.Button();
-			this.btnSaveJournalEntry = new System.Windows.Forms.Button();
 			this.tbAlarmMinutes = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
@@ -84,39 +77,29 @@
 			this.timer2 = new System.Windows.Forms.Timer(this.components);
 			this.tbAlarmTick = new System.Windows.Forms.TextBox();
 			this.btnGetTime = new System.Windows.Forms.Button();
-			this.tbQuoteOfTheDay = new System.Windows.Forms.TextBox();
-			this.label11 = new System.Windows.Forms.Label();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.btnFnc4 = new System.Windows.Forms.Button();
 			this.btnFnc5 = new System.Windows.Forms.Button();
-			this.groupBox3 = new System.Windows.Forms.GroupBox();
-			this.NextSrssLabel = new System.Windows.Forms.Label();
-			this.btnNextSunrise = new System.Windows.Forms.Button();
 			this.btnSendSort = new System.Windows.Forms.Button();
-			this.timer3 = new System.Windows.Forms.Timer(this.components);
-			this.tbJournalEntry = new System.Windows.Forms.TextBox();
-			this.label12 = new System.Windows.Forms.Label();
 			this.btnUnused = new System.Windows.Forms.Button();
-			this.tbFactoid = new System.Windows.Forms.TextBox();
-			this.label8 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
 			this.btnGetTemp = new System.Windows.Forms.Button();
+			this.timer3 = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
-			this.groupBox3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tbReceived
 			// 
 			this.tbReceived.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbReceived.Location = new System.Drawing.Point(21, 378);
+			this.tbReceived.Location = new System.Drawing.Point(25, 364);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(235, 243);
+			this.tbReceived.Size = new System.Drawing.Size(216, 192);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
 			// 
@@ -126,7 +109,7 @@
 			this.btnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnConnect.Location = new System.Drawing.Point(272, 69);
 			this.btnConnect.Name = "btnConnect";
-			this.btnConnect.Size = new System.Drawing.Size(233, 61);
+			this.btnConnect.Size = new System.Drawing.Size(193, 38);
 			this.btnConnect.TabIndex = 4;
 			this.btnConnect.Text = "Connect Server";
 			this.btnConnect.UseVisualStyleBackColor = false;
@@ -190,9 +173,9 @@
 			this.btnAssignFunc.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.btnAssignFunc.Location = new System.Drawing.Point(318, 12);
 			this.btnAssignFunc.Name = "btnAssignFunc";
-			this.btnAssignFunc.Size = new System.Drawing.Size(163, 46);
+			this.btnAssignFunc.Size = new System.Drawing.Size(147, 46);
 			this.btnAssignFunc.TabIndex = 27;
-			this.btnAssignFunc.Text = "Assign Func";
+			this.btnAssignFunc.Text = "Assign FN";
 			this.btnAssignFunc.UseVisualStyleBackColor = false;
 			this.btnAssignFunc.Click += new System.EventHandler(this.BtnAssignFunction);
 			// 
@@ -207,7 +190,7 @@
 			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Controls.Add(this.tbPort);
 			this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox1.Location = new System.Drawing.Point(528, 143);
+			this.groupBox1.Location = new System.Drawing.Point(479, 135);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(300, 204);
 			this.groupBox1.TabIndex = 34;
@@ -251,9 +234,9 @@
 			// 
 			this.btnMngServer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnMngServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnMngServer.Location = new System.Drawing.Point(21, 69);
+			this.btnMngServer.Location = new System.Drawing.Point(23, 73);
 			this.btnMngServer.Name = "btnMngServer";
-			this.btnMngServer.Size = new System.Drawing.Size(235, 61);
+			this.btnMngServer.Size = new System.Drawing.Size(216, 56);
 			this.btnMngServer.TabIndex = 0;
 			this.btnMngServer.Text = "Manage Server";
 			this.btnMngServer.UseVisualStyleBackColor = false;
@@ -263,9 +246,9 @@
 			// 
 			this.btnRescan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnRescan.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnRescan.Location = new System.Drawing.Point(21, 147);
+			this.btnRescan.Location = new System.Drawing.Point(23, 143);
 			this.btnRescan.Name = "btnRescan";
-			this.btnRescan.Size = new System.Drawing.Size(235, 61);
+			this.btnRescan.Size = new System.Drawing.Size(216, 56);
 			this.btnRescan.TabIndex = 1;
 			this.btnRescan.Text = "DS1620";
 			this.btnRescan.UseVisualStyleBackColor = false;
@@ -287,9 +270,9 @@
 			// 
 			this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnClear.Location = new System.Drawing.Point(272, 225);
+			this.btnClear.Location = new System.Drawing.Point(272, 124);
 			this.btnClear.Name = "btnClear";
-			this.btnClear.Size = new System.Drawing.Size(235, 61);
+			this.btnClear.Size = new System.Drawing.Size(193, 38);
 			this.btnClear.TabIndex = 6;
 			this.btnClear.Text = "Clear Screen";
 			this.btnClear.UseVisualStyleBackColor = false;
@@ -311,33 +294,21 @@
 			// 
 			this.btnGarageForm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnGarageForm.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnGarageForm.Location = new System.Drawing.Point(1185, 491);
+			this.btnGarageForm.Location = new System.Drawing.Point(272, 332);
 			this.btnGarageForm.Name = "btnGarageForm";
-			this.btnGarageForm.Size = new System.Drawing.Size(274, 38);
+			this.btnGarageForm.Size = new System.Drawing.Size(193, 38);
 			this.btnGarageForm.TabIndex = 17;
 			this.btnGarageForm.Text = "Garage Lights";
 			this.btnGarageForm.UseVisualStyleBackColor = false;
 			this.btnGarageForm.Click += new System.EventHandler(this.GarageFormClick);
 			// 
-			// btnSettings
-			// 
-			this.btnSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSettings.Location = new System.Drawing.Point(272, 147);
-			this.btnSettings.Name = "btnSettings";
-			this.btnSettings.Size = new System.Drawing.Size(235, 61);
-			this.btnSettings.TabIndex = 5;
-			this.btnSettings.Text = "Settings";
-			this.btnSettings.UseVisualStyleBackColor = false;
-			this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
-			// 
 			// btnCabin
 			// 
 			this.btnCabin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnCabin.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCabin.Location = new System.Drawing.Point(1185, 445);
+			this.btnCabin.Location = new System.Drawing.Point(272, 283);
 			this.btnCabin.Name = "btnCabin";
-			this.btnCabin.Size = new System.Drawing.Size(274, 38);
+			this.btnCabin.Size = new System.Drawing.Size(193, 38);
 			this.btnCabin.TabIndex = 16;
 			this.btnCabin.Text = "Cabin";
 			this.btnCabin.UseVisualStyleBackColor = false;
@@ -353,9 +324,9 @@
 			this.lbAvailClients.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbAvailClients.FormattingEnabled = true;
 			this.lbAvailClients.ItemHeight = 15;
-			this.lbAvailClients.Location = new System.Drawing.Point(909, 158);
+			this.lbAvailClients.Location = new System.Drawing.Point(727, 11);
 			this.lbAvailClients.Name = "lbAvailClients";
-			this.lbAvailClients.Size = new System.Drawing.Size(173, 79);
+			this.lbAvailClients.Size = new System.Drawing.Size(173, 94);
 			this.lbAvailClients.TabIndex = 35;
 			this.lbAvailClients.SelectedIndexChanged += new System.EventHandler(this.AvailClientSelIndexChanged);
 			// 
@@ -363,7 +334,7 @@
 			// 
 			this.btnRebootClient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnRebootClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnRebootClient.Location = new System.Drawing.Point(909, 246);
+			this.btnRebootClient.Location = new System.Drawing.Point(800, 115);
 			this.btnRebootClient.Name = "btnRebootClient";
 			this.btnRebootClient.Size = new System.Drawing.Size(173, 37);
 			this.btnRebootClient.TabIndex = 8;
@@ -374,7 +345,7 @@
 			// btnShutdownClient
 			// 
 			this.btnShutdownClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnShutdownClient.Location = new System.Drawing.Point(909, 346);
+			this.btnShutdownClient.Location = new System.Drawing.Point(800, 215);
 			this.btnShutdownClient.Name = "btnShutdownClient";
 			this.btnShutdownClient.Size = new System.Drawing.Size(173, 37);
 			this.btnShutdownClient.TabIndex = 10;
@@ -385,7 +356,7 @@
 			// btnSendStatus
 			// 
 			this.btnSendStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendStatus.Location = new System.Drawing.Point(909, 396);
+			this.btnSendStatus.Location = new System.Drawing.Point(800, 265);
 			this.btnSendStatus.Name = "btnSendStatus";
 			this.btnSendStatus.Size = new System.Drawing.Size(173, 37);
 			this.btnSendStatus.TabIndex = 11;
@@ -396,9 +367,9 @@
 			// btnSendMsg
 			// 
 			this.btnSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendMsg.Location = new System.Drawing.Point(532, 551);
+			this.btnSendMsg.Location = new System.Drawing.Point(272, 479);
 			this.btnSendMsg.Name = "btnSendMsg";
-			this.btnSendMsg.Size = new System.Drawing.Size(198, 37);
+			this.btnSendMsg.Size = new System.Drawing.Size(193, 38);
 			this.btnSendMsg.TabIndex = 20;
 			this.btnSendMsg.Text = "Send Message";
 			this.btnSendMsg.UseVisualStyleBackColor = true;
@@ -407,7 +378,7 @@
 			// bSetClientTime
 			// 
 			this.bSetClientTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.bSetClientTime.Location = new System.Drawing.Point(909, 446);
+			this.bSetClientTime.Location = new System.Drawing.Point(800, 315);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(173, 37);
 			this.bSetClientTime.TabIndex = 12;
@@ -418,7 +389,7 @@
 			// btnReportTimeUp
 			// 
 			this.btnReportTimeUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnReportTimeUp.Location = new System.Drawing.Point(909, 590);
+			this.btnReportTimeUp.Location = new System.Drawing.Point(800, 459);
 			this.btnReportTimeUp.Name = "btnReportTimeUp";
 			this.btnReportTimeUp.Size = new System.Drawing.Size(173, 37);
 			this.btnReportTimeUp.TabIndex = 14;
@@ -430,7 +401,7 @@
 			// 
 			this.btnExit2Shell.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnExit2Shell.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnExit2Shell.Location = new System.Drawing.Point(909, 296);
+			this.btnExit2Shell.Location = new System.Drawing.Point(800, 165);
 			this.btnExit2Shell.Name = "btnExit2Shell";
 			this.btnExit2Shell.Size = new System.Drawing.Size(173, 37);
 			this.btnExit2Shell.TabIndex = 9;
@@ -441,7 +412,7 @@
 			// tbSendMsg
 			// 
 			this.tbSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbSendMsg.Location = new System.Drawing.Point(532, 594);
+			this.tbSendMsg.Location = new System.Drawing.Point(272, 530);
 			this.tbSendMsg.Name = "tbSendMsg";
 			this.tbSendMsg.Size = new System.Drawing.Size(285, 26);
 			this.tbSendMsg.TabIndex = 20;
@@ -451,9 +422,9 @@
 			// 
 			this.btnTestBench.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnTestBench.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnTestBench.Location = new System.Drawing.Point(1185, 586);
+			this.btnTestBench.Location = new System.Drawing.Point(272, 430);
 			this.btnTestBench.Name = "btnTestBench";
-			this.btnTestBench.Size = new System.Drawing.Size(274, 38);
+			this.btnTestBench.Size = new System.Drawing.Size(193, 38);
 			this.btnTestBench.TabIndex = 19;
 			this.btnTestBench.Text = "Test Bench";
 			this.btnTestBench.UseVisualStyleBackColor = false;
@@ -484,7 +455,7 @@
 			// tbTodaysDate
 			// 
 			this.tbTodaysDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbTodaysDate.Location = new System.Drawing.Point(664, 25);
+			this.tbTodaysDate.Location = new System.Drawing.Point(539, 11);
 			this.tbTodaysDate.Name = "tbTodaysDate";
 			this.tbTodaysDate.Size = new System.Drawing.Size(164, 44);
 			this.tbTodaysDate.TabIndex = 15;
@@ -493,7 +464,7 @@
 			// 
 			this.label10.AutoSize = true;
 			this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label10.Location = new System.Drawing.Point(607, 38);
+			this.label10.Location = new System.Drawing.Point(482, 24);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(53, 20);
 			this.label10.TabIndex = 57;
@@ -502,7 +473,7 @@
 			// tbTime
 			// 
 			this.tbTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbTime.Location = new System.Drawing.Point(664, 82);
+			this.tbTime.Location = new System.Drawing.Point(539, 68);
 			this.tbTime.Name = "tbTime";
 			this.tbTime.Size = new System.Drawing.Size(164, 44);
 			this.tbTime.TabIndex = 16;
@@ -523,73 +494,21 @@
 			// 
 			this.btnMinimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnMinimize.Location = new System.Drawing.Point(270, 303);
+			this.btnMinimize.Location = new System.Drawing.Point(272, 179);
 			this.btnMinimize.Name = "btnMinimize";
-			this.btnMinimize.Size = new System.Drawing.Size(235, 61);
+			this.btnMinimize.Size = new System.Drawing.Size(193, 38);
 			this.btnMinimize.TabIndex = 7;
 			this.btnMinimize.Text = "Minimize";
 			this.btnMinimize.UseVisualStyleBackColor = false;
 			this.btnMinimize.Click += new System.EventHandler(this.Minimize_Click);
 			// 
-			// btnSunriseSunset
-			// 
-			this.btnSunriseSunset.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnSunriseSunset.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSunriseSunset.Location = new System.Drawing.Point(20, 28);
-			this.btnSunriseSunset.Name = "btnSunriseSunset";
-			this.btnSunriseSunset.Size = new System.Drawing.Size(117, 37);
-			this.btnSunriseSunset.TabIndex = 0;
-			this.btnSunriseSunset.Text = "Refresh";
-			this.btnSunriseSunset.UseVisualStyleBackColor = false;
-			this.btnSunriseSunset.Click += new System.EventHandler(this.btnSunriseSunset_Click);
-			// 
-			// SunriseLabel
-			// 
-			this.SunriseLabel.AutoSize = true;
-			this.SunriseLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.SunriseLabel.Location = new System.Drawing.Point(16, 70);
-			this.SunriseLabel.Name = "SunriseLabel";
-			this.SunriseLabel.Size = new System.Drawing.Size(62, 20);
-			this.SunriseLabel.TabIndex = 59;
-			this.SunriseLabel.Text = "Today:";
-			// 
-			// SunsetLabel
-			// 
-			this.SunsetLabel.AutoSize = true;
-			this.SunsetLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.SunsetLabel.Location = new System.Drawing.Point(16, 100);
-			this.SunsetLabel.Name = "SunsetLabel";
-			this.SunsetLabel.Size = new System.Drawing.Size(62, 20);
-			this.SunsetLabel.TabIndex = 60;
-			this.SunsetLabel.Text = "Today:";
-			// 
-			// MoonriseLabel
-			// 
-			this.MoonriseLabel.AutoSize = true;
-			this.MoonriseLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.MoonriseLabel.Location = new System.Drawing.Point(16, 129);
-			this.MoonriseLabel.Name = "MoonriseLabel";
-			this.MoonriseLabel.Size = new System.Drawing.Size(62, 20);
-			this.MoonriseLabel.TabIndex = 61;
-			this.MoonriseLabel.Text = "Today:";
-			// 
-			// MoonsetLabel
-			// 
-			this.MoonsetLabel.AutoSize = true;
-			this.MoonsetLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.MoonsetLabel.Location = new System.Drawing.Point(16, 156);
-			this.MoonsetLabel.Name = "MoonsetLabel";
-			this.MoonsetLabel.Size = new System.Drawing.Size(62, 20);
-			this.MoonsetLabel.TabIndex = 62;
-			this.MoonsetLabel.Text = "Today:";
-			// 
 			// btnTimerSchedules
 			// 
 			this.btnTimerSchedules.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnTimerSchedules.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnTimerSchedules.Location = new System.Drawing.Point(21, 303);
+			this.btnTimerSchedules.Location = new System.Drawing.Point(23, 283);
 			this.btnTimerSchedules.Name = "btnTimerSchedules";
-			this.btnTimerSchedules.Size = new System.Drawing.Size(235, 61);
+			this.btnTimerSchedules.Size = new System.Drawing.Size(216, 56);
 			this.btnTimerSchedules.TabIndex = 3;
 			this.btnTimerSchedules.Text = "Timer Schedules";
 			this.btnTimerSchedules.UseVisualStyleBackColor = false;
@@ -600,24 +519,13 @@
 			this.btnOutdoor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnOutdoor.Enabled = false;
 			this.btnOutdoor.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnOutdoor.Location = new System.Drawing.Point(1185, 539);
+			this.btnOutdoor.Location = new System.Drawing.Point(272, 381);
 			this.btnOutdoor.Name = "btnOutdoor";
-			this.btnOutdoor.Size = new System.Drawing.Size(274, 38);
+			this.btnOutdoor.Size = new System.Drawing.Size(193, 38);
 			this.btnOutdoor.TabIndex = 18;
 			this.btnOutdoor.Text = "Outdoor";
 			this.btnOutdoor.UseVisualStyleBackColor = false;
 			this.btnOutdoor.Click += new System.EventHandler(this.btnOutdoor_Click);
-			// 
-			// btnSaveJournalEntry
-			// 
-			this.btnSaveJournalEntry.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSaveJournalEntry.Location = new System.Drawing.Point(401, 373);
-			this.btnSaveJournalEntry.Name = "btnSaveJournalEntry";
-			this.btnSaveJournalEntry.Size = new System.Drawing.Size(104, 37);
-			this.btnSaveJournalEntry.TabIndex = 21;
-			this.btnSaveJournalEntry.Text = "Save";
-			this.btnSaveJournalEntry.UseVisualStyleBackColor = true;
-			this.btnSaveJournalEntry.Click += new System.EventHandler(this.btnSave_Click);
 			// 
 			// tbAlarmMinutes
 			// 
@@ -686,33 +594,13 @@
 			// btnGetTime
 			// 
 			this.btnGetTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnGetTime.Location = new System.Drawing.Point(909, 496);
+			this.btnGetTime.Location = new System.Drawing.Point(800, 365);
 			this.btnGetTime.Name = "btnGetTime";
 			this.btnGetTime.Size = new System.Drawing.Size(173, 37);
 			this.btnGetTime.TabIndex = 13;
 			this.btnGetTime.Text = "Get Time";
 			this.btnGetTime.UseVisualStyleBackColor = true;
 			this.btnGetTime.Click += new System.EventHandler(this.btnGetTime_Click);
-			// 
-			// tbQuoteOfTheDay
-			// 
-			this.tbQuoteOfTheDay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbQuoteOfTheDay.Location = new System.Drawing.Point(1189, 49);
-			this.tbQuoteOfTheDay.Multiline = true;
-			this.tbQuoteOfTheDay.Name = "tbQuoteOfTheDay";
-			this.tbQuoteOfTheDay.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbQuoteOfTheDay.Size = new System.Drawing.Size(286, 115);
-			this.tbQuoteOfTheDay.TabIndex = 77;
-			// 
-			// label11
-			// 
-			this.label11.AutoSize = true;
-			this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label11.Location = new System.Drawing.Point(1185, 18);
-			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(115, 20);
-			this.label11.TabIndex = 78;
-			this.label11.Text = "Quote of Day";
 			// 
 			// groupBox2
 			// 
@@ -725,7 +613,7 @@
 			this.groupBox2.Controls.Add(this.cbAlarm);
 			this.groupBox2.Controls.Add(this.tbAlarmHours);
 			this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox2.Location = new System.Drawing.Point(532, 373);
+			this.groupBox2.Location = new System.Drawing.Point(483, 365);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(285, 146);
 			this.groupBox2.TabIndex = 79;
@@ -756,120 +644,35 @@
 			this.btnFnc5.UseVisualStyleBackColor = false;
 			this.btnFnc5.Click += new System.EventHandler(this.btnFcn5_Click);
 			// 
-			// groupBox3
-			// 
-			this.groupBox3.Controls.Add(this.NextSrssLabel);
-			this.groupBox3.Controls.Add(this.btnNextSunrise);
-			this.groupBox3.Controls.Add(this.MoonsetLabel);
-			this.groupBox3.Controls.Add(this.MoonriseLabel);
-			this.groupBox3.Controls.Add(this.SunsetLabel);
-			this.groupBox3.Controls.Add(this.SunriseLabel);
-			this.groupBox3.Controls.Add(this.btnSunriseSunset);
-			this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox3.Location = new System.Drawing.Point(1185, 177);
-			this.groupBox3.Name = "groupBox3";
-			this.groupBox3.Size = new System.Drawing.Size(278, 208);
-			this.groupBox3.TabIndex = 0;
-			this.groupBox3.TabStop = false;
-			this.groupBox3.Text = "Sunrise Sunset";
-			// 
-			// NextSrssLabel
-			// 
-			this.NextSrssLabel.AutoSize = true;
-			this.NextSrssLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.NextSrssLabel.Location = new System.Drawing.Point(17, 182);
-			this.NextSrssLabel.Name = "NextSrssLabel";
-			this.NextSrssLabel.Size = new System.Drawing.Size(0, 20);
-			this.NextSrssLabel.TabIndex = 1;
-			// 
-			// btnNextSunrise
-			// 
-			this.btnNextSunrise.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnNextSunrise.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnNextSunrise.Location = new System.Drawing.Point(143, 28);
-			this.btnNextSunrise.Name = "btnNextSunrise";
-			this.btnNextSunrise.Size = new System.Drawing.Size(117, 37);
-			this.btnNextSunrise.TabIndex = 1;
-			this.btnNextSunrise.Text = "Next";
-			this.btnNextSunrise.UseVisualStyleBackColor = false;
-			this.btnNextSunrise.Click += new System.EventHandler(this.btnNextSunrise_Click);
-			// 
 			// btnSendSort
 			// 
 			this.btnSendSort.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnSendSort.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSendSort.Location = new System.Drawing.Point(1189, 396);
+			this.btnSendSort.Location = new System.Drawing.Point(272, 234);
 			this.btnSendSort.Name = "btnSendSort";
-			this.btnSendSort.Size = new System.Drawing.Size(274, 38);
+			this.btnSendSort.Size = new System.Drawing.Size(193, 38);
 			this.btnSendSort.TabIndex = 15;
 			this.btnSendSort.Text = "Sort";
 			this.btnSendSort.UseVisualStyleBackColor = false;
 			this.btnSendSort.Click += new System.EventHandler(this.btnSendSort_Click);
 			// 
-			// timer3
-			// 
-			this.timer3.Interval = 6000000;
-			this.timer3.Tick += new System.EventHandler(this.timer3_tick);
-			// 
-			// tbJournalEntry
-			// 
-			this.tbJournalEntry.AcceptsReturn = true;
-			this.tbJournalEntry.AcceptsTab = true;
-			this.tbJournalEntry.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbJournalEntry.Location = new System.Drawing.Point(272, 420);
-			this.tbJournalEntry.Multiline = true;
-			this.tbJournalEntry.Name = "tbJournalEntry";
-			this.tbJournalEntry.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbJournalEntry.Size = new System.Drawing.Size(233, 201);
-			this.tbJournalEntry.TabIndex = 84;
-			// 
-			// label12
-			// 
-			this.label12.AutoSize = true;
-			this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
-			this.label12.Location = new System.Drawing.Point(283, 384);
-			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(112, 20);
-			this.label12.TabIndex = 85;
-			this.label12.Text = "Daily Journal";
-			// 
 			// btnUnused
 			// 
 			this.btnUnused.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnUnused.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnUnused.Location = new System.Drawing.Point(23, 224);
+			this.btnUnused.Location = new System.Drawing.Point(25, 212);
 			this.btnUnused.Name = "btnUnused";
-			this.btnUnused.Size = new System.Drawing.Size(235, 61);
+			this.btnUnused.Size = new System.Drawing.Size(216, 56);
 			this.btnUnused.TabIndex = 2;
 			this.btnUnused.Text = "Unused";
 			this.btnUnused.UseVisualStyleBackColor = false;
 			this.btnUnused.Click += new System.EventHandler(this.btnUnused_Click);
 			// 
-			// tbFactoid
-			// 
-			this.tbFactoid.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbFactoid.Location = new System.Drawing.Point(866, 49);
-			this.tbFactoid.Multiline = true;
-			this.tbFactoid.Name = "tbFactoid";
-			this.tbFactoid.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbFactoid.Size = new System.Drawing.Size(286, 98);
-			this.tbFactoid.TabIndex = 86;
-			// 
-			// label8
-			// 
-			this.label8.AutoSize = true;
-			this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label8.Location = new System.Drawing.Point(866, 18);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(69, 20);
-			this.label8.TabIndex = 87;
-			this.label8.Text = "Factoid";
-			// 
 			// label9
 			// 
 			this.label9.AutoSize = true;
 			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label9.Location = new System.Drawing.Point(606, 93);
+			this.label9.Location = new System.Drawing.Point(481, 79);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(52, 20);
 			this.label9.TabIndex = 88;
@@ -878,7 +681,7 @@
 			// btnGetTemp
 			// 
 			this.btnGetTemp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnGetTemp.Location = new System.Drawing.Point(909, 540);
+			this.btnGetTemp.Location = new System.Drawing.Point(800, 409);
 			this.btnGetTemp.Name = "btnGetTemp";
 			this.btnGetTemp.Size = new System.Drawing.Size(173, 37);
 			this.btnGetTemp.TabIndex = 89;
@@ -886,28 +689,25 @@
 			this.btnGetTemp.UseVisualStyleBackColor = true;
 			this.btnGetTemp.Click += new System.EventHandler(this.btnGetTemp_Click);
 			// 
+			// timer3
+			// 
+			this.timer3.Interval = 6000000;
+			this.timer3.Tick += new System.EventHandler(this.timer3_tick);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(1487, 642);
+			this.ClientSize = new System.Drawing.Size(1005, 576);
 			this.Controls.Add(this.btnGetTemp);
 			this.Controls.Add(this.label9);
-			this.Controls.Add(this.label8);
-			this.Controls.Add(this.tbFactoid);
 			this.Controls.Add(this.btnUnused);
-			this.Controls.Add(this.label12);
-			this.Controls.Add(this.tbJournalEntry);
 			this.Controls.Add(this.btnSendSort);
-			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.btnFnc5);
 			this.Controls.Add(this.btnFnc4);
 			this.Controls.Add(this.groupBox2);
-			this.Controls.Add(this.label11);
-			this.Controls.Add(this.tbQuoteOfTheDay);
 			this.Controls.Add(this.btnGetTime);
-			this.Controls.Add(this.btnSaveJournalEntry);
 			this.Controls.Add(this.btnOutdoor);
 			this.Controls.Add(this.btnTimerSchedules);
 			this.Controls.Add(this.btnMinimize);
@@ -926,7 +726,6 @@
 			this.Controls.Add(this.btnRebootClient);
 			this.Controls.Add(this.lbAvailClients);
 			this.Controls.Add(this.btnCabin);
-			this.Controls.Add(this.btnSettings);
 			this.Controls.Add(this.btnGarageForm);
 			this.Controls.Add(this.btnFnc1);
 			this.Controls.Add(this.btnClear);
@@ -947,8 +746,6 @@
 			this.groupBox1.PerformLayout();
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
-			this.groupBox3.ResumeLayout(false);
-			this.groupBox3.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -983,7 +780,6 @@
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnFnc1;
         private System.Windows.Forms.Button btnGarageForm;
-        private System.Windows.Forms.Button btnSettings;
 		private System.Windows.Forms.Button btnCabin;
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.ComboBox cbIPAdress;
@@ -1006,14 +802,8 @@
 		private System.Windows.Forms.TextBox tbTime;
 		private System.Windows.Forms.Button btnFnc2;
 		private System.Windows.Forms.Button btnMinimize;
-		private System.Windows.Forms.Button btnSunriseSunset;
-		private System.Windows.Forms.Label SunriseLabel;
-		private System.Windows.Forms.Label SunsetLabel;
-		private System.Windows.Forms.Label MoonriseLabel;
-		private System.Windows.Forms.Label MoonsetLabel;
 		private System.Windows.Forms.Button btnTimerSchedules;
 		private System.Windows.Forms.Button btnOutdoor;
-		private System.Windows.Forms.Button btnSaveJournalEntry;
 		private System.Windows.Forms.TextBox tbAlarmMinutes;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label6;
@@ -1022,23 +812,14 @@
 		private System.Windows.Forms.Timer timer2;
 		private System.Windows.Forms.TextBox tbAlarmTick;
 		private System.Windows.Forms.Button btnGetTime;
-		private System.Windows.Forms.TextBox tbQuoteOfTheDay;
-		private System.Windows.Forms.Label label11;
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Button btnFnc4;
 		private System.Windows.Forms.Button btnFnc5;
-		private System.Windows.Forms.GroupBox groupBox3;
-		private System.Windows.Forms.Button btnNextSunrise;
-		private System.Windows.Forms.Label NextSrssLabel;
 		private System.Windows.Forms.Button btnSendSort;
-		private System.Windows.Forms.Timer timer3;
-		private System.Windows.Forms.TextBox tbJournalEntry;
-		private System.Windows.Forms.Label label12;
 		private System.Windows.Forms.Button btnUnused;
-		private System.Windows.Forms.TextBox tbFactoid;
-		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Button btnGetTemp;
+		private System.Windows.Forms.Timer timer3;
 	}
 }
 

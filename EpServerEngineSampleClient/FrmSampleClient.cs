@@ -47,9 +47,7 @@ namespace EpServerEngineSampleClient
         private List<DS1620_conversions> ds1620_list;
         private List<ClientParams> client_params;
         private List<ClientsAvail> clients_avail;
-        private List<Sunrise_sunset> sunrise_sunsets;
-        private List<SunriseSunsetHoursMinutes> sunrisesunsetHoursMinutes;
-        private SunriseSunsetHoursMinutes curr_srss_day;
+       
         private int i = 0;
         private int selected_address = 0;
         private int disconnect_attempts = 0;
@@ -64,25 +62,16 @@ namespace EpServerEngineSampleClient
         int which_winclient = -1;
         int alarm_hours, alarm_minutes, alarm_seconds;
         Int64 alarm_tick;
-        bool clk_oneoff = true;
-        bool clk_oneoff2 = true;
-		bool silent_mode = false;
-		bool play_chimes = false;
-        int next_srss = 0;
+        
 
         private string xml_params_location = "c:\\Users\\daniel\\ClientProgramData\\ClientParams.xml";
         private string xml_clients_avail_location = "c:\\Users\\daniel\\ClientProgramData\\ClientsAvail.xml";
-        private string sunrisesunset_location = "c:\\Users\\daniel\\ClientProgramData\\tdata.xml";
+        
         private int hour;
         private int minute;
         private int second;
-        private int hour_before_sunrise;
-        private int minutes_before_sunrise_5, minutes_before_sunrise_1;
-        private int hour_before_sunset;
-        private int minute_before_sunset;
-        //private string[] Todo_List;
-        private string[] Quote_of_the_Day_List;
-        private string[] Factoid_List;
+        bool clk_oneoff = true;
+
         private DateTime now;
         /* remove the min/max/close buttons in the 'frame' */
         /* or you can just set 'Control Box' to false in the properties pane for the form */
@@ -116,11 +105,7 @@ namespace EpServerEngineSampleClient
             tbReceived.Enabled = true;
             tbPort.Enabled = true;
             timer1.Enabled = true;
-            btnNextSunrise.Enabled = false;
-/*
-            ds.raw_value = 1;
-            ds.temp = "asdf";
-*/
+
             for (int i = 0; i < 8; i++)
             {
                 status[i] = false;
@@ -128,52 +113,16 @@ namespace EpServerEngineSampleClient
             tbReceived.Clear();
             cbWhichWinClient.SelectedIndex = 0;
 
-            Sunrise_sunset item2 = null;
-            if (!File.Exists(sunrisesunset_location))
-            {
-                MessageBox.Show("can't find " + sunrisesunset_location);
-                return;
-            }
-            XmlReader xmlFile2 = XmlReader.Create(sunrisesunset_location);
-            DataSet ds3 = new DataSet();
-            ds3.ReadXml(xmlFile2);
-
-            sunrise_sunsets = new List<Sunrise_sunset>();
-            now = DateTime.Now;
-            foreach (DataRow dr in ds3.Tables[0].Rows)
-            {
-                item2 = new Sunrise_sunset();
-                item2.day = Convert.ToInt16(dr.ItemArray[0]);
-                item2.month = Convert.ToInt16(dr.ItemArray[1]);
-                item2.AstTwiStart = dr.ItemArray[2].ToString();
-                item2.NautTwiStart = dr.ItemArray[3].ToString();
-                item2.CivilTwiStart = dr.ItemArray[4].ToString();
-                item2.sunrise = dr.ItemArray[5].ToString();
-                item2.sunset = dr.ItemArray[6].ToString();
-                item2.moonrise = dr.ItemArray[7].ToString();
-                item2.moonset = dr.ItemArray[8].ToString();
-                item2.AstTwiEnd = dr.ItemArray[9].ToString();
-                item2.NautTwiEnd = dr.ItemArray[10].ToString();
-                item2.CivilTwiEnd = dr.ItemArray[11].ToString();
-//                if(item2.day >= now.Day && item2.month >= now.Month)
-                sunrise_sunsets.Add(item2);
-                item2 = null;
-            }
-            AddMsg(sunrise_sunsets.Count().ToString() + " items in tdata");
-            sunrisesunsetHoursMinutes = new List<SunriseSunsetHoursMinutes>();
-            for (i = 0; i < sunrise_sunsets.Count(); i++)
-                sunrisesunsetHoursMinutes.Add(new SunriseSunsetHoursMinutes());
-            // should be just as many sunrisesunsetHoursMinutes as sunrise_sunsets records
-            // there may be/should be more than 1 month's worth
+           
             client_params = new List<ClientParams>();
             ClientParams item = null;
-            DataSet ds = new DataSet();
             if(!File.Exists(xml_params_location))
 			{
                 MessageBox.Show("can't find " + xml_params_location);
                 return;
 			}
             XmlReader xmlFile = XmlReader.Create(xml_params_location);
+            DataSet ds = new DataSet();
             ds.ReadXml(xmlFile);
             foreach (DataRow dr in ds.Tables[0].Rows)
             {
@@ -269,86 +218,7 @@ namespace EpServerEngineSampleClient
 
             i = 0;
             int j = 0;
-            foreach (Sunrise_sunset srss in sunrise_sunsets)
-			{
-                if (srss.sunrise != null)
-                {
-                    sunrisesunsetHoursMinutes[i].day = srss.day;
-                    sunrisesunsetHoursMinutes[i].month = srss.month;
-                    sunrisesunsetHoursMinutes[i].AstTwiStartHour = getHours(srss.AstTwiStart);
-                    sunrisesunsetHoursMinutes[i].AstTwiStartMinute = getMinutes(srss.AstTwiStart);
-                    sunrisesunsetHoursMinutes[i].AstTwiEndHour = getHours(srss.AstTwiEnd);
-                    sunrisesunsetHoursMinutes[i].AstTwiEndMinute = getMinutes(srss.AstTwiEnd);
-                    sunrisesunsetHoursMinutes[i].NautTwiStartHour = getHours(srss.NautTwiStart);
-                    sunrisesunsetHoursMinutes[i].NautTwiStartMinute = getMinutes(srss.NautTwiStart);
-                    sunrisesunsetHoursMinutes[i].NautTwiEndHour = getHours(srss.NautTwiEnd);
-                    sunrisesunsetHoursMinutes[i].NautTwiEndMinute = getMinutes(srss.NautTwiEnd);
-                    sunrisesunsetHoursMinutes[i].CivilTwiStartHour = getHours(srss.CivilTwiStart);
-                    sunrisesunsetHoursMinutes[i].CivilTwiStartMinute = getMinutes(srss.CivilTwiStart);
-                    sunrisesunsetHoursMinutes[i].CivilTwiEndHour = getHours(srss.CivilTwiEnd);
-                    sunrisesunsetHoursMinutes[i].CivilTwiEndMinute = getMinutes(srss.CivilTwiEnd);
-                    sunrisesunsetHoursMinutes[i].SunriseHour = getHours(srss.sunrise);
-                    sunrisesunsetHoursMinutes[i].SunriseMinute = getMinutes(srss.sunrise);
-                    sunrisesunsetHoursMinutes[i].SunsetHour = getHours(srss.sunset);
-                    sunrisesunsetHoursMinutes[i].SunsetMinute = getMinutes(srss.sunset);
-//                    if (srss.day == 1 && srss.month == 4)
-  //                      j++;
-                    sunrisesunsetHoursMinutes[i].MoonriseHour = getHours(srss.moonrise);
-                    sunrisesunsetHoursMinutes[i].MoonriseMinute = getMinutes(srss.moonrise);
-                    sunrisesunsetHoursMinutes[i].MoonsetHour = getHours(srss.moonset);
-                    sunrisesunsetHoursMinutes[i].MoonsetMinute = getMinutes(srss.moonset);
-                    i++;
-                }
-            }
-            foreach (SunriseSunsetHoursMinutes srss in sunrisesunsetHoursMinutes)
-            {
-                if (srss.day == now.Day && srss.month == now.Month)
-                {
-                    curr_srss_day = srss;
-                    break;
-                }
-            }
-            hour_before_sunrise = curr_srss_day.SunriseHour;
-            minutes_before_sunrise_1 = minutes_before_sunrise_5 = curr_srss_day.SunriseMinute;
-            calc_time_before(ref hour_before_sunrise, ref minutes_before_sunrise_5, 5);
-            calc_time_before(ref hour_before_sunrise, ref minutes_before_sunrise_1, 1);
-            hour_before_sunset = curr_srss_day.SunsetHour;
-            minute_before_sunset = curr_srss_day.SunsetMinute;
-            calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 10);
-
             i = 0;
-            if (false)
-            {
-                int temp = getHours(sunrise_sunsets[2].moonset);
-                AddMsg("hours: " + temp.ToString());
-                temp = getMinutes(sunrise_sunsets[2].moonset);
-                AddMsg("minutes: " + temp.ToString());
-
-                foreach (SunriseSunsetHoursMinutes srhm in sunrisesunsetHoursMinutes)
-                    AddMsg(srhm.SunriseHour.ToString() + " " + srhm.SunriseMinute.ToString());
-                AddMsg(" ");
-                foreach (SunriseSunsetHoursMinutes srhm in sunrisesunsetHoursMinutes)
-                    AddMsg(srhm.SunsetHour.ToString() + " " + srhm.SunsetMinute.ToString());
-
-                foreach (SunriseSunsetHoursMinutes srhm in sunrisesunsetHoursMinutes)
-                    AddMsg(srhm.MoonriseHour.ToString() + " " + srhm.MoonriseMinute.ToString());
-                AddMsg(" ");
-                foreach (SunriseSunsetHoursMinutes srhm in sunrisesunsetHoursMinutes)
-                    AddMsg(srhm.MoonsetHour.ToString() + " " + srhm.MoonsetMinute.ToString());
-            }
-            btnSunriseSunset_Click(new object(), new EventArgs());
-            //AddMsg("Month: " + now.ToString("MMMM"));
-
-            if (File.Exists(str_quote_of_the_day_file))
-			{
-                Quote_of_the_Day_List = System.IO.File.ReadAllLines(str_quote_of_the_day_file);
-                DisplayQuoteOfTheDay();
-            }
-            if (File.Exists(str_factoid_file))
-            {
-                Factoid_List = System.IO.File.ReadAllLines(str_factoid_file);
-                DisplayFactoid();
-            }
             DS1620_conversions ds1 = null;
             ds1620_list = new List<DS1620_conversions>();
             string dslist_filename = @"C:\Users\Daniel\ClientProgramData\dslist.txt";
@@ -368,24 +238,6 @@ namespace EpServerEngineSampleClient
 
             // turn off east light because it is on by default (relay is wired nc)
             //svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
-        }
-        private void DisplayQuoteOfTheDay()
-		{
-            int iter = (int)Properties.Settings.Default["Quote_iter"];
-            if (++iter > 365)
-                iter = 0;
-            tbQuoteOfTheDay.Text = Quote_of_the_Day_List[iter];
-            Properties.Settings.Default["Quote_iter"] = iter;
-            //AddMsg("quote: " + iter.ToString());
-        }
-        private void DisplayFactoid()
-        {
-            int iter = (int)Properties.Settings.Default["Factoid_iter"];
-            if (++iter > 354)
-                iter = 0;
-            tbFactoid.Text = Factoid_List[iter];
-            Properties.Settings.Default["Factoid_iter"] = iter;
-            //AddMsg("factoid: " + iter.ToString());
         }
         private int getMinutes(string time)
 		{
@@ -479,6 +331,7 @@ namespace EpServerEngineSampleClient
                     client_connected = false;
                     connect_buttons(false);
                     m_client.Disconnect();
+                    lbAvailClients.Items.Clear();
                 }
             }
             else AddMsg("chose which client this is");
@@ -583,15 +436,16 @@ namespace EpServerEngineSampleClient
         {
             lbAvailClients.Items.Clear();
             int i = 0;
-            //AddMsg("redraw: ");
+            int k = 0;
             foreach (ClientsAvail j in clients_avail)
             {
-                //AddMsg(j.ip_addr + " " + j.label + " " + j.socket.ToString() + " " + j.type);
                 if (j.socket > 0 && j.type != 0)
                 {
                     string temp = j.label + " " + j.ip_addr + " " + j.socket.ToString();
+                 
                     lbAvailClients.Items.Add(temp);
                     j.lbindex = i;
+                    AddMsg(j.ip_addr + " " + j.label + " " + j.socket.ToString() + " " + j.type);
                     i++;
                 }
                 else j.lbindex = -1;
@@ -996,102 +850,23 @@ namespace EpServerEngineSampleClient
                 tTime = tTime.Substring(0, 8);
                 tbTime.Text = tTime;
 
-                if (minute == 0 && clk_oneoff)
+               
+                if (minute == 1 && clk_oneoff)
                 {
-                    int xhour = hour;
-                    if (xhour > 12)
-                        xhour -= 12;
                     clk_oneoff = false;
-                    clk_oneoff2 = true;
-                    clock_chime(xhour);
-                    /*
-                    if(xhour == 0)
-                        AddMsg("The time is 12 midnight");
-                    else if(xhour == 12)
-                        AddMsg("The time is: 12 noon");
-                    else
-                        AddMsg("The time is: " + xhour.ToString() + " O'Clock");
-                    */
-                }
-                if (minute == 1 && clk_oneoff2)
-                {
-                    clk_oneoff = true;
-                    clk_oneoff2 = false;
+               
                     foreach (ClientsAvail cl in clients_avail)
                     {
                         if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
                         {
                             svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
+                            AddMsg(cl.label);
                         }
                     }
                 }
-                if (hour == curr_srss_day.AstTwiStartHour && minute == curr_srss_day.AstTwiStartMinute && second == 0)
-                {
-                    play_tone(0);
-                    AddMsg("start of Ast Twilight");
-                }
-                else if (hour == curr_srss_day.NautTwiStartHour && minute == curr_srss_day.NautTwiStartMinute && second == 0)
-                {
-                    play_tone(1);
-                    AddMsg("start of Naut Twilight");
-                }
-                else if (hour == curr_srss_day.CivilTwiStartHour && minute == curr_srss_day.CivilTwiStartMinute && second == 0)
-                {
-                    play_tone(2);
-                    AddMsg("start of Civil Twilight");
-                }
-                /*
-                else if (hour == hour_before_sunrise && minute == minutes_before_sunrise_1 && second == 0)
-                {
-                    play_tone(9);
-                    AddMsg("One Minutes before sunrise");
-                }
-                */
-                else if (hour == hour_before_sunrise && minute == minutes_before_sunrise_5 && second == 0)
-                {
-                    play_tone(7);
-                    AddMsg("Five Minutes before sunrise");
-                }
-                else if (hour == curr_srss_day.SunriseHour && minute == curr_srss_day.SunriseMinute && second == 0)
-                {
-                    play_sunrise_clip();
-                    AddMsg("sunrise");
-                    //AddMsg(now.Day.ToString());
-                    //AddMsg(sunrise_sunsets[now.Day].sunrise);
-                    //SunriseLabel.Text = sunrise_sunsets[now.Day].sunrise + " tomorrow";
-                }
-                else if (hour == hour_before_sunset && minute == minute_before_sunset && second == 0)
-                {
-                    play_tone(8);
-                    AddMsg("Ten Minutes before sunset");
-                }
-                else if (hour == curr_srss_day.SunsetHour && minute == curr_srss_day.SunsetMinute && second == 0)
-                {
-                    play_tone(6);
-                    AddMsg("sunset");
-                    //tbSunrise.Text = "now";
-                    //SunriseLabel.Text = sunrise_sunsets[now.Day].sunrise + " tomorrow";
-                }
-                else if (hour == curr_srss_day.CivilTwiEndHour && minute == curr_srss_day.CivilTwiEndMinute && second == 0)
-                {
-                    play_tone(5);
-                    AddMsg("end of Civil Twilight");
-                }
-                else if (hour == curr_srss_day.NautTwiEndHour && minute == curr_srss_day.NautTwiEndMinute && second == 0)
-                {
-                    play_tone(4);
-                    AddMsg("end of Naut Twilight");
-                }
-                else if (hour == curr_srss_day.AstTwiEndHour && minute == curr_srss_day.AstTwiEndMinute && second == 0)
-                {
-                    play_tone(3);
-                    AddMsg("end of Ast Twilight");
-                }
-                else if (hour == 23 && minute == 59 && second == 0)
-				{
-                    SaveJournalEntry();
-                    tbJournalEntry.Clear();
-                }
+                if (minute == 2)
+                    clk_oneoff = true;
+
                 else if (hour == 0 && minute == 0 && second == 0)
                 {
                     DateTime now2 = DateTime.Now;
@@ -1099,25 +874,13 @@ namespace EpServerEngineSampleClient
                     int space = t2date.IndexOf(" ");
                     t2date = t2date.Remove(space);
                     tbTodaysDate.Text = t2date;
-                    btnSunriseSunset_Click(new object(), new EventArgs());
+
                     //play_tone(9);
                     //AddMsg("midnight");
                 }
                 else if (hour == 0 && minute == 1 && second == 0)
                 {
-                    foreach (SunriseSunsetHoursMinutes srss in sunrisesunsetHoursMinutes)
-                    {
-                        if (srss.day == now.Day && srss.month == now.Month)
-                            curr_srss_day = srss;
-                        hour_before_sunrise = curr_srss_day.SunriseHour;
-                        minutes_before_sunrise_5 = curr_srss_day.SunriseMinute;
-                        calc_time_before(ref hour_before_sunrise, ref minutes_before_sunrise_5, 5);
-                        hour_before_sunset = curr_srss_day.SunsetHour;
-                        minute_before_sunset = curr_srss_day.SunsetMinute;
-                        calc_time_before(ref hour_before_sunset, ref minute_before_sunset, 10);
-                    }
-                    DisplayQuoteOfTheDay();
-                    DisplayFactoid();
+
                 }
             }
             if (tick == 4)
@@ -1156,137 +919,6 @@ namespace EpServerEngineSampleClient
             }
             if(tick > 1600)
                 tick = 36;
-        }
-        private void calc_time_before(ref int hour, ref int minutes, int offset)
-		{
-            if (minutes < offset)
-            {
-                hour--;
-                minutes = minutes + 60 - offset;
-
-            } else minutes -= offset;
-		}
-        private void calc_time_after(ref int hour, ref int minutes, int offset)
-        {
-            if (minutes + offset > 60)
-            {
-                hour++;
-                minutes = minutes + offset - 60;
-            }
-            else minutes += offset;
-        }
-        void play_sunrise_clip()
-        {
-			if(silent_mode)
-				return;
-            //AddMsg("playing sunrise.wav...");
-            System.Media.SoundPlayer player;
-            string song = "c:\\users\\Daniel\\Music\\sunrise.wav";
-            player = new System.Media.SoundPlayer();
-            player.SoundLocation = song;
-            player.Play();
-            player.Dispose();
-        }
-        void clock_chime(int hour)
-		{
-			if(!play_chimes)
-				return;
-            System.Media.SoundPlayer player;
-            string song = "c:\\users\\Daniel\\Music\\ClockChimes";
-            switch (hour)
-            {
-                case 1:
-                    song += "(1).wav";
-                    break;
-                case 2:
-                    song += "(2).wav";
-                    break;
-                case 3:
-                    song += "(3).wav";
-                    break;
-                case 4:
-                    song += "(4).wav";
-                    break;
-                case 5:
-                    song += "(5).wav";
-                    break;
-                case 6:
-                    song += "(6).wav";
-                    break;
-                case 7:
-                    song += "(7).wav";
-                    break;
-                case 8:
-                    song += "(8).wav";
-                    break;
-                case 9:
-                    song += "(9).wav";
-                    break;
-                case 10:
-                    song += "(10).wav";
-                    break;
-                case 11:
-                    song += "(11).wav";
-                    break;
-                case 12:
-                    song += "(12).wav";
-                    break;
-                default:
-                    song += "(12).wav";
-                    break;
-            }
-            player = new System.Media.SoundPlayer();
-            player.SoundLocation = song;
-            player.Play();
-            player.Dispose();
-        }
-        void play_tone(int which)
-        {
-			if(silent_mode)
-				return;
-            //AddMsg("playing sunrise.wav...");
-            System.Media.SoundPlayer player;
-            string song = "c:\\users\\Daniel\\Music\\";
-            switch(which)
-			{
-                case 0:
-                    song += "startAst.wav";
-                    break;
-                case 1:
-                    song += "startNaut.wav";
-                    break;
-                case 2:
-                    song += "startCivil.wav";
-                    break;
-                case 3:
-                    song += "endAst.wav";
-                    break;
-                case 4:
-                    song += "endNaut.wav";
-                    break;
-                case 5:
-                    song += "endCivil.wav";
-                    break;
-                case 6:
-                    song += "sunset.wav";
-                    break;
-                case 7:
-                    song += "Five_Minutes_Before_Sunrise.wav";
-                    break;
-                case 8:
-                    song += "Ten_Minutes_Before_Sunset.wav";
-                    break;
-                case 9:
-                    song += "One_Minute_Before_Sunrise.wav";
-                    break;
-                default:
-                    song += "tone440.wav";
-                    break;
-			}
-            player = new System.Media.SoundPlayer();
-            player.SoundLocation = song;
-            player.Play();
-            player.Dispose();
         }
         private void IPAddressChanged(object sender, EventArgs e)
         {
@@ -1367,23 +999,6 @@ namespace EpServerEngineSampleClient
                 AddMsg(msg + " " + temp);
             }
         }
-        private void SaveJournalEntry()
-		{
-            string[] lines = new string[2];
-            string temp = "";
-            DateTime localDate = DateTime.Now;
-            String cultureName = "en-US";
-            var culture = new CultureInfo(cultureName);
-            temp = localDate.ToString(culture);
-            string docPath = @"c:\users\daniel\documents\DailyJournal.txt";
-            //AddMsg(docPath);
-            //AddMsg(tbJournalEntry.Text);
-            using (StreamWriter sw = File.AppendText(docPath))
-            {
-                sw.WriteLine(temp);
-                sw.WriteLine(tbJournalEntry.Text);
-            }
-        }
         private void AvailClientSelIndexChanged(object sender, EventArgs e)
         {
             AvailClientCurrentSection = lbAvailClients.SelectedIndex;
@@ -1430,6 +1045,8 @@ namespace EpServerEngineSampleClient
         }
         private void btnSendMsg_Click(object sender, EventArgs e)
         {
+            if (tbSendMsg.Text.Length == 0)
+                sendmsgtext = "test asdf";
             SendClientMsg(svrcmd.GetCmdIndexI("SEND_MESSAGE"), sendmsgtext, false);
         }
         private void bSetClientTime_Click(object sender, EventArgs e)
@@ -1651,39 +1268,7 @@ namespace EpServerEngineSampleClient
             if(iResult == 55)
                 this.WindowState = FormWindowState.Minimized;
         }
-		private void btnSunriseSunset_Click(object sender, EventArgs e)
-		{
-            // TODO: if after sunrise then show tomorrow's stats for sunrise (Ast, Naut & Civil)
-            // if after sunset then show tomorrow's stats for sunset
-            btnNextSunrise.Enabled = true;
-            now = DateTime.Now;
-            next_srss = 0;
-            tbReceived.Clear();
-            foreach(Sunrise_sunset srss in sunrise_sunsets)
-			{
-                if(srss.day == now.Day && srss.month == now.Month)
-				{
-                    AddMsg("Ast start " + srss.AstTwiStart);
-                    AddMsg("Naut start " + srss.NautTwiStart);
-                    AddMsg("Civil start " + srss.CivilTwiStart);
-                    AddMsg("sunrise: " + srss.sunrise);
-                    AddMsg("sunset: " + srss.sunset);
-                    AddMsg("Civil end " + srss.CivilTwiEnd);
-                    AddMsg("Naut end " + srss.NautTwiEnd);
-                    AddMsg("Ast end " + srss.AstTwiEnd);
-                    AddMsg("moonrise: " + srss.moonrise);
-                    AddMsg("moonset: " + srss.moonset);
-                    SunriseLabel.Text = "sunrise: " + srss.sunrise + " today";
-                    SunsetLabel.Text = "sunset: " + srss.sunset + " tonite";
-                    MoonriseLabel.Text = "moonrise: " + srss.moonrise;
-                    MoonsetLabel.Text = "moonset: " + srss.moonset;
-                    NextSrssLabel.Text = "";
-                    return;
-                }
-                next_srss++;
-            }
-            
-        }
+		
         private void btnTimer_Click(object sender, EventArgs e)
 		{
             timer_schedule.StartPosition = FormStartPosition.Manual;
@@ -1705,18 +1290,6 @@ namespace EpServerEngineSampleClient
             else
             {
             }
-        }
-		private void btnSettings_Click(object sender, EventArgs e)
-		{
-            Settings dlg = new Settings();
-            if (dlg.ShowDialog(this) == DialogResult.OK)
-            {
-                silent_mode = (bool)Properties.Settings.Default["silent_mode"];
-                play_chimes = (bool)Properties.Settings.Default["play_chimes"];
-            }
-            dlg.Dispose();
-            AddMsg("silent mode: " + silent_mode.ToString());
-            AddMsg("play chimes: " + play_chimes.ToString());
         }
         private void cbAlarm_CheckedChanged(object sender, EventArgs e)
 		{
@@ -1768,35 +1341,7 @@ namespace EpServerEngineSampleClient
             {
             }
         }
-        private void btnNextSunrise_Click(object sender, EventArgs e)
-		{
-            if (next_srss < sunrise_sunsets.Count()-1)
-            {
-                next_srss++;
-                tbReceived.Clear();
-                AddMsg("Ast start " + sunrise_sunsets[next_srss].AstTwiStart);
-                AddMsg("Naut start " + sunrise_sunsets[next_srss].NautTwiStart);
-                AddMsg("Civil start " + sunrise_sunsets[next_srss].CivilTwiStart);
-                AddMsg("sunrise: " + sunrise_sunsets[next_srss].sunrise);
-                AddMsg("sunset: " + sunrise_sunsets[next_srss].sunset);
-                AddMsg("Civil end " + sunrise_sunsets[next_srss].CivilTwiEnd);
-                AddMsg("Naut end " + sunrise_sunsets[next_srss].NautTwiEnd);
-                AddMsg("Ast end " + sunrise_sunsets[next_srss].AstTwiEnd);
-                AddMsg("moonrise: " + sunrise_sunsets[next_srss].moonrise);
-                AddMsg("moonset: " + sunrise_sunsets[next_srss].moonset);
-                SunriseLabel.Text = "sunrise: " + sunrise_sunsets[next_srss].sunrise + " today";
-                SunsetLabel.Text = "sunset: " + sunrise_sunsets[next_srss].sunset + " tonite";
-                MoonriseLabel.Text = "moonrise: " + sunrise_sunsets[next_srss].moonrise;
-                MoonsetLabel.Text = "moonset: " + sunrise_sunsets[next_srss].moonset;
-                NextSrssLabel.Text = sunrise_sunsets[next_srss].month.ToString() + '/' + sunrise_sunsets[next_srss].day.ToString();
-            }
-            else
-            {
-                next_srss = 0;
-                btnNextSunrise.Enabled = false;
-                NextSrssLabel.Text = "";
-            }
-        }
+       
 		private void btnSendSort_Click(object sender, EventArgs e)
 		{
             int dest = -1;
@@ -1824,9 +1369,9 @@ namespace EpServerEngineSampleClient
 
 		private void btnUnused_Click(object sender, EventArgs e)
 		{
-            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
+            //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
             //AddMsg("send client list");
-            //RedrawClientListBox();
+            RedrawClientListBox();
         }
 
 		private void btnGetTemp_Click(object sender, EventArgs e)
@@ -1840,11 +1385,6 @@ namespace EpServerEngineSampleClient
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-		{
-            SaveJournalEntry();
-            tbJournalEntry.Clear();
-        }
 		private void tbAlarmMinutes_TextChanged(object sender, EventArgs e)
         {
             alarm_minutes = int.Parse(tbAlarmMinutes.Text);

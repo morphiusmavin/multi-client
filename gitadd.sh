@@ -36,14 +36,14 @@ git add queue/rdwr.h
 git add queue/rdwr.c
 
 git add thread_client/ts4600sock.mak
-git add thread_client/ts4600_147.mak
-git add thread_client/ts4600_154.mak
-git add thread_client/ts4600_150.mak
-git add thread_client/ts4600_151.mak
+#git add thread_client/ts4600_147.mak
+#git add thread_client/ts4600_154.mak
+#git add thread_client/ts4600_150.mak
+#git add thread_client/ts4600_151.mak
 git add thread_client/sched.c
 git add thread_client/sock_mgt.c
 git add thread_client/sock_sched.c
-git add thread_client/do1.sh
+#git add thread_client/do1.sh
 
 git add EpServerEngineSampleClient/*
 

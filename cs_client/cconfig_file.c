@@ -61,7 +61,7 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 		printf("invalid file format\n");
 		return -1;
 	}
-	printf("sizeof: %d\n",sizeof(C_DATA));
+	//printf("sizeof: %d\n",sizeof(C_DATA));
 	for(i = 0;i < NO_CLLIST_RECS;i++)
 	{
 		ret += read(fp,&c_data,sizeof(C_DATA));

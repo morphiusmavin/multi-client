@@ -490,7 +490,7 @@ printf("\n");
 			{
 				case GET_TEMP4:
 					printf("ds_index: %d\n",ds_index);
-					if(ds_index > 1)
+					if(ds_index > 0)
 					{
 						dllist_find_data(ds_index, dtpp, &dll);
 						printf("%d:%d:%d - %s\n",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
@@ -500,7 +500,7 @@ printf("\n");
 					break;
 
 				case SEND_CLIENT_LIST:
-					//printf("send client list :");
+					printf("send client list :");
 					send_sock_msg(tempx, msg_len, SEND_CLIENT_LIST, _SERVER);
 					break;
 

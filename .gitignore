@@ -42,3 +42,4 @@ nbus/mapdump_mak
 nbus/test_serial.c
 test_ports.c
 thread_client/cdata.dat
+mc_aux/*
