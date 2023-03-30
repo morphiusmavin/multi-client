@@ -144,27 +144,15 @@ UCHAR sock_timer(int test)
 	//printf("sock_timer starting %d\n",s_tick);
 	while(TRUE)
 	{
-		uSleep(5,0);
-//		if(client_table[0].socket > 0 && client_table[0].type != WINDOWS_CLIENT)
+		uSleep(2,0);
+		/*
+		strcpy(tempx,"testing \0");
+		if((s_tick % 2) == 0)
+			send_msg(client_table[_147].socket, strlen(tempx),&tempx[0],SEND_MESSAGE);
+		else send_msg(client_table[_154].socket, strlen(tempx),&tempx[0],SEND_MESSAGE);
+		*/
 		s_tick++;
 		//printf("%d \n",s_tick);
-/*
-		if(client_table[0].socket > 0)
-		{
-			sprintf(tempx,"%03d",s_tick);
-			//printf("tick: %s\n",tempx);
-			// send msg to win client (SECOND_WINDOWS7)
-			// WIN7-X64 is client_table[1] 
-			send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,AREYOUTHERE);
-		}
-
-		if(s_tick > 10 && client_table[0].socket > 0)
-		{
-			close(client_table[0].socket);
-			client_table[0].socket = -1;
-			printf("sock closed...\n");
-		}
-*/
 		if(shutdown_all == 1)
 		{
 			printf("sock_timer shutdown\n");
@@ -237,7 +225,7 @@ UCHAR get_host_cmd_task(int test)
 //		if(cmd > 0)
 		rc = 0;
 		//printf("server get_cmd_host :");
-		//print_cmd(cmd);
+		print_cmd(cmd);
 		switch(cmd)
 		{
 			case DS1620_MSG:
@@ -247,7 +235,7 @@ UCHAR get_host_cmd_task(int test)
 			case SORT_CLLIST:
 				msg_len = 0;
 				// 2 is start of clients (skipping win cl) and 8 is server 
-				for(i = 2;i < 8;i++)
+				for(i = _154;i <= _SERVER;i++)
 				{
 					if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 					{
@@ -262,7 +250,7 @@ UCHAR get_host_cmd_task(int test)
 				break;
 
 			case SET_TIME:
-				printf("set time\n");
+				//printf("set time\n");
 				break;
 
 			case SEND_CLIENT_LIST:
@@ -277,7 +265,7 @@ UCHAR get_host_cmd_task(int test)
 						{
 							memset(write_serial_buff,0,sizeof(write_serial_buff));
 							sprintf(write_serial_buff,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-							printf("%s\n",write_serial_buff);
+							//printf("%s\n",write_serial_buff);
 							//printf("%d\n",strlen(write_serial_buff));
 
 							send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
@@ -534,7 +522,7 @@ if(cmd == DB_LOOKUP)
 				if(client_table[win_client_to_client_sock].socket > 0)
 				{
 					send_msg(client_table[win_client_to_client_sock].socket, msg_len, (UCHAR*)tempx,cmd);
-				}else printf("bad socket\n");
+				}else printf("bad socket %d\n",win_client_to_client_sock);
 				//printf("sent: %s\n", msg.mtext);
 				//printf("\n");
 			}
@@ -614,7 +602,7 @@ startover1:
 			//printf("ret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			printf("dest: %d\n",dest);
+			//printf("dest: %d\n",dest);
 /*
 			for(i = 0;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);
@@ -625,8 +613,8 @@ startover1:
 			printf("\n");
 */
 			//printf("cmd: %d\n",cmd);
-			printf("read task: %d\n",index);
-			print_cmd(cmd);
+			//printf("read task: %d\n",index);
+			//print_cmd(cmd);
 			memmove(tempx,tempx+2,msg_len);
 /*
 			for(i = 0;i < msg_len;i++)

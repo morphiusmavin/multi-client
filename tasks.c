@@ -636,7 +636,7 @@ int change_output(int index, int onoff)
 			break;
 	}
 	pthread_mutex_unlock(&io_mem_lock);
-//	printf("change output: %d %d\r\n",index,onoff);
+	//printf("change output: %d %d\r\n",index,onoff);
 
 //	sprintf(tempx,"%d %d %d", bank, index, onoff);
 //	myprintf1(tempx);
@@ -1007,7 +1007,7 @@ UCHAR timer_task(int test)
 						printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
 						onoff = count_down[i].onoff;
 						add_msg_queue(count_down[i].port+offset, onoff);
-						printf("%d\n",onoff);
+						printf("%d %d %d\n",count_down[i].port, offset, onoff);
 						//remove_top_countdown();
 					}
 				}

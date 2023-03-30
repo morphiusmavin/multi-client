@@ -1,55 +1,30 @@
 todo: 
 
-1) reboot, exit to shell and shutdown all work for clients and server, except
-	exit to shell doesn't work for server (not that I would ever want to exit to shell on server tho)
-2) input for motion sensors (use odata database?)
-3) if both win clients are up one should be doing some things - have a way for win clients 
+1) input for motion sensors (use odata database?)
+2) if both win clients are up one should be doing some things - have a way for win clients 
 	to talk to each other 
-4) SEND_CLIENT_LIST from cmd_tasks to sock_mgt shouldn't need any params (line 306 in cmd_tasks.c) 
-5) Hook up temp sensors and use as triggers for ports (heat strips) or warnings 
-6) Clients/Server should send a msg back to Winclient after Winclient logs in saying that they 
+3) Hook up temp sensors and use as triggers for ports (heat strips) or warnings 
+4) Clients/Server should send a msg back to Winclient after Winclient logs in saying that they 
 	already have their time set 
-7) 154 turns on ports it's not supposed to (fixed - see line 21 in ioports.h )
-	but had to disable monitor_fake_input_task() because of 'bad mask 1' error 
+5)	Had to disable monitor_fake_input_task() because of 'bad mask 1' error 
 	monitor_fake_input_task reacts to change_input() used in old Truck_Project1 
-8) If moonrise is about an hour after sunset, then alert when moon will rise (5 minutes before)
-	(so I can go out on the porch and watch the moonrise)
-9) Need a 'gate' for all ports controlled by timer schedule, and possibly the same 
-		for each port so I can turn it off if I need to conserve power because of
-		cloudy days ahead. (use 'state' field in db)
-10) Move coop heaters, lights & outdoor lights to 147, replace 147 w/4600 and put 150 in NW corner 
-11) change COUNTDOWN_SIZE to NUMDB_RECS and set to 20 and fix real_banks
-12) ds1620 dialog must set valid sensors and time intervals. Also, whether to truncate, rename
-	or download the ddata.dat file. 
-	value of ds_interval:
-		0 - 1/2 second
-		1 - 1 second 
-		2 - 5 seconds
-		3 - 15 seconds 
-		4 - 30 seconds 
-		5 - 1 minute 
-		6 - 5 minutes 
-		7 - 10 minutes 
-		default - 1 minute 
-13) could possibly rename the ddata.dat file every hour with the day/month/hour in the filename 
-	to save space, but not worth the trouble, really - until we start running out of space 
-14) be nice if clients could just log off (but how they gonna log back in?)
-15) win client is now eating up memory for some reason
-16) try getting the mqtt library working with the 4600 cards
-17) need a config file for each client/server which stores:
+6) Move coop heaters, lights & outdoor lights to 147, replace 147 w/4600 and put 150 in NW corner 
+7) be nice if clients could just log off (but how they gonna log back in?)
+8) win client is now eating up memory for some reason
+9) try getting the mqtt library working with the 4600 cards
+10) need a config file for each client/server which stores:
 	a) params for DS1620: enabled, which ones are valid, frequency of samples 
 	b) 
+11) need a suscinct way to assign ports and see them show up in the cdata.dat output 
 
 to add new commands:
 
 1) add to the enum in cmd_types.h 
 2) add to load_cmds.c 
 3) inc the NO_CMDS define in mytypes.h 
-4) copy to multi-client.zip (pack) 
-5) ssh out to 148 
-6) unzip -o ~/multi-client.zip into ~/dev/multi-client directory 
-7) go back to either thread_client or thread_server and 
-	compile as usual 
+4) use peazip to make tar file 
+5) ssh out to all
+6) run do3.sh on all
 	
 When changing the number or order of clients:
 1) make sure ClientAvail.xml is updated 
@@ -66,7 +41,6 @@ set to '0' - currently, the win client sets which client sends to which.
 can't send/recv more than 255 bytes using send_msg() or get_msg() (TCP)
 If server gets msg to shutdown, reboot, etc. then it must log off all 
 clients 
-If client(s) gets msg to shutdown, reboot, etc. then server stays up 
 
 In the first case all the commands would be in the cmd_types.h and would 
 be limited to 255 total commands. 
@@ -74,7 +48,7 @@ be limited to 255 total commands.
 146 (server) is where the pi used to be (controlling garage lights)	(offset 8 in client_table[])
 154 is cabin	(offset 2 in client_table)
 147 is other io card in garage near RE system (testbench)	(offset 3)
-150 is io card outside garage mounted on back of chicken coop* (offset 4)
+150 is io card (outside) (offset 4)
 151	" offset 5
 155	" offset 6
 145	" offset 7
@@ -86,7 +60,7 @@ be limited to 255 total commands.
 
 * may want to have 150 at the nw corner of the garage and have a sep relay board outside for 
 	the chicken coops - run the 12v supply out to the relay board as signals for the relays 
-	and use 147 for the chicken coop 
+	and use 147 for the chicken coop and outdoor lights
 
 when sending array of bytes from WinCl to svr/cl 
 array must be 2x what's needed 
@@ -126,12 +100,16 @@ if (msgrcv(sched_qid, (void *) &msg, ...
 does switch/case and can use send_sock_msg() to send a message back to 
 the sock_mgt 
 
-get_host_cmd_task in both server/client's sock_mgt wait for msg 
-from their sched programs:
+get_host_cmd_task in server's sock_mgt wait for msg 
+from sched:
 if (msgrcv(sock_qid, (void *) &msg, ...
 
-both of these can either send a msg back to sched, to one of the clients 
+it can either send a msg back to sched, to one of the clients 
 using the tcp send_msg() or to the windows client using send_msgb() 
+
+get_host_cmd_task in client's sock_mgt waits for msg 
+from tcp and relays it onto the sched with no switch/case
+statements like the server's get_host_cmd_task does
 
 UCHAR recv_msg_task() in client sock_mgt waits for msg from sched and 
 relays it to tcp (send_msg())
@@ -159,8 +137,6 @@ ReadTask (1 for each client)
 		send_msg(client_table[dest].socket... (tcp)
 
 need to know the destination because it's used by ReadTask in server 
-
-
 	
 idea for detecting if client is still up:
 	use START_TIMER/STOP_TIMER msg's to send AREYOUTHERE msg to 
@@ -170,11 +146,6 @@ idea for detecting if client is still up:
 	
 there's no lag with client in cabin using a wire across the ground 
 as opposed to using the TP-Links. 
-
-system needs to know what time it is (use system time functions) but 
-also have a list of sunrise and sunset for the entire year so e.g. it 
-can know when to turn lights on/off in chicken coop to extend laying 
-time for hens and turn on night lights at dusk. 
 
 ethernet wire colors 
 used:

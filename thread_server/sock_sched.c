@@ -115,7 +115,7 @@ int main(int argc, char **argv)
 /* spawn the threads */
 
 	assign_client_table();
-	printf("\n");
+	//printf("\n");
 
 	for (i = 0; i < NUM_SOCK_TASKS; i++)
 	{

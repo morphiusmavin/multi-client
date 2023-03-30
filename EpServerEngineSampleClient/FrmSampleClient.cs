@@ -445,7 +445,7 @@ namespace EpServerEngineSampleClient
                  
                     lbAvailClients.Items.Add(temp);
                     j.lbindex = i;
-                    AddMsg(j.ip_addr + " " + j.label + " " + j.socket.ToString() + " " + j.type);
+                    //AddMsg(j.ip_addr + " " + j.label + " " + j.socket.ToString() + " " + j.type);
                     i++;
                 }
                 else j.lbindex = -1;
@@ -556,10 +556,10 @@ namespace EpServerEngineSampleClient
                     i = 0;
                     int j = 0;
                     int sock = -1;
-                    AddMsg(ret);
+                    //AddMsg(ret);
                     string clmsg = " ";
                     bool avail = false;
-                    AddMsg("SEND_CLIENT_LIST ");
+                    //AddMsg("SEND_CLIENT_LIST ");
                     foreach (var word in words)
                     {
                         switch (i)
@@ -883,7 +883,7 @@ namespace EpServerEngineSampleClient
 
                 }
             }
-            if (tick == 4)
+            if (tick == 2)
             {
                 if (m_client.IsConnectionAlive)
                 {
@@ -893,7 +893,7 @@ namespace EpServerEngineSampleClient
                 }
 
             }
-            if (clients_inited == false && tick == 6)
+            if (clients_inited == false && tick == 3)
             {
                 //AddMsg("set time");
                 if (m_client.IsConnectionAlive)
@@ -902,18 +902,18 @@ namespace EpServerEngineSampleClient
                     {
                         if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
                         {
-                            AddMsg(cl.label);
+                            //AddMsg(cl.label);
                             SetTime(cl.index);
                         }
                     }
                 }
             }
-            if (clients_inited == false && tick == 8)
+            if (clients_inited == false && tick == 4)
             {
                 if (m_client.IsConnectionAlive)
                 {
                     UpdateClientInfo();
-                    AddMsg("update client info");
+                    //AddMsg("update client info");
                     clients_inited = true;
                 }
             }
@@ -1068,7 +1068,8 @@ namespace EpServerEngineSampleClient
                 //  if(cl.socket > 0)   // to do all at once
                 {
                     //AddMsg(cl.label + " " + cl.index.ToString() + " " + cl.lbindex.ToString());
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
+                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_CONFIG2"), cl.index, " ");
                 }
             }
         }

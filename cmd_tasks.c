@@ -384,23 +384,13 @@ UCHAR get_host_cmd_task(int test)
 		onoff = tempx[0];
 
 /*
-printf("onoff: %d\n",onoff);
-
 for(i = 0;i < msg_len;i++)
 	printf("%02x ",tempx[i]);
-
-printf("\n");
-
-for(i = 0;i < 4;i++)
-	printf("%02x ",msg.mtext[i]);
 
 printf("\n");
 */
 		if(cmd > 0)
 		{
-//				printf("cmd: %d %s\n",cmd,cmd_array[cmd].cmd_str);
-//				printf("%s\r\n",cmd_array[cmd].cmd_str);
-
 			rc = 0;
 
 			switch(cmd)
@@ -472,7 +462,6 @@ printf("\n");
 					memset(tempx,0,sizeof(tempx));
 					//send_serialother(cmd,(UCHAR *)tempx);
 					add_msg_queue(cmd, onoff);
-					WriteParams("config.bin", &ps, password, errmsg);
 					break;
 				default:
 					break;
@@ -483,6 +472,7 @@ printf("\n");
 				//printf("sending shutdown send sock msg: ");
 				//print_cmd(cmd);
 				send_sock_msg(tempx, 1, cmd, _SERVER);
+				WriteParams("config.bin", &ps, password, errmsg);
 				return 1;
 			}
 
@@ -500,7 +490,7 @@ printf("\n");
 					break;
 
 				case SEND_CLIENT_LIST:
-					printf("send client list :");
+					//printf("send client list :");
 					send_sock_msg(tempx, msg_len, SEND_CLIENT_LIST, _SERVER);
 					break;
 
@@ -571,7 +561,7 @@ printf("\n");
 					break;
 
 				case SHOW_CLLIST:
-					printf("show cllist\n");
+					//printf("show cllist\n");
 					j = cllist_show(&cll);
 					if(j == -1)
 					{
@@ -624,7 +614,6 @@ printf("\n");
 				break;
 
 				case SAVE_CLLIST:
-					printf("%d %s\n",csize,cFileName);
 					clWriteConfig(cFileName,&cll,csize,errmsg);
 					break;
 
@@ -641,22 +630,8 @@ printf("\n");
 							printf("%s\n",tempx);
 							cmd = REPLY_CLLIST;
 							msg_len = strlen(tempx);
-							send_sock_msg(tempx, msg_len, cmd, _SERVER);
-							/*
-							msg.mtext[0] = cmd;
-							msg_len = strlen(tempx);
-							msg.mtext[1] = (UCHAR)msg_len;
-							msg.mtext[2] = (UCHAR)(msg_len >> 4);
-							strncpy(msg.mtext+3,tempx,msg_len);
-
-							if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-							{
-								perror("msgsnd error");
-								printf("exit from send client list\n");
-								exit(EXIT_FAILURE);
-							}
-							*/
-							uSleep(0,TIME_DELAY/4);
+							send_sock_msg(tempx, msg_len, cmd, _149);
+							uSleep(0,TIME_DELAY/2);
 						}
 					}
 					break;
@@ -829,12 +804,12 @@ printf("\n");
 //						printf("%c %x\n",*pch,*pch);
 					if(*pch == 'P')
 					{
-						printf("PM\n");
+						//printf("PM\n");
 						if(pt->tm_hour != 12)
 							pt->tm_hour += 12;
 					}else if(*pch == 'A' && pt->tm_hour == 12)
 						pt->tm_hour -= 12;
-					printf("hour: %d\n",pt->tm_hour);
+					//printf("hour: %d\n",pt->tm_hour);
 
 					curtime2 = mktime(pt);
 					stime(pcurtime2);
@@ -842,7 +817,7 @@ printf("\n");
 					gettimeofday(&mtv, NULL);
 					curtime2 = mtv.tv_sec;
 					strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
-					printf("%s\n",tempx);
+					//printf("%s\n",tempx);
 					break;
 
 				case GET_TIME:
@@ -974,6 +949,11 @@ printf("\n");
 					break;
 
 				case GET_CONFIG2:
+					printf("ds_interval: %d\n",ps.ds_interval);
+					printf("valid: \n");
+					for(i = 0;i < 7;i++)
+						printf("%d ",ps.valid_ds[i]);
+					printf("\nenabled: %d\n",ps.ds_enable);
 					break;
 
 				case GET_VERSION:
