@@ -473,7 +473,7 @@ namespace EpServerEngineSampleClient
             switch (str)
             {
                 case "DS1620_MSG":
-                    AddMsg(ret.ToString());
+                    //AddMsg(ret.ToString());
                     
                     words = ret.Split(' ');
                     i = 0;
@@ -498,9 +498,9 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "UPTIME_MSG":
-                    AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
-                    /*
-                    string[] words = ret.Split(' ');
+                    //AddMsg("ret: " + ret);
+                    
+                    words = ret.Split(' ');
                     i = 0;
                     int j = 0;
                     foreach (var word in words)
@@ -510,7 +510,7 @@ namespace EpServerEngineSampleClient
                             case 0:
                                 j = int.Parse(word);
                                 //AddMsg(word + " " + j.ToString());
-                                //AddMsg(clients_avail[j].label + " uptime:");
+                                AddMsg(clients_avail[j].label + " uptime:");
                                 //AddMsg(word);
                                 break;
                             case 1:
@@ -537,24 +537,23 @@ namespace EpServerEngineSampleClient
                         }
                         i++;
                     }//AddMsg("uptime_msg");
-                    */
                     break;
 
                 case "SEND_MESSAGE":
                     //AddMsg("str: " + str + " " + str.Length.ToString());
                     //AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
-                    AddMsg(ret);
-                    ListMsg(ret, false);
+                    AddMsg("send msg: " + ret);
+                    //ListMsg(ret, false);
                     break;
 
                 case "CURRENT_TIME":
-                    ListMsg(ret, true);
+                    //ListMsg(ret, true);
                     break;
 
                 case "SEND_CLIENT_LIST":
                     words = ret.Split(' ');
                     i = 0;
-                    int j = 0;
+                    j = 0;
                     int sock = -1;
                     //AddMsg(ret);
                     string clmsg = " ";
@@ -699,11 +698,11 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "GET_TIME":
-                    ListMsg(ret, true);
+                    //ListMsg(ret, true);
                     break;
 
                 case "SEND_STATUS":
-                    AddMsg(ret);
+                    //AddMsg(ret);
                     break;
 
                 default:
@@ -837,7 +836,7 @@ namespace EpServerEngineSampleClient
         {
             now = DateTime.Now;
             tick++;
-            connected_tick++;
+           
             if(true)
             //if ((tick % 3) == 0)
             {
@@ -882,6 +881,14 @@ namespace EpServerEngineSampleClient
                 {
 
                 }
+                else if(minute % 2 == 0 && second == 0 && tick > 5)
+				{
+                    connected_tick++;
+                    if (connected_tick >= lbAvailClients.Items.Count)
+                        connected_tick = 0;
+                    ReportAllTimeUp(connected_tick);
+                    //AddMsg(connected_tick.ToString());
+				}
             }
             if (tick == 2)
             {
@@ -908,17 +915,8 @@ namespace EpServerEngineSampleClient
                     }
                 }
             }
-            if (clients_inited == false && tick == 4)
-            {
-                if (m_client.IsConnectionAlive)
-                {
-                    UpdateClientInfo();
-                    //AddMsg("update client info");
-                    clients_inited = true;
-                }
-            }
-            if(tick > 1600)
-                tick = 36;
+            if(tick > 100)
+                tick = 6;
         }
         private void IPAddressChanged(object sender, EventArgs e)
         {
@@ -1068,8 +1066,18 @@ namespace EpServerEngineSampleClient
                 //  if(cl.socket > 0)   // to do all at once
                 {
                     //AddMsg(cl.label + " " + cl.index.ToString() + " " + cl.lbindex.ToString());
-                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_CONFIG2"), cl.index, " ");
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
+                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_CONFIG2"), cl.index, " ");
+                }
+            }
+        }
+        private void ReportAllTimeUp(int index)
+		{
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if(cl.socket > 0 && (cl.type == 2 || cl.type == 1) && cl.lbindex == index)
+                {
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
                 }
             }
         }
@@ -1373,6 +1381,7 @@ namespace EpServerEngineSampleClient
             //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
             //AddMsg("send client list");
             RedrawClientListBox();
+            //ReportAllTimeUp();
         }
 
 		private void btnGetTemp_Click(object sender, EventArgs e)

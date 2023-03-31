@@ -225,7 +225,7 @@ UCHAR get_host_cmd_task(int test)
 //		if(cmd > 0)
 		rc = 0;
 		//printf("server get_cmd_host :");
-		print_cmd(cmd);
+		//print_cmd(cmd);
 		switch(cmd)
 		{
 			case DS1620_MSG:
@@ -279,10 +279,12 @@ UCHAR get_host_cmd_task(int test)
 			case UPTIME_MSG:	// sent from client
 				//printf("uptime msg (sock): %s\n",write_serial_buff);
 				//printf("%ld %ld\n",ttrunning_minutes, ttrunning_seconds);
+				
 				if(client_table[0].socket > 0)
 				{
-					send_msgb(client_table[0].socket,18,(UCHAR *)&write_serial_buff[1],UPTIME_MSG);
+					send_msgb(client_table[0].socket,strlen(write_serial_buff)*2,(UCHAR *)&write_serial_buff[0],UPTIME_MSG);
 				}
+				
 				//if(client_table[1].socket > 0)
 					//send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
 				//printf("uptime: %s\n",write_serial_buff);

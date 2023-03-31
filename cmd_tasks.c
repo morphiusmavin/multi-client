@@ -480,12 +480,12 @@ printf("\n");
 			{
 				case GET_TEMP4:
 					printf("ds_index: %d\n",ds_index);
-					if(ds_index > 0)
+					if(ds_index > 0 && ps.ds_enable > 0)
 					{
 						dllist_find_data(ds_index, dtpp, &dll);
 						printf("%d:%d:%d - %s\n",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
 						//printf("%d:%d:%d %d\n",dtp->hour, dtp->minute, dtp->second, dtp->value);
-					}
+					}else printf("not enabled\n");
 					//printf("avg: %d\n",avg_raw_data(sample_size));	not working yet
 					break;
 
@@ -667,21 +667,24 @@ printf("\n");
 					break;
 
 				case UPDATE_CLIENT_INFO:
+				/*
 					this_client_index = tempx[0];
-					printf("this client index: %d\n",this_client_index);
+					*/
+					printf("this client id: %d\n",this_client_id);
 					break;
 
 				case SEND_TIMEUP:
 					memset(tempx,0,sizeof(tempx));
-					sprintf(tempx,"%d %d %d %d %d",this_client_index, trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
+					sprintf(tempx,"%d %d %d %d %d",this_client_id, trunning_days, trunning_hours, trunning_minutes, trunning_seconds);
 					//printf("send timeup: %s\n",tempx);
 					msg_len = strlen(tempx);
-					uSleep(0,TIME_DELAY/8);
+					uSleep(0,TIME_DELAY/4);
 					send_sock_msg(tempx, msg_len, UPTIME_MSG, _SERVER);
 					break;
 
 				case UPTIME_MSG:
-					printf("%s\n",tempx);
+					printf("uptime msg: %s\n",tempx);
+					send_sock_msg(tempx, msg_len, UPTIME_MSG, _SERVER);
 					break;
 
 				case SEND_STATUS:

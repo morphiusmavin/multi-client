@@ -80,7 +80,6 @@ int sched_qid;
 key_t sock_key;
 key_t sched_key;
 key_t basic_controls_key;
-int this_client_index;
 int next_client;
 int this_client_id;
 #define _1SEC	 	1000000 

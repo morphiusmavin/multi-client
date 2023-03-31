@@ -671,6 +671,17 @@ UCHAR poll_ds1620_task(int test)
 
 	//ds_index = dGetnRecs("ddata.dat",errmsg);
 	ds_index = dllist_get_size(&dll);
+	T = time(NULL);
+	tm = *localtime(&T);
+	dtp->sensor_no = i;
+	dtp->month = tm.tm_mon;
+	dtp->day = tm.tm_mday;
+	dtp->hour = tm.tm_hour;
+	dtp->minute = tm.tm_min;
+	dtp->second = tm.tm_sec;
+	dtp->value = val;
+	ds_index++;
+	ds_index = dllist_add_data(ds_index, &dll, dtp);
 	//printf("no recs in ddata.dat: %d\n",ds_index);
 	while(TRUE)
 	{
