@@ -85,6 +85,7 @@
 			this.label9 = new System.Windows.Forms.Label();
 			this.btnGetTemp = new System.Windows.Forms.Button();
 			this.timer3 = new System.Windows.Forms.Timer(this.components);
+			this.AlertLabel = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -326,7 +327,7 @@
 			this.lbAvailClients.ItemHeight = 15;
 			this.lbAvailClients.Location = new System.Drawing.Point(727, 11);
 			this.lbAvailClients.Name = "lbAvailClients";
-			this.lbAvailClients.Size = new System.Drawing.Size(173, 94);
+			this.lbAvailClients.Size = new System.Drawing.Size(246, 94);
 			this.lbAvailClients.TabIndex = 35;
 			this.lbAvailClients.SelectedIndexChanged += new System.EventHandler(this.AvailClientSelIndexChanged);
 			// 
@@ -334,7 +335,7 @@
 			// 
 			this.btnRebootClient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnRebootClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnRebootClient.Location = new System.Drawing.Point(800, 115);
+			this.btnRebootClient.Location = new System.Drawing.Point(800, 168);
 			this.btnRebootClient.Name = "btnRebootClient";
 			this.btnRebootClient.Size = new System.Drawing.Size(173, 37);
 			this.btnRebootClient.TabIndex = 8;
@@ -345,7 +346,7 @@
 			// btnShutdownClient
 			// 
 			this.btnShutdownClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnShutdownClient.Location = new System.Drawing.Point(800, 215);
+			this.btnShutdownClient.Location = new System.Drawing.Point(800, 268);
 			this.btnShutdownClient.Name = "btnShutdownClient";
 			this.btnShutdownClient.Size = new System.Drawing.Size(173, 37);
 			this.btnShutdownClient.TabIndex = 10;
@@ -356,7 +357,7 @@
 			// btnSendStatus
 			// 
 			this.btnSendStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendStatus.Location = new System.Drawing.Point(800, 265);
+			this.btnSendStatus.Location = new System.Drawing.Point(800, 318);
 			this.btnSendStatus.Name = "btnSendStatus";
 			this.btnSendStatus.Size = new System.Drawing.Size(173, 37);
 			this.btnSendStatus.TabIndex = 11;
@@ -378,7 +379,7 @@
 			// bSetClientTime
 			// 
 			this.bSetClientTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.bSetClientTime.Location = new System.Drawing.Point(800, 315);
+			this.bSetClientTime.Location = new System.Drawing.Point(800, 368);
 			this.bSetClientTime.Name = "bSetClientTime";
 			this.bSetClientTime.Size = new System.Drawing.Size(173, 37);
 			this.bSetClientTime.TabIndex = 12;
@@ -389,7 +390,7 @@
 			// btnReportTimeUp
 			// 
 			this.btnReportTimeUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnReportTimeUp.Location = new System.Drawing.Point(800, 459);
+			this.btnReportTimeUp.Location = new System.Drawing.Point(800, 512);
 			this.btnReportTimeUp.Name = "btnReportTimeUp";
 			this.btnReportTimeUp.Size = new System.Drawing.Size(173, 37);
 			this.btnReportTimeUp.TabIndex = 14;
@@ -401,7 +402,7 @@
 			// 
 			this.btnExit2Shell.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnExit2Shell.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnExit2Shell.Location = new System.Drawing.Point(800, 165);
+			this.btnExit2Shell.Location = new System.Drawing.Point(800, 218);
 			this.btnExit2Shell.Name = "btnExit2Shell";
 			this.btnExit2Shell.Size = new System.Drawing.Size(173, 37);
 			this.btnExit2Shell.TabIndex = 9;
@@ -594,7 +595,7 @@
 			// btnGetTime
 			// 
 			this.btnGetTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnGetTime.Location = new System.Drawing.Point(800, 365);
+			this.btnGetTime.Location = new System.Drawing.Point(800, 418);
 			this.btnGetTime.Name = "btnGetTime";
 			this.btnGetTime.Size = new System.Drawing.Size(173, 37);
 			this.btnGetTime.TabIndex = 13;
@@ -664,7 +665,7 @@
 			this.btnUnused.Name = "btnUnused";
 			this.btnUnused.Size = new System.Drawing.Size(216, 56);
 			this.btnUnused.TabIndex = 2;
-			this.btnUnused.Text = "Unused";
+			this.btnUnused.Text = "Clear Alert";
 			this.btnUnused.UseVisualStyleBackColor = false;
 			this.btnUnused.Click += new System.EventHandler(this.btnUnused_Click);
 			// 
@@ -681,7 +682,7 @@
 			// btnGetTemp
 			// 
 			this.btnGetTemp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnGetTemp.Location = new System.Drawing.Point(800, 409);
+			this.btnGetTemp.Location = new System.Drawing.Point(800, 462);
 			this.btnGetTemp.Name = "btnGetTemp";
 			this.btnGetTemp.Size = new System.Drawing.Size(173, 37);
 			this.btnGetTemp.TabIndex = 89;
@@ -694,12 +695,22 @@
 			this.timer3.Interval = 6000000;
 			this.timer3.Tick += new System.EventHandler(this.timer3_tick);
 			// 
+			// AlertLabel
+			// 
+			this.AlertLabel.AutoSize = true;
+			this.AlertLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.AlertLabel.Location = new System.Drawing.Point(805, 124);
+			this.AlertLabel.Name = "AlertLabel";
+			this.AlertLabel.Size = new System.Drawing.Size(0, 20);
+			this.AlertLabel.TabIndex = 0;
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1005, 576);
+			this.Controls.Add(this.AlertLabel);
 			this.Controls.Add(this.btnGetTemp);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.btnUnused);
@@ -820,6 +831,7 @@
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Button btnGetTemp;
 		private System.Windows.Forms.Timer timer3;
+		private System.Windows.Forms.Label AlertLabel;
 	}
 }
 

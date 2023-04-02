@@ -683,7 +683,7 @@ printf("\n");
 					break;
 
 				case UPTIME_MSG:
-					printf("uptime msg: %s\n",tempx);
+					//printf("uptime msg: %s\n",tempx);
 					send_sock_msg(tempx, msg_len, UPTIME_MSG, _SERVER);
 					break;
 

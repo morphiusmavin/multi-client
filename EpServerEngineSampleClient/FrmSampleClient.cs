@@ -62,7 +62,7 @@ namespace EpServerEngineSampleClient
         int which_winclient = -1;
         int alarm_hours, alarm_minutes, alarm_seconds;
         Int64 alarm_tick;
-        
+        bool client_alert = false;
 
         private string xml_params_location = "c:\\Users\\daniel\\ClientProgramData\\ClientParams.xml";
         private string xml_clients_avail_location = "c:\\Users\\daniel\\ClientProgramData\\ClientsAvail.xml";
@@ -180,6 +180,8 @@ namespace EpServerEngineSampleClient
                 //temp += item2.socket.ToString();
                 item3.type = Convert.ToInt16(dr.ItemArray[3]);  // type is: 0 - win client; 1 - TS_CLIENT; 2 - TS_SERVER (only one of these)
                                                                 //AddMsg(item2.label.ToString() + " " + item2.ip_addr.ToString() + " " + item2.socket.ToString());
+                item3.time_string = "";
+                item3.flag = 0;
                 clients_avail.Add(item3);
                 item3 = null;
                 lb_index++;
@@ -233,62 +235,12 @@ namespace EpServerEngineSampleClient
                 ds1.raw_value = int.Parse(words2[1]);
                 ds1620_list.Add(ds1);
             }
+            
             //foreach (DS1620_conversions d1 in ds1620_list)
-                //AddMsg(d1.raw_value.ToString() + " " + d1.temp.ToString());
+            //AddMsg(d1.raw_value.ToString() + " " + d1.temp.ToString());
 
             // turn off east light because it is on by default (relay is wired nc)
             //svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
-        }
-        private int getMinutes(string time)
-		{
-            int num;
-            string snum;
-            if (time.Contains("none") || time == "")
-                return -1;
-            int colon = time.IndexOf(':');
-            //colon = time.IndexOf(':',colon+1);
-            char dig1 = time[colon + 1];
-            //AddMsg(dig1.ToString());
-            char dig2 = time[colon + 2];
-            if (dig2 > 47 && dig2 < 58)
-            {
-                //snum = new string(dig1, dig1);
-                snum = dig1.ToString();
-                snum += dig2.ToString();
-            }
-            else snum = dig1.ToString();
-            num = int.Parse(snum);
-            //AddMsg(num.ToString());
-            return num;
-        }
-        private int getHours(string time)
-        {
-            // check for double digits otherwise it will only be single
-            int num;
-            string snum;
-            char dig1;
-            int colon;
-            if (time.Contains("none") || time == "")
-                return -1;
-            colon = time.IndexOf(':');
-            char dig2 = time[colon - 1];
-            //AddMsg(dig1.ToString());
-            if (time[1] == ':')
-                dig1 = '0';
-            else 
-                dig1 = time[colon - 2];
-            if (dig1 > 47 && dig1 < 58)
-            {
-                //snum = new string(dig1, dig1);
-                snum = dig1.ToString();
-                snum += dig2.ToString();
-            }
-            else snum = dig1.ToString();
-            num = int.Parse(snum);
-            //AddMsg(num.ToString());
-            if (time.Contains("PM") || time.Contains("pm"))
-                num += 12;
-            return num;
         }
         private void btnConnect_Click(object sender, EventArgs e)
         {
@@ -441,10 +393,12 @@ namespace EpServerEngineSampleClient
             {
                 if (j.socket > 0 && j.type != 0)
                 {
-                    string temp = j.label + " " + j.ip_addr + " " + j.socket.ToString();
+                    //string temp = j.label + " " + j.ip_addr + " " + j.socket.ToString();
+                    string temp = j.label + "  " + j.time_string;
                  
                     lbAvailClients.Items.Add(temp);
                     j.lbindex = i;
+                   
                     //AddMsg(j.ip_addr + " " + j.label + " " + j.socket.ToString() + " " + j.type);
                     i++;
                 }
@@ -499,10 +453,11 @@ namespace EpServerEngineSampleClient
 
                 case "UPTIME_MSG":
                     //AddMsg("ret: " + ret);
-                    
                     words = ret.Split(' ');
                     i = 0;
                     int j = 0;
+                    int k = 0;
+					int hours = 0;
                     foreach (var word in words)
                     {
                         switch (i)
@@ -510,26 +465,40 @@ namespace EpServerEngineSampleClient
                             case 0:
                                 j = int.Parse(word);
                                 //AddMsg(word + " " + j.ToString());
-                                AddMsg(clients_avail[j].label + " uptime:");
+                                //AddMsg(clients_avail[j].label + " uptime:");
                                 //AddMsg(word);
+                                clients_avail[j].time_string = " ";
+                                clients_avail[j].flag = 0;
+                                k = j;
                                 break;
                             case 1:
                                 j = int.Parse(word);
                                 if (j > 0)
-                                    AddMsg("days: " + j.ToString());
+                                {
+                                    clients_avail[k].time_string += j.ToString() + " days ";
+                                }
                                 break;
                             case 2:
                                 j = int.Parse(word);
+								hours = j;
                                 if (j > 0)
-                                    AddMsg("hours: " + j.ToString());
+                                    clients_avail[k].time_string += j.ToString() + " hrs ";
                                 break;
                             case 3:
                                 j = int.Parse(word);
-                                AddMsg("minutes: " + j.ToString());
+                                clients_avail[k].time_string += j.ToString() + " mins ";
                                 break;
                             case 4:
                                 j = int.Parse(word);
-                                AddMsg("seconds: " + j.ToString());
+								if(hours == 0)
+									clients_avail[k].time_string += j.ToString() + " secs";
+                                //AddMsg(clients_avail[k].time_string + " " + clients_avail[k].prev_time_string);
+                                if (clients_avail[k].time_string == clients_avail[k].prev_time_string)
+                                {
+                                    AddMsg("Alert 2: " + clients_avail[k].label);
+                                }
+                                clients_avail[k].prev_time_string = clients_avail[k].time_string;
+                                RedrawClientListBox();
                                 break;
                             default:
                                 AddMsg("?");
@@ -859,7 +828,7 @@ namespace EpServerEngineSampleClient
                         if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
                         {
                             svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
-                            AddMsg(cl.label);
+                            //AddMsg(cl.label);
                         }
                     }
                 }
@@ -879,16 +848,31 @@ namespace EpServerEngineSampleClient
                 }
                 else if (hour == 0 && minute == 1 && second == 0)
                 {
-
+                    AddMsg("one minute after midnight");
                 }
-                else if(minute % 2 == 0 && second == 0 && tick > 5)
+                else if (tick > 260 && second == 30)
+                {
+                    //AddMsg("test");
+                    ReportAllTimeUp(0);
+                }
+                else if(client_alert && second % 10 == 0)
 				{
+                    System.Media.SoundPlayer player;
+                    string song = "c:\\users\\Daniel\\Music\\alert.wav";
+                    player = new System.Media.SoundPlayer();
+                    player.SoundLocation = song;
+                    player.Play();
+                    player.Dispose();
+                }
+                /*
+                else if((tick <= 120 && second % 5 == 0) || (tick > 120 && tick <= 240 && second == 0) || (tick > 240 && minute % 2 == 0 && second == 0))
+                {
                     connected_tick++;
                     if (connected_tick >= lbAvailClients.Items.Count)
                         connected_tick = 0;
                     ReportAllTimeUp(connected_tick);
-                    //AddMsg(connected_tick.ToString());
-				}
+                }
+                */
             }
             if (tick == 2)
             {
@@ -915,8 +899,6 @@ namespace EpServerEngineSampleClient
                     }
                 }
             }
-            if(tick > 100)
-                tick = 6;
         }
         private void IPAddressChanged(object sender, EventArgs e)
         {
@@ -1075,9 +1057,20 @@ namespace EpServerEngineSampleClient
 		{
             foreach (ClientsAvail cl in clients_avail)
             {
-                if(cl.socket > 0 && (cl.type == 2 || cl.type == 1) && cl.lbindex == index)
+                //if(cl.socket > 0 && (cl.type == 2 || cl.type == 1) && cl.lbindex == index)
+                if (cl.socket > 0 && cl.type == 1)
                 {
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
+                    //AddMsg("testing: " + cl.label + " " + cl.flag.ToString());
+                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
+                    if (cl.flag > 1)
+                    {
+                        AddMsg("Alert: " + cl.label + " " + (cl.flag - 1).ToString());
+                        AlertLabel.Visible = true;
+                        AlertLabel.Text = "Alert: " + cl.label + " " + (cl.flag - 1).ToString();
+                        AlertLabel.ForeColor = Color.Red;
+                        client_alert = true;
+                    }
+                    cl.flag++;
                 }
             }
         }
@@ -1225,6 +1218,10 @@ namespace EpServerEngineSampleClient
         private void Exit2Shell_Click(object sender, EventArgs e)
 		{
             SendClientMsg(svrcmd.GetCmdIndexI("EXIT_TO_SHELL"), " ", true);
+            
+            AlertLabel.Text = "";
+            AlertLabel.Visible = false;
+            client_alert = false;
         }
 		private void btnSendStatus_Click(object sender, EventArgs e)
 		{
@@ -1277,7 +1274,6 @@ namespace EpServerEngineSampleClient
             if(iResult == 55)
                 this.WindowState = FormWindowState.Minimized;
         }
-		
         private void btnTimer_Click(object sender, EventArgs e)
 		{
             timer_schedule.StartPosition = FormStartPosition.Manual;
@@ -1350,7 +1346,6 @@ namespace EpServerEngineSampleClient
             {
             }
         }
-       
 		private void btnSendSort_Click(object sender, EventArgs e)
 		{
             int dest = -1;
@@ -1375,15 +1370,14 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
-
 		private void btnUnused_Click(object sender, EventArgs e)
 		{
-            //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
-            //AddMsg("send client list");
+            
+            AlertLabel.Text = "";
+            AlertLabel.Visible = false;
             RedrawClientListBox();
-            //ReportAllTimeUp();
+            client_alert = false;
         }
-
 		private void btnGetTemp_Click(object sender, EventArgs e)
 		{
             foreach (ClientsAvail cl in clients_avail)
@@ -1394,7 +1388,6 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
-
 		private void tbAlarmMinutes_TextChanged(object sender, EventArgs e)
         {
             alarm_minutes = int.Parse(tbAlarmMinutes.Text);

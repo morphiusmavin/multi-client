@@ -189,10 +189,11 @@ and scrape the spreadsheet starting with '1' to the left of the first sunrise da
 	C:\Users\Daniel\SunriseSunsetData\[xxx].moon where 'xxx' 
 	is the name of the file for that month (e.g. Dec.moon)
 	do this for as many months as you want to catalog.
-6) run this app, then choose the month, then hit 'Open CSV' to create the 
+6) run this app (C:\Users\Daniel\dev\SunriseSunset\bin\Release\SunriseSunset.exe), then 
+	choose the month, then hit 'Open CSV' to create the 
 	xml file for as many months to catalog.
-7) Then choose the month, 'Open Moon' and choose the *.moon file(s) you 
-	want to add to the list 
+7) Then choose the month in the month pull-down, then choose 'Open Moon' and choose 
+	the *.moon file(s) you want to add to the list.
 8) Show Cdata will show all the data from the xml files with the moonrise & moonset 
 	columns blank.
 9) 'Add Moon' will add in the internal moon list to the internal sunrise/sunset list 

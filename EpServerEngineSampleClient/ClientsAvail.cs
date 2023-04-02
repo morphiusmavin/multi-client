@@ -14,6 +14,8 @@ namespace EpServerEngineSampleClient
 		public string label { get; set; }
 		public int socket { get; set; }
 		public int type { get; set; }
-
+		public string time_string { get; set; }
+		public string prev_time_string { get; set; }
+		public int flag;
 	}
 }

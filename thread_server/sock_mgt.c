@@ -141,16 +141,29 @@ static int s_tick = 0;
 UCHAR sock_timer(int test)
 {
 	UCHAR tempx[100];
+	int i;
 	//printf("sock_timer starting %d\n",s_tick);
+	strcpy(tempx,"testing \0");
 	while(TRUE)
 	{
 		uSleep(2,0);
-		/*
+		//printf("sock timer\n");
+
+		if(client_table[i].socket > 0 && client_table[i].type == TS_CLIENT)
+		{
+			//printf("%d %s\n",i,client_table[i].label);
+			send_msg(client_table[i].socket, strlen(tempx),&tempx[0],SEND_TIMEUP);
+			uSleep(30,0);
+		}
+		i++;
+		if(i > 4)
+			i = 0;
+/*		
 		strcpy(tempx,"testing \0");
 		if((s_tick % 2) == 0)
 			send_msg(client_table[_147].socket, strlen(tempx),&tempx[0],SEND_MESSAGE);
 		else send_msg(client_table[_154].socket, strlen(tempx),&tempx[0],SEND_MESSAGE);
-		*/
+*/
 		s_tick++;
 		//printf("%d \n",s_tick);
 		if(shutdown_all == 1)
@@ -290,16 +303,12 @@ UCHAR get_host_cmd_task(int test)
 				//printf("uptime: %s\n",write_serial_buff);
 				break;
 
+/*
 			case SEND_TIMEUP:
+				printf("send timeup: %s\n",write_serial_buff);
 				msg.mtype = msgtype;
 				memset(msg.mtext,0,sizeof(msg.mtext));
-/*
-				msg.mtext[0] = cmd;
-				msg.mtext[1] = (UCHAR)msg_len;
-				msg.mtext[2] = (UCHAR)(msg_len >> 4);
-*/
 				memcpy(msg.mtext,write_serial_buff,msg_len);
-//					uSleep(1,0);
 
 				if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 				{
@@ -308,7 +317,7 @@ UCHAR get_host_cmd_task(int test)
 					exit(EXIT_FAILURE);
 				}
 				break;
-/*
+
 			case SEND_MESSAGE:
 				for(i = 0;i < msg_len;i++)
 					printf("%c",write_serial_buff[i]);
@@ -680,6 +689,7 @@ startover1:
 					break;
 				default:
 					printf("read task sending to tcp\n");
+					uSleep(1,0);
 //					if(client_table[dest].socket > 0)
 //						send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
 					break;
