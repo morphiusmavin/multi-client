@@ -44,6 +44,7 @@ extern cllist_t cll;
 extern dllist_t dll;
 extern int ds_index;
 extern int ds_reset;
+int cs_index;
 
 //UCHAR msg_buf[SERIAL_BUFF_SIZE];
 extern PARAM_STRUCT ps;
@@ -119,6 +120,7 @@ UCHAR get_host_cmd_task(int test)
 	C_DATA **ctpp = &ctp;
 	D_DATA *dtp;
 	D_DATA **dtpp = &dtp;
+	C_DATA *cttp;
 	int rc = 0; 
 	UCHAR cmd = 0x21;
 	UCHAR onoff;
@@ -322,8 +324,10 @@ UCHAR get_host_cmd_task(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
-		//cllist_show(&cll);
-	}
+		cs_index = cllist_get_size(&cll);
+		printf("%d no recs in cllist\n",cs_index);
+		cllist_show(&cll);
+	}else printf("can't fine %s\n",cFileName);
 
 	dllist_init(&dll);
 	if(access(dFileName,F_OK) != -1)
@@ -340,6 +344,7 @@ UCHAR get_host_cmd_task(int test)
 		printf("can't open data.dat\n");
 		dlWriteConfig(dFileName, &dll,1,errmsg);
 	}
+	ds_index = dllist_get_size(&dll);
 
 	init_ips();
 	same_msg = 0;
@@ -528,6 +533,7 @@ printf("\n");
 					cllist_init(&cll);
 					if(access(cFileName,F_OK) != -1)
 					{
+						csize = cs_index * sizeof(C_DATA);
 						clLoadConfig(cFileName,&cll,csize,errmsg);
 						if(rc > 0)
 						{
@@ -535,10 +541,14 @@ printf("\n");
 						}
 						cllist_show(&cll);
 					}
+					cs_index = 0;
 					break;
 
 				case CLEAR_CLLIST:
-					for(i = 0;i < 20;i++)
+					cllist_init(&cll);
+					cs_index = 0;
+					/*
+					for(i = 0;i < cs_index;i++)
 					{
 						j = cllist_find_data(i, ctpp, &cll);
 						if(j == -1)
@@ -557,6 +567,7 @@ printf("\n");
 						strcpy(ctp->label,"test");
 						cllist_change_data(i,ctp,&cll);
 					}
+					*/
 					curr_countdown_size = 0;
 					break;
 
@@ -579,51 +590,45 @@ printf("\n");
 					break;
 
 				case SET_CLLIST:
-/*
-					printf("set cllist\n");
-					printf("msg_len: %d\n",msg_len);
-					for(i = 0;i < msg_len/2;i++)
-						printf("%02x ",tempx[i]);
-					printf("\n");
-*/
-					index = (int)tempx[0];
-					j = cllist_find_data(index, ctpp, &cll);
-					if(j == -1)
-					{
-						printf("bad find: %d\n",index);
-						break;
-					}
-					ctp->index = index;
-					ctp->port = (int)tempx[1];
-					ctp->state = (int)tempx[2];
-					ctp->on_hour = (int)tempx[3];
-					ctp->on_minute = (int)tempx[4];
-					ctp->on_second = (int)tempx[5];
-					ctp->off_hour = (int)tempx[6];
-					ctp->off_minute = (int)tempx[7];
-					ctp->off_second = (int)tempx[8];
+					cttp = (C_DATA *)malloc(sizeof(C_DATA));
+					cttp->index = (int)tempx[0];
+					cttp->port = (int)tempx[1];
+					cttp->state = (int)tempx[2];
+					cttp->on_hour = (int)tempx[3];
+					cttp->on_minute = (int)tempx[4];
+					cttp->on_second = (int)tempx[5];
+					cttp->off_hour = (int)tempx[6];
+					cttp->off_minute = (int)tempx[7];
+					cttp->off_second = (int)tempx[8];
 					memset(label,0,sizeof(label));
 					memcpy(label,&tempx[10],CLABELSIZE);
-					strcpy(ctp->label,label);
-					if(ctp->on_hour == 0 && ctp->on_minute == 0 && ctp->on_second == 0 && ctp->off_hour == 0 
-							&& ctp->off_minute == 0 && ctp->off_second == 0)
-						ctp->port = -1;
-					cllist_change_data(index,ctp,&cll);
+					strcpy(cttp->label,label);
+//					if(cttp->on_hour == 0 && cttp->on_minute == 0 && cttp->on_second == 0 && cttp->off_hour == 0 
+	//						&& cttp->off_minute == 0 && cttp->off_second == 0)
+					
+					//cllist_change_data(index,ctp,&cll);
+					cllist_add_data(cttp->index, &cll, cttp);
 					memset(tempx,0,sizeof(tempx));
+					cs_index++;
+					free(cttp);
 					printf("done\n");
 				break;
 
 				case SAVE_CLLIST:
+					csize = cs_index * sizeof(C_DATA);
+					printf("cs_index: %d\n",cs_index);
 					clWriteConfig(cFileName,&cll,csize,errmsg);
 					break;
 
 				case GET_ALL_CLLIST:
-					for(i = 0;i < 20;i++)
+					printf("%d no recs in cllist\n",cs_index);
+					for(i = 0;i < cs_index;i++)
 					{
 						j = cllist_find_data(i, ctpp, &cll);
 						if(j == -1)
 							break;
-						if(ctp->port > -1)
+						//if(ctp->port > -1)
+						if(1)
 						{
 							sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->index, ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
 									ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
@@ -659,18 +664,6 @@ printf("\n");
 					j++;
 					if(j > 10)
 						j = 0;
-					break;
-
-				case CLIENT_RECONNECT:
-					printf("cl reconn\n");
-//						close_tcp();
-					break;
-
-				case UPDATE_CLIENT_INFO:
-				/*
-					this_client_index = tempx[0];
-					*/
-					printf("this client id: %d\n",this_client_id);
 					break;
 
 				case SEND_TIMEUP:
@@ -710,10 +703,6 @@ printf("\n");
 						printf("%c",tempx[i]);
 					printf("\n");
 					send_sock_msg(tempx, msg_len, cmd, _SERVER);
-					break;
-
-				case SET_PARAMS:
-//						send_param_msg();
 					break;
 
 				case SET_TIME:
@@ -957,10 +946,6 @@ printf("\n");
 					for(i = 0;i < 7;i++)
 						printf("%d ",ps.valid_ds[i]);
 					printf("\nenabled: %d\n",ps.ds_enable);
-					break;
-
-				case GET_VERSION:
-					send_status_msg(version);
 					break;
 
 				default:

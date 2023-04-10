@@ -13,14 +13,20 @@ namespace EpServerEngineSampleClient
 	public partial class DeleteRec : Form
 	{
 		private int delrecno;
+		private int norecs;
 		public DeleteRec()
 		{
 			InitializeComponent();
+			norecs = delrecno = 0;
 		}
 
 		public int GetDelRecNo()
 		{
 			return delrecno;
+		}
+		public int GetNoRecs()
+		{
+			return norecs;
 		}
 
 		private void btnOK_Click(object sender, EventArgs e)
@@ -31,28 +37,12 @@ namespace EpServerEngineSampleClient
 
 		private void tbRecord_TextChanged(object sender, EventArgs e)
 		{
-			int i,j;
-			string temp = tbRecord.Text;
-			if (temp.Contains(','))
-			{
-				string[] words = temp.Split(' ');
-				i = 0;
-				j = 0;
-				foreach (var word in words)
-				{
-					switch (i)
-					{
-						case 0:
-							j = int.Parse(word);
-							break;
-					}
-				}
-			}
-						delrecno = int.Parse(tbRecord.Text);
+			delrecno = int.Parse(tbRecord.Text);
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
+			norecs = delrecno = 0;
 			this.DialogResult = DialogResult.Cancel;
 			this.Close();
 		}
@@ -60,6 +50,11 @@ namespace EpServerEngineSampleClient
 		private void DeleteRec_Load(object sender, EventArgs e)
 		{
 
+		}
+
+		private void tbEndingRec_TextChanged(object sender, EventArgs e)
+		{
+			norecs = int.Parse(tbEndingRec.Text);
 		}
 	}
 }

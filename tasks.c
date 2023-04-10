@@ -49,6 +49,7 @@ cllist_t cll;
 dllist_t dll;
 int ds_index;
 int ds_reset;
+extern int cs_index;
 
 PARAM_STRUCT ps;
 
@@ -670,7 +671,6 @@ UCHAR poll_ds1620_task(int test)
 	ds_reset = 0;
 
 	//ds_index = dGetnRecs("ddata.dat",errmsg);
-	ds_index = dllist_get_size(&dll);
 	T = time(NULL);
 	tm = *localtime(&T);
 	dtp->sensor_no = i;
@@ -893,7 +893,7 @@ void sort_countdown(void)
 	int current_seconds = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
 	//printf("curr sec: %d\n",current_seconds);
 	k = 0;
-	for(i = 0;i < 20;i++)
+	for(i = 0;i < cs_index;i++)
 	{
 		j = cllist_find_data(i, ctpp, &cll);
 		//printf("%d %d\n",ctp->port, ctp->state);
@@ -1113,21 +1113,6 @@ UCHAR serial_recv_task(int test)
 //	green_led(0);
 
 	s = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-
-	// send msg to STM32 so it can play a set of beeps & blips
-/*	
-	usleep(200000);
-	send_serialother(SERVER_UP,&send_buffer[0]);
-	usleep(200000);
-	send_serialother(SERVER_UP,&send_buffer[0]);
-	usleep(200000);
-	tempx[0] = 0;
-	send_serialother(SEND_DEBUG_MSG,(UCHAR *)tempx);
-//	send_serialother(GET_VERSION,(UCHAR *)tempx);
-
-	tempx[0] = 1;
-	send_serialother(SEND_DEBUG_MSG,(UCHAR *)tempx);
-*/
 
 	while(TRUE)
 	{

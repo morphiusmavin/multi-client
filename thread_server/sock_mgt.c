@@ -361,10 +361,6 @@ UCHAR get_host_cmd_task(int test)
 				}
 				break;
 */
-			case GET_VERSION:
-				//send_status_msg(version);
-				break;
-
 			case SHUTDOWN_IOBOX:
 			case REBOOT_IOBOX:
 			case SHELL_AND_RENAME:
@@ -644,23 +640,6 @@ startover1:
 				goto startover1;
 //				break;
 			}
-
-			if(cmd == CLIENT_RECONNECT)
-			{
-				printf("client reconnecting...\n");
-				close(client_table[index].socket);
-				client_table[index].socket = -1;
-				// the break statement only goes back up to 
-				// "read task 2"
-				goto startover1;
-			}
-			//printf("%02x %02x %02x\n",tempx[0],tempx[1],tempx[2]);
-/*
-			for(i = 0;i < ret;i++)
-			{
-				printf("%02x ",tempx[i]);
-			}
-*/
 			switch(dest)
 			{
 				case _SERVER:		// from one of the clients to the server

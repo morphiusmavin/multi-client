@@ -45,7 +45,7 @@ int dllist_get_size(dllist_t *llistp)
 	return size;
 }
 /******************************************************************************/
-int dllist_add_data(int index, dllist_t *llistp,D_DATA *datap2)
+int dllist_add_data(int index, dllist_t *llistp, D_DATA *datap2)
 {
 	dllist_node_t *cur, *prev, *new;
 	int found = FALSE;

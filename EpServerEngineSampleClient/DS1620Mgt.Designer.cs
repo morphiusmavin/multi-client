@@ -47,6 +47,7 @@ namespace EpServerEngineSampleClient
 			this.btnValidDS = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
+			this.rbInterval9 = new System.Windows.Forms.RadioButton();
 			this.rbInterval8 = new System.Windows.Forms.RadioButton();
 			this.rbInterval7 = new System.Windows.Forms.RadioButton();
 			this.rbInterval6 = new System.Windows.Forms.RadioButton();
@@ -58,7 +59,6 @@ namespace EpServerEngineSampleClient
 			this.btnApplyInterval = new System.Windows.Forms.Button();
 			this.btnShow = new System.Windows.Forms.Button();
 			this.btnReset = new System.Windows.Forms.Button();
-			this.rbInterval9 = new System.Windows.Forms.RadioButton();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -111,7 +111,8 @@ namespace EpServerEngineSampleClient
             "Server (146)",
             "Cabin (154)",
             "Testbench (147)",
-            "Outdoor (150)"});
+            "Outdoor (150)",
+            "Greenhouse (151)"});
 			this.cbClientNames.Location = new System.Drawing.Point(133, 23);
 			this.cbClientNames.Name = "cbClientNames";
 			this.cbClientNames.Size = new System.Drawing.Size(159, 21);
@@ -264,6 +265,18 @@ namespace EpServerEngineSampleClient
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "Interval";
 			// 
+			// rbInterval9
+			// 
+			this.rbInterval9.AutoSize = true;
+			this.rbInterval9.Location = new System.Drawing.Point(24, 268);
+			this.rbInterval9.Name = "rbInterval9";
+			this.rbInterval9.Size = new System.Drawing.Size(49, 24);
+			this.rbInterval9.TabIndex = 120;
+			this.rbInterval9.TabStop = true;
+			this.rbInterval9.Text = "off";
+			this.rbInterval9.UseVisualStyleBackColor = true;
+			this.rbInterval9.CheckedChanged += new System.EventHandler(this.rbInterval9_CheckedChanged);
+			// 
 			// rbInterval8
 			// 
 			this.rbInterval8.AutoSize = true;
@@ -391,18 +404,6 @@ namespace EpServerEngineSampleClient
 			this.btnReset.Text = "Reset";
 			this.btnReset.UseVisualStyleBackColor = true;
 			this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-			// 
-			// rbInterval9
-			// 
-			this.rbInterval9.AutoSize = true;
-			this.rbInterval9.Location = new System.Drawing.Point(24, 268);
-			this.rbInterval9.Name = "rbInterval9";
-			this.rbInterval9.Size = new System.Drawing.Size(49, 24);
-			this.rbInterval9.TabIndex = 120;
-			this.rbInterval9.TabStop = true;
-			this.rbInterval9.Text = "off";
-			this.rbInterval9.UseVisualStyleBackColor = true;
-			this.rbInterval9.CheckedChanged += new System.EventHandler(this.rbInterval9_CheckedChanged);
 			// 
 			// DS1620Mgt
 			// 

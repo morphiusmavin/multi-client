@@ -24,7 +24,7 @@ namespace EpServerEngineSampleClient
 	public partial class DS1620Mgt : Form
 	{
 		private int client_no;
-		private int[] types = new int[4];
+		private int[] types = new int[5];
 		private string new_filename;
 		int interval = 7;
 		private INetworkClient m_client;
@@ -41,6 +41,7 @@ namespace EpServerEngineSampleClient
 			types[1] = (ushort)Properties.Settings.Default["ds_154"];
 			types[2] = (ushort)Properties.Settings.Default["ds_147"];
 			types[3] = (ushort)Properties.Settings.Default["ds_150"];
+			types[4] = (ushort)Properties.Settings.Default["ds_151"];
 		}
 		delegate void AddMsg_Involk(string message);
 		public void AddMsg(string message)
@@ -85,7 +86,7 @@ namespace EpServerEngineSampleClient
 					target = 4;		// 150
 					break;
 				case 4:
-					target = 0;
+					target = 5;		// 151
 					break;
 				default:
 					target = 0;

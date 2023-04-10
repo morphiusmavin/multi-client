@@ -50,6 +50,8 @@ typedef struct cllist {
 } cllist_t;
 
 int cllist_init (cllist_t *llistp);
+int cllist_get_size(cllist_t *llistp);
+int cllist_add_data(int index, cllist_t *llistp,C_DATA *datap2);
 int cllist_insert_data (int index, cllist_t *llistp,C_DATA *datap);
 int cllist_remove_data(int index, C_DATA **datapp, cllist_t *llistp);
 int cllist_removeall_data(cllist_t *llistp);

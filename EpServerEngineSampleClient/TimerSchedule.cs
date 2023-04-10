@@ -235,7 +235,7 @@ namespace EpServerEngineSampleClient
 								break;
 							case 9:
 								cdata_temp.label = word;
-								AddMsg(word);
+								//AddMsg(word);
 								//AddMsg("");
 								//cdata_temp.label += '\n';
 								break;
@@ -329,7 +329,8 @@ namespace EpServerEngineSampleClient
 			{
 				//string temp = "";
 				port = Convert.ToInt16(dr.ItemArray[2]);
-				if (port > -1)
+				if(true)
+				//if (port > -1)
 				{
 					item = new Cdata();
 
@@ -411,6 +412,9 @@ namespace EpServerEngineSampleClient
 		private void btnDeleteRecord_Click(object sender, EventArgs e)
 		{
 			int delrecno = 0;
+			int norecs = 0;
+			int i;
+			bool refresh = false;
 			DeleteRec delrec = new DeleteRec();
 			delrec.StartPosition = FormStartPosition.Manual;
 			delrec.Location = new Point(100, 10);
@@ -418,13 +422,28 @@ namespace EpServerEngineSampleClient
 			if (delrec.ShowDialog(this) == DialogResult.OK)
 			{
 				delrecno = delrec.GetDelRecNo();
+				norecs = delrec.GetNoRecs();
 				AddMsg("rec to del: " + delrecno.ToString());
+				for(i = delrecno;i < delrecno + norecs;i++)
+				{
+					mycdata.RemoveAt(delrecno);
+					AddMsg("delete: " + i.ToString());
+					refresh = true;
+				}
 			}
 			else
 			{
 				//                this.txtResult.Text = "Cancelled";
 			}
 			delrec.Dispose();
+			i = 0;
+			foreach(Cdata cd in mycdata)
+			{
+				cd.index = i;
+				i++;
+			}
+			if(refresh)
+				btnUpdateChart_Click(new object(), new EventArgs());
 		}
 		private void btnChart2Cdata_Click(object sender, EventArgs e)
 		{
@@ -464,7 +483,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void SelectionChanged(object sender, EventArgs e)
 		{
-			//AddMsg("row: " + e.ToString());
+			AddMsg("row: " + e.ToString());
 		}
 		private void btnClearNonRecs_Click(object sender, EventArgs e)
 		{
@@ -486,13 +505,15 @@ namespace EpServerEngineSampleClient
 			byte[] label;
 			byte[] data = new byte[80];
 			//tbReceived.Clear();
+			svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("CLEAR_CLLIST"), type, data);
 			Array.Clear(data, 0, data.Length);
-			if (type > -1)		// TODO: check to make sure no times start or stop at the same time
+			//if (type > -1)		// TODO: check to make sure no times start or stop at the same time
+			if(true)
 			{
 				foreach (Cdata cd in mycdata)
 				{
-					if (cd.port > -1)
-					//if(true)
+					//if (cd.port > -1)
+					if(true)
 					{
 						//Array.Clear(label2, 0, label2.Length);
 
@@ -589,7 +610,8 @@ namespace EpServerEngineSampleClient
 			int k = 0;
 			for (i = 0; i < count; i++)
 			{
-				if (mycdata[i].port != -1)
+				if(true)
+				//if (mycdata[i].port != -1)
 				{
 					temp_cdata[i] = mycdata[i];
 					k++;
@@ -661,7 +683,7 @@ namespace EpServerEngineSampleClient
 			int index = count;
 			for (int j = 0; j < 20 - count; j++)
 			{
-				line2 = index.ToString() + ',' + "-1" + ',' + line + index.ToString();
+				line2 = index.ToString() + ',' + "0" + ',' + line + index.ToString();
 				file[index] = line2;
 				index++;
 			}

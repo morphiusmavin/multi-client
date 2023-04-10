@@ -29,7 +29,7 @@ static char space = 0x21;
 // so (i/ol)(Load/Write)Config is used by sched/tasks etc
 #ifndef CONFIG_FILE
 /////////////////////////////////////////////////////////////////////////////
-int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
+int clLoadConfig(char *filename, cllist_t *oll, size_t size, char *errmsg)
 {
 	char *fptr;
 	int fp = -1;
@@ -39,6 +39,7 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 	UCHAR id;
 	C_DATA c_data;
 	int ret = 0;
+	int ret2 = 0;
 	//void *ptr;
 	//UCHAR tempx[60];
 
@@ -64,7 +65,11 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 	//printf("sizeof: %d\n",sizeof(C_DATA));
 	for(i = 0;i < NO_CLLIST_RECS;i++)
 	{
-		ret += read(fp,&c_data,sizeof(C_DATA));
+		ret2 = read(fp,&c_data,sizeof(C_DATA));
+		printf("%d %d %d\n",i,ret2,ret);
+		if(ret2 == 0)
+			break;
+		ret += ret2;
 		//ret += read(fp,&tempx[0],sizeof(C_DATA));
 /*		
 		for(j = 0;j < 52;j++)
@@ -77,6 +82,7 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size,char *errmsg)
 		cllist_insert_data(i, oll, &c_data);
 	}
 	//printf("fp:%d  read: %d bytes in clLoadConfig\n",fp,ret);
+	printf("done\n");
 	close(fp);
 	strcpy(errmsg,"Success\0");
 	return 0;
@@ -109,7 +115,7 @@ int clWriteConfig(char *filename,  cllist_t *oll, size_t size,char *errmsg)
 //	printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
 	i = lseek(fp,0,SEEK_SET);
 	write(fp,&id,1);
-	printf("nrecs: %d\n",size/sizeof(C_DATA));
+	printf("__nrecs: %d\n",size/sizeof(C_DATA));
 	for(i = 0;i < size/sizeof(C_DATA);i++)
 	{
 		cllist_find_data(i,&pio,oll);

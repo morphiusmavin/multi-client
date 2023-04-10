@@ -493,11 +493,13 @@ namespace EpServerEngineSampleClient
 								if(hours == 0)
 									clients_avail[k].time_string += j.ToString() + " secs";
                                 //AddMsg(clients_avail[k].time_string + " " + clients_avail[k].prev_time_string);
+                                /*
                                 if (clients_avail[k].time_string == clients_avail[k].prev_time_string)
                                 {
                                     AddMsg("Alert 2: " + clients_avail[k].label);
                                 }
                                 clients_avail[k].prev_time_string = clients_avail[k].time_string;
+                                */
                                 RedrawClientListBox();
                                 break;
                             default:

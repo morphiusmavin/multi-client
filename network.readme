@@ -10,12 +10,16 @@ todo:
 	monitor_fake_input_task reacts to change_input() used in old Truck_Project1 
 6) Move coop heaters, lights & outdoor lights to 147, replace 147 w/4600 and put 150 in NW corner 
 7) be nice if clients could just log off (but how they gonna log back in?)
-8) win client is now eating up memory for some reason
+8) win client is now eating up memory for some reason (not too bad - keep an eye on it)
 9) try getting the mqtt library working with the 4600 cards
 10) need a config file for each client/server which stores:
 	a) params for DS1620: enabled, which ones are valid, frequency of samples 
 	b) 
 11) need a suscinct way to assign ports and see them show up in the cdata.dat output 
+12) instead of having a timer to turn lights off in Garage/Cabin dialog, make it a function of 
+	the client/server that sets it's own timer to turn off the lights using the timer schedule 
+	sort/timer_task method 
+13) look into making the cdata.dat a variable field like ddata.dat 
 
 to add new commands:
 

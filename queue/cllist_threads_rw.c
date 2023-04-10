@@ -31,6 +31,50 @@ int cllist_init (cllist_t *llistp)
 }
 
 /******************************************************************************/
+int cllist_get_size(cllist_t *llistp)
+{
+	int size = 0;
+	cllist_node_t *cur, *prev;
+
+	pthread_rdwr_wlock_np(&(llistp->rwlock));
+
+	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
+	{
+		size++;
+	}
+	pthread_rdwr_wunlock_np(&(llistp->rwlock));
+	return size;
+}
+/******************************************************************************/
+int cllist_add_data(int index, cllist_t *llistp, C_DATA *datap2)
+{
+	cllist_node_t *cur, *prev, *new;
+	int found = FALSE;
+	C_DATA *datap;
+
+	pthread_rdwr_wlock_np(&(llistp->rwlock));
+	datap = malloc(sizeof(C_DATA));
+	memcpy(datap,datap2,sizeof(C_DATA));
+
+	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
+	{
+		//printf("%d ",cur->datap->value);
+	}
+	//printf("\n");
+
+	new = (cllist_node_t *)malloc(sizeof(cllist_node_t));
+	new->index = index;
+	new->datap = datap;
+	new->nextp = cur;
+	if (cur==llistp->first)
+		llistp->first = new;
+	else
+		prev->nextp = new;
+
+	pthread_rdwr_wunlock_np(&(llistp->rwlock));
+	return index;
+}
+/******************************************************************************/
 int cllist_insert_data(int index, cllist_t *llistp,C_DATA *datap2)
 {
 	cllist_node_t *cur, *prev, *new;
@@ -98,7 +142,6 @@ int cllist_remove_data(int index, C_DATA **datapp, cllist_t *llistp)
 	pthread_rdwr_wunlock_np(&(llistp->rwlock));
 	return 0;
 }
-
 /******************************************************************************/
 int cllist_removeall_data(cllist_t *llistp)
 {
@@ -198,7 +241,7 @@ int cllist_show(cllist_t *llistp)
 */
 	printf("showing C_DATA\r\n");
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
-	printf("%02x \n",cur);
+	//printf("%02x \n",cur);
 	cur=llistp->first;
 	//printf("%d\n",cur->datap->index);
 
@@ -243,7 +286,6 @@ int cllist_show(cllist_t *llistp)
 	pthread_rdwr_runlock_np(&(llistp->rwlock));
 	return 0;
 }
-
 int cllist_reorder(cllist_t *llistp)
 {
 //	char list_buf[100];
