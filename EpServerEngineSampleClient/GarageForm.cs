@@ -76,7 +76,7 @@ namespace EpServerEngineSampleClient
 						Enabled = sCtl.Enabled,
 						Name = sCtl.Name
 					});
-					AddMsg(button_list[i].Name);
+					//AddMsg(button_list[i].Name);
 					sCtl = GetNextControl(sCtl, true);
 				}
 			}
@@ -292,9 +292,26 @@ namespace EpServerEngineSampleClient
 			tbTimer.Text = timer_tick.ToString();
 			//AddMsg(timer_tick.ToString());
 		}
+		public static byte GetByteFromInt(int i)
+		{
+			byte[] bytes = BitConverter.GetBytes(i);
+			return bytes[0];
+		}
 		private void btnTimer_Click(object sender, EventArgs e)
 		{
-			timer1.Enabled = true;
+			//timer1.Enabled = true;
+			//int seconds = int.Parse(tbTimer.Text);
+			int seconds = timer_tick;
+			byte[] data = new byte[4];		// data array must be 2x of what's sent
+			uint x = (uint)seconds >> 8;
+			//AddMsg(x.ToString());
+			data[0] = (byte)x;
+			x = (uint)seconds;
+			//AddMsg(x.ToString());
+			data[1] = (byte)x;
+			int ret = svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("TURN_ALL_LIGHTS_OFF"), 8, data);
+			if (this.Visible)
+				this.Close();
 		}
 		private void btnDesk_Click(object sender, EventArgs e)
 		{
@@ -397,6 +414,9 @@ namespace EpServerEngineSampleClient
 		private void tbTimerChanged(object sender, EventArgs e)
 		{
 			timer_tick = int.Parse(tbTimer.Text);
+			if (timer_tick > 65535)
+				timer_tick = 65535;
+
 		}
 		private void label14_Click(object sender, EventArgs e)
 		{

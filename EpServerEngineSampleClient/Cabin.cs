@@ -136,7 +136,17 @@ namespace EpServerEngineSampleClient
 
 		private void btnTimer_Click(object sender, EventArgs e)
 		{
-			timer1.Enabled = true;
+			int seconds = timer_tick;
+			byte[] data = new byte[4];      // data array must be 2x of what's sent
+			uint x = (uint)seconds >> 8;
+			//AddMsg(x.ToString());
+			data[0] = (byte)x;
+			x = (uint)seconds;
+			//AddMsg(x.ToString());
+			data[1] = (byte)x;
+			int ret = svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("TURN_ALL_LIGHTS_OFF"), 2, data);
+			if (this.Visible)
+				this.Close();
 		}
 		private void TimerTick(object sender, EventArgs e)
 		{

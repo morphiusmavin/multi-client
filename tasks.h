@@ -29,6 +29,7 @@ typedef struct
 
 // global variables
 int trunning_days, trunning_hours, trunning_minutes, trunning_seconds;
+int trunning_seconds_off;
 
 REAL_BANKS real_banks[40];
 void sort_countdown(void);

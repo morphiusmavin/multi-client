@@ -829,11 +829,60 @@ static void dsSleep(int interval)
 // this happens 10x a second
 UCHAR timer2_task(int test)
 {
+	int port;
+
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
+	trunning_seconds_off = 0;
 
 	while(TRUE)
 	{
 		uSleep(1,0);
+		if(trunning_seconds_off > 0)
+		{
+			printf("%d\n",trunning_seconds_off);
+			if(--trunning_seconds_off == 0)
+			{
+				switch(this_client_id)
+				{
+					case _154:
+						port = CABIN1;
+						add_msg_queue(port, 0);
+						uSleep(0,TIME_DELAY/4);
+						port = CABIN4;
+						add_msg_queue(port, 0);
+						uSleep(0,TIME_DELAY/4);
+						port = CABIN5;
+						add_msg_queue(port, 0);
+						uSleep(0,TIME_DELAY/4);
+						port = CABIN6;
+						add_msg_queue(port, 0);
+					break;
+
+					case _SERVER:
+						port = EAST_LIGHT;
+						add_msg_queue(port, 0);
+						uSleep(0,TIME_DELAY/4);
+						port = NORTHWEST_LIGHT;
+						add_msg_queue(port, 0);
+						uSleep(0,TIME_DELAY/4);
+						port = SOUTHEAST_LIGHT;
+						add_msg_queue(port, 0);
+						uSleep(0,TIME_DELAY/4);
+						port = MIDDLE_LIGHT;
+						add_msg_queue(port, 0);
+						uSleep(0,TIME_DELAY/4);
+						port = WEST_LIGHT;
+						add_msg_queue(port, 0);
+						uSleep(0,TIME_DELAY/4);
+						port = NORTHEAST_LIGHT;
+						add_msg_queue(port, 0);
+						uSleep(0,TIME_DELAY/4);
+						port = SOUTHWEST_LIGHT;
+						add_msg_queue(port, 0);
+					break;
+				}
+			}
+		}
 
 		//printf("%d : %d -",trunning_minutes, trunning_seconds);
 		if(++trunning_seconds > 59)
@@ -1292,6 +1341,7 @@ UCHAR basic_controls_task(int test)
 		
 		//printf("basic controls: ");
 		//print_cmd(cmd);
+		//printf("%d\n",onoff);
 		//usleep(_5MS);
 
 		switch(cmd)

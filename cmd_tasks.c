@@ -325,7 +325,7 @@ UCHAR get_host_cmd_task(int test)
 			printf("%s\r\n",errmsg);
 		}
 		cs_index = cllist_get_size(&cll);
-		printf("%d no recs in cllist\n",cs_index);
+		//printf("%d no recs in cllist\n",cs_index);
 		cllist_show(&cll);
 	}else printf("can't fine %s\n",cFileName);
 
@@ -483,6 +483,12 @@ printf("\n");
 
 			switch(cmd)
 			{
+				case TURN_ALL_LIGHTS_OFF:
+					//printf("%02x %02x\n",tempx[0], tempx[1]);
+					trunning_seconds_off = (tempx[0] << 8) | tempx[1];
+					//printf("trunning_seconds_off: %d\n",trunning_seconds_off);
+					break;
+
 				case GET_TEMP4:
 					printf("ds_index: %d\n",ds_index);
 					if(ds_index > 0 && ps.ds_enable > 0)
@@ -632,7 +638,7 @@ printf("\n");
 						{
 							sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->index, ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
 									ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
-							printf("%s\n",tempx);
+							//printf("%s\n",tempx);
 							cmd = REPLY_CLLIST;
 							msg_len = strlen(tempx);
 							send_sock_msg(tempx, msg_len, cmd, _149);
