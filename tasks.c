@@ -32,7 +32,6 @@
 #include "tasks.h"
 #include "nbus/dio_ds1620.h"
 #include "cs_client/dconfig_file.h"
-#include "raw_data.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
 pthread_mutex_t     io_mem_lock=PTHREAD_MUTEX_INITIALIZER;
@@ -50,7 +49,7 @@ dllist_t dll;
 int ds_index;
 int ds_reset;
 extern int cs_index;
-
+extern CLIENT_TABLE client_table[];
 PARAM_STRUCT ps;
 
 static UCHAR read_serial_buffer[SERIAL_BUFF_SIZE];
@@ -64,9 +63,7 @@ static int mask2int(UCHAR mask);
 extern int shutdown_all;
 static int raw_data_array[RAW_DATA_ARRAY_SIZE];
 static int raw_data_ptr;
-int avg_raw_data(int sample_size);
 static void dsSleep(int interval);
-char *lookup_raw_data(int val);
 int max_ips;
 IP ip[40];
 
@@ -646,18 +643,17 @@ int change_output(int index, int onoff)
 }
 #endif
 /*********************************************************************/
-// do the same thing as monitor_input_tasks but with the fake arrays
-// set by change_inputs()
 UCHAR poll_ds1620_task(int test)
 {
 	int val;
 	int i,j;
 	time_t T;
 	struct tm tm;
-	char sock_msg[30];
+	char sock_msg[50];
 	char errmsg[20];
 	int bad_ds_count = 5;
 	char date_str[20];
+	float fval,C,F;
 
 	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
 	D_DATA **dtpp = &dtp;
@@ -697,11 +693,32 @@ UCHAR poll_ds1620_task(int test)
 		if(ps.valid_ds[i] > 0 && ds_reset == 0)
 		{
 			writeByteTo1620(DS1620_CMD_STARTCONV);
-			uSleep(0,TIME_DELAY/8);
+			uSleep(0,TIME_DELAY/2);
 			val = readTempFrom1620(i);
+
+			//printf("%d\n",val);
+/*
+			val &= ~0x100;
+			printf("%02x\n",val);
+*/
 			//printf("%s\n",lookup_raw_data(val));
-			uSleep(0,TIME_DELAY/8);
+			uSleep(0,TIME_DELAY/2);
 			writeByteTo1620(DS1620_CMD_STOPCONV);
+			fval = (float)val;
+			//printf("%.2f\t\t",fval);
+
+			if(fval >= 0.0 && fval <= 250.0)
+			{
+				C = fval/2.0;
+
+			}
+			else if(fval >= 403 && fval <= 511)
+			{
+				C = (fval - 512.0)/2.0;
+			}
+			F = C*9.0;
+			F /= 5.0;
+			F += 32.0;
 
 			//printf("polling ds: %d %d\n",i,ds_index);
 			T = time(NULL);
@@ -719,9 +736,10 @@ UCHAR poll_ds1620_task(int test)
 			ds_index++;
 			ds_index = dllist_add_data(ds_index, &dll, dtp);
 			uSleep(0,TIME_DELAY/16);
-			sprintf(sock_msg, "%0d %0d %0d",this_client_id, i, val);
-			printf("%s\n",sock_msg);
-			//send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _149);	// to win cl
+			memset(sock_msg,0,sizeof(sock_msg));
+			sprintf(sock_msg, "%s    %0d     %0.1f       ",client_table[this_client_id].label, i, F);
+			//printf("%s\n",sock_msg);
+			send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _149);	// to win cl
 			//uSleep(0,TIME_DELAY/16);
 			//send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, 4);
 			//dllist_find_data(index, dtpp, &dll);
@@ -776,12 +794,6 @@ UCHAR poll_ds1620_task(int test)
 	return 1;
 }
 /*********************************************************************/
-char *lookup_raw_data(int val)
-{
-	int i = 0;
-	while(raw_data[i].raw != val && i++ < 360);
-	return raw_data[i].str;
-}
 /*********************************************************************/
 static void dsSleep(int interval)
 {
@@ -839,7 +851,7 @@ UCHAR timer2_task(int test)
 		uSleep(1,0);
 		if(trunning_seconds_off > 0)
 		{
-			printf("%d\n",trunning_seconds_off);
+			//printf("%d\n",trunning_seconds_off);
 			if(--trunning_seconds_off == 0)
 			{
 				switch(this_client_id)
@@ -1642,6 +1654,7 @@ UCHAR basic_controls_task(int test)
 	return 1;
 }
 /*********************************************************************/
+/*
 int avg_raw_data(int sample_size)
 {
 	int i;
@@ -1668,6 +1681,7 @@ int avg_raw_data(int sample_size)
 	free(dtp);
 	return temp_data;
 }
+*/
 /*********************************************************************/
 float convertF(int raw_data)
 {

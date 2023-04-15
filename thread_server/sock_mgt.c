@@ -242,6 +242,7 @@ UCHAR get_host_cmd_task(int test)
 		switch(cmd)
 		{
 			case DS1620_MSG:
+				//printf("%s\n",write_serial_buff);
 				send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
 				break;
 

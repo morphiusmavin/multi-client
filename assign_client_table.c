@@ -5,7 +5,7 @@
 #include <semaphore.h>
 #include "mytypes.h"
 
-extern CLIENT_TABLE client_table[MAX_CLIENTS];
+CLIENT_TABLE client_table[MAX_CLIENTS];
 void assign_client_table(void)
 {
 	int i;

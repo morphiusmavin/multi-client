@@ -48,7 +48,7 @@ typedef struct
 	int task_id;
 }CLIENT_TABLE;
 
-CLIENT_TABLE client_table[MAX_CLIENTS];
+//CLIENT_TABLE client_table[MAX_CLIENTS];
 
 enum client_types
 {

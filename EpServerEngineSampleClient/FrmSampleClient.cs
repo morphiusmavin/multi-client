@@ -427,8 +427,8 @@ namespace EpServerEngineSampleClient
             switch (str)
             {
                 case "DS1620_MSG":
-                    //AddMsg(ret.ToString());
-                    
+                    AddMsg(ret.ToString());
+                    /*
                     words = ret.Split(' ');
                     i = 0;
                     foreach(var word in words)
@@ -436,18 +436,19 @@ namespace EpServerEngineSampleClient
                         switch(i)
 						{
                             case 0:
-                                //AddMsg("client id: " + word);
+                                AddMsg("client id: " + word);
                                 break;
                             case 1:
-                                //AddMsg("sensor: " + word);
+                                AddMsg("sensor: " + word);
                                 break;
                             case 2:
-                                AddMsg("val: " + lookup_DS1620(word));
-                                //AddMsg("val: " + word);
+                                //AddMsg("val: " + lookup_DS1620(word));
+                                AddMsg("val: " + word);
                                 break;
 						}
                         i++;
 					}
+                    */
                     
                     break;
 
@@ -492,7 +493,7 @@ namespace EpServerEngineSampleClient
                                 j = int.Parse(word);
 								if(hours == 0)
 									clients_avail[k].time_string += j.ToString() + " secs";
-                                //AddMsg(clients_avail[k].time_string + " " + clients_avail[k].prev_time_string);
+                               //AddMsg(clients_avail[k].time_string);
                                 /*
                                 if (clients_avail[k].time_string == clients_avail[k].prev_time_string)
                                 {
@@ -852,11 +853,13 @@ namespace EpServerEngineSampleClient
                 {
                     AddMsg("one minute after midnight");
                 }
-                else if (tick > 260 && second == 30)
+                /*
+                else if (tick > 120 && second == 30)
                 {
-                    //AddMsg("test");
-                    ReportAllTimeUp(0);
+                    if (garageform.Visible == false && testbench.Visible == false && timer_schedule.Visible == false)
+                        ReportAllTimeUp(0);
                 }
+                
                 else if(client_alert && second % 10 == 0)
 				{
                     System.Media.SoundPlayer player;
@@ -865,7 +868,9 @@ namespace EpServerEngineSampleClient
                     player.SoundLocation = song;
                     player.Play();
                     player.Dispose();
+                    //client_alert = false;
                 }
+                */
                 /*
                 else if((tick <= 120 && second % 5 == 0) || (tick > 120 && tick <= 240 && second == 0) || (tick > 240 && minute % 2 == 0 && second == 0))
                 {

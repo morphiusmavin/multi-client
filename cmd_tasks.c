@@ -44,6 +44,7 @@ extern cllist_t cll;
 extern dllist_t dll;
 extern int ds_index;
 extern int ds_reset;
+extern CLIENT_TABLE client_table[];
 int cs_index;
 
 //UCHAR msg_buf[SERIAL_BUFF_SIZE];
@@ -54,8 +55,8 @@ int shutdown_all;
 extern int curr_countdown_size;
 extern void sort_countdown(void);
 extern void display_sort(void);
-extern char *lookup_raw_data(int val);
-extern int avg_raw_data(int sample_size);
+char *lookup_raw_data(int val);
+//extern int avg_raw_data(int sample_size);
 
 inline int pack4chars(char c1, char c2, char c3, char c4) {
     return ((int)(((unsigned char)c1) << 24)
@@ -67,6 +68,13 @@ inline int pack4chars(char c1, char c2, char c3, char c4) {
 
 struct msgqbuf msg;		// this has to be shared by send_sock_msg & get_host_cmd_task
 int msgtype = 1;
+
+char *lookup_raw_data(int val)
+{
+	int i = 0;
+	while(raw_data[i].raw != val && i++ < 360);
+	return raw_data[i].str;
+}
 
 void print_cmd(UCHAR cmd)
 {
@@ -357,6 +365,8 @@ UCHAR get_host_cmd_task(int test)
 	//printf("%s\n",errmsg);
 	//printf("%d %d\n",ps.ds_interval, ps.ds_enable);
 #endif
+
+	assign_client_table();
 
 	while(TRUE)
 	{

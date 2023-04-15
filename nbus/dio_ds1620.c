@@ -44,6 +44,7 @@ void set_dir(int pin, int dir)
 	if(dir > 0)
 		nbus_poke16(0x28, pin | 0x80);
 	else nbus_poke16(0x28, pin & ~0x80);
+	mydelay(1);
 }
 /*********************************************************************************/
 void set_pin(int pin, int val)
@@ -51,6 +52,7 @@ void set_pin(int pin, int val)
 	if(val > 0)
 		nbus_poke16(0x26, pin | 0x80);
 	else nbus_poke16(0x26, pin & ~0x80);
+	mydelay(1);
 }
 /*********************************************************************************/
 void initDS1620(void)
@@ -91,19 +93,19 @@ static void shiftOutByte( UCHAR val )
 	// Send UCHAR, LSB first
 	for( i = 0; i < 8; i++ )
 	{
+		mydelay(2);
 		set_pin(CLK,LOW);
 
 		// Set bit
 		if( val & (1 << i))
 		{
 			set_pin(DQ,HIGH);
-			mydelay(4);
 		}
 		else
 		{
 			set_pin(DQ,LOW);
-			mydelay(4);
 		}
+		mydelay(2);
 		set_pin(CLK,HIGH);
 	}
 }
@@ -164,8 +166,10 @@ int readTempFrom1620(int which)
 		mydelay(5);
 		state = get_pin(DQ);
 		if(state == HIGH)
-			raw |= (1 << i);									// add value
+			raw |= (1 << i);
 		set_pin(CLK,HIGH);
+		mydelay(5);
+		
 	}
 
 	set_pin(current_ds[current_ds_ptr],LOW);
