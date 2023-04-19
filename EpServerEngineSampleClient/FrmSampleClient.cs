@@ -453,6 +453,8 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "UPTIME_MSG":
+                    if (NoUpdate)
+                        break;
                     //AddMsg("ret: " + ret);
                     words = ret.Split(' ');
                     i = 0;
@@ -514,7 +516,7 @@ namespace EpServerEngineSampleClient
                 case "SEND_MESSAGE":
                     //AddMsg("str: " + str + " " + str.Length.ToString());
                     //AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
-                    AddMsg("send msg: " + ret);
+                    AddMsg(ret);
                     //ListMsg(ret, false);
                     break;
 
@@ -830,7 +832,7 @@ namespace EpServerEngineSampleClient
                     {
                         if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
                         {
-                            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
+                            //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
                             //AddMsg(cl.label);
                         }
                     }
@@ -853,14 +855,14 @@ namespace EpServerEngineSampleClient
                 {
                     AddMsg("one minute after midnight");
                 }
-                /*
-                else if (tick > 120 && second == 30)
+                
+                else if (tick > 120 && second == 30 && NoUpdate == false)
                 {
                     if (garageform.Visible == false && testbench.Visible == false && timer_schedule.Visible == false)
                         ReportAllTimeUp(0);
                 }
                 
-                else if(client_alert && second % 10 == 0)
+                else if(client_alert && second % 10 == 0 && NoUpdate == false)
 				{
                     System.Media.SoundPlayer player;
                     string song = "c:\\users\\Daniel\\Music\\alert.wav";
@@ -870,7 +872,7 @@ namespace EpServerEngineSampleClient
                     player.Dispose();
                     //client_alert = false;
                 }
-                */
+                
                 /*
                 else if((tick <= 120 && second % 5 == 0) || (tick > 120 && tick <= 240 && second == 0) || (tick > 240 && minute % 2 == 0 && second == 0))
                 {
@@ -1395,6 +1397,13 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
+        bool NoUpdate = false;
+		private void CheckChangedNoUpdate(object sender, EventArgs e)
+		{
+            NoUpdate = cbNoUpdate.Checked;
+            AddMsg("no update: " + NoUpdate.ToString());
+		}
+
 		private void tbAlarmMinutes_TextChanged(object sender, EventArgs e)
         {
             alarm_minutes = int.Parse(tbAlarmMinutes.Text);

@@ -150,7 +150,7 @@ UCHAR recv_msg_task(int test)
 
 		if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
 		{
-			printf("recv msg task shutdown 1\n");
+			//printf("recv msg task shutdown 1\n");
 			return 0;
 		}
 
@@ -240,7 +240,7 @@ UCHAR get_host_cmd_task(int test)
 		if(shutdown_all == 1)
 		{
 			uSleep(0,TIME_DELAY/16);
-			printf("cmd_host shutdown\n");
+			//printf("cmd_host shutdown\n");
 			return 0;
 		}
 	}
@@ -374,9 +374,9 @@ void close_tcp(void)
 {
 	if(sock_open)
 	{
-		printf("closing socket...\r\n");
+		//printf("closing socket...\r\n");
 		close(global_socket);
-		printf("socket closed!\r\n");
+		//printf("socket closed!\r\n");
 		global_socket = -1;
 		set_sock(-1);
 	}else
@@ -516,7 +516,7 @@ int put_sock(UCHAR *buf,int buflen, int block, char *errmsg)
 			strcat(errmsg,extra_msg);
 			strcat(errmsg," put_sock");
 			close_tcp();
-			printf("closing tcp socket\n");
+			//printf("closing tcp socket\n");
 		}else strcpy(errmsg,"Success\0");
 	}
 	else

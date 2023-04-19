@@ -86,6 +86,7 @@
 			this.btnGetTemp = new System.Windows.Forms.Button();
 			this.timer3 = new System.Windows.Forms.Timer(this.components);
 			this.AlertLabel = new System.Windows.Forms.Label();
+			this.cbNoUpdate = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.groupBox2.SuspendLayout();
@@ -704,12 +705,24 @@
 			this.AlertLabel.Size = new System.Drawing.Size(0, 20);
 			this.AlertLabel.TabIndex = 0;
 			// 
+			// cbNoUpdate
+			// 
+			this.cbNoUpdate.AutoSize = true;
+			this.cbNoUpdate.Location = new System.Drawing.Point(592, 537);
+			this.cbNoUpdate.Name = "cbNoUpdate";
+			this.cbNoUpdate.Size = new System.Drawing.Size(78, 17);
+			this.cbNoUpdate.TabIndex = 90;
+			this.cbNoUpdate.Text = "No Update";
+			this.cbNoUpdate.UseVisualStyleBackColor = true;
+			this.cbNoUpdate.CheckedChanged += new System.EventHandler(this.CheckChangedNoUpdate);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1005, 576);
+			this.Controls.Add(this.cbNoUpdate);
 			this.Controls.Add(this.AlertLabel);
 			this.Controls.Add(this.btnGetTemp);
 			this.Controls.Add(this.label9);
@@ -832,6 +845,7 @@
 		private System.Windows.Forms.Button btnGetTemp;
 		private System.Windows.Forms.Timer timer3;
 		private System.Windows.Forms.Label AlertLabel;
+		private System.Windows.Forms.CheckBox cbNoUpdate;
 	}
 }
 

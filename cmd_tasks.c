@@ -165,23 +165,23 @@ UCHAR get_host_cmd_task(int test)
 	msg.mtype = msgtype;
 
 #ifdef SERVER_146
-	printf("starting server\n");
+	//printf("starting server\n");
 	this_client_id = _SERVER;
 #endif
 #ifdef CL_150
-	printf("starting 150\n");
+	//printf("starting 150\n");
 	this_client_id = _150;
 #endif
 #ifdef CL_147
-	printf("starting 147\n");
+	//printf("starting 147\n");
 	this_client_id = _147;
 #endif 
 #ifdef CL_154
-	printf("starting 154\n");
+	//printf("starting 154\n");
 	this_client_id = _154;
 #endif 
 #ifdef CL_151
-	printf("starting 151\n");
+	//printf("starting 151\n");
 	this_client_id = _151;
 #endif 
 #if 1
@@ -334,7 +334,7 @@ UCHAR get_host_cmd_task(int test)
 		}
 		cs_index = cllist_get_size(&cll);
 		//printf("%d no recs in cllist\n",cs_index);
-		cllist_show(&cll);
+		//cllist_show(&cll);
 	}else printf("can't fine %s\n",cFileName);
 
 	dllist_init(&dll);
@@ -504,7 +504,9 @@ printf("\n");
 					if(ds_index > 0 && ps.ds_enable > 0)
 					{
 						dllist_find_data(ds_index, dtpp, &dll);
-						printf("%d:%d:%d - %s\n",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
+						sprintf(tempx,"%d:%d:%d - %s       ",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
+						cmd = SEND_MESSAGE;
+						send_sock_msg(tempx, strlen(tempx), cmd, _149);
 						//printf("%d:%d:%d %d\n",dtp->hour, dtp->minute, dtp->second, dtp->value);
 					}else printf("not enabled\n");
 					//printf("avg: %d\n",avg_raw_data(sample_size));	not working yet
@@ -706,11 +708,11 @@ printf("\n");
 					tempx[2] = (UCHAR)j;
 					tempx[3] = (UCHAR)(j >> 4);
 					tempx[4] = 0;
-
-					//send_msg(4,(UCHAR*)tempx, SEND_STATUS, _SERVER);
-//						send_msg(strlen((char*)tempx),(UCHAR*)tempx, SEND_STATUS, _SERVER);
-					printf("k: %d j: %d\n",k,j);
-//						printf("send status\n");
+					cmd = SEND_MESSAGE;
+					sprintf(tempx,"k: %d j: %d     ",k,j);
+					msg_len = strlen(tempx);
+					send_sock_msg(tempx, msg_len, cmd, _149);
+					printf("%s\n",tempx);
 					break;
 
 				case SEND_MESSAGE:
@@ -718,7 +720,7 @@ printf("\n");
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");
-					send_sock_msg(tempx, msg_len, cmd, _SERVER);
+					send_sock_msg(tempx, msg_len, cmd, _149);
 					break;
 
 				case SET_TIME:
@@ -832,16 +834,22 @@ printf("\n");
 					gettimeofday(&mtv, NULL);
 					curtime2 = mtv.tv_sec;
 					strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
-					printf(tempx);
+					//printf(tempx);
 					strftime(tempx,30,"%H",localtime(&curtime2));  // show as 24-hour (00 -> 23)
-					printf(tempx);
-					printf("\n");
+					//printf(tempx);
+					//printf("\n");
 					strftime(tempx,30,"%I",localtime(&curtime2));	// show as 12-hour (01 -> 12)
-					printf(tempx);
+					//printf(tempx);
 					printf("\n");
 					T = time(NULL);
 					tm = *localtime(&T);
-					printf("%02d:%02d:%02d\n", tm.tm_hour, tm.tm_min, tm.tm_sec);
+					memset(tempx,0,sizeof(tempx));
+					sprintf(tempx,"%02d:%02d:%02d       ", tm.tm_hour, tm.tm_min, tm.tm_sec);
+					//printf("%s\n",tempx);
+					msg_len = strlen(tempx);
+					//printf("msg_len: %d\n",msg_len);
+					cmd = SEND_MESSAGE;
+					send_sock_msg(tempx, msg_len, cmd, _149);
 					break;
 
 				case BAD_MSG:

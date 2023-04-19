@@ -23,6 +23,8 @@ todo:
 14) Use push buttons hooked up to inputs on 146 to turn on/off lights in garage 
 15) Use config.bin to store variable that tells how often to rename ddata.dat. (the dat file 
 	for temperatures)
+16) Need a way to monitor ddata.dat size (ds_index) 
+17) Need to be able to monitor the cdata.dat & ddata.dat files from the wincl only and not the tty
 
 to add new commands:
 

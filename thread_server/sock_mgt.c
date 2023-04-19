@@ -155,20 +155,13 @@ UCHAR sock_timer(int test)
 			send_msg(client_table[i].socket, strlen(tempx),&tempx[0],SEND_TIMEUP);
 			uSleep(30,0);
 		}
-		i++;
-		if(i > 4)
+		if(i++ > MAX_CLIENTS)
 			i = 0;
-/*		
-		strcpy(tempx,"testing \0");
-		if((s_tick % 2) == 0)
-			send_msg(client_table[_147].socket, strlen(tempx),&tempx[0],SEND_MESSAGE);
-		else send_msg(client_table[_154].socket, strlen(tempx),&tempx[0],SEND_MESSAGE);
-*/
 		s_tick++;
 		//printf("%d \n",s_tick);
 		if(shutdown_all == 1)
 		{
-			printf("sock_timer shutdown\n");
+			//printf("sock_timer shutdown\n");
 			return 0;
 		}
 	}
@@ -231,10 +224,10 @@ UCHAR get_host_cmd_task(int test)
 		//printf("msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+4,msg_len);
 /*
-		for(i = 1;i < msg_len+1;i++)
+		for(i = 0;i < msg_len;i++)
 			printf("%02x ",write_serial_buff[i]);
+		printf("\n");
 */
-
 //		if(cmd > 0)
 		rc = 0;
 		//printf("server get_cmd_host :");
@@ -341,14 +334,14 @@ UCHAR get_host_cmd_task(int test)
 					exit(EXIT_FAILURE);
 				}
 				break;
-*/
+
 			case SEND_STATUS:
 				temp = 0;
 				temp = (int)(write_serial_buff[3] << 4);
 				temp |= (int)write_serial_buff[2];
-				printf("temp: %d\n",temp);
+				printf("server temp: %d\n",temp);
 				break;
-
+*/
 			case BAD_MSG:
 //						shutdown_all = 1;
 				break;
@@ -369,12 +362,19 @@ UCHAR get_host_cmd_task(int test)
 				shutdown_all = 1;
 				return 0;
 				break;
+			default:
+				//print_cmd(cmd);
+				//printf("msg_len: %d\n",msg_len);
+				//printf("dest: %d\n",dest);
+				if(dest == 0)
+					send_msgb(client_table[dest].socket, msg_len*2, write_serial_buff, cmd);
+				else send_msg(client_table[dest].socket, msg_len, write_serial_buff, cmd);
 		}	// end of switch
 		uSleep(0,TIME_DELAY/16);
 		if(shutdown_all == 1)
 		{
 			uSleep(0,TIME_DELAY/16);
-			printf("cmd_host shutdown\n");
+			//printf("cmd_host shutdown\n");
 			return 0;
 		}
 	}		// end of while(TRUE)
@@ -931,8 +931,8 @@ UCHAR tcp_monitor_task(int test)
 //					if(i == 0)
 //						s_tick = 0;
 					client_table[i].socket = new_socket;
-					printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, 
-							client_table[i].label,client_table[i].socket);
+					//printf("index: %d type: %d label: %s socket: %d\n",i, client_table[i].type, 
+							//client_table[i].label,client_table[i].socket);
 					memset(tempx,0,sizeof(tempx));
 					sprintf(tempx,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
 					//printf("should be sending msg to win cl: %s\n",tempx);
@@ -955,7 +955,7 @@ UCHAR tcp_monitor_task(int test)
 			if(shutdown_all)
 			{
 				uSleep(1,0);
-				printf("shutting down tcp monitor\n");
+				//printf("shutting down tcp monitor\n");
 				return 0;
 			}
 		}
@@ -969,7 +969,7 @@ UCHAR tcp_monitor_task(int test)
 				uSleep(0,TIME_DELAY/16);
 				// this never happens when doing a SEND_MSG but when it does a SHUTDOWN 
 				// it's because we were not closing the socket
-				printf("*socket: %d ",sd);
+				//printf("*socket: %d ",sd);
 				client_socket[i] = 0;
 			}
 		}
@@ -977,7 +977,7 @@ UCHAR tcp_monitor_task(int test)
 		if(shutdown_all)
 		{
 			uSleep(1,0);
-			printf("shutting down tcp monitor\n");
+			//printf("shutting down tcp monitor\n");
 			return 0;
 		}
 /*

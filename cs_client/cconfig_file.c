@@ -66,7 +66,7 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size, char *errmsg)
 	for(i = 0;i < NO_CLLIST_RECS;i++)
 	{
 		ret2 = read(fp,&c_data,sizeof(C_DATA));
-		printf("%d %d %d\n",i,ret2,ret);
+		//printf("%d %d %d\n",i,ret2,ret);
 		if(ret2 == 0)
 			break;
 		ret += ret2;
@@ -82,7 +82,7 @@ int clLoadConfig(char *filename, cllist_t *oll, size_t size, char *errmsg)
 		cllist_insert_data(i, oll, &c_data);
 	}
 	//printf("fp:%d  read: %d bytes in clLoadConfig\n",fp,ret);
-	printf("done\n");
+	//printf("done\n");
 	close(fp);
 	strcpy(errmsg,"Success\0");
 	return 0;

@@ -44,3 +44,52 @@ int main(void)
 // C = 5/9(F-32)
 
 // F = (9/5)C + 32
+/*
+#include <stdio.h>
+
+typedef struct
+{
+int temp;
+int digital_output;
+} TEMP_DIGITAL_OUTPUT;
+
+// Define the input values
+TEMP_DIGITAL_OUTPUT input_data[] = {
+{125, 0x00FA},
+{25, 0x0032},
+{0.5, 0x0001},
+{0, 0x0000},
+{-0.5, 0x01FF},
+{-25, 0x01CE},
+{-55, 0x0192}
+};
+
+int main()
+{
+	int i, count;
+	float sum_temp = 0;
+
+	// Calculate the average temperature
+	count = sizeof(input_data) / sizeof(input_data[0]);
+	for (i = 0; i < count; i++) 
+	{
+		if (input_data.digital_output & 0x8000) { // Check if the temperature is negative
+			input_data.temp = -(~(input_data.digital_output - 1) & 0x7FFF); // Convert the two's complement
+		} else 
+		{
+			input_data.temp = input_data.digital_output & 0x7FFF; // Positive temperature
+		}
+		sum_temp += input_data.temp;
+		}
+		float average_temp = sum_temp / count;
+
+		// Print the results
+		printf("Input values:\n");
+		for (i = 0; i < count; i++) {
+		printf("%d°C 0x%04Xh\n", input_data.temp, input_data.digital_output);
+	}
+	printf("\nAverage temperature: %.2f°C\n", average_temp);
+
+	return 0;
+}
+*/

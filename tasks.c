@@ -758,8 +758,8 @@ UCHAR poll_ds1620_task(int test)
 				tm = *localtime(&T);
 				memset(dtp,0,sizeof(D_DATA));
 				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-				printf("reset: %s\n",date_str);
-				printf("ds_index: %d\n",ds_index);
+				//printf("reset: %s\n",date_str);
+				//printf("ds_index: %d\n",ds_index);
 				dlWriteConfig(date_str, &dll, ds_index, errmsg);
 				//rename("ddata.dat",date_str);
 				//dllist_remove_data(int index, D_DATA **datapp, dllist_t *llistp)
@@ -793,7 +793,6 @@ UCHAR poll_ds1620_task(int test)
 	}
 	return 1;
 }
-/*********************************************************************/
 /*********************************************************************/
 static void dsSleep(int interval)
 {
@@ -903,7 +902,7 @@ UCHAR timer2_task(int test)
 			if(++trunning_minutes > 59)
 			{
 				trunning_minutes = 0;
-				ds_reset = 1;
+				//ds_reset = 1;
 				if(++trunning_hours > 23)
 				{
 					trunning_hours = 0;
@@ -1025,11 +1024,18 @@ void sort_countdown(void)
 void display_sort()
 {
 	int i;
-	printf("index\tsec away\tport\tonoff\thour\tmin\tsec\n");
+	char sock_msg[50];
+	//printf("index\tsec away\tport\tonoff\thour\tmin\tsec\n");
 	for(i = 0;i < curr_countdown_size;i++)
 	{
 		if(count_down[i].seconds_away > -1)
-			printf("%d:\t%d\t\t%d\t%d\t%d\t%d\t%d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
+		{
+			printf("%d:\t%d\t\t%d\t%d\t%d\t%d\t%d        ",count_down[i].index, 
+				count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,
+						count_down[i].hour,count_down[i].minute,count_down[i].second);
+			uSleep(0,TIME_DELAY/4);			
+			send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), SEND_MESSAGE, _149);	// to win cl
+		}
 	}
 }
 /*********************************************************************/
