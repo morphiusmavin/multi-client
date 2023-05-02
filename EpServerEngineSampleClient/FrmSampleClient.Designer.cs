@@ -30,92 +30,83 @@
         {
 			this.components = new System.ComponentModel.Container();
 			this.tbReceived = new System.Windows.Forms.TextBox();
-			this.btnConnect = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.tbPort = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.table = new System.Data.DataTable();
 			this.tbConnected = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
-			this.btnAssignFunc = new System.Windows.Forms.Button();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.cbWhichWinClient = new System.Windows.Forms.ComboBox();
 			this.cbIPAdress = new System.Windows.Forms.ComboBox();
-			this.btnMngServer = new System.Windows.Forms.Button();
-			this.btnRescan = new System.Windows.Forms.Button();
 			this.btnFnc3 = new System.Windows.Forms.Button();
 			this.btnClear = new System.Windows.Forms.Button();
 			this.btnFnc1 = new System.Windows.Forms.Button();
-			this.btnGarageForm = new System.Windows.Forms.Button();
-			this.btnCabin = new System.Windows.Forms.Button();
 			this.timer1 = new System.Windows.Forms.Timer(this.components);
 			this.lbAvailClients = new System.Windows.Forms.ListBox();
-			this.btnRebootClient = new System.Windows.Forms.Button();
-			this.btnShutdownClient = new System.Windows.Forms.Button();
-			this.btnSendStatus = new System.Windows.Forms.Button();
-			this.btnSendMsg = new System.Windows.Forms.Button();
-			this.bSetClientTime = new System.Windows.Forms.Button();
-			this.btnReportTimeUp = new System.Windows.Forms.Button();
-			this.btnExit2Shell = new System.Windows.Forms.Button();
-			this.tbSendMsg = new System.Windows.Forms.TextBox();
-			this.btnTestBench = new System.Windows.Forms.Button();
-			this.tbAlarmHours = new System.Windows.Forms.TextBox();
-			this.cbAlarm = new System.Windows.Forms.CheckBox();
 			this.tbTodaysDate = new System.Windows.Forms.TextBox();
 			this.label10 = new System.Windows.Forms.Label();
 			this.tbTime = new System.Windows.Forms.TextBox();
 			this.btnFnc2 = new System.Windows.Forms.Button();
 			this.btnMinimize = new System.Windows.Forms.Button();
-			this.btnTimerSchedules = new System.Windows.Forms.Button();
-			this.btnOutdoor = new System.Windows.Forms.Button();
-			this.tbAlarmMinutes = new System.Windows.Forms.TextBox();
-			this.label5 = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
-			this.label7 = new System.Windows.Forms.Label();
-			this.tbAlarmSeconds = new System.Windows.Forms.TextBox();
 			this.timer2 = new System.Windows.Forms.Timer(this.components);
-			this.tbAlarmTick = new System.Windows.Forms.TextBox();
-			this.btnGetTime = new System.Windows.Forms.Button();
-			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.btnFnc4 = new System.Windows.Forms.Button();
 			this.btnFnc5 = new System.Windows.Forms.Button();
 			this.btnSendSort = new System.Windows.Forms.Button();
-			this.btnUnused = new System.Windows.Forms.Button();
 			this.label9 = new System.Windows.Forms.Label();
-			this.btnGetTemp = new System.Windows.Forms.Button();
 			this.timer3 = new System.Windows.Forms.Timer(this.components);
 			this.AlertLabel = new System.Windows.Forms.Label();
 			this.cbNoUpdate = new System.Windows.Forms.CheckBox();
+			this.tbNoChartRec = new System.Windows.Forms.TextBox();
+			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.clientControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.cabinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.garageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.testbenchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.outdoorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.utilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.dS1620ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.timersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.minimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.clearAlertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.assignFunctionKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.clientListActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.exitToShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.showTimeUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.getTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.setTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.rebootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.shutdownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.getStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.loadTempFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.loadGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.clearGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.changeGraphParamsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.graphTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.btnConnect = new System.Windows.Forms.Button();
+			this.btnExit = new System.Windows.Forms.Button();
+			this.timer4 = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
-			this.groupBox2.SuspendLayout();
+			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tbReceived
 			// 
 			this.tbReceived.Anchor = System.Windows.Forms.AnchorStyles.None;
 			this.tbReceived.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbReceived.Location = new System.Drawing.Point(25, 364);
+			this.tbReceived.Location = new System.Drawing.Point(230, 208);
 			this.tbReceived.Multiline = true;
 			this.tbReceived.Name = "tbReceived";
 			this.tbReceived.ReadOnly = true;
 			this.tbReceived.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this.tbReceived.Size = new System.Drawing.Size(216, 192);
+			this.tbReceived.Size = new System.Drawing.Size(216, 168);
 			this.tbReceived.TabIndex = 16;
 			this.tbReceived.TabStop = false;
-			// 
-			// btnConnect
-			// 
-			this.btnConnect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnConnect.Location = new System.Drawing.Point(272, 69);
-			this.btnConnect.Name = "btnConnect";
-			this.btnConnect.Size = new System.Drawing.Size(193, 38);
-			this.btnConnect.TabIndex = 4;
-			this.btnConnect.Text = "Connect Server";
-			this.btnConnect.UseVisualStyleBackColor = false;
-			this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
 			// 
 			// label2
 			// 
@@ -169,18 +160,6 @@
 			this.label3.TabIndex = 7;
 			this.label3.Text = "Status:";
 			// 
-			// btnAssignFunc
-			// 
-			this.btnAssignFunc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnAssignFunc.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnAssignFunc.Location = new System.Drawing.Point(318, 12);
-			this.btnAssignFunc.Name = "btnAssignFunc";
-			this.btnAssignFunc.Size = new System.Drawing.Size(147, 46);
-			this.btnAssignFunc.TabIndex = 27;
-			this.btnAssignFunc.Text = "Assign FN";
-			this.btnAssignFunc.UseVisualStyleBackColor = false;
-			this.btnAssignFunc.Click += new System.EventHandler(this.BtnAssignFunction);
-			// 
 			// groupBox1
 			// 
 			this.groupBox1.Controls.Add(this.label4);
@@ -192,7 +171,7 @@
 			this.groupBox1.Controls.Add(this.label2);
 			this.groupBox1.Controls.Add(this.tbPort);
 			this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox1.Location = new System.Drawing.Point(479, 135);
+			this.groupBox1.Location = new System.Drawing.Point(479, 172);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(300, 204);
 			this.groupBox1.TabIndex = 34;
@@ -232,35 +211,11 @@
 			this.cbIPAdress.TabIndex = 0;
 			this.cbIPAdress.SelectedIndexChanged += new System.EventHandler(this.IPAddressChanged);
 			// 
-			// btnMngServer
-			// 
-			this.btnMngServer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnMngServer.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnMngServer.Location = new System.Drawing.Point(23, 73);
-			this.btnMngServer.Name = "btnMngServer";
-			this.btnMngServer.Size = new System.Drawing.Size(216, 56);
-			this.btnMngServer.TabIndex = 0;
-			this.btnMngServer.Text = "Manage Server";
-			this.btnMngServer.UseVisualStyleBackColor = false;
-			this.btnMngServer.Click += new System.EventHandler(this.btnMngServer_Click);
-			// 
-			// btnRescan
-			// 
-			this.btnRescan.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnRescan.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnRescan.Location = new System.Drawing.Point(23, 143);
-			this.btnRescan.Name = "btnRescan";
-			this.btnRescan.Size = new System.Drawing.Size(216, 56);
-			this.btnRescan.TabIndex = 1;
-			this.btnRescan.Text = "DS1620";
-			this.btnRescan.UseVisualStyleBackColor = false;
-			this.btnRescan.Click += new System.EventHandler(this.btnRescan_Click);
-			// 
 			// btnFnc3
 			// 
 			this.btnFnc3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnFnc3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnFnc3.Location = new System.Drawing.Point(139, 12);
+			this.btnFnc3.Location = new System.Drawing.Point(139, 42);
 			this.btnFnc3.Name = "btnFnc3";
 			this.btnFnc3.Size = new System.Drawing.Size(52, 47);
 			this.btnFnc3.TabIndex = 24;
@@ -272,7 +227,7 @@
 			// 
 			this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnClear.Location = new System.Drawing.Point(272, 124);
+			this.btnClear.Location = new System.Drawing.Point(23, 104);
 			this.btnClear.Name = "btnClear";
 			this.btnClear.Size = new System.Drawing.Size(193, 38);
 			this.btnClear.TabIndex = 6;
@@ -284,37 +239,13 @@
 			// 
 			this.btnFnc1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnFnc1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnFnc1.Location = new System.Drawing.Point(23, 12);
+			this.btnFnc1.Location = new System.Drawing.Point(23, 42);
 			this.btnFnc1.Name = "btnFnc1";
 			this.btnFnc1.Size = new System.Drawing.Size(52, 47);
 			this.btnFnc1.TabIndex = 22;
 			this.btnFnc1.Text = "F1";
 			this.btnFnc1.UseVisualStyleBackColor = false;
 			this.btnFnc1.Click += new System.EventHandler(this.Function1Click);
-			// 
-			// btnGarageForm
-			// 
-			this.btnGarageForm.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnGarageForm.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnGarageForm.Location = new System.Drawing.Point(272, 332);
-			this.btnGarageForm.Name = "btnGarageForm";
-			this.btnGarageForm.Size = new System.Drawing.Size(193, 38);
-			this.btnGarageForm.TabIndex = 17;
-			this.btnGarageForm.Text = "Garage Lights";
-			this.btnGarageForm.UseVisualStyleBackColor = false;
-			this.btnGarageForm.Click += new System.EventHandler(this.GarageFormClick);
-			// 
-			// btnCabin
-			// 
-			this.btnCabin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnCabin.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnCabin.Location = new System.Drawing.Point(272, 283);
-			this.btnCabin.Name = "btnCabin";
-			this.btnCabin.Size = new System.Drawing.Size(193, 38);
-			this.btnCabin.TabIndex = 16;
-			this.btnCabin.Text = "Cabin";
-			this.btnCabin.UseVisualStyleBackColor = false;
-			this.btnCabin.Click += new System.EventHandler(this.Cabin_Click);
 			// 
 			// timer1
 			// 
@@ -326,138 +257,16 @@
 			this.lbAvailClients.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbAvailClients.FormattingEnabled = true;
 			this.lbAvailClients.ItemHeight = 15;
-			this.lbAvailClients.Location = new System.Drawing.Point(727, 11);
+			this.lbAvailClients.Location = new System.Drawing.Point(727, 48);
 			this.lbAvailClients.Name = "lbAvailClients";
 			this.lbAvailClients.Size = new System.Drawing.Size(246, 94);
 			this.lbAvailClients.TabIndex = 35;
 			this.lbAvailClients.SelectedIndexChanged += new System.EventHandler(this.AvailClientSelIndexChanged);
 			// 
-			// btnRebootClient
-			// 
-			this.btnRebootClient.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnRebootClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnRebootClient.Location = new System.Drawing.Point(800, 168);
-			this.btnRebootClient.Name = "btnRebootClient";
-			this.btnRebootClient.Size = new System.Drawing.Size(173, 37);
-			this.btnRebootClient.TabIndex = 8;
-			this.btnRebootClient.Text = "Reboot";
-			this.btnRebootClient.UseVisualStyleBackColor = false;
-			this.btnRebootClient.Click += new System.EventHandler(this.btnRebootClient_Click);
-			// 
-			// btnShutdownClient
-			// 
-			this.btnShutdownClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnShutdownClient.Location = new System.Drawing.Point(800, 268);
-			this.btnShutdownClient.Name = "btnShutdownClient";
-			this.btnShutdownClient.Size = new System.Drawing.Size(173, 37);
-			this.btnShutdownClient.TabIndex = 10;
-			this.btnShutdownClient.Text = "Shutdown";
-			this.btnShutdownClient.UseVisualStyleBackColor = true;
-			this.btnShutdownClient.Click += new System.EventHandler(this.btnShutdownClient_Click);
-			// 
-			// btnSendStatus
-			// 
-			this.btnSendStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendStatus.Location = new System.Drawing.Point(800, 318);
-			this.btnSendStatus.Name = "btnSendStatus";
-			this.btnSendStatus.Size = new System.Drawing.Size(173, 37);
-			this.btnSendStatus.TabIndex = 11;
-			this.btnSendStatus.Text = "Get Status";
-			this.btnSendStatus.UseVisualStyleBackColor = true;
-			this.btnSendStatus.Click += new System.EventHandler(this.btnSendStatus_Click);
-			// 
-			// btnSendMsg
-			// 
-			this.btnSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnSendMsg.Location = new System.Drawing.Point(272, 479);
-			this.btnSendMsg.Name = "btnSendMsg";
-			this.btnSendMsg.Size = new System.Drawing.Size(193, 38);
-			this.btnSendMsg.TabIndex = 20;
-			this.btnSendMsg.Text = "Send Message";
-			this.btnSendMsg.UseVisualStyleBackColor = true;
-			this.btnSendMsg.Click += new System.EventHandler(this.btnSendMsg_Click);
-			// 
-			// bSetClientTime
-			// 
-			this.bSetClientTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.bSetClientTime.Location = new System.Drawing.Point(800, 368);
-			this.bSetClientTime.Name = "bSetClientTime";
-			this.bSetClientTime.Size = new System.Drawing.Size(173, 37);
-			this.bSetClientTime.TabIndex = 12;
-			this.bSetClientTime.Text = "Set Time";
-			this.bSetClientTime.UseVisualStyleBackColor = true;
-			this.bSetClientTime.Click += new System.EventHandler(this.bSetClientTime_Click);
-			// 
-			// btnReportTimeUp
-			// 
-			this.btnReportTimeUp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnReportTimeUp.Location = new System.Drawing.Point(800, 512);
-			this.btnReportTimeUp.Name = "btnReportTimeUp";
-			this.btnReportTimeUp.Size = new System.Drawing.Size(173, 37);
-			this.btnReportTimeUp.TabIndex = 14;
-			this.btnReportTimeUp.Text = "Time Up";
-			this.btnReportTimeUp.UseVisualStyleBackColor = true;
-			this.btnReportTimeUp.Click += new System.EventHandler(this.btnReportTimeUp_Click);
-			// 
-			// btnExit2Shell
-			// 
-			this.btnExit2Shell.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnExit2Shell.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnExit2Shell.Location = new System.Drawing.Point(800, 218);
-			this.btnExit2Shell.Name = "btnExit2Shell";
-			this.btnExit2Shell.Size = new System.Drawing.Size(173, 37);
-			this.btnExit2Shell.TabIndex = 9;
-			this.btnExit2Shell.Text = "Exit to Shell";
-			this.btnExit2Shell.UseVisualStyleBackColor = false;
-			this.btnExit2Shell.Click += new System.EventHandler(this.Exit2Shell_Click);
-			// 
-			// tbSendMsg
-			// 
-			this.tbSendMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbSendMsg.Location = new System.Drawing.Point(272, 530);
-			this.tbSendMsg.Name = "tbSendMsg";
-			this.tbSendMsg.Size = new System.Drawing.Size(285, 26);
-			this.tbSendMsg.TabIndex = 20;
-			this.tbSendMsg.TextChanged += new System.EventHandler(this.tbSendMsg_TextChanged);
-			// 
-			// btnTestBench
-			// 
-			this.btnTestBench.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnTestBench.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnTestBench.Location = new System.Drawing.Point(272, 430);
-			this.btnTestBench.Name = "btnTestBench";
-			this.btnTestBench.Size = new System.Drawing.Size(193, 38);
-			this.btnTestBench.TabIndex = 19;
-			this.btnTestBench.Text = "Test Bench";
-			this.btnTestBench.UseVisualStyleBackColor = false;
-			this.btnTestBench.Click += new System.EventHandler(this.btnTestBench_Click);
-			// 
-			// tbAlarmHours
-			// 
-			this.tbAlarmHours.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.tbAlarmHours.Location = new System.Drawing.Point(125, 23);
-			this.tbAlarmHours.Name = "tbAlarmHours";
-			this.tbAlarmHours.Size = new System.Drawing.Size(38, 29);
-			this.tbAlarmHours.TabIndex = 19;
-			this.tbAlarmHours.Text = "0";
-			this.tbAlarmHours.TextChanged += new System.EventHandler(this.tbAlarm_TextChanged);
-			// 
-			// cbAlarm
-			// 
-			this.cbAlarm.AutoSize = true;
-			this.cbAlarm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.cbAlarm.Location = new System.Drawing.Point(23, 23);
-			this.cbAlarm.Name = "cbAlarm";
-			this.cbAlarm.Size = new System.Drawing.Size(59, 28);
-			this.cbAlarm.TabIndex = 49;
-			this.cbAlarm.Text = "Set";
-			this.cbAlarm.UseVisualStyleBackColor = true;
-			this.cbAlarm.CheckedChanged += new System.EventHandler(this.cbAlarm_CheckedChanged);
-			// 
 			// tbTodaysDate
 			// 
 			this.tbTodaysDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbTodaysDate.Location = new System.Drawing.Point(539, 11);
+			this.tbTodaysDate.Location = new System.Drawing.Point(539, 48);
 			this.tbTodaysDate.Name = "tbTodaysDate";
 			this.tbTodaysDate.Size = new System.Drawing.Size(164, 44);
 			this.tbTodaysDate.TabIndex = 15;
@@ -466,7 +275,7 @@
 			// 
 			this.label10.AutoSize = true;
 			this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label10.Location = new System.Drawing.Point(482, 24);
+			this.label10.Location = new System.Drawing.Point(482, 61);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(53, 20);
 			this.label10.TabIndex = 57;
@@ -475,7 +284,7 @@
 			// tbTime
 			// 
 			this.tbTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tbTime.Location = new System.Drawing.Point(539, 68);
+			this.tbTime.Location = new System.Drawing.Point(539, 105);
 			this.tbTime.Name = "tbTime";
 			this.tbTime.Size = new System.Drawing.Size(164, 44);
 			this.tbTime.TabIndex = 16;
@@ -484,7 +293,7 @@
 			// 
 			this.btnFnc2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnFnc2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnFnc2.Location = new System.Drawing.Point(81, 12);
+			this.btnFnc2.Location = new System.Drawing.Point(81, 42);
 			this.btnFnc2.Name = "btnFnc2";
 			this.btnFnc2.Size = new System.Drawing.Size(52, 47);
 			this.btnFnc2.TabIndex = 23;
@@ -496,7 +305,7 @@
 			// 
 			this.btnMinimize.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnMinimize.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnMinimize.Location = new System.Drawing.Point(272, 179);
+			this.btnMinimize.Location = new System.Drawing.Point(23, 157);
 			this.btnMinimize.Name = "btnMinimize";
 			this.btnMinimize.Size = new System.Drawing.Size(193, 38);
 			this.btnMinimize.TabIndex = 7;
@@ -504,129 +313,17 @@
 			this.btnMinimize.UseVisualStyleBackColor = false;
 			this.btnMinimize.Click += new System.EventHandler(this.Minimize_Click);
 			// 
-			// btnTimerSchedules
-			// 
-			this.btnTimerSchedules.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnTimerSchedules.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnTimerSchedules.Location = new System.Drawing.Point(23, 283);
-			this.btnTimerSchedules.Name = "btnTimerSchedules";
-			this.btnTimerSchedules.Size = new System.Drawing.Size(216, 56);
-			this.btnTimerSchedules.TabIndex = 3;
-			this.btnTimerSchedules.Text = "Timer Schedules";
-			this.btnTimerSchedules.UseVisualStyleBackColor = false;
-			this.btnTimerSchedules.Click += new System.EventHandler(this.btnTimer_Click);
-			// 
-			// btnOutdoor
-			// 
-			this.btnOutdoor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnOutdoor.Enabled = false;
-			this.btnOutdoor.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnOutdoor.Location = new System.Drawing.Point(272, 381);
-			this.btnOutdoor.Name = "btnOutdoor";
-			this.btnOutdoor.Size = new System.Drawing.Size(193, 38);
-			this.btnOutdoor.TabIndex = 18;
-			this.btnOutdoor.Text = "Outdoor";
-			this.btnOutdoor.UseVisualStyleBackColor = false;
-			this.btnOutdoor.Click += new System.EventHandler(this.btnOutdoor_Click);
-			// 
-			// tbAlarmMinutes
-			// 
-			this.tbAlarmMinutes.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.tbAlarmMinutes.Location = new System.Drawing.Point(126, 58);
-			this.tbAlarmMinutes.Name = "tbAlarmMinutes";
-			this.tbAlarmMinutes.Size = new System.Drawing.Size(37, 29);
-			this.tbAlarmMinutes.TabIndex = 66;
-			this.tbAlarmMinutes.Text = "0";
-			this.tbAlarmMinutes.TextChanged += new System.EventHandler(this.tbAlarmMinutes_TextChanged);
-			// 
-			// label5
-			// 
-			this.label5.AutoSize = true;
-			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label5.Location = new System.Drawing.Point(82, 29);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(37, 20);
-			this.label5.TabIndex = 67;
-			this.label5.Text = "Hrs";
-			// 
-			// label6
-			// 
-			this.label6.AutoSize = true;
-			this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label6.Location = new System.Drawing.Point(83, 64);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(37, 20);
-			this.label6.TabIndex = 68;
-			this.label6.Text = "Min";
-			// 
-			// label7
-			// 
-			this.label7.AutoSize = true;
-			this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label7.Location = new System.Drawing.Point(82, 99);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(40, 20);
-			this.label7.TabIndex = 70;
-			this.label7.Text = "Sec";
-			// 
-			// tbAlarmSeconds
-			// 
-			this.tbAlarmSeconds.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.tbAlarmSeconds.Location = new System.Drawing.Point(125, 93);
-			this.tbAlarmSeconds.Name = "tbAlarmSeconds";
-			this.tbAlarmSeconds.Size = new System.Drawing.Size(38, 29);
-			this.tbAlarmSeconds.TabIndex = 69;
-			this.tbAlarmSeconds.Text = "0";
-			this.tbAlarmSeconds.TextChanged += new System.EventHandler(this.tbAlarmSecondsChanged);
-			// 
 			// timer2
 			// 
-			this.timer2.Interval = 1000;
+			this.timer2.Enabled = true;
+			this.timer2.Interval = 300000;
 			this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
-			// 
-			// tbAlarmTick
-			// 
-			this.tbAlarmTick.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
-			this.tbAlarmTick.Location = new System.Drawing.Point(169, 23);
-			this.tbAlarmTick.Name = "tbAlarmTick";
-			this.tbAlarmTick.ReadOnly = true;
-			this.tbAlarmTick.Size = new System.Drawing.Size(90, 29);
-			this.tbAlarmTick.TabIndex = 71;
-			// 
-			// btnGetTime
-			// 
-			this.btnGetTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnGetTime.Location = new System.Drawing.Point(800, 418);
-			this.btnGetTime.Name = "btnGetTime";
-			this.btnGetTime.Size = new System.Drawing.Size(173, 37);
-			this.btnGetTime.TabIndex = 13;
-			this.btnGetTime.Text = "Get Time";
-			this.btnGetTime.UseVisualStyleBackColor = true;
-			this.btnGetTime.Click += new System.EventHandler(this.btnGetTime_Click);
-			// 
-			// groupBox2
-			// 
-			this.groupBox2.Controls.Add(this.tbAlarmTick);
-			this.groupBox2.Controls.Add(this.label7);
-			this.groupBox2.Controls.Add(this.tbAlarmSeconds);
-			this.groupBox2.Controls.Add(this.label6);
-			this.groupBox2.Controls.Add(this.label5);
-			this.groupBox2.Controls.Add(this.tbAlarmMinutes);
-			this.groupBox2.Controls.Add(this.cbAlarm);
-			this.groupBox2.Controls.Add(this.tbAlarmHours);
-			this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.groupBox2.Location = new System.Drawing.Point(483, 365);
-			this.groupBox2.Name = "groupBox2";
-			this.groupBox2.Size = new System.Drawing.Size(285, 146);
-			this.groupBox2.TabIndex = 79;
-			this.groupBox2.TabStop = false;
-			this.groupBox2.Text = "Alarm";
 			// 
 			// btnFnc4
 			// 
 			this.btnFnc4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnFnc4.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnFnc4.Location = new System.Drawing.Point(197, 12);
+			this.btnFnc4.Location = new System.Drawing.Point(197, 42);
 			this.btnFnc4.Name = "btnFnc4";
 			this.btnFnc4.Size = new System.Drawing.Size(52, 47);
 			this.btnFnc4.TabIndex = 25;
@@ -638,7 +335,7 @@
 			// 
 			this.btnFnc5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnFnc5.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnFnc5.Location = new System.Drawing.Point(255, 12);
+			this.btnFnc5.Location = new System.Drawing.Point(255, 42);
 			this.btnFnc5.Name = "btnFnc5";
 			this.btnFnc5.Size = new System.Drawing.Size(52, 47);
 			this.btnFnc5.TabIndex = 26;
@@ -650,46 +347,23 @@
 			// 
 			this.btnSendSort.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			this.btnSendSort.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnSendSort.Location = new System.Drawing.Point(272, 234);
+			this.btnSendSort.Location = new System.Drawing.Point(230, 157);
 			this.btnSendSort.Name = "btnSendSort";
 			this.btnSendSort.Size = new System.Drawing.Size(193, 38);
 			this.btnSendSort.TabIndex = 15;
-			this.btnSendSort.Text = "Sort";
+			this.btnSendSort.Text = "Display Sort";
 			this.btnSendSort.UseVisualStyleBackColor = false;
 			this.btnSendSort.Click += new System.EventHandler(this.btnSendSort_Click);
-			// 
-			// btnUnused
-			// 
-			this.btnUnused.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-			this.btnUnused.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnUnused.Location = new System.Drawing.Point(25, 212);
-			this.btnUnused.Name = "btnUnused";
-			this.btnUnused.Size = new System.Drawing.Size(216, 56);
-			this.btnUnused.TabIndex = 2;
-			this.btnUnused.Text = "Clear Alert";
-			this.btnUnused.UseVisualStyleBackColor = false;
-			this.btnUnused.Click += new System.EventHandler(this.btnUnused_Click);
 			// 
 			// label9
 			// 
 			this.label9.AutoSize = true;
 			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label9.Location = new System.Drawing.Point(481, 79);
+			this.label9.Location = new System.Drawing.Point(481, 116);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(52, 20);
 			this.label9.TabIndex = 88;
 			this.label9.Text = "Time:";
-			// 
-			// btnGetTemp
-			// 
-			this.btnGetTemp.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F);
-			this.btnGetTemp.Location = new System.Drawing.Point(800, 462);
-			this.btnGetTemp.Name = "btnGetTemp";
-			this.btnGetTemp.Size = new System.Drawing.Size(173, 37);
-			this.btnGetTemp.TabIndex = 89;
-			this.btnGetTemp.Text = "Get Temp";
-			this.btnGetTemp.UseVisualStyleBackColor = true;
-			this.btnGetTemp.Click += new System.EventHandler(this.btnGetTemp_Click);
 			// 
 			// timer3
 			// 
@@ -708,7 +382,7 @@
 			// cbNoUpdate
 			// 
 			this.cbNoUpdate.AutoSize = true;
-			this.cbNoUpdate.Location = new System.Drawing.Point(592, 537);
+			this.cbNoUpdate.Location = new System.Drawing.Point(809, 178);
 			this.cbNoUpdate.Name = "cbNoUpdate";
 			this.cbNoUpdate.Size = new System.Drawing.Size(78, 17);
 			this.cbNoUpdate.TabIndex = 90;
@@ -716,50 +390,294 @@
 			this.cbNoUpdate.UseVisualStyleBackColor = true;
 			this.cbNoUpdate.CheckedChanged += new System.EventHandler(this.CheckChangedNoUpdate);
 			// 
+			// tbNoChartRec
+			// 
+			this.tbNoChartRec.Location = new System.Drawing.Point(905, 175);
+			this.tbNoChartRec.Name = "tbNoChartRec";
+			this.tbNoChartRec.Size = new System.Drawing.Size(48, 20);
+			this.tbNoChartRec.TabIndex = 91;
+			// 
+			// menuStrip1
+			// 
+			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clientControlsToolStripMenuItem,
+            this.utilsToolStripMenuItem,
+            this.clientListActionToolStripMenuItem,
+            this.testToolStripMenuItem});
+			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip1.Name = "menuStrip1";
+			this.menuStrip1.Size = new System.Drawing.Size(1218, 24);
+			this.menuStrip1.TabIndex = 92;
+			this.menuStrip1.Text = "menuStrip1";
+			// 
+			// clientControlsToolStripMenuItem
+			// 
+			this.clientControlsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cabinToolStripMenuItem,
+            this.garageToolStripMenuItem,
+            this.testbenchToolStripMenuItem,
+            this.outdoorToolStripMenuItem});
+			this.clientControlsToolStripMenuItem.Name = "clientControlsToolStripMenuItem";
+			this.clientControlsToolStripMenuItem.Size = new System.Drawing.Size(98, 20);
+			this.clientControlsToolStripMenuItem.Text = "Client Controls";
+			// 
+			// cabinToolStripMenuItem
+			// 
+			this.cabinToolStripMenuItem.Name = "cabinToolStripMenuItem";
+			this.cabinToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.cabinToolStripMenuItem.Text = "Cabin";
+			this.cabinToolStripMenuItem.Click += new System.EventHandler(this.cabinToolStripMenuItem_Click);
+			// 
+			// garageToolStripMenuItem
+			// 
+			this.garageToolStripMenuItem.Name = "garageToolStripMenuItem";
+			this.garageToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.garageToolStripMenuItem.Text = "Garage";
+			this.garageToolStripMenuItem.Click += new System.EventHandler(this.garageToolStripMenuItem_Click);
+			// 
+			// testbenchToolStripMenuItem
+			// 
+			this.testbenchToolStripMenuItem.Name = "testbenchToolStripMenuItem";
+			this.testbenchToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.testbenchToolStripMenuItem.Text = "Testbench";
+			this.testbenchToolStripMenuItem.Click += new System.EventHandler(this.testbenchToolStripMenuItem_Click);
+			// 
+			// outdoorToolStripMenuItem
+			// 
+			this.outdoorToolStripMenuItem.Name = "outdoorToolStripMenuItem";
+			this.outdoorToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+			this.outdoorToolStripMenuItem.Text = "Outdoor";
+			this.outdoorToolStripMenuItem.Click += new System.EventHandler(this.outdoorToolStripMenuItem_Click);
+			// 
+			// utilsToolStripMenuItem
+			// 
+			this.utilsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.dS1620ToolStripMenuItem,
+            this.timersToolStripMenuItem,
+            this.minimizeToolStripMenuItem,
+            this.clearScreenToolStripMenuItem,
+            this.clearAlertToolStripMenuItem,
+            this.assignFunctionKeyToolStripMenuItem,
+            this.exitToolStripMenuItem});
+			this.utilsToolStripMenuItem.Name = "utilsToolStripMenuItem";
+			this.utilsToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
+			this.utilsToolStripMenuItem.Text = "Utils";
+			// 
+			// dS1620ToolStripMenuItem
+			// 
+			this.dS1620ToolStripMenuItem.Name = "dS1620ToolStripMenuItem";
+			this.dS1620ToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.dS1620ToolStripMenuItem.Text = "DS1620";
+			this.dS1620ToolStripMenuItem.Click += new System.EventHandler(this.dS1620ToolStripMenuItem_Click);
+			// 
+			// timersToolStripMenuItem
+			// 
+			this.timersToolStripMenuItem.Name = "timersToolStripMenuItem";
+			this.timersToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.timersToolStripMenuItem.Text = "Timers";
+			this.timersToolStripMenuItem.Click += new System.EventHandler(this.timersToolStripMenuItem_Click);
+			// 
+			// minimizeToolStripMenuItem
+			// 
+			this.minimizeToolStripMenuItem.Name = "minimizeToolStripMenuItem";
+			this.minimizeToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.minimizeToolStripMenuItem.Text = "Minimize";
+			this.minimizeToolStripMenuItem.Click += new System.EventHandler(this.minimizeToolStripMenuItem_Click);
+			// 
+			// clearScreenToolStripMenuItem
+			// 
+			this.clearScreenToolStripMenuItem.Name = "clearScreenToolStripMenuItem";
+			this.clearScreenToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.clearScreenToolStripMenuItem.Text = "Clear Screen";
+			this.clearScreenToolStripMenuItem.Click += new System.EventHandler(this.clearScreenToolStripMenuItem_Click);
+			// 
+			// clearAlertToolStripMenuItem
+			// 
+			this.clearAlertToolStripMenuItem.Name = "clearAlertToolStripMenuItem";
+			this.clearAlertToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.clearAlertToolStripMenuItem.Text = "Clear Alert";
+			this.clearAlertToolStripMenuItem.Click += new System.EventHandler(this.clearAlertToolStripMenuItem_Click);
+			// 
+			// assignFunctionKeyToolStripMenuItem
+			// 
+			this.assignFunctionKeyToolStripMenuItem.Name = "assignFunctionKeyToolStripMenuItem";
+			this.assignFunctionKeyToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.assignFunctionKeyToolStripMenuItem.Text = "Assign Function Key";
+			this.assignFunctionKeyToolStripMenuItem.Click += new System.EventHandler(this.assignFunctionKeyToolStripMenuItem_Click);
+			// 
+			// exitToolStripMenuItem
+			// 
+			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.exitToolStripMenuItem.Text = "Exit";
+			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			// 
+			// clientListActionToolStripMenuItem
+			// 
+			this.clientListActionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToShellToolStripMenuItem,
+            this.showTimeUpToolStripMenuItem,
+            this.getTimeToolStripMenuItem,
+            this.setTimeToolStripMenuItem,
+            this.rebootToolStripMenuItem,
+            this.shutdownToolStripMenuItem,
+            this.getStatusToolStripMenuItem});
+			this.clientListActionToolStripMenuItem.Name = "clientListActionToolStripMenuItem";
+			this.clientListActionToolStripMenuItem.Size = new System.Drawing.Size(109, 20);
+			this.clientListActionToolStripMenuItem.Text = "Client List Action";
+			// 
+			// exitToShellToolStripMenuItem
+			// 
+			this.exitToShellToolStripMenuItem.Name = "exitToShellToolStripMenuItem";
+			this.exitToShellToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.exitToShellToolStripMenuItem.Text = "Exit to Shell";
+			this.exitToShellToolStripMenuItem.Click += new System.EventHandler(this.exitToShellToolStripMenuItem_Click);
+			// 
+			// showTimeUpToolStripMenuItem
+			// 
+			this.showTimeUpToolStripMenuItem.Name = "showTimeUpToolStripMenuItem";
+			this.showTimeUpToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.showTimeUpToolStripMenuItem.Text = "Show Time Up";
+			this.showTimeUpToolStripMenuItem.Click += new System.EventHandler(this.showTimeUpToolStripMenuItem_Click);
+			// 
+			// getTimeToolStripMenuItem
+			// 
+			this.getTimeToolStripMenuItem.Name = "getTimeToolStripMenuItem";
+			this.getTimeToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.getTimeToolStripMenuItem.Text = "Get Time";
+			this.getTimeToolStripMenuItem.Click += new System.EventHandler(this.getTimeToolStripMenuItem_Click);
+			// 
+			// setTimeToolStripMenuItem
+			// 
+			this.setTimeToolStripMenuItem.Name = "setTimeToolStripMenuItem";
+			this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.setTimeToolStripMenuItem.Text = "Set Time";
+			this.setTimeToolStripMenuItem.Click += new System.EventHandler(this.setTimeToolStripMenuItem_Click);
+			// 
+			// rebootToolStripMenuItem
+			// 
+			this.rebootToolStripMenuItem.Name = "rebootToolStripMenuItem";
+			this.rebootToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.rebootToolStripMenuItem.Text = "Reboot";
+			this.rebootToolStripMenuItem.Click += new System.EventHandler(this.rebootToolStripMenuItem_Click);
+			// 
+			// shutdownToolStripMenuItem
+			// 
+			this.shutdownToolStripMenuItem.Name = "shutdownToolStripMenuItem";
+			this.shutdownToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.shutdownToolStripMenuItem.Text = "Shutdown";
+			this.shutdownToolStripMenuItem.Click += new System.EventHandler(this.shutdownToolStripMenuItem_Click);
+			// 
+			// getStatusToolStripMenuItem
+			// 
+			this.getStatusToolStripMenuItem.Name = "getStatusToolStripMenuItem";
+			this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.getStatusToolStripMenuItem.Text = "Get Status";
+			this.getStatusToolStripMenuItem.Click += new System.EventHandler(this.getStatusToolStripMenuItem_Click);
+			// 
+			// testToolStripMenuItem
+			// 
+			this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.loadTempFileToolStripMenuItem,
+            this.loadGraphToolStripMenuItem,
+            this.clearGraphToolStripMenuItem,
+            this.changeGraphParamsToolStripMenuItem,
+            this.graphTimerToolStripMenuItem});
+			this.testToolStripMenuItem.Name = "testToolStripMenuItem";
+			this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+			this.testToolStripMenuItem.Text = "Test";
+			// 
+			// loadTempFileToolStripMenuItem
+			// 
+			this.loadTempFileToolStripMenuItem.Name = "loadTempFileToolStripMenuItem";
+			this.loadTempFileToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+			this.loadTempFileToolStripMenuItem.Text = "Load Temp File";
+			this.loadTempFileToolStripMenuItem.Click += new System.EventHandler(this.loadTempFileToolStripMenuItem_Click);
+			// 
+			// loadGraphToolStripMenuItem
+			// 
+			this.loadGraphToolStripMenuItem.Name = "loadGraphToolStripMenuItem";
+			this.loadGraphToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+			this.loadGraphToolStripMenuItem.Text = "Load Graph";
+			this.loadGraphToolStripMenuItem.Click += new System.EventHandler(this.loadGraphToolStripMenuItem_Click);
+			// 
+			// clearGraphToolStripMenuItem
+			// 
+			this.clearGraphToolStripMenuItem.Name = "clearGraphToolStripMenuItem";
+			this.clearGraphToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+			this.clearGraphToolStripMenuItem.Text = "Clear Graph";
+			this.clearGraphToolStripMenuItem.Click += new System.EventHandler(this.clearGraphToolStripMenuItem_Click);
+			// 
+			// changeGraphParamsToolStripMenuItem
+			// 
+			this.changeGraphParamsToolStripMenuItem.Name = "changeGraphParamsToolStripMenuItem";
+			this.changeGraphParamsToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+			this.changeGraphParamsToolStripMenuItem.Text = "Change Graph Params";
+			this.changeGraphParamsToolStripMenuItem.Click += new System.EventHandler(this.changeGraphParamsToolStripMenuItem_Click);
+			// 
+			// graphTimerToolStripMenuItem
+			// 
+			this.graphTimerToolStripMenuItem.Name = "graphTimerToolStripMenuItem";
+			this.graphTimerToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+			this.graphTimerToolStripMenuItem.Text = "Graph timer";
+			this.graphTimerToolStripMenuItem.Click += new System.EventHandler(this.graphTimerToolStripMenuItem_Click);
+			// 
+			// btnConnect
+			// 
+			this.btnConnect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnConnect.Location = new System.Drawing.Point(230, 105);
+			this.btnConnect.Name = "btnConnect";
+			this.btnConnect.Size = new System.Drawing.Size(193, 38);
+			this.btnConnect.TabIndex = 93;
+			this.btnConnect.Text = "Connect";
+			this.btnConnect.UseVisualStyleBackColor = false;
+			this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
+			// 
+			// btnExit
+			// 
+			this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnExit.Location = new System.Drawing.Point(23, 208);
+			this.btnExit.Name = "btnExit";
+			this.btnExit.Size = new System.Drawing.Size(193, 38);
+			this.btnExit.TabIndex = 94;
+			this.btnExit.Text = "Exit";
+			this.btnExit.UseVisualStyleBackColor = false;
+			this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+			// 
+			// timer4
+			// 
+			this.timer4.Tick += new System.EventHandler(this.Test_graph_timer);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(1005, 576);
+			this.ClientSize = new System.Drawing.Size(1218, 726);
+			this.Controls.Add(this.btnExit);
+			this.Controls.Add(this.btnConnect);
+			this.Controls.Add(this.tbNoChartRec);
 			this.Controls.Add(this.cbNoUpdate);
 			this.Controls.Add(this.AlertLabel);
-			this.Controls.Add(this.btnGetTemp);
 			this.Controls.Add(this.label9);
-			this.Controls.Add(this.btnUnused);
 			this.Controls.Add(this.btnSendSort);
 			this.Controls.Add(this.btnFnc5);
 			this.Controls.Add(this.btnFnc4);
-			this.Controls.Add(this.groupBox2);
-			this.Controls.Add(this.btnGetTime);
-			this.Controls.Add(this.btnOutdoor);
-			this.Controls.Add(this.btnTimerSchedules);
 			this.Controls.Add(this.btnMinimize);
 			this.Controls.Add(this.btnFnc2);
 			this.Controls.Add(this.tbTime);
 			this.Controls.Add(this.label10);
 			this.Controls.Add(this.tbTodaysDate);
-			this.Controls.Add(this.btnTestBench);
-			this.Controls.Add(this.tbSendMsg);
-			this.Controls.Add(this.btnExit2Shell);
-			this.Controls.Add(this.btnReportTimeUp);
-			this.Controls.Add(this.bSetClientTime);
-			this.Controls.Add(this.btnSendMsg);
-			this.Controls.Add(this.btnSendStatus);
-			this.Controls.Add(this.btnShutdownClient);
-			this.Controls.Add(this.btnRebootClient);
 			this.Controls.Add(this.lbAvailClients);
-			this.Controls.Add(this.btnCabin);
-			this.Controls.Add(this.btnGarageForm);
 			this.Controls.Add(this.btnFnc1);
 			this.Controls.Add(this.btnClear);
 			this.Controls.Add(this.btnFnc3);
-			this.Controls.Add(this.btnRescan);
-			this.Controls.Add(this.btnMngServer);
 			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.btnAssignFunc);
 			this.Controls.Add(this.tbReceived);
-			this.Controls.Add(this.btnConnect);
+			this.Controls.Add(this.menuStrip1);
+			this.MainMenuStrip = this.menuStrip1;
 			this.MaximizeBox = false;
 			this.Name = "FrmSampleClient";
 			this.ShowIcon = false;
@@ -768,8 +686,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.table)).EndInit();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
-			this.groupBox2.ResumeLayout(false);
-			this.groupBox2.PerformLayout();
+			this.menuStrip1.ResumeLayout(false);
+			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -778,7 +696,6 @@
         #endregion
 
         private System.Windows.Forms.TextBox tbReceived;
-        private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox tbPort;
         private System.Windows.Forms.Label label1;
@@ -796,56 +713,60 @@
 
         private System.Windows.Forms.TextBox tbConnected;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button btnAssignFunc;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnMngServer;
-        private System.Windows.Forms.Button btnRescan;
         private System.Windows.Forms.Button btnFnc3;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnFnc1;
-        private System.Windows.Forms.Button btnGarageForm;
-		private System.Windows.Forms.Button btnCabin;
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.ComboBox cbIPAdress;
 		private System.Windows.Forms.ListBox lbAvailClients;
-		private System.Windows.Forms.Button btnRebootClient;
-		private System.Windows.Forms.Button btnShutdownClient;
-		private System.Windows.Forms.Button btnSendStatus;
-		private System.Windows.Forms.Button btnSendMsg;
-		private System.Windows.Forms.Button bSetClientTime;
-		private System.Windows.Forms.Button btnReportTimeUp;
-		private System.Windows.Forms.Button btnExit2Shell;
-		private System.Windows.Forms.TextBox tbSendMsg;
-		private System.Windows.Forms.Button btnTestBench;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.ComboBox cbWhichWinClient;
-		private System.Windows.Forms.TextBox tbAlarmHours;
-		private System.Windows.Forms.CheckBox cbAlarm;
 		private System.Windows.Forms.TextBox tbTodaysDate;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.TextBox tbTime;
 		private System.Windows.Forms.Button btnFnc2;
 		private System.Windows.Forms.Button btnMinimize;
-		private System.Windows.Forms.Button btnTimerSchedules;
-		private System.Windows.Forms.Button btnOutdoor;
-		private System.Windows.Forms.TextBox tbAlarmMinutes;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Label label6;
-		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.TextBox tbAlarmSeconds;
 		private System.Windows.Forms.Timer timer2;
-		private System.Windows.Forms.TextBox tbAlarmTick;
-		private System.Windows.Forms.Button btnGetTime;
-		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Button btnFnc4;
 		private System.Windows.Forms.Button btnFnc5;
 		private System.Windows.Forms.Button btnSendSort;
-		private System.Windows.Forms.Button btnUnused;
 		private System.Windows.Forms.Label label9;
-		private System.Windows.Forms.Button btnGetTemp;
 		private System.Windows.Forms.Timer timer3;
 		private System.Windows.Forms.Label AlertLabel;
 		private System.Windows.Forms.CheckBox cbNoUpdate;
+		private System.Windows.Forms.TextBox tbNoChartRec;
+		private System.Windows.Forms.MenuStrip menuStrip1;
+		private System.Windows.Forms.ToolStripMenuItem clientControlsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem cabinToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem garageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem testbenchToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem outdoorToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem utilsToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem dS1620ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem timersToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem minimizeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem clearScreenToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem clearAlertToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem assignFunctionKeyToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem clientListActionToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem exitToShellToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem showTimeUpToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem getTimeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem setTimeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem rebootToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem shutdownToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem getStatusToolStripMenuItem;
+		private System.Windows.Forms.Button btnConnect;
+		private System.Windows.Forms.Button btnExit;
+		private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem loadTempFileToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem loadGraphToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem clearGraphToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem changeGraphParamsToolStripMenuItem;
+		private System.Windows.Forms.Timer timer4;
+		private System.Windows.Forms.ToolStripMenuItem graphTimerToolStripMenuItem;
 	}
 }
 

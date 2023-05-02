@@ -19,6 +19,7 @@ using System.Runtime.InteropServices;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace EpServerEngineSampleClient
 {
@@ -39,40 +40,53 @@ namespace EpServerEngineSampleClient
         private TimerSchedule timer_schedule = null;
         private DS1620Mgt ds1620 = null;
         private WinCLMsg winclmsg = null;
-        private ClientDest clientdest = null;
-        private SetNextClient setnextclient = null;
+        //private ClientDest clientdest = null;
+        //private SetNextClient setnextclient = null;
         private int AvailClientCurrentSection = 0;
         private bool clients_inited = false;
         private bool[] status = new bool[8];
-        private List<DS1620_conversions> ds1620_list;
         private List<ClientParams> client_params;
         private List<ClientsAvail> clients_avail;
-       
-        private int i = 0;
+        private List<TemperatureClass> temp_class;
+
         private int selected_address = 0;
         private int disconnect_attempts = 0;
         private string m_hostname;
         private string m_portno;
-        private int server_up_seconds = 0;
+        //private int server_up_seconds = 0;
         private bool client_connected = false;
-        private int timer_offset;
-        private string sendmsgtext;
+        //private int timer_offset;
+        //private string sendmsgtext;
         int tick = 0;
-        int connected_tick = 0;
+        //int connected_tick = 0;
         int which_winclient = -1;
-        int alarm_hours, alarm_minutes, alarm_seconds;
-        Int64 alarm_tick;
         bool client_alert = false;
 
-        private string xml_params_location = "c:\\Users\\daniel\\ClientProgramData\\ClientParams.xml";
-        private string xml_clients_avail_location = "c:\\Users\\daniel\\ClientProgramData\\ClientsAvail.xml";
-        
+        private string initial_directory = "c:\\Users\\daniel\\ClientProgramData\\";
+        private string xml_params_location = "";
+        //private string xml_params_location = initial_directory + "ClientParams.xml";
+        //private string xml_params_location = "c:\\Users\\daniel\\ClientProgramData\\ClientParams.xml";
+        private string xml_clients_avail_location = ""; //"c:\\Users\\daniel\\ClientProgramData\\ClientsAvail.xml";
+        private string temp_data_location = ""; //"c:\\Users\\daniel\\ClientProgramData\\";
+
         private int hour;
         private int minute;
         private int second;
         bool clk_oneoff = true;
+        bool updateGraph = false;
 
         private DateTime now;
+        Chart chart1 = null;
+        Series series1 = null;
+        int chart_noRec = 10;
+        decimal chart_min = 0;
+        decimal chart_max = 100;
+        int m_AxisX_Interval = 30;
+        int m_YValuesPerPoint = 10;
+        int m_MarkerStep = 10;
+        int graph_timer;
+        int prev_y, prev_x;
+
         /* remove the min/max/close buttons in the 'frame' */
         /* or you can just set 'Control Box' to false in the properties pane for the form */
         private const int CP_NOCLOSE_BUTTON = 0x200;
@@ -106,6 +120,9 @@ namespace EpServerEngineSampleClient
             tbPort.Enabled = true;
             timer1.Enabled = true;
 
+            xml_params_location = initial_directory + "ClientParams.xml";
+            xml_clients_avail_location = initial_directory +  "ClientsAvail.xml";
+
             for (int i = 0; i < 8; i++)
             {
                 status[i] = false;
@@ -113,14 +130,13 @@ namespace EpServerEngineSampleClient
             tbReceived.Clear();
             cbWhichWinClient.SelectedIndex = 0;
 
-           
             client_params = new List<ClientParams>();
             ClientParams item = null;
-            if(!File.Exists(xml_params_location))
-			{
+            if (!File.Exists(xml_params_location))
+            {
                 MessageBox.Show("can't find " + xml_params_location);
                 return;
-			}
+            }
             XmlReader xmlFile = XmlReader.Create(xml_params_location);
             DataSet ds = new DataSet();
             ds.ReadXml(xmlFile);
@@ -136,16 +152,16 @@ namespace EpServerEngineSampleClient
                 client_params.Add(item);
                 item = null;
             }
-           
+
             clients_avail = new List<ClientsAvail>();
             ClientsAvail item3 = null;
             //AddMsg("adding clients avail...");
             DataSet ds2 = new DataSet();
-            if(!File.Exists(xml_clients_avail_location))
-			{
+            if (!File.Exists(xml_clients_avail_location))
+            {
                 MessageBox.Show("can't find " + xml_clients_avail_location);
                 return;
-			}
+            }
             xmlFile = XmlReader.Create(xml_clients_avail_location);
             ds2.ReadXml(xmlFile);
             int lb_index = 0;
@@ -155,10 +171,6 @@ namespace EpServerEngineSampleClient
             outdoor = new Outdoor(m_client);
             timer_schedule = new TimerSchedule("c:\\users\\daniel\\dev\\cdata.xml", m_client);
             ds1620 = new DS1620Mgt(m_client);
-            btnGarageForm.Enabled = false;
-            btnTestBench.Enabled = false;
-            btnCabin.Enabled = false;
-            btnTimerSchedules.Enabled = false;
             btnFnc1.Enabled = false;
             btnFnc2.Enabled = false;
             btnFnc3.Enabled = false;
@@ -213,35 +225,124 @@ namespace EpServerEngineSampleClient
             string t2date = now.Date.ToString();
             //string smonth = DateTime.
 
-            
             int space = t2date.IndexOf(" ");
             t2date = t2date.Remove(space);
             tbTodaysDate.Text = t2date;
 
-            i = 0;
             int j = 0;
-            i = 0;
-            DS1620_conversions ds1 = null;
-            ds1620_list = new List<DS1620_conversions>();
-            string dslist_filename = @"C:\Users\Daniel\ClientProgramData\dslist.txt";
-            String[] file = File.ReadAllLines(dslist_filename);
-            // make sure not to change dslist.txt or this won't work
-            for (i = 0; i < 360; i++)
-            {
-                ds1 = new DS1620_conversions();
-                
-                string[] words2 = file[i].Split(',');
-                ds1.temp = words2[0];
-                ds1.raw_value = int.Parse(words2[1]);
-                ds1620_list.Add(ds1);
-            }
+            chart1 = new Chart();
+            chart1.Location = new Point(20, 420);
+            chart1.Width = 1175;
+            chart1.Height = 310;
+            series1 = new Series();
+            chart1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Top;
+            this.Controls.Add(chart1);
+            // one chart can have many ChartAreas，one ChartAreas can have many Series
+            temp_class = new List<TemperatureClass>();
             
-            //foreach (DS1620_conversions d1 in ds1620_list)
-            //AddMsg(d1.raw_value.ToString() + " " + d1.temp.ToString());
-
-            // turn off east light because it is on by default (relay is wired nc)
-            //svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
+            firstSeries(series1);
         }
+
+        private void firstSeries(Series series1)
+        {
+            // chartArea
+            ChartArea chartArea = new ChartArea();
+            chartArea.Name = "First Area";
+            chart1.ChartAreas.Add(chartArea);
+            chartArea.BackColor = Color.Azure;
+            chartArea.BackGradientStyle = GradientStyle.HorizontalCenter;
+            chartArea.BackHatchStyle = ChartHatchStyle.LargeGrid;
+            chartArea.BorderDashStyle = ChartDashStyle.Solid;
+            chartArea.BorderWidth = 1;
+            chartArea.BorderColor = Color.Red;
+            chartArea.ShadowColor = Color.Purple;
+            chartArea.ShadowOffset = 0;
+            chart1.ChartAreas[0].Axes[0].MajorGrid.Enabled = false;//x axis
+            chart1.ChartAreas[0].Axes[1].MajorGrid.Enabled = false;//y axis
+
+            //Cursor：only apply the top area
+            chartArea.CursorX.IsUserEnabled = true;
+            chartArea.CursorX.AxisType = AxisType.Primary;//act on primary x axis
+            chartArea.CursorX.Interval = 1;
+            chartArea.CursorX.LineWidth = 1;
+            chartArea.CursorX.LineDashStyle = ChartDashStyle.Dash;
+            chartArea.CursorX.IsUserSelectionEnabled = true;
+            chartArea.CursorX.SelectionColor = Color.Yellow;
+            chartArea.CursorX.AutoScroll = true;
+
+            chartArea.CursorY.IsUserEnabled = true;
+            chartArea.CursorY.AxisType = AxisType.Primary;//act on primary y axis
+            chartArea.CursorY.Interval = 1;
+            chartArea.CursorY.LineWidth = 1;
+            chartArea.CursorY.LineDashStyle = ChartDashStyle.Dash;
+            chartArea.CursorY.IsUserSelectionEnabled = true;
+            chartArea.CursorY.SelectionColor = Color.Yellow;
+            chartArea.CursorY.AutoScroll = true;
+
+            // Axis
+            //chartArea.AxisY.Minimum = -10d;//Y axis Minimum value
+            //chartArea.AxisY.Minimum = (double)chart_min;
+            //chartArea.AxisY.Title = @"Temperature Value";
+            //chartArea.AxisY.Maximum = 100d;//Y axis Maximum value
+            //chartArea.AxisX.Minimum = 0d; //X axis Minimum value
+            //chartArea.AxisX.Maximum = 12d;
+            //chartArea.AxisY.Maximum = (double)chart_max;
+            chartArea.AxisX.Minimum = 0;
+            chartArea.AxisX.Maximum = 10;
+            chartArea.AxisX.IsLabelAutoFit = true;
+            //chartArea.AxisX.LabelAutoFitMaxFontSize = 12;
+            chartArea.AxisX.LabelAutoFitMinFontSize = 10;
+            chartArea.AxisX.LabelStyle.Angle = -20;
+            chartArea.AxisX.LabelStyle.IsEndLabelVisible = true;//show the last label
+            chartArea.AxisX.Interval = m_AxisX_Interval;
+            //chartArea.AxisX.IntervalAutoMode = IntervalAutoMode.FixedCount;
+            chartArea.AxisX.IntervalAutoMode = IntervalAutoMode.VariableCount;
+            chartArea.AxisX.IntervalType = DateTimeIntervalType.Hours;
+            //chartArea.AxisX.Title = @"Hour";
+            chartArea.AxisX.TextOrientation = TextOrientation.Auto;
+            chartArea.AxisX.LineWidth = 1;
+            chartArea.AxisX.LineColor = Color.DarkOrchid;
+            chartArea.AxisX.Enabled = AxisEnabled.True;
+            chartArea.AxisX.ScaleView.MinSizeType = DateTimeIntervalType.Months;
+            chartArea.AxisX.ScrollBar = new AxisScrollBar();
+
+            //Series
+            series1.ChartArea = "First Area";
+            chart1.Series.Add(series1);
+            //Series style
+            series1.Name = @"series：Test One";
+            series1.ChartType = SeriesChartType.Line;  // type
+            series1.BorderWidth = 2;
+            series1.Color = Color.Green;
+            series1.XValueType = ChartValueType.Int32;//x axis type
+            series1.YValueType = ChartValueType.Int32;//y axis type
+            series1.YValuesPerPoint = m_YValuesPerPoint;
+
+            //Marker
+            //series1.MarkerStyle = MarkerStyle.Diamond;
+            series1.MarkerStyle = MarkerStyle.None;
+            series1.MarkerSize = 10;
+            series1.MarkerStep = m_MarkerStep;     // how often to put markers
+            series1.MarkerColor = Color.Red;
+            series1.ToolTip = @"ToolTip";
+
+            //Label
+            series1.IsValueShownAsLabel = false;
+            series1.SmartLabelStyle.Enabled = false;
+            series1.SmartLabelStyle.AllowOutsidePlotArea = LabelOutsidePlotAreaStyle.Yes;
+            series1.LabelForeColor = Color.Gray;
+            series1.LabelToolTip = @"LabelToolTip";
+
+            //Empty Point Style 
+            DataPointCustomProperties p = new DataPointCustomProperties();
+            p.Color = Color.Green;
+            series1.EmptyPointStyle = p;
+
+            //Legend
+            series1.LegendText = "LegendText：Test One";
+            series1.LegendToolTip = @"LegendToolTip";
+        }
+  
         private void btnConnect_Click(object sender, EventArgs e)
         {
             if (which_winclient > -1)
@@ -269,7 +370,7 @@ namespace EpServerEngineSampleClient
                     tick = 0;
                     btnConnect.Text = "Disconnect";
                     client_connected = true;
-                    connected_tick = 0;
+                    //connected_tick = 0;
                     //AddMsg(GetLocalIPAddress());
                 }
                 else
@@ -300,7 +401,6 @@ namespace EpServerEngineSampleClient
                     btnConnect.Text = "Disconnect";
                     cbIPAdress.Enabled = false;     /// from here to MPH should be commented out when in debugger
 					tbPort.Enabled = false;
-                    btnRescan.Enabled = true;
                     //tbServerTime.Text = "";
                     //AddMsg("server_up_seconds: " + server_up_seconds.ToString());
                     //btnShowParams.Enabled = valid_cfg;
@@ -314,16 +414,11 @@ namespace EpServerEngineSampleClient
         }
         private void connect_buttons(bool btnstate)
 		{
-            btnGarageForm.Enabled = btnstate;
-            btnTestBench.Enabled = btnstate;
-            btnCabin.Enabled = btnstate;
-            btnTimerSchedules.Enabled = btnstate;
             btnFnc1.Enabled = btnstate;
             btnFnc2.Enabled = btnstate;
             btnFnc3.Enabled = btnstate;
             btnFnc4.Enabled = btnstate;
             btnFnc5.Enabled = btnstate;
-            btnOutdoor.Enabled = btnstate;
         }
         public void OnDisconnect(INetworkClient client)
         {
@@ -371,19 +466,6 @@ namespace EpServerEngineSampleClient
             else
                 Process_Msg(receivedPacket.PacketRaw);
         }
-        private string lookup_DS1620(string val)
-		{
-            string ret = "N/A";
-            foreach(var raw in ds1620_list)
-			{
-                if (val == raw.raw_value.ToString())
-                {
-                    ret = raw.temp;
-                    return ret;     // if I don't return here it causes a huge memory leak
-                }
-			}
-            return ret;
-		}
         private void RedrawClientListBox()
         {
             lbAvailClients.Items.Clear();
@@ -427,8 +509,9 @@ namespace EpServerEngineSampleClient
             switch (str)
             {
                 case "DS1620_MSG":
-                    AddMsg(ret.ToString());
-                    /*
+                    if (updateGraph)
+                        break;
+                    TemperatureClass tc = new TemperatureClass();
                     words = ret.Split(' ');
                     i = 0;
                     foreach(var word in words)
@@ -436,20 +519,42 @@ namespace EpServerEngineSampleClient
                         switch(i)
 						{
                             case 0:
-                                AddMsg("client id: " + word);
+                                tc.client_id = int.Parse(word);
                                 break;
                             case 1:
-                                AddMsg("sensor: " + word);
+                                tc.sensor_no = int.Parse(word);
                                 break;
                             case 2:
-                                //AddMsg("val: " + lookup_DS1620(word));
-                                AddMsg("val: " + word);
+                                tc.time = word;
+                                break;
+                            case 3:
+                                tc.temp = int.Parse(word);
                                 break;
 						}
                         i++;
 					}
-                    */
+                    temp_class.Add(tc);
                     
+                    chart_min = 100;
+                    chart_max = 0;
+                    foreach (TemperatureClass tc2 in temp_class)
+                    {
+                        if (chart_min > tc2.temp)
+                            chart_min = tc2.temp;
+                        if (chart_max < tc2.temp)
+                            chart_max = tc2.temp;
+                    }
+                    AddMsg("count: " + temp_class.Count().ToString());
+                    if (chart_min == chart_max)
+                    {
+                        chart_min = chart_min - 2;
+                        chart_max = chart_max + 2;
+                    }else
+					{
+                        chart_min--;
+                        chart_max++;
+					}
+                    chart_noRec = temp_class.Count();
                     break;
 
                 case "UPTIME_MSG":
@@ -514,9 +619,11 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "SEND_MESSAGE":
+                    i = ret.IndexOf('x');
+                    substr = ret.Remove(i);
                     //AddMsg("str: " + str + " " + str.Length.ToString());
                     //AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
-                    AddMsg(ret);
+                    AddMsg(substr);
                     //ListMsg(ret, false);
                     break;
 
@@ -791,21 +898,7 @@ namespace EpServerEngineSampleClient
         {
             tbReceived.Clear();
         }
-        private void GarageFormClick(object sender, EventArgs e)
-        {
-            garageform.Enable_Dlg(true);
-            //garageform.SetStatus(status);
-            garageform.StartPosition = FormStartPosition.Manual;
-            garageform.Location = new Point(100, 10);
-            if (garageform.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-            garageform.Enable_Dlg(false);
-            //status = garageform.GetStatus();
-        }
+      
         private void myTimerTick(object sender, EventArgs e)
         {
             now = DateTime.Now;
@@ -823,24 +916,7 @@ namespace EpServerEngineSampleClient
                 tTime = tTime.Substring(0, 8);
                 tbTime.Text = tTime;
 
-               
-                if (minute == 1 && clk_oneoff)
-                {
-                    clk_oneoff = false;
-               
-                    foreach (ClientsAvail cl in clients_avail)
-                    {
-                        if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
-                        {
-                            //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
-                            //AddMsg(cl.label);
-                        }
-                    }
-                }
-                if (minute == 2)
-                    clk_oneoff = true;
-
-                else if (hour == 0 && minute == 0 && second == 0)
+                if (hour == 0 && minute == 0 && second == 0)
                 {
                     DateTime now2 = DateTime.Now;
                     string t2date = now2.Date.ToString();
@@ -850,6 +926,14 @@ namespace EpServerEngineSampleClient
 
                     //play_tone(9);
                     //AddMsg("midnight");
+                    foreach (ClientsAvail cl in clients_avail)
+                    {
+                        if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
+                        {
+                            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
+                            AddMsg("DLLIST_SAVE: " + cl.label);
+                        }
+                    }
                 }
                 else if (hour == 0 && minute == 1 && second == 0)
                 {
@@ -992,76 +1076,6 @@ namespace EpServerEngineSampleClient
         {
             AvailClientCurrentSection = lbAvailClients.SelectedIndex;
         }
-        private void btnRebootClient_Click(object sender, EventArgs e)
-        {
-            SendClientMsg(svrcmd.GetCmdIndexI("REBOOT_IOBOX"), " ", true);
-        }
-        private void btnShutdownClient_Click(object sender, EventArgs e)
-        {
-            SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), " ", true);
-        }
-        private void SendClientMsg(int msg, string param, bool remove)
-        {
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                //AddMsg(cl.label + " " + cl.lbindex.ToString());
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                {
-                    //AddMsg("send msg: " + cl.label + " " + cl.index);
-                    if (remove)
-                    {
-                        cl.lbindex = -1;
-                        cl.socket = -1;
-                    }
-                    svrcmd.Send_ClCmd(msg, cl.index, param);
-                    //AddMsg(cl.index.ToString());
-                    // if cl.index == server then set disconnected flag
-
-                    //if ((cl.index == 8) && (msg == REBOOT_IOBOX))
-                    if (false)
-                    {
-                        btnConnect.Text = "Connect";
-                        //timer1.Enabled = false;
-                        client_connected = false;
-                    }
-                    RedrawClientListBox();
-                    if (!remove)
-                    {
-                        lbAvailClients.SetSelected(cl.lbindex, true);
-                    }
-                }
-            }
-        }
-        private void btnSendMsg_Click(object sender, EventArgs e)
-        {
-            if (tbSendMsg.Text.Length == 0)
-                sendmsgtext = "test asdf";
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_MESSAGE"), sendmsgtext, false);
-        }
-        private void bSetClientTime_Click(object sender, EventArgs e)
-        {
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                {
-                    //AddMsg(cl.label);
-                    SetTime(cl.index);
-                }
-            }
-        }
-        private void btnReportTimeUp_Click(object sender, EventArgs e)
-        {
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                //  if(cl.socket > 0)   // to do all at once
-                {
-                    //AddMsg(cl.label + " " + cl.index.ToString() + " " + cl.lbindex.ToString());
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
-                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_CONFIG2"), cl.index, " ");
-                }
-            }
-        }
         private void ReportAllTimeUp(int index)
 		{
             foreach (ClientsAvail cl in clients_avail)
@@ -1082,10 +1096,6 @@ namespace EpServerEngineSampleClient
                     cl.flag++;
                 }
             }
-        }
-        private void tbSendMsg_TextChanged(object sender, EventArgs e)
-        {
-            sendmsgtext = tbSendMsg.Text;
         }
         private void cbWhichWinClient_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1110,7 +1120,306 @@ namespace EpServerEngineSampleClient
             winclmsg.Enable_Dlg(false);
             winclmsg.Dispose();
         }       // unused
- 		private void btnTestBench_Click(object sender, EventArgs e)
+        private void Function1Click(object sender, EventArgs e)
+		{
+            int type, port;
+            //AddMsg(Properties.Settings.Default["func1_type"].ToString());
+            //AddMsg(Properties.Settings.Default["func1_port"].ToString());
+            type = (int)Properties.Settings.Default["func1_type"];
+            port = (int)Properties.Settings.Default["func1_port"];
+            svrcmd.Change_PortCmd(port, type);
+        }
+        private void Function2Click(object sender, EventArgs e)
+		{
+            int type, port;
+            type = (int)Properties.Settings.Default["func2_type"];
+            port = (int)Properties.Settings.Default["func2_port"];
+            svrcmd.Change_PortCmd(port, type);
+        }
+        private void Function3Click(object sender, EventArgs e)
+        {
+            int type, port;
+            type = (int)Properties.Settings.Default["func3_type"];
+            port = (int)Properties.Settings.Default["func3_port"];
+            svrcmd.Change_PortCmd(port, type);
+        }
+        private void btnFnc4_Click(object sender, EventArgs e)
+        {
+            int type, port;
+            type = (int)Properties.Settings.Default["func4_type"];
+            port = (int)Properties.Settings.Default["func4_port"];
+            svrcmd.Change_PortCmd(port, type);
+        }
+        private void btnFcn5_Click(object sender, EventArgs e)
+        {
+            int type, port;
+            type = (int)Properties.Settings.Default["func5_type"];
+            port = (int)Properties.Settings.Default["func5_port"];
+            svrcmd.Change_PortCmd(port, type);
+        }
+		private void Minimize_Click(object sender, EventArgs e)
+		{
+            this.WindowState = FormWindowState.Minimized;
+        }
+		private void btnSendSort_Click(object sender, EventArgs e)
+		{
+            int dest = -1;
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    dest = cl.index;
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISPLAY_CLLIST_SORT"), dest, "test");
+                }
+            }
+        }
+		private void timer3_tick(object sender, EventArgs e)
+		{
+            int dest = -1;
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (cl.socket > 0 && cl.type != 0)
+                {
+                    dest = cl.index;
+                    SetTime(dest);
+                }
+            }
+        }
+		
+		private void btnGetTemp_Click(object sender, EventArgs e)
+		{
+            int x, i;
+
+            //temp_class.Clear();
+
+            using (StreamReader file = new StreamReader(temp_data_location + "dataset_4-29.txt"))
+            {
+                string ln;
+                string[] words;
+                while ((ln = file.ReadLine()) != null)
+                {
+                    TemperatureClass tc = new TemperatureClass();
+                    words = ln.Split(' ');
+                    i = 0;
+                    foreach (var word in words)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                tc.client_id = int.Parse(word);
+                                break;
+                            case 1:
+                                tc.sensor_no = int.Parse(word);
+                                break;
+                            case 2:
+                                tc.time = word;
+                                break;
+                            case 3:
+                                tc.temp = int.Parse(word);
+                                break;
+                        }
+                        i++;
+                    }
+                    temp_class.Add(tc);
+                }
+                file.Close();
+                AddMsg("count: " + temp_class.Count().ToString());
+                chart_noRec =+ temp_class.Count();
+                chart1.ChartAreas[0].AxisX.Maximum = chart_noRec;
+                
+                //foreach (DS1620_conversions d1 in ds1620_list)
+                //AddMsg(d1.raw_value.ToString() + " " + d1.temp.ToString());
+
+                // turn off east light because it is on by default (relay is wired nc)
+                //svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
+            }
+            chart_min = 100;
+            chart_max = 0;
+            foreach (TemperatureClass tc in temp_class)
+            {
+                if (chart_min > tc.temp)
+                    chart_min = tc.temp;
+                if (chart_max < tc.temp)
+                    chart_max = tc.temp;
+            }
+            AddMsg("min: " + chart_min.ToString() + " max: " + chart_max.ToString());
+            chart_noRec = temp_class.Count();
+            chart1.ChartAreas[0].AxisX.Maximum = chart_noRec;
+            series1.Points.Clear();
+            x = 0;
+            //series1.Color = Color.Red;
+            //chart1.ChartAreas[0].AxisX.LineColor = Color.Red;
+            foreach (TemperatureClass d in temp_class)
+            {
+                if (true)
+                //if (size++ == m_reduce_size)
+                {
+                    series1.Points.AddXY(x, d.temp);
+                    x++;
+                }
+            }
+            i = 0;
+            foreach (DataPoint item in chart1.Series[0].Points)
+            {
+                //item.AxisLabel = "test" + i.ToString();
+                //i++;
+
+                //if (size++ == m_reduce_size)
+                if (true)
+                {
+                    //item.AxisLabel = "test" + i.ToString();
+                    string temp = temp_class[i].time;
+                    item.AxisLabel = temp;
+                    //size = 1;
+                }
+                i++;
+            }
+
+
+            /*
+            firstSeries(series1);
+            int i = 0;
+            int size = 1;
+            int x = 0;
+            series1.Points.Clear();
+            if (temp_class.Count() < 1)
+                return;
+            foreach (TemperatureClass d in temp_class)
+            {
+                if (true)
+                //if (size++ == m_reduce_size)
+                {
+                    size = 1;
+                    series1.Points.AddXY(x, d.temp);
+                    x++;
+                }
+            }
+            foreach (DataPoint item in chart1.Series[0].Points)
+            {
+                //item.AxisLabel = "test" + i.ToString();
+                //i++;
+
+                //if (size++ == m_reduce_size)
+                if (true)
+                {
+                    //item.AxisLabel = "test" + i.ToString();
+                    string temp = temp_class[i].time;
+                    item.AxisLabel = temp;
+                    //size = 1;
+                }
+                i++;
+            }
+
+
+            if (tbNoChartRec.Text == "")
+                return;
+            int noRecs = int.Parse(tbNoChartRec.Text);
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_TEMP4"), cl.index, noRecs);
+                }
+            }
+            */
+        }
+        bool NoUpdate = false;
+		private void CheckChangedNoUpdate(object sender, EventArgs e)
+		{
+            NoUpdate = cbNoUpdate.Checked;
+            AddMsg("no update: " + NoUpdate.ToString());
+		}
+        int reduce = 0;
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            Load_Graph();
+        }
+        private void Load_Graph()
+        { 
+            int x = 0;
+            int i = 0;
+            int j = 0;
+
+            updateGraph = true;
+            series1.Points.Clear();
+
+            chart1.ChartAreas[0].AxisY.Minimum = (double)chart_min;
+            chart1.ChartAreas[0].AxisY.Maximum = (double)chart_max;
+            chart1.ChartAreas[0].AxisX.Maximum = chart_noRec;
+            chart1.ChartAreas[0].AxisX.Interval = m_AxisX_Interval;
+            series1.MarkerStep = m_MarkerStep;
+            series1.YValuesPerPoint = m_YValuesPerPoint;
+
+            if (chart_noRec == 150)
+                m_AxisX_Interval += 10;
+            foreach (TemperatureClass d in temp_class)
+            {
+                if (true)
+                //if (size++ == m_reduce_size)
+                {
+                    series1.Points.AddXY(x, d.temp);
+                    x++;
+                }
+            }
+            foreach (DataPoint item in chart1.Series[0].Points)
+            {
+                //item.AxisLabel = "test" + i.ToString();
+                //i++;
+
+                //if (size++ == m_reduce_size)
+                if (true)
+                {
+                    //item.AxisLabel = "test" + i.ToString();
+                    string temp = temp_class[i].time;
+                    item.AxisLabel = temp;
+                    //size = 1;
+                }
+                i++;
+            }
+            updateGraph = false;
+        }
+        private void ReduceGraph()
+		{
+            int j,i;
+            j = temp_class.Count() / 2;
+            for (i = 0; i < j; i++)
+            {
+                if (reduce >= temp_class.Count())
+                    break;
+                temp_class.RemoveAt(reduce);
+                reduce++;
+            }
+            //AddMsg(reduce.ToString());
+            reduce = 0;
+        }
+        private void cabinToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            cabin.StartPosition = FormStartPosition.Manual;
+            cabin.Location = new Point(100, 10);
+            if (cabin.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+        }
+
+		private void garageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            garageform.Enable_Dlg(true);
+            //garageform.SetStatus(status);
+            garageform.StartPosition = FormStartPosition.Manual;
+            garageform.Location = new Point(100, 10);
+            if (garageform.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+            garageform.Enable_Dlg(false);
+        }
+
+		private void testbenchToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             testbench.Enable_Dlg(true);
             testbench.StartPosition = FormStartPosition.Manual;
@@ -1123,26 +1432,69 @@ namespace EpServerEngineSampleClient
             }
             testbench.Enable_Dlg(false);
         }
-		private void Cabin_Click(object sender, EventArgs e)
+
+        private void outdoorToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            cabin.StartPosition = FormStartPosition.Manual;
-            cabin.Location = new Point(100, 10);
-            if (cabin.ShowDialog(this) == DialogResult.OK)
+            outdoor.StartPosition = FormStartPosition.Manual;
+            outdoor.Location = new Point(100, 10);
+            if (outdoor.ShowDialog(this) == DialogResult.OK)
             {
             }
             else
             {
             }
-            //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("RELOAD_CLLIST"), 2, " ");
         }
-        private void BtnAssignFunction(object sender, EventArgs e)
-        {
-            int func = 0;          
+
+		private void dS1620ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            ds1620.StartPosition = FormStartPosition.Manual;
+            ds1620.Location = new Point(100, 10);
+            if (ds1620.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+        }
+
+		private void timersToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            timer_schedule.StartPosition = FormStartPosition.Manual;
+            timer_schedule.Location = new Point(100, 10);
+            if (timer_schedule.ShowDialog(this) == DialogResult.OK)
+            {
+            }
+            else
+            {
+            }
+        }
+
+		private void minimizeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+		private void clearScreenToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            tbReceived.Clear();
+        }
+
+		private void clearAlertToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            AlertLabel.Text = "";
+            AlertLabel.Visible = false;
+            RedrawClientListBox();
+            client_alert = false;
+        }
+
+        private void assignFunctionKeyToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            int func = 0;
             EasyButtonForm easyButton = new EasyButtonForm();
             easyButton.StartPosition = FormStartPosition.Manual;
             easyButton.Location = new Point(100, 0);
-            if(easyButton.ShowDialog(this) == DialogResult.OK)
-			{
+            if (easyButton.ShowDialog(this) == DialogResult.OK)
+            {
                 func = easyButton.getFunc();
                 switch (func)
                 {
@@ -1182,160 +1534,87 @@ namespace EpServerEngineSampleClient
                 //AddMsg("port: " + easyButton.getPort().ToString());
             }
             else
-			{
+            {
 
-			}
+            }
             easyButton.Dispose();
         }
-        private void Function1Click(object sender, EventArgs e)
+
+		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            int type, port;
-            //AddMsg(Properties.Settings.Default["func1_type"].ToString());
-            //AddMsg(Properties.Settings.Default["func1_port"].ToString());
-            type = (int)Properties.Settings.Default["func1_type"];
-            port = (int)Properties.Settings.Default["func1_port"];
-            svrcmd.Change_PortCmd(port, type);
+            if (client_connected)
+            {
+                svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
+                disconnect_attempts = 0;
+                AddMsg("disconnecting");
+                btnConnect.Text = "Connect";
+                //timer1.Enabled = false;
+                client_connected = false;
+                m_client.Disconnect();
+            }
+            garageform.Dispose();
+            testbench.Dispose();
+            timer_schedule.Dispose();
+            this.Close();
         }
-        private void Function2Click(object sender, EventArgs e)
-		{
-            int type, port;
-            type = (int)Properties.Settings.Default["func2_type"];
-            port = (int)Properties.Settings.Default["func2_port"];
-            svrcmd.Change_PortCmd(port, type);
-        }
-        private void Function3Click(object sender, EventArgs e)
+        private void SendClientMsg(int msg, string param, bool remove)
         {
-            int type, port;
-            type = (int)Properties.Settings.Default["func3_type"];
-            port = (int)Properties.Settings.Default["func3_port"];
-            svrcmd.Change_PortCmd(port, type);
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                //AddMsg(cl.label + " " + cl.lbindex.ToString());
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    //AddMsg("send msg: " + cl.label + " " + cl.index);
+                    if (remove)
+                    {
+                        cl.lbindex = -1;
+                        cl.socket = -1;
+                    }
+                    svrcmd.Send_ClCmd(msg, cl.index, param);
+                    //AddMsg(cl.index.ToString());
+                    // if cl.index == server then set disconnected flag
+
+                    //if ((cl.index == 8) && (msg == REBOOT_IOBOX))
+                    if (false)
+                    {
+                        btnConnect.Text = "Connect";
+                        //timer1.Enabled = false;
+                        client_connected = false;
+                    }
+                    RedrawClientListBox();
+                    if (!remove)
+                    {
+                        lbAvailClients.SetSelected(cl.lbindex, true);
+                    }
+                }
+            }
         }
-        private void btnFnc4_Click(object sender, EventArgs e)
-        {
-            int type, port;
-            type = (int)Properties.Settings.Default["func4_type"];
-            port = (int)Properties.Settings.Default["func4_port"];
-            svrcmd.Change_PortCmd(port, type);
-        }
-        private void btnFcn5_Click(object sender, EventArgs e)
-        {
-            int type, port;
-            type = (int)Properties.Settings.Default["func5_type"];
-            port = (int)Properties.Settings.Default["func5_port"];
-            svrcmd.Change_PortCmd(port, type);
-        }
-        private void Exit2Shell_Click(object sender, EventArgs e)
+
+        private void exitToShellToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             SendClientMsg(svrcmd.GetCmdIndexI("EXIT_TO_SHELL"), " ", true);
-            
+
             AlertLabel.Text = "";
             AlertLabel.Visible = false;
             client_alert = false;
         }
-		private void btnSendStatus_Click(object sender, EventArgs e)
+
+		private void showTimeUpToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"), "status", false);
-        }
-		private void Minimize_Click(object sender, EventArgs e)
-		{
-            this.WindowState = FormWindowState.Minimized;
-        }
-		private void btnMngServer_Click(object sender, EventArgs e)
-		{
-            DialogResult res;
-            int iResult = 0;
-            ManageServer dlg = new ManageServer(m_client);
-            res = dlg.ShowDialog(this);
-            iResult = dlg.GetResult();
-            if (res == DialogResult.OK)
+            foreach (ClientsAvail cl in clients_avail)
             {
-                if (client_params[selected_address].AutoConn == true)
-                    cfg_params = dlgsetparams.GetParams();
-            }
-            else if (res == DialogResult.Abort)
-            {
-                AddMsg("closing connection and exiting " + client_connected.ToString());
-                /*
-                if (client_connected)
-                    m_client.Disconnect();
-                garageform.Dispose();
-                testbench.Dispose();
-                base.OnClosed(e);
-                */
-                if (client_connected)
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                //  if(cl.socket > 0)   // to do all at once
                 {
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
-                    disconnect_attempts = 0;
-                    AddMsg("disconnecting");
-                    btnConnect.Text = "Connect";
-                    //timer1.Enabled = false;
-                    client_connected = false;
-                    btnTestBench.Enabled = false;
-                    btnGarageForm.Enabled = false;
-                    btnTimerSchedules.Enabled = false;
-                    m_client.Disconnect();
+                    //AddMsg(cl.label + " " + cl.index.ToString() + " " + cl.lbindex.ToString());
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_TIMEUP"), cl.index, " ");
+                    //svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_CONFIG2"), cl.index, " ");
                 }
-                garageform.Dispose();
-                testbench.Dispose();
-                timer_schedule.Dispose();
-                this.Close();
             }
-            if(iResult == 55)
-                this.WindowState = FormWindowState.Minimized;
         }
-        private void btnTimer_Click(object sender, EventArgs e)
+
+        private void getTimeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            timer_schedule.StartPosition = FormStartPosition.Manual;
-            timer_schedule.Location = new Point(100, 10);
-            if (timer_schedule.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-        }
-		private void btnOutdoor_Click(object sender, EventArgs e)
-		{
-            outdoor.StartPosition = FormStartPosition.Manual;
-            outdoor.Location = new Point(100, 10);
-            if (outdoor.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-        }
-        private void cbAlarm_CheckedChanged(object sender, EventArgs e)
-		{
-            if (cbAlarm.Checked)
-            {
-                if (tbAlarmHours.Text == "" || tbAlarmMinutes.Text == "" || tbAlarmSeconds.Text == "")
-                {
-                    AddMsg("alarm hours and minutes must be set");
-                    timer2.Enabled = false;
-                    return;
-                }
-                alarm_tick = (Int64)(alarm_hours * 3600 + alarm_minutes * 60 + alarm_seconds);
-                AddMsg(alarm_seconds.ToString());
-                timer2.Enabled = true;
-            }
-            else timer2.Enabled = false;
-        }
-		private void tbAlarmSecondsChanged(object sender, EventArgs e)
-		{
-            alarm_seconds = int.Parse(tbAlarmSeconds.Text);
-            if (alarm_seconds > 60)
-            {
-                alarm_seconds = 60;
-                tbAlarmSeconds.Text = "60";
-            }
-		}
-        private void tbAlarm_TextChanged(object sender, EventArgs e)
-        {
-            alarm_hours = int.Parse(tbAlarmHours.Text);
-        }
-        private void btnGetTime_Click(object sender, EventArgs e)
-        {
             foreach (ClientsAvail cl in clients_avail)
             {
                 if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
@@ -1344,91 +1623,237 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
-		private void btnRescan_Click(object sender, EventArgs e)
+
+        private void setTimeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            ds1620.StartPosition = FormStartPosition.Manual;
-            ds1620.Location = new Point(100, 10);
-            if (ds1620.ShowDialog(this) == DialogResult.OK)
+            foreach (ClientsAvail cl in clients_avail)
             {
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    //AddMsg(cl.label);
+                    SetTime(cl.index);
+                }
+            }
+        }
+
+        private void rebootToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            SendClientMsg(svrcmd.GetCmdIndexI("REBOOT_IOBOX"), " ", true);
+        }
+
+		private void shutdownToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            SendClientMsg(svrcmd.GetCmdIndexI("SHUTDOWN_IOBOX"), " ", true);
+        }
+
+		private void getStatusToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            SendClientMsg(svrcmd.GetCmdIndexI("SEND_STATUS"), "status", false);
+        }
+
+		private void btnExit_Click(object sender, EventArgs e)
+		{
+            exitToolStripMenuItem_Click(new object(), new EventArgs());
+
+        }
+
+		private void loadTempFileToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            string tfilename;
+            int i;
+            tfilename = ChooseTXTFileName();
+            if (tfilename == "")
+                return;
+            if (!File.Exists(tfilename))
+            {
+                MessageBox.Show("can't find file: " + tfilename);
+                return;
+            }
+            //AddMsg(tfilename);
+            using (StreamReader file = new StreamReader(tfilename))
+            {
+                string ln;
+                string[] words;
+                while ((ln = file.ReadLine()) != null)
+                {
+                    TemperatureClass tc = new TemperatureClass();
+                    words = ln.Split(' ');
+                    i = 0;
+                    foreach (var word in words)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                tc.client_id = int.Parse(word);
+                                break;
+                            case 1:
+                                tc.sensor_no = int.Parse(word);
+                                break;
+                            case 2:
+                                tc.time = word;
+                                break;
+                            case 3:
+                                tc.temp = int.Parse(word);
+                                break;
+                        }
+                        i++;
+                    }
+                    temp_class.Add(tc);
+                }
+                file.Close();
+                AddMsg("count: " + temp_class.Count().ToString());
+                chart_noRec = temp_class.Count();
+
+                //foreach (DS1620_conversions d1 in ds1620_list)
+                //AddMsg(d1.raw_value.ToString() + " " + d1.temp.ToString());
+
+                // turn off east light because it is on by default (relay is wired nc)
+                //svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
+            }
+            chart_min = 100;
+            chart_max = 0;
+            foreach (TemperatureClass tc in temp_class)
+            {
+                if (chart_min > tc.temp)
+                    chart_min = tc.temp;
+                if (chart_max < tc.temp)
+                    chart_max = tc.temp;
+            }
+            chart_max++;
+            chart_min--;
+            AddMsg("min: " + chart_min.ToString() + " max: " + chart_max.ToString());
+            Load_Graph();
+        }
+        private string ChooseTXTFileName()
+        {
+            OpenFileDialog openFileDialog2 = new OpenFileDialog
+            {
+                InitialDirectory = initial_directory,
+                Title = "Browse TXT Files",
+
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "txt",
+                Filter = "txt files (*.txt)|*.TXT",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                //tbFileName.Text = openFileDialog2.FileName;
+                return openFileDialog2.FileName;
+            }
+            else return "";
+
+        }
+
+		private void loadGraphToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            Load_Graph();
+		}
+
+		private void clearGraphToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            temp_class.Clear();
+		}
+
+		private void changeGraphParamsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            GraphParams gp = new GraphParams();
+            gp.SetAxisInterval(m_AxisX_Interval);
+            gp.SetMarkerSteps(m_MarkerStep);
+            gp.SetNoRecs(chart_noRec);
+            gp.SetYValuesPerPoint(m_YValuesPerPoint);
+            if(gp.ShowDialog(this) == DialogResult.OK)
+			{
+                m_MarkerStep = gp.GetMarkerSteps();
+                m_AxisX_Interval = gp.GetAxisInterval();
+                m_YValuesPerPoint = gp.GetYValuesPerPoint();
+                chart_noRec = gp.GetNoRecs();
+                Load_Graph();
+			}
+		}
+
+		private void Test_graph_timer(object sender, EventArgs e)
+		{
+            int x = 0;
+            int i = 0;
+            /*
+            chart1.ChartAreas[0].AxisY.Minimum = (double)chart_min;
+            chart1.ChartAreas[0].AxisY.Maximum = (double)chart_max;
+            chart1.ChartAreas[0].AxisX.Maximum = chart_noRec;
+            */
+            chart_min = 100;
+            chart_max = 0;
+            i = 0;
+            foreach (TemperatureClass tc2 in temp_class)
+            {
+                if (i++ < graph_timer)
+                {
+                    if (chart_min > tc2.temp)
+                        chart_min = tc2.temp;
+                    if (chart_max < tc2.temp)
+                        chart_max = tc2.temp;
+                }
+            }
+            if (chart_min == chart_max)
+            {
+                chart_min = chart_min - 2;
+                chart_max = chart_max + 2;
             }
             else
             {
+                chart_min--;
+                chart_max++;
             }
-        }
-		private void btnSendSort_Click(object sender, EventArgs e)
-		{
-            int dest = -1;
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                {
-                    dest = cl.index;
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SORT_CLLIST"), dest, "test");
-                }
-            }
-        }
-		private void timer3_tick(object sender, EventArgs e)
-		{
-            int dest = -1;
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (cl.socket > 0 && cl.type != 0)
-                {
-                    dest = cl.index;
-                    SetTime(dest);
-                }
-            }
-        }
-		private void btnUnused_Click(object sender, EventArgs e)
-		{
-            
-            AlertLabel.Text = "";
-            AlertLabel.Visible = false;
-            RedrawClientListBox();
-            client_alert = false;
-        }
-		private void btnGetTemp_Click(object sender, EventArgs e)
-		{
-            foreach (ClientsAvail cl in clients_avail)
-            {
-                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
-                {
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_TEMP4"), cl.index, " ");
-                }
-            }
-        }
-        bool NoUpdate = false;
-		private void CheckChangedNoUpdate(object sender, EventArgs e)
-		{
-            NoUpdate = cbNoUpdate.Checked;
-            AddMsg("no update: " + NoUpdate.ToString());
-		}
 
-		private void tbAlarmMinutes_TextChanged(object sender, EventArgs e)
-        {
-            alarm_minutes = int.Parse(tbAlarmMinutes.Text);
-            if(alarm_minutes > 60)
-			{
-                alarm_minutes = 60;
-                tbAlarmMinutes.Text = "60";
-			}
-        }
-        private void timer2_Tick(object sender, EventArgs e)
-		{
-            alarm_tick--;
-            tbAlarmTick.Text = alarm_tick.ToString();
-            if (alarm_tick == 0)
+            chart1.ChartAreas[0].AxisX.Interval = m_AxisX_Interval;
+            series1.MarkerStep = m_MarkerStep;
+            series1.YValuesPerPoint = m_YValuesPerPoint;
+
+            chart1.ChartAreas[0].AxisX.Maximum = graph_timer;
+            series1.Points.AddXY(x, temp_class[graph_timer].temp);
+            i = 0;
+            foreach (DataPoint item in chart1.Series[0].Points)
             {
-                cbAlarm.Checked = false;
-                System.Media.SoundPlayer player;
-                string song = "c:\\users\\Daniel\\Music\\White Bird.wav";
-                player = new System.Media.SoundPlayer();
-                player.SoundLocation = song;
-                player.Play();
-                player.Dispose();
-                tbAlarmHours.Text = tbAlarmMinutes.Text = tbAlarmSeconds.Text = "0";
-                timer2.Enabled = false;
+                //chart1.Series[0].AxisLabel = temp_class[graph_timer].time;
+                item.AxisLabel = temp_class[i].time;
+                i++;
             }
-        }
+            if(graph_timer == temp_class.Count()-1)
+			{
+                timer4.Enabled = false;
+                return;
+			}
+            graph_timer++;
+            if (graph_timer == 100)
+                m_AxisX_Interval = 40;
+            if (graph_timer == 130)
+                m_AxisX_Interval = 50;
+            if (graph_timer == 576)
+            {
+                timer4.Enabled = false;
+                AddMsg("done");
+            }
+            AddMsg(graph_timer.ToString());
+         }
+
+		private void graphTimerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            series1.Points.Clear();
+            chart_noRec = 1;
+            chart_min = 0;
+            chart_max = 100;
+            m_AxisX_Interval = 30;
+            m_YValuesPerPoint = 10;
+            m_MarkerStep = 10;
+            timer4.Enabled = true;
+            graph_timer = 0;
+         }
     }
 }

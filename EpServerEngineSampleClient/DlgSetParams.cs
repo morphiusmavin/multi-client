@@ -27,7 +27,6 @@ namespace EpServerEngineSampleClient
 		IDictionary<string, int> timeout_str;
 		private bool rev_limit_override = false;
 		private bool fp_override = false;
-		private string xml_dimmer_location = "c:\\Users\\daniel\\dev\\dimmer.xml";
 		public void SetParams(ConfigParams _cfg)
 		{
 			cfg = _cfg;

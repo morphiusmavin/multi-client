@@ -18,13 +18,18 @@ todo:
 11) instead of having a timer to turn lights off in Garage/Cabin dialog, make it a function of 
 	the client/server that sets it's own timer to turn off the lights using the timer schedule 
 	sort/timer_task method (done except the state on the properties are not changed)
-12) look into making the cdata.dat a variable field like ddata.dat (done but needs testing)
-13) Need an a-off button for cabin (F5?)
-14) Use push buttons hooked up to inputs on 146 to turn on/off lights in garage 
-15) Use config.bin to store variable that tells how often to rename ddata.dat. (the dat file 
+12) Need an all-off button for cabin (F5?)
+13) Use push buttons hooked up to inputs on 146 to turn on/off lights in garage 
+14) Use config.bin to store variable that tells how often to rename ddata.dat. (the dat file 
 	for temperatures)
-16) Need a way to monitor ddata.dat size (ds_index) 
-17) Need to be able to monitor the cdata.dat & ddata.dat files from the wincl only and not the tty
+15) Need a way to monitor ddata.dat size (ds_index) 
+16) Need to be able to monitor the cdata.dat & ddata.dat files from the wincl only and not the tty (mostly done)
+17) nice to have advanced warning when sched is about to execute lights on/off (in timer_task)
+	(poss. have the lights blink off and back on a minute before going off)
+18) need a new msg that the client sends back to wincl so it can update the state of the lights buttons in 
+	the properties settings (also, some of the dialogs don't show the button's correct state when re-entering
+	the dialog 
+19) client_table[] is not updated in sched as far as who's logged in (client_table[].socket)
 
 to add new commands:
 
@@ -334,4 +339,29 @@ testing how winCl sends var. no. of bytes
 					trunning_hours = tempx[1];
 					trunning_minutes = tempx[2];
 					trunning_seconds = tempx[3];
+*/
+
+
+511 - 403 - 108
+so tval represents the entire possible temp range of the
+DS1620 from -66F to 257F in a range of raw values from 0 up to 
+359 but because any temps from -66 to 32F are raw values from 
+403 to 511 then it's not trivial to have an algorithm that 
+throws out any outliers and does any graph smoothing
+
+			if(fval >= 0.0 && fval <= 250.0)
+			{
+				C = fval/2.0;
+				tval = fval + 109;
+
+			}
+			else if(fval >= 403 && fval <= 511)
+			{
+				C = (fval - 512.0)/2.0;
+				tval = fval - 403;
+			}
+			F = C*9.0;
+			F /= 5.0;
+			F += 32.0;
+
 */

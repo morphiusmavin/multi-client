@@ -25,12 +25,11 @@ namespace EpServerEngineSampleClient
 	{
 		private INetworkClient m_client;
 		ServerCmds svrcmd = new ServerCmds();
-		private List<ClientsAvail> clients_avail;
+		//private List<ClientsAvail> clients_avail;
 		int sindex, iparam;
 		int timer_seconds = 0;
 		int water_off_time = 3600;	// water off 1 hour
 		int water_on_time = 30;     // water on 30 seconds
-		bool water_enabled = false;
 		public ClientDest()
 		{
 			InitializeComponent();
@@ -234,7 +233,7 @@ namespace EpServerEngineSampleClient
 		{
 			if(cbWaterEnabled.Checked)
 			{
-				water_enabled = true;
+				//water_enabled = true;
 /*
 				btnOffTime.Enabled = true;
 				btnOnTime.Enabled = true;
@@ -246,7 +245,7 @@ namespace EpServerEngineSampleClient
 			}
 			else
 			{
-				water_enabled = false;
+				//water_enabled = false;
 /*
 				btnOffTime.Enabled = false;
 				btnOnTime.Enabled = false;

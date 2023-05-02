@@ -163,6 +163,8 @@ UCHAR get_host_cmd_task(int test)
 	UCHAR mask2;
 	int sample_size = 10;
 	msg.mtype = msgtype;
+	float F,C; 
+	int tval;
 
 #ifdef SERVER_146
 	//printf("starting server\n");
@@ -500,13 +502,39 @@ printf("\n");
 					break;
 
 				case GET_TEMP4:
-					printf("ds_index: %d\n",ds_index);
+					cmd = SEND_MESSAGE;
+					i = (int)tempx[0];
+					printf("ds_index: %d %d\n",ds_index,i);
 					if(ds_index > 0 && ps.ds_enable > 0)
 					{
-						dllist_find_data(ds_index, dtpp, &dll);
-						sprintf(tempx,"%d:%d:%d - %s       ",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
-						cmd = SEND_MESSAGE;
-						send_sock_msg(tempx, strlen(tempx), cmd, _149);
+						if(i > ds_index)
+							i = ds_index;
+						for(j = ds_index-i;j < ds_index;j++)
+						{
+							dllist_find_data(i, dtpp, &dll);
+							if(dtp->value >= 0 && dtp->value <= 250)
+							{
+								fval = (float)dtp->value;
+								C = fval/2.0;
+								//tval = val + 109;
+
+							}
+							else if(fval >= 403 && fval <= 511)
+							{
+								C = (fval - 512.0)/2.0;
+								//tval = val - 403;
+							}
+							F = C*9.0;
+							F /= 5.0;
+							F += 32.0;
+							ival = (int)F;
+
+							sprintf(tempx, "%d %0d %02d:%02d %d       ",this_client_id, i, dtp->hour, dtp->minute, ival);
+							//sprintf(tempx,"%d:%d:%d - %sxxx",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
+							//send_sock_msg(tempx, strlen(tempx), cmd, _149);
+							printf("%s\n",tempx);
+							uSleep(0,TIME_DELAY/4);
+						}
 						//printf("%d:%d:%d %d\n",dtp->hour, dtp->minute, dtp->second, dtp->value);
 					}else printf("not enabled\n");
 					//printf("avg: %d\n",avg_raw_data(sample_size));	not working yet
@@ -709,7 +737,7 @@ printf("\n");
 					tempx[3] = (UCHAR)(j >> 4);
 					tempx[4] = 0;
 					cmd = SEND_MESSAGE;
-					sprintf(tempx,"k: %d j: %d     ",k,j);
+					sprintf(tempx,"k: %d j: %dxxx",k,j);
 					msg_len = strlen(tempx);
 					send_sock_msg(tempx, msg_len, cmd, _149);
 					printf("%s\n",tempx);
@@ -833,18 +861,18 @@ printf("\n");
 				case GET_TIME:
 					gettimeofday(&mtv, NULL);
 					curtime2 = mtv.tv_sec;
-					strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
+					//strftime(tempx,30,"%m-%d-%Y %T\0",localtime(&curtime2));
 					//printf(tempx);
-					strftime(tempx,30,"%H",localtime(&curtime2));  // show as 24-hour (00 -> 23)
+					//strftime(tempx,30,"%H",localtime(&curtime2));  // show as 24-hour (00 -> 23)
 					//printf(tempx);
 					//printf("\n");
-					strftime(tempx,30,"%I",localtime(&curtime2));	// show as 12-hour (01 -> 12)
+					//strftime(tempx,30,"%I",localtime(&curtime2));	// show as 12-hour (01 -> 12)
 					//printf(tempx);
-					printf("\n");
+					//printf("\n");
 					T = time(NULL);
 					tm = *localtime(&T);
 					memset(tempx,0,sizeof(tempx));
-					sprintf(tempx,"%02d:%02d:%02d       ", tm.tm_hour, tm.tm_min, tm.tm_sec);
+					sprintf(tempx,"%02d:%02d:%02dxxx", tm.tm_hour, tm.tm_min, tm.tm_sec);
 					//printf("%s\n",tempx);
 					msg_len = strlen(tempx);
 					//printf("msg_len: %d\n",msg_len);

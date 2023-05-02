@@ -150,7 +150,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void TimerTick(object sender, EventArgs e)
 		{
-			int i,j;
+			int j;
 			if (--timer_tick == 0)
 			{
 				for (j = 0; j < 8; j++)

@@ -28,9 +28,6 @@ namespace EpServerEngineSampleClient
 		List<String> testbench_list;
 		List<String> outdoor_list;
 		//List<int> ports;
-		List<String> ports1;
-		List<String> ports2;
-		List<String> ports3;
 		int func, type, port;
 		ServerCmds svrcmd;
 

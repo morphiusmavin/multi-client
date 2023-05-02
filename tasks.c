@@ -645,7 +645,7 @@ int change_output(int index, int onoff)
 /*********************************************************************/
 UCHAR poll_ds1620_task(int test)
 {
-	int val;
+	int val, tval;
 	int i,j;
 	time_t T;
 	struct tm tm;
@@ -654,6 +654,8 @@ UCHAR poll_ds1620_task(int test)
 	int bad_ds_count = 5;
 	char date_str[20];
 	float fval,C,F;
+	int ival;
+	int temp_shutdown = 0;
 
 	D_DATA *dtp = (D_DATA *)malloc(sizeof(D_DATA));
 	D_DATA **dtpp = &dtp;
@@ -690,6 +692,10 @@ UCHAR poll_ds1620_task(int test)
 				return 0;
 			}
 		}
+		if(shutdown_all)
+		{
+			ds_reset = 1;
+		}
 		if(ps.valid_ds[i] > 0 && ds_reset == 0)
 		{
 			writeByteTo1620(DS1620_CMD_STARTCONV);
@@ -710,15 +716,18 @@ UCHAR poll_ds1620_task(int test)
 			if(fval >= 0.0 && fval <= 250.0)
 			{
 				C = fval/2.0;
+				tval = val + 109;
 
 			}
 			else if(fval >= 403 && fval <= 511)
 			{
 				C = (fval - 512.0)/2.0;
+				tval = val - 403;
 			}
 			F = C*9.0;
 			F /= 5.0;
 			F += 32.0;
+			ival = (int)F;
 
 			//printf("polling ds: %d %d\n",i,ds_index);
 			T = time(NULL);
@@ -737,9 +746,16 @@ UCHAR poll_ds1620_task(int test)
 			ds_index = dllist_add_data(ds_index, &dll, dtp);
 			uSleep(0,TIME_DELAY/16);
 			memset(sock_msg,0,sizeof(sock_msg));
-			sprintf(sock_msg, "%s    %0d     %0.1f       ",client_table[this_client_id].label, i, F);
-			//printf("%s\n",sock_msg);
-			send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _149);	// to win cl
+			//sprintf(sock_msg, "%s    %0d     %0.1f       ",client_table[this_client_id].label, i, F);
+			
+			sprintf(sock_msg, "%d %0d %02d:%02d %d       ",this_client_id, i, dtp->hour, dtp->minute, ival);
+			
+			//if(client_table[_149].socket > 0)	// this not updated by sock 
+			if(1)
+			{
+				printf("%s\n",sock_msg);
+				send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _149);	// to win cl
+			}
 			//uSleep(0,TIME_DELAY/16);
 			//send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, 4);
 			//dllist_find_data(index, dtpp, &dll);
@@ -781,10 +797,12 @@ UCHAR poll_ds1620_task(int test)
 				ds_index = dllist_add_data(ds_index, &dll, dtp);
 				//printf("reset\n");
 				ds_reset = 0;
+				if(shutdown_all)
+					temp_shutdown = 1;
 			}
 		}
 
-		if(shutdown_all)
+		if(temp_shutdown)	
 		{
 			free(dtp);
 			dlWriteConfig("ddata.dat", &dll, index, errmsg);
@@ -1024,17 +1042,22 @@ void sort_countdown(void)
 void display_sort()
 {
 	int i;
-	char sock_msg[50];
+	char sock_msg[100];
+	int msg_len = 0;
 	//printf("index\tsec away\tport\tonoff\thour\tmin\tsec\n");
 	for(i = 0;i < curr_countdown_size;i++)
 	{
 		if(count_down[i].seconds_away > -1)
 		{
-			printf("%d:\t%d\t\t%d\t%d\t%d\t%d\t%d        ",count_down[i].index, 
-				count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,
+			memset(sock_msg,0,sizeof(sock_msg));
+			sprintf(sock_msg,"%d %d %d %d %d %dx\0", count_down[i].seconds_away, 
+				count_down[i].port, count_down[i].onoff,
 						count_down[i].hour,count_down[i].minute,count_down[i].second);
 			uSleep(0,TIME_DELAY/4);			
-			send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), SEND_MESSAGE, _149);	// to win cl
+			msg_len = strlen(sock_msg);
+			//printf("%d ",msg_len);
+			send_sock_msg((UCHAR *)&sock_msg[0], msg_len, SEND_MESSAGE, _149);	// to win cl
+			//printf("%s\n",sock_msg);
 		}
 	}
 }
@@ -1703,4 +1726,32 @@ float convertF(int raw_data)
 	return ret;	// returns 257 -> -67
 }
 
-
+#if 0
+#define AVG_BUF_SIZE 20
+int avg_buf_ptr;
+int avg_buf[AVG_BUF_SIZE];
+avg_buf_ptr = 0;
+int get_avg_buf(int val)
+{
+	int i;
+	int not_same = 0;
+	avg_buf[avg_buf_ptr] = val;
+	for(i = 0;i < AVG_BUF_SIZE-1;i++)
+	{
+		if(avg_buf[i] != avg_buf[i+1])
+		{
+			not_same = 1;
+		}
+	}
+	if(not_same == 1)
+	{
+		not_same = 0;
+		avg_buf_ptr = 0;
+		for(i = 0;i < AVG_BUF_SIZE;i++)
+			avg_buf[i] = 0;
+	}
+	
+	if(++avg_buf_ptr > AVG_BUF_SIZE-1)
+	{
+	}
+#endif

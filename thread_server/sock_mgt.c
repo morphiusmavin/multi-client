@@ -236,7 +236,8 @@ UCHAR get_host_cmd_task(int test)
 		{
 			case DS1620_MSG:
 				//printf("%s\n",write_serial_buff);
-				send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
+				if(client_table[0].socket > -1)
+					send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
 				break;
 
 			case SORT_CLLIST:
