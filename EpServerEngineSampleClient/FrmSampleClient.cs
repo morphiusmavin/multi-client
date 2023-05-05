@@ -511,6 +511,7 @@ namespace EpServerEngineSampleClient
                 case "DS1620_MSG":
                     if (updateGraph)
                         break;
+                    AddMsg(ret);
                     TemperatureClass tc = new TemperatureClass();
                     words = ret.Split(' ');
                     i = 0;
@@ -1842,6 +1843,17 @@ namespace EpServerEngineSampleClient
             }
             AddMsg(graph_timer.ToString());
          }
+
+		private void getTemp4ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            temp_class.Clear();
+            SendClientMsg(svrcmd.GetCmdIndexI("GET_TEMP4"), " ", false);
+        }
+
+		private void getDirInfoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            SendClientMsg(svrcmd.GetCmdIndexI("GET_DIR_INFO"), " ", false);
+        }
 
 		private void graphTimerToolStripMenuItem_Click(object sender, EventArgs e)
 		{

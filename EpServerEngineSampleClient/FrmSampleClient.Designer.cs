@@ -87,9 +87,11 @@
 			this.clearGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.changeGraphParamsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.graphTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.getTemp4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.btnConnect = new System.Windows.Forms.Button();
 			this.btnExit = new System.Windows.Forms.Button();
 			this.timer4 = new System.Windows.Forms.Timer(this.components);
+			this.getDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -521,7 +523,8 @@
             this.setTimeToolStripMenuItem,
             this.rebootToolStripMenuItem,
             this.shutdownToolStripMenuItem,
-            this.getStatusToolStripMenuItem});
+            this.getStatusToolStripMenuItem,
+            this.getDirInfoToolStripMenuItem});
 			this.clientListActionToolStripMenuItem.Name = "clientListActionToolStripMenuItem";
 			this.clientListActionToolStripMenuItem.Size = new System.Drawing.Size(109, 20);
 			this.clientListActionToolStripMenuItem.Text = "Client List Action";
@@ -529,49 +532,49 @@
 			// exitToShellToolStripMenuItem
 			// 
 			this.exitToShellToolStripMenuItem.Name = "exitToShellToolStripMenuItem";
-			this.exitToShellToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.exitToShellToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.exitToShellToolStripMenuItem.Text = "Exit to Shell";
 			this.exitToShellToolStripMenuItem.Click += new System.EventHandler(this.exitToShellToolStripMenuItem_Click);
 			// 
 			// showTimeUpToolStripMenuItem
 			// 
 			this.showTimeUpToolStripMenuItem.Name = "showTimeUpToolStripMenuItem";
-			this.showTimeUpToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.showTimeUpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.showTimeUpToolStripMenuItem.Text = "Show Time Up";
 			this.showTimeUpToolStripMenuItem.Click += new System.EventHandler(this.showTimeUpToolStripMenuItem_Click);
 			// 
 			// getTimeToolStripMenuItem
 			// 
 			this.getTimeToolStripMenuItem.Name = "getTimeToolStripMenuItem";
-			this.getTimeToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.getTimeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.getTimeToolStripMenuItem.Text = "Get Time";
 			this.getTimeToolStripMenuItem.Click += new System.EventHandler(this.getTimeToolStripMenuItem_Click);
 			// 
 			// setTimeToolStripMenuItem
 			// 
 			this.setTimeToolStripMenuItem.Name = "setTimeToolStripMenuItem";
-			this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.setTimeToolStripMenuItem.Text = "Set Time";
 			this.setTimeToolStripMenuItem.Click += new System.EventHandler(this.setTimeToolStripMenuItem_Click);
 			// 
 			// rebootToolStripMenuItem
 			// 
 			this.rebootToolStripMenuItem.Name = "rebootToolStripMenuItem";
-			this.rebootToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.rebootToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.rebootToolStripMenuItem.Text = "Reboot";
 			this.rebootToolStripMenuItem.Click += new System.EventHandler(this.rebootToolStripMenuItem_Click);
 			// 
 			// shutdownToolStripMenuItem
 			// 
 			this.shutdownToolStripMenuItem.Name = "shutdownToolStripMenuItem";
-			this.shutdownToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.shutdownToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.shutdownToolStripMenuItem.Text = "Shutdown";
 			this.shutdownToolStripMenuItem.Click += new System.EventHandler(this.shutdownToolStripMenuItem_Click);
 			// 
 			// getStatusToolStripMenuItem
 			// 
 			this.getStatusToolStripMenuItem.Name = "getStatusToolStripMenuItem";
-			this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.getStatusToolStripMenuItem.Text = "Get Status";
 			this.getStatusToolStripMenuItem.Click += new System.EventHandler(this.getStatusToolStripMenuItem_Click);
 			// 
@@ -582,7 +585,8 @@
             this.loadGraphToolStripMenuItem,
             this.clearGraphToolStripMenuItem,
             this.changeGraphParamsToolStripMenuItem,
-            this.graphTimerToolStripMenuItem});
+            this.graphTimerToolStripMenuItem,
+            this.getTemp4ToolStripMenuItem});
 			this.testToolStripMenuItem.Name = "testToolStripMenuItem";
 			this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
 			this.testToolStripMenuItem.Text = "Test";
@@ -622,6 +626,13 @@
 			this.graphTimerToolStripMenuItem.Text = "Graph timer";
 			this.graphTimerToolStripMenuItem.Click += new System.EventHandler(this.graphTimerToolStripMenuItem_Click);
 			// 
+			// getTemp4ToolStripMenuItem
+			// 
+			this.getTemp4ToolStripMenuItem.Name = "getTemp4ToolStripMenuItem";
+			this.getTemp4ToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+			this.getTemp4ToolStripMenuItem.Text = "Get Temp 4";
+			this.getTemp4ToolStripMenuItem.Click += new System.EventHandler(this.getTemp4ToolStripMenuItem_Click);
+			// 
 			// btnConnect
 			// 
 			this.btnConnect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -649,6 +660,13 @@
 			// timer4
 			// 
 			this.timer4.Tick += new System.EventHandler(this.Test_graph_timer);
+			// 
+			// getDirInfoToolStripMenuItem
+			// 
+			this.getDirInfoToolStripMenuItem.Name = "getDirInfoToolStripMenuItem";
+			this.getDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.getDirInfoToolStripMenuItem.Text = "Get Dir Info";
+			this.getDirInfoToolStripMenuItem.Click += new System.EventHandler(this.getDirInfoToolStripMenuItem_Click);
 			// 
 			// FrmSampleClient
 			// 
@@ -767,6 +785,8 @@
 		private System.Windows.Forms.ToolStripMenuItem changeGraphParamsToolStripMenuItem;
 		private System.Windows.Forms.Timer timer4;
 		private System.Windows.Forms.ToolStripMenuItem graphTimerToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem getTemp4ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem getDirInfoToolStripMenuItem;
 	}
 }
 

@@ -365,3 +365,23 @@ throws out any outliers and does any graph smoothing
 			F += 32.0;
 
 */
+
+int reduce = 0;
+private void tsbtnReduce_Click(object sender, EventArgs e)
+{
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	j = mycdata.Count() / 2;
+	for (i = 0; i < j; i++)
+	{
+		if (reduce >= mycdata.Count())
+			break;
+		mycdata.RemoveAt(reduce);
+		reduce++;
+	}
+	AddMsg(reduce.ToString());
+	reduce = 0;
+	RedrawGridView();
+	return;
+}

@@ -418,9 +418,5 @@ namespace EpServerEngineSampleClient
 				timer_tick = 65535;
 
 		}
-		private void label14_Click(object sender, EventArgs e)
-		{
-
-		}
 	}
 }

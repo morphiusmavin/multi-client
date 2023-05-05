@@ -112,7 +112,8 @@ namespace EpServerEngineSampleClient
             "Cabin (154)",
             "Testbench (147)",
             "Outdoor (150)",
-            "Greenhouse (151)"});
+            "Greenhouse (151)",
+            "New Client (145)"});
 			this.cbClientNames.Location = new System.Drawing.Point(133, 23);
 			this.cbClientNames.Name = "cbClientNames";
 			this.cbClientNames.Size = new System.Drawing.Size(159, 21);

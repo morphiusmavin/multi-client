@@ -22,6 +22,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <dirent.h> 
 #include "cmd_types.h"
 #include "mytypes.h"
 #include "ioports.h"
@@ -163,8 +164,10 @@ UCHAR get_host_cmd_task(int test)
 	UCHAR mask2;
 	int sample_size = 10;
 	msg.mtype = msgtype;
-	float F,C; 
-	int tval;
+	float F,C, fval; 
+	int ival;
+	DIR *d;
+	struct dirent *dir;
 
 #ifdef SERVER_146
 	//printf("starting server\n");
@@ -185,6 +188,10 @@ UCHAR get_host_cmd_task(int test)
 #ifdef CL_151
 	//printf("starting 151\n");
 	this_client_id = _151;
+#endif 
+#ifdef CL_145
+	//printf("starting 151\n");
+	this_client_id = _145;
 #endif 
 #if 1
 	// since each card only has 20 ports then the 1st 2 port access bytes
@@ -337,9 +344,10 @@ UCHAR get_host_cmd_task(int test)
 		cs_index = cllist_get_size(&cll);
 		//printf("%d no recs in cllist\n",cs_index);
 		//cllist_show(&cll);
-	}else printf("can't fine %s\n",cFileName);
+	}else printf("can't find %s\n",cFileName);
 
 	dllist_init(&dll);
+	//strcpy(dFileName,"temp.dat\0");
 	if(access(dFileName,F_OK) != -1)
 	{
 		dlLoadConfig(dFileName,&dll,dsize,errmsg);
@@ -501,17 +509,38 @@ printf("\n");
 					//printf("trunning_seconds_off: %d\n",trunning_seconds_off);
 					break;
 
+
+				case GET_DIR_INFO:
+					d = opendir( "." );
+					if(d != NULL)
+					{
+						while((dir = readdir( d )))
+						{
+							if(dir->d_type == DT_REG && dir != 0 && strcmp(dir->d_name+14,".dat") == 0)
+								printf("%s\n",dir->d_name);
+						}
+					}
+					closedir( d );
+					printf("dir done\n");
+					break;
+
 				case GET_TEMP4:
-					cmd = SEND_MESSAGE;
+					//cmd = SEND_MESSAGE;
+					cmd = DS1620_MSG;
 					i = (int)tempx[0];
 					printf("ds_index: %d %d\n",ds_index,i);
-					if(ds_index > 0 && ps.ds_enable > 0)
+					//if(ds_index > 0 && ps.ds_enable > 0)
+					if(1)
 					{
+/*
 						if(i > ds_index)
 							i = ds_index;
 						for(j = ds_index-i;j < ds_index;j++)
+*/
+						for(i = 0;i < ds_index-2;i++)
 						{
 							dllist_find_data(i, dtpp, &dll);
+							//printf("%d\n",dtp->value);
 							if(dtp->value >= 0 && dtp->value <= 250)
 							{
 								fval = (float)dtp->value;
@@ -529,10 +558,11 @@ printf("\n");
 							F += 32.0;
 							ival = (int)F;
 
-							sprintf(tempx, "%d %0d %02d:%02d %d       ",this_client_id, i, dtp->hour, dtp->minute, ival);
+							sprintf(tempx, "%d %0d %02d:%02d %d",this_client_id, dtp->sensor_no, dtp->hour, dtp->minute, ival);
 							//sprintf(tempx,"%d:%d:%d - %sxxx",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
-							//send_sock_msg(tempx, strlen(tempx), cmd, _149);
-							printf("%s\n",tempx);
+							send_sock_msg(tempx, strlen(tempx), cmd, _149);
+							//printf("test: %s\n",tempx);
+							//uSleep(0,TIME_DELAY);
 							uSleep(0,TIME_DELAY/4);
 						}
 						//printf("%d:%d:%d %d\n",dtp->hour, dtp->minute, dtp->second, dtp->value);

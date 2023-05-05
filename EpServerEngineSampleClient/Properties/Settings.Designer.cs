@@ -454,18 +454,6 @@ namespace EpServerEngineSampleClient.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool CHICK_WATER {
-            get {
-                return ((bool)(this["CHICK_WATER"]));
-            }
-            set {
-                this["CHICK_WATER"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool COOP1_LIGHT {
             get {
                 return ((bool)(this["COOP1_LIGHT"]));
@@ -513,13 +501,397 @@ namespace EpServerEngineSampleClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string temp {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WATER_HEATER {
             get {
-                return ((string)(this["temp"]));
+                return ((bool)(this["WATER_HEATER"]));
             }
             set {
-                this["temp"] = value;
+                this["WATER_HEATER"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool BATTERY_HEATER {
+            get {
+                return ((bool)(this["BATTERY_HEATER"]));
+            }
+            set {
+                this["BATTERY_HEATER"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WATER_PUMP {
+            get {
+                return ((bool)(this["WATER_PUMP"]));
+            }
+            set {
+                this["WATER_PUMP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WATER_VALVE1 {
+            get {
+                return ((bool)(this["WATER_VALVE1"]));
+            }
+            set {
+                this["WATER_VALVE1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WATER_VALVE2 {
+            get {
+                return ((bool)(this["WATER_VALVE2"]));
+            }
+            set {
+                this["WATER_VALVE2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool WATER_VALVE3 {
+            get {
+                return ((bool)(this["WATER_VALVE3"]));
+            }
+            set {
+                this["WATER_VALVE3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OUTDOOR_LIGHT1 {
+            get {
+                return ((bool)(this["OUTDOOR_LIGHT1"]));
+            }
+            set {
+                this["OUTDOOR_LIGHT1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OUTDOOR_LIGHT2 {
+            get {
+                return ((bool)(this["OUTDOOR_LIGHT2"]));
+            }
+            set {
+                this["OUTDOOR_LIGHT2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool silent_mode {
+            get {
+                return ((bool)(this["silent_mode"]));
+            }
+            set {
+                this["silent_mode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int func4_type {
+            get {
+                return ((int)(this["func4_type"]));
+            }
+            set {
+                this["func4_type"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int func4_port {
+            get {
+                return ((int)(this["func4_port"]));
+            }
+            set {
+                this["func4_port"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int func5_type {
+            get {
+                return ((int)(this["func5_type"]));
+            }
+            set {
+                this["func5_type"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int func5_port {
+            get {
+                return ((int)(this["func5_port"]));
+            }
+            set {
+                this["func5_port"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_1 {
+            get {
+                return ((bool)(this["UNUSED150_1"]));
+            }
+            set {
+                this["UNUSED150_1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_2 {
+            get {
+                return ((bool)(this["UNUSED150_2"]));
+            }
+            set {
+                this["UNUSED150_2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_3 {
+            get {
+                return ((bool)(this["UNUSED150_3"]));
+            }
+            set {
+                this["UNUSED150_3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_4 {
+            get {
+                return ((bool)(this["UNUSED150_4"]));
+            }
+            set {
+                this["UNUSED150_4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_5 {
+            get {
+                return ((bool)(this["UNUSED150_5"]));
+            }
+            set {
+                this["UNUSED150_5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_6 {
+            get {
+                return ((bool)(this["UNUSED150_6"]));
+            }
+            set {
+                this["UNUSED150_6"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_7 {
+            get {
+                return ((bool)(this["UNUSED150_7"]));
+            }
+            set {
+                this["UNUSED150_7"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_8 {
+            get {
+                return ((bool)(this["UNUSED150_8"]));
+            }
+            set {
+                this["UNUSED150_8"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_9 {
+            get {
+                return ((bool)(this["UNUSED150_9"]));
+            }
+            set {
+                this["UNUSED150_9"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UNUSED150_10 {
+            get {
+                return ((bool)(this["UNUSED150_10"]));
+            }
+            set {
+                this["UNUSED150_10"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool play_chimes {
+            get {
+                return ((bool)(this["play_chimes"]));
+            }
+            set {
+                this["play_chimes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Quote_iter {
+            get {
+                return ((int)(this["Quote_iter"]));
+            }
+            set {
+                this["Quote_iter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Factoid_iter {
+            get {
+                return ((int)(this["Factoid_iter"]));
+            }
+            set {
+                this["Factoid_iter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public ushort ds_server {
+            get {
+                return ((ushort)(this["ds_server"]));
+            }
+            set {
+                this["ds_server"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public ushort ds_150 {
+            get {
+                return ((ushort)(this["ds_150"]));
+            }
+            set {
+                this["ds_150"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public ushort ds_154 {
+            get {
+                return ((ushort)(this["ds_154"]));
+            }
+            set {
+                this["ds_154"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public ushort ds_147 {
+            get {
+                return ((ushort)(this["ds_147"]));
+            }
+            set {
+                this["ds_147"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public ushort ds_145 {
+            get {
+                return ((ushort)(this["ds_145"]));
+            }
+            set {
+                this["ds_145"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public ushort ds_151 {
+            get {
+                return ((ushort)(this["ds_151"]));
+            }
+            set {
+                this["ds_151"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string asdf {
+            get {
+                return ((string)(this["asdf"]));
+            }
+            set {
+                this["asdf"] = value;
             }
         }
     }

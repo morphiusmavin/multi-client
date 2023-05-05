@@ -312,7 +312,7 @@
 			this.btnWaterHeater.TabIndex = 8;
 			this.btnWaterHeater.Text = "OFF";
 			this.btnWaterHeater.UseVisualStyleBackColor = true;
-			this.btnWaterHeater.Click += new System.EventHandler(this.btnWaterHeater_Click);
+			this.btnWaterHeater.Click += new System.EventHandler(this.btnWaterPump_Click);
 			// 
 			// btnWaterPump
 			// 
@@ -323,7 +323,7 @@
 			this.btnWaterPump.TabIndex = 12;
 			this.btnWaterPump.Text = "OFF";
 			this.btnWaterPump.UseVisualStyleBackColor = true;
-			this.btnWaterPump.Click += new System.EventHandler(this.btnWaterPump_Click);
+			this.btnWaterPump.Click += new System.EventHandler(this.btnWaterHeater_Click);
 			// 
 			// btnWaterValve1
 			// 
@@ -362,7 +362,7 @@
 			// 
 			this.label10.AutoSize = true;
 			this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label10.Location = new System.Drawing.Point(313, 19);
+			this.label10.Location = new System.Drawing.Point(299, 227);
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(132, 24);
 			this.label10.TabIndex = 26;
@@ -372,7 +372,7 @@
 			// 
 			this.label11.AutoSize = true;
 			this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label11.Location = new System.Drawing.Point(313, 229);
+			this.label11.Location = new System.Drawing.Point(299, 19);
 			this.label11.Name = "label11";
 			this.label11.Size = new System.Drawing.Size(124, 24);
 			this.label11.TabIndex = 27;
@@ -407,7 +407,6 @@
 			this.label14.Size = new System.Drawing.Size(79, 24);
 			this.label14.TabIndex = 30;
 			this.label14.Text = "Valve 2";
-			this.label14.Click += new System.EventHandler(this.label14_Click);
 			// 
 			// tbTimer
 			// 

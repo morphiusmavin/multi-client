@@ -99,7 +99,8 @@ namespace EpServerEngineSampleClient
 			DLLIST_SHOW,
 			DLLIST_SAVE,
 			DS1620_MSG,
-			TURN_ALL_LIGHTS_OFF
+			TURN_ALL_LIGHTS_OFF,
+			GET_DIR_INFO
 		}
 		public ServerCmds()
 		{
