@@ -122,10 +122,19 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 
 	}
 }
-void swap_order(int x, int y)
+
+static char temp_list[30][11];
+
+static void swap(int x, int y)
 {
-	int temp = x;
-}	
+	char temp[12];
+	memset(temp,0,sizeof(temp));
+	//printf("%s %s\n",temp_list[x],temp_list[y]);
+	memcpy(&temp[0],&temp_list[x][0],10);
+	memcpy(&temp_list[x][0],&temp_list[y][0],10);
+	memcpy(&temp_list[y][0],&temp[0],10);
+}
+
 /*********************************************************************/
 // task to get commands from the sock
 UCHAR get_host_cmd_task(int test)
@@ -543,7 +552,7 @@ printf("\n");
 					break;
 
 				case GET_DIR_INFO:
-					//printf("tempx: %d\n",tempx[0]);
+					printf("tempx: %d\n",tempx[0]);
 					switch(tempx[0])
 					{
 						case 0:
@@ -575,8 +584,61 @@ printf("\n");
 							for(i = 0;i < ss_index;i++)
 							{
 								sllist_find_data(i, stpp, &sll);
-								printf("%s\t\t%d\t\t%d\n",stp->name,stp->order, stp->filesize);
+								memset(tempx,0,sizeof(tempx));
+								strncpy(tempx,stp->name,10);
+								strncpy(temp_list[i],tempx,10);
+								//printf("%s\t\t%d\t\t%d\n",stp->name,stp->order, stp->filesize);
 							}
+/*
+							for(i = 0;i < ss_index;i++)
+							{
+								printf("%s\n",temp_list[i]);
+							}
+							printf("\n");
+*/
+							for(i = 0;i < ss_index-1;i++)
+							{
+								min_idx = i;
+								for(j = i + 1;j < ss_index;j++)
+									if(strcmp(temp_list[j],temp_list[min_idx]) < 0)
+										min_idx = j;
+								//printf("%s\n",temp_list[i]);
+								swap(min_idx,i);
+							}
+//							printf("\n");
+							stpp = &stp;
+							printf("\n");
+							for(k = 0;k < ss_index;k++)
+							{
+								sllist_find_data(k, stpp, &sll);
+								for(i = 0;i < ss_index;i++)
+								{
+									//printf("- %s\n",stp->name);
+									if(strncmp(stp->name,temp_list[i],10) == 0)
+									{
+										//printf("%s %d\n",temp_list[i],i);
+										stp->order = i;
+										break;
+									}
+								}
+								j++;
+							}
+/*
+							for(i = 0;i < ss_index;i++)
+							{
+								sllist_find_data(i, stpp, &sll);
+								printf("%s %d\n",stp->name,stp->order);
+							}
+							printf("\n");
+*/
+							for(k = 0;k < ss_index;k++)
+								for(i = 0;i < ss_index;i++)
+								{
+									sllist_find_data(i, stpp, &sll);
+									if(stp->order == k)
+										printf("%s %d\n", stp->name, stp->order);
+								}
+							j = 0;
 							break;
 
 						case 2:

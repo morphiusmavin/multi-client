@@ -996,11 +996,12 @@ UCHAR timer2_task(int test)
 	}
 	return 1;
 }
-void swap(COUNTDOWN* xp, COUNTDOWN* yp)
+static void swap(COUNTDOWN* xp, COUNTDOWN* yp)
 {
 	COUNTDOWN temp = *xp;
 	*xp = *yp;
 	*yp = temp;
+
 }
 /*********************************************************************/
 void remove_top_countdown()

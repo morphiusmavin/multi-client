@@ -291,23 +291,30 @@ int sllist_show(sllist_t *llistp)
 
 int sllist_reorder(sllist_t *llistp)
 {
-	char *ptr;
-	int iptr;
-	sllist_node_t *cur;
-	char list_buf[100];
+	sllist_node_t *cur, *prev, *temp;
 	int i = 0;
+	int j = 0;
+	int min_idx;
+	int list_size;
 
 	printf("re-ordering S_DATA\r\n");
 
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 	cur=llistp->first;
-
+	//list_size = sllist_get_size(llistp);
 //	printf("port\tonoff\tinput_port\ttype\ttime_delay\tlabel\r\n");
-
-	for (cur=llistp->first; cur != NULL; cur=cur->nextp)
+/*
+	for (cur=prev=llistp->first; cur != NULL; prev=cur, cur=cur->nextp)
 	{
-		printf("%s %d\n",cur->datap->name,cur->datap->order);
+		min_idx = i;
+		if(cur->nextp == NULL)
+			break;
+		for(j = i + 1;j < list_size;j++)
+			if(strcmp(
+		printf("%s %d %d\n",cur->datap->name,cur->datap->order,cur->index,temp->index);
+		i++;
 	}
+*/
 	pthread_rdwr_runlock_np(&(llistp->rwlock));
 	return 0;
 }
