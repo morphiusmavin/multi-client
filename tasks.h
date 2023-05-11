@@ -46,6 +46,7 @@ void display_sort(void);
 #define QLEN				6					  /* size of request queue        */
 UCHAR monitor_input_task(int test);
 UCHAR poll_ds1620_task(int test);
+UCHAR poll_mcp3002_task(int test);
 UCHAR timer_task(int test);
 UCHAR timer2_task(int test);
 UCHAR serial_recv_task(int test);
@@ -74,6 +75,7 @@ float convertF(int raw_data);
 extern char oFileName[20];
 extern char cFileName[20];
 extern char dFileName[20];
+extern char sFileName[20];
 UCHAR reboot_on_exit;
 int basic_controls_qid;
 int sock_qid;
@@ -101,7 +103,7 @@ int this_client_id;
 #ifndef SERVER_146
 #warning "SERVER_146 not defined"
 #define NUM_SOCK_TASKS			3
-#define NUM_SCHED_TASKS			7
+#define NUM_SCHED_TASKS			8
 //#define MSG_QUEUE_SIZE		50
 #define SEND_CMD_HOST_QKEY	1235
 #define RECV_CMD_HOST_QKEY	1309
@@ -124,6 +126,7 @@ enum sched_task_types
 	GET_HOST_CMD2,
 	MONITOR_INPUTS,
 	MONITOR_INPUTS2,
+	POLL_MCP3002,
 	TIMER,
 	TIMER2,
 	SERIAL_RECV,

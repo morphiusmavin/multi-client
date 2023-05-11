@@ -81,6 +81,8 @@
 			this.rebootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.shutdownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.getStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.getDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.listDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadTempFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,10 +90,13 @@
 			this.changeGraphParamsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.graphTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.getTemp4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.reduceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.btnConnect = new System.Windows.Forms.Button();
 			this.btnExit = new System.Windows.Forms.Button();
 			this.timer4 = new System.Windows.Forms.Timer(this.components);
-			this.getDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tbNoRecs = new System.Windows.Forms.TextBox();
+			this.label5 = new System.Windows.Forms.Label();
+			this.sortDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -524,7 +529,9 @@
             this.rebootToolStripMenuItem,
             this.shutdownToolStripMenuItem,
             this.getStatusToolStripMenuItem,
-            this.getDirInfoToolStripMenuItem});
+            this.getDirInfoToolStripMenuItem,
+            this.listDirInfoToolStripMenuItem,
+            this.sortDirInfoToolStripMenuItem});
 			this.clientListActionToolStripMenuItem.Name = "clientListActionToolStripMenuItem";
 			this.clientListActionToolStripMenuItem.Size = new System.Drawing.Size(109, 20);
 			this.clientListActionToolStripMenuItem.Text = "Client List Action";
@@ -578,6 +585,20 @@
 			this.getStatusToolStripMenuItem.Text = "Get Status";
 			this.getStatusToolStripMenuItem.Click += new System.EventHandler(this.getStatusToolStripMenuItem_Click);
 			// 
+			// getDirInfoToolStripMenuItem
+			// 
+			this.getDirInfoToolStripMenuItem.Name = "getDirInfoToolStripMenuItem";
+			this.getDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.getDirInfoToolStripMenuItem.Text = "Get Dir Info";
+			this.getDirInfoToolStripMenuItem.Click += new System.EventHandler(this.getDirInfoToolStripMenuItem_Click);
+			// 
+			// listDirInfoToolStripMenuItem
+			// 
+			this.listDirInfoToolStripMenuItem.Name = "listDirInfoToolStripMenuItem";
+			this.listDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.listDirInfoToolStripMenuItem.Text = "List Dir Info";
+			this.listDirInfoToolStripMenuItem.Click += new System.EventHandler(this.listDirInfoToolStripMenuItem_Click);
+			// 
 			// testToolStripMenuItem
 			// 
 			this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -586,7 +607,8 @@
             this.clearGraphToolStripMenuItem,
             this.changeGraphParamsToolStripMenuItem,
             this.graphTimerToolStripMenuItem,
-            this.getTemp4ToolStripMenuItem});
+            this.getTemp4ToolStripMenuItem,
+            this.reduceToolStripMenuItem});
 			this.testToolStripMenuItem.Name = "testToolStripMenuItem";
 			this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
 			this.testToolStripMenuItem.Text = "Test";
@@ -633,6 +655,13 @@
 			this.getTemp4ToolStripMenuItem.Text = "Get Temp 4";
 			this.getTemp4ToolStripMenuItem.Click += new System.EventHandler(this.getTemp4ToolStripMenuItem_Click);
 			// 
+			// reduceToolStripMenuItem
+			// 
+			this.reduceToolStripMenuItem.Name = "reduceToolStripMenuItem";
+			this.reduceToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+			this.reduceToolStripMenuItem.Text = "Reduce";
+			this.reduceToolStripMenuItem.Click += new System.EventHandler(this.reduceToolStripMenuItem_Click);
+			// 
 			// btnConnect
 			// 
 			this.btnConnect.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -661,12 +690,28 @@
 			// 
 			this.timer4.Tick += new System.EventHandler(this.Test_graph_timer);
 			// 
-			// getDirInfoToolStripMenuItem
+			// tbNoRecs
 			// 
-			this.getDirInfoToolStripMenuItem.Name = "getDirInfoToolStripMenuItem";
-			this.getDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.getDirInfoToolStripMenuItem.Text = "Get Dir Info";
-			this.getDirInfoToolStripMenuItem.Click += new System.EventHandler(this.getDirInfoToolStripMenuItem_Click);
+			this.tbNoRecs.Location = new System.Drawing.Point(867, 356);
+			this.tbNoRecs.Name = "tbNoRecs";
+			this.tbNoRecs.Size = new System.Drawing.Size(43, 20);
+			this.tbNoRecs.TabIndex = 95;
+			// 
+			// label5
+			// 
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(806, 359);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(55, 13);
+			this.label5.TabIndex = 96;
+			this.label5.Text = "No. Recs.";
+			// 
+			// sortDirInfoToolStripMenuItem
+			// 
+			this.sortDirInfoToolStripMenuItem.Name = "sortDirInfoToolStripMenuItem";
+			this.sortDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.sortDirInfoToolStripMenuItem.Text = "Sort Dir Info";
+			this.sortDirInfoToolStripMenuItem.Click += new System.EventHandler(this.sortDirInfoToolStripMenuItem_Click);
 			// 
 			// FrmSampleClient
 			// 
@@ -674,6 +719,8 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1218, 726);
+			this.Controls.Add(this.label5);
+			this.Controls.Add(this.tbNoRecs);
 			this.Controls.Add(this.btnExit);
 			this.Controls.Add(this.btnConnect);
 			this.Controls.Add(this.tbNoChartRec);
@@ -718,17 +765,6 @@
         private System.Windows.Forms.TextBox tbPort;
         private System.Windows.Forms.Label label1;
         private System.Data.DataTable table;
-        private System.Data.SqlClient.SqlConnection conn;
-//        private System.Data.SqlClient.SqlCommand cmd;
-
-
-        // desktop
-        //string connectionString = "Data Source = (LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Daniel\\dev\\Client-SQL-DB.mdf;Integrated Security=True;Connect Timeout=30";
-        // laptop
-
-        //string currentconnectionString = "Data Source = (LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Daniel\\dev\\Client-SQL.mdf;Integrated Security=True;Connect Timeout=30";
-        string connectionString = "Data Source = (LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\Daniel\\dev\\Client-SQL.mdf;Integrated Security=True;Connect Timeout=30";
-
         private System.Windows.Forms.TextBox tbConnected;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -787,6 +823,11 @@
 		private System.Windows.Forms.ToolStripMenuItem graphTimerToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem getTemp4ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem getDirInfoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem reduceToolStripMenuItem;
+		private System.Windows.Forms.TextBox tbNoRecs;
+		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.ToolStripMenuItem listDirInfoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem sortDirInfoToolStripMenuItem;
 	}
 }
 

@@ -43,6 +43,7 @@ UCHAR (*fptr[NUM_SCHED_TASKS])(int) = {
 	get_host_cmd_task, 
 	monitor_input_task, 
 	poll_ds1620_task, 
+	poll_mcp3002_task,
 	timer_task, 
 	timer2_task, 
 	serial_recv_task, 
@@ -92,6 +93,7 @@ void *work_routine(void *arg)
 char oFileName[20];
 char cFileName[20];
 char dFileName[20];
+char sFileName[20];
 
 key_t send_cmd_host_key;
 key_t recv_cmd_host_key;
@@ -131,12 +133,14 @@ int main(int argc, char **argv)
 	{
 		strcpy(oFileName,"odata.dat\0");
 		strcpy(cFileName,"cdata.dat\0");
+		strcpy(sFileName,"sdata.dat\0");
 	}
 
 	else if(argc == 2)
 	{
 		strcpy(oFileName,argv[1]);
 		strcpy(cFileName,"cdata.dat\0");
+		strcpy(sFileName,"sdata.dat\0");
 	}
 	else if(argc == 3)
 	{
@@ -144,6 +148,7 @@ int main(int argc, char **argv)
 		strcpy(cFileName,argv[2]);
 	}
 	strcpy(dFileName,"ddata.dat");
+	strcpy(sFileName,"sdata.dat");
 
 	id_arg = (int *)malloc(NUM_SCHED_TASKS*sizeof(int));
 
@@ -162,6 +167,7 @@ int main(int argc, char **argv)
 	_threads[GET_HOST_CMD2].sched = TIME_SLICE;
 	_threads[MONITOR_INPUTS].sched = PFIFO;
 	_threads[MONITOR_INPUTS2].sched = PFIFO;
+	_threads[POLL_MCP3002].sched = PFIFO;
 	_threads[TIMER].sched = PTIME_SLICE;
 	_threads[TIMER2].sched = PTIME_SLICE;
 	_threads[SERIAL_RECV].sched = TIME_SLICE;
@@ -170,6 +176,7 @@ int main(int argc, char **argv)
 	strcpy(_threads[GET_HOST_CMD2].label,"GET_HOST_CMD2\0");
 	strcpy(_threads[MONITOR_INPUTS].label,"MONITOR_INPUTS\0");
 	strcpy(_threads[MONITOR_INPUTS2].label,"poll ds1620\0");
+	strcpy(_threads[POLL_MCP3002].label,"poll_mcp3002\0");
 	strcpy(_threads[TIMER].label,"TIMER\0");
 	strcpy(_threads[TIMER2].label,"TIMER2\0");
 	strcpy(_threads[SERIAL_RECV].label,"SERIAL_RECV\0");

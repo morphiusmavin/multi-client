@@ -16,11 +16,12 @@ pin 6	CLK
 pin 7 	RST_0
 pin 8	RST_1
 pin 10	RST_2
-pin 11	RST_3
-pin 13	RST_4
-pin 14	RST_5
-pin 15	RST_6	// probably won't use this - 2 conv chips 
-				// make only 8 lines 
+pin 11	MCP_CS
+pin 13	MCP_DIN
+pin 14	MCP_DOUT
+pin 15	MCP_CLK
+		
+5/6/23 if accessing the MCP3002 then I need 4 lines 
 
 the DQ & CLK go to all the DS1620's (upto 7)
 and each RST is just the chip enable for 

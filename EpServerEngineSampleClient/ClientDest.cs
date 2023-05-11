@@ -57,7 +57,6 @@ namespace EpServerEngineSampleClient
 		}
         private void Process_Msg(byte[] bytes)
         {
-            string substr;
             int type_msg;
             string ret = null;
             int i = 0;

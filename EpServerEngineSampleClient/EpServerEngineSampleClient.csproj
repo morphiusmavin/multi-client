@@ -102,6 +102,7 @@
     <Compile Include="ClientParams.cs" />
     <Compile Include="ClientsAvail.cs" />
     <Compile Include="ConfigParams.cs" />
+    <Compile Include="Ddata.cs" />
     <Compile Include="DeleteRec.cs">
       <SubType>Form</SubType>
     </Compile>

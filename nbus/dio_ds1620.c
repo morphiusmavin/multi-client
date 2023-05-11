@@ -11,7 +11,7 @@
 #include "nbus.h"
 #include "dio_ds1620.h"
 
-static int current_ds[7];
+static int current_ds[3];
 static int current_ds_ptr;
 /*********************************************************************************/
 static void mydelay(unsigned long i)
@@ -60,10 +60,6 @@ void initDS1620(void)
 	current_ds[0] = RST_0;
 	current_ds[1] = RST_1;
 	current_ds[2] = RST_2;
-	current_ds[3] = RST_3;
-	current_ds[4] = RST_4;
-	current_ds[5] = RST_5;
-	current_ds[6] = RST_6;
 	current_ds_ptr = 0;
 
 	int pin = DQ;
@@ -75,12 +71,6 @@ void initDS1620(void)
 	pin = RST_1;
 	set_dir(pin,OUT);
 	pin = RST_2;
-	set_dir(pin,OUT);
-	pin = RST_3;
-	set_dir(pin,OUT);
-	pin = RST_4;
-	set_dir(pin,OUT);
-	pin = RST_5;
 	set_dir(pin,OUT);
 
 	writeCommandTo1620( DS1620_CMD_WRITECONF, 0x02 );			// CPU mode; continous conversion

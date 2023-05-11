@@ -29,8 +29,10 @@
 #include "queue/ollist_threads_rw.h"
 #include "queue/cllist_threads_rw.h"
 #include "queue/dllist_threads_rw.h"
+#include "queue/sllist_threads_rw.h"
 #include "tasks.h"
 #include "nbus/dio_ds1620.h"
+#include "nbus/dio_mcp3002.h"
 #include "cs_client/dconfig_file.h"
 #define TOGGLE_OTP otp->onoff = (otp->onoff == 1?0:1)
 
@@ -46,11 +48,14 @@ static UCHAR check_inputs(int index, int test);
 ollist_t oll;
 cllist_t cll;
 dllist_t dll;
+sllist_t sll;
 int ds_index;
 int ds_reset;
 extern int cs_index;
 extern CLIENT_TABLE client_table[];
 PARAM_STRUCT ps;
+extern UCHAR start_seq[];
+extern UCHAR mcp_data[];
 
 static UCHAR read_serial_buffer[SERIAL_BUFF_SIZE];
 static UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
@@ -776,7 +781,7 @@ UCHAR poll_ds1620_task(int test)
 				T = time(NULL);
 				tm = *localtime(&T);
 				memset(dtp,0,sizeof(D_DATA));
-				sprintf(date_str, "%02d-%02d-%02d-%02d-%02d.dat",tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+				sprintf(date_str, "%02d%02d%02d%02d%02d.dat",tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 				//printf("reset: %s\n",date_str);
 				//printf("ds_index: %d\n",ds_index);
 				dlWriteConfig(date_str, &dll, ds_index, errmsg);
@@ -801,14 +806,17 @@ UCHAR poll_ds1620_task(int test)
 				//printf("reset\n");
 				ds_reset = 0;
 				if(shutdown_all)
+				{
 					temp_shutdown = 1;
+					free(dtp);
+					dlWriteConfig("ddata.dat", &dll, ds_index, errmsg);
+					printf("index: %d\n",index);
+				}
 			}
 		}
 
 		if(temp_shutdown)	
 		{
-			free(dtp);
-			dlWriteConfig("ddata.dat", &dll, index, errmsg);
 			return 0;
 		}
 	}
@@ -855,7 +863,54 @@ static void dsSleep(int interval)
 		if(shutdown_all == 1 || ds_reset > 0)
 			return;
 	}
-	
+}
+/*********************************************************************/
+UCHAR poll_mcp3002_task(int test)
+{
+	int i;
+
+	uSleep(1,0);
+	printf("starting...\n");
+
+	//init_MCP3002();
+	uSleep(1,0);
+
+	while(TRUE)
+	{
+		uSleep(1,0);
+#if 0
+		for(i = 0;i < 15;i++)
+		{
+
+			set_pin(MCP_CLK, HIGH);
+			uSleep(0,TIME_DELAY/16);
+			if(i < 4)
+			{
+				set_pin(MCP_DIN, start_seq[i]);		// dout here goes to the Din pin
+			}
+			if(i == 4)		// switch to other channel 
+				if(start_seq[2] == 0)
+					start_seq[2] = 1;
+				else start_seq[2] = 0;
+			set_pin(MCP_CLK, LOW);
+			uSleep(0,TIME_DELAY/16);
+			if(i > 4)
+			{
+				mcp_data[5-i] = get_pin(MCP_DOUT);
+			}
+			uSleep(0,TIME_DELAY/16);
+		}
+		for(i = 0;i < 10;i++)
+		{
+			printf("%d ",mcp_data[i]);
+		}
+		printf("\n");
+#endif
+		//printf("hello...\n");
+		if(shutdown_all == 1)
+			return 0;
+	}
+	return 1;
 }
 /*********************************************************************/
 // this happens 10x a second

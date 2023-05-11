@@ -30,6 +30,7 @@
 #include "queue/ollist_threads_rw.h"
 #include "queue/cllist_threads_rw.h"
 #include "queue/dllist_threads_rw.h"
+#include "queue/sllist_threads_rw.h"
 #include "tasks.h"
 #include "raw_data.h"
 #include "cs_client/config_file.h"
@@ -43,8 +44,10 @@ extern CMD_STRUCT cmd_array[];
 extern ollist_t oll;
 extern cllist_t cll;
 extern dllist_t dll;
+extern sllist_t sll;
 extern int ds_index;
 extern int ds_reset;
+int ss_index;
 extern CLIENT_TABLE client_table[];
 int cs_index;
 
@@ -119,6 +122,10 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 
 	}
 }
+void swap_order(int x, int y)
+{
+	int temp = x;
+}	
 /*********************************************************************/
 // task to get commands from the sock
 UCHAR get_host_cmd_task(int test)
@@ -138,9 +145,11 @@ UCHAR get_host_cmd_task(int test)
 	int i;
 	int j;
 	int k;
+	int min_idx;
 	size_t csize;
 	size_t osize;
 	size_t dsize;
+	size_t ssize;
 	UCHAR tempx[SERIAL_BUFF_SIZE];
 	char temp_time[5];
 	char *pch, *pch2;
@@ -168,6 +177,7 @@ UCHAR get_host_cmd_task(int test)
 	int ival;
 	DIR *d;
 	struct dirent *dir;
+	struct stat st;
 
 #ifdef SERVER_146
 	//printf("starting server\n");
@@ -355,15 +365,38 @@ UCHAR get_host_cmd_task(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
-		//dllist_show(&dll);
+		dllist_show(&dll);
 	}else
 	{
 		memset(dtp,0,sizeof(D_DATA));
-		printf("can't open data.dat\n");
+		printf("can't open %s\n",dFileName);
 		dlWriteConfig(dFileName, &dll,1,errmsg);
 	}
 	ds_index = dllist_get_size(&dll);
+#endif
 
+	S_DATA *stp = (S_DATA *)malloc(sizeof(S_DATA));
+	S_DATA **stpp = &stp;
+
+	sllist_init(&sll);
+	//strcpy(dFileName,"temp.dat\0");
+	if(access(sFileName,F_OK) != -1)
+	{
+		slLoadConfig(sFileName,&sll,ssize,errmsg);
+		if(rc > 0)
+		{
+			printf("%s\r\n",errmsg);
+		}
+		//dllist_show(&dll);
+	}else
+	{
+		memset(stp,0,sizeof(S_DATA));
+		printf("can't open %s\n",sFileName);
+		slWriteConfig(sFileName, &sll,1,errmsg);
+	}
+	ss_index = sllist_get_size(&sll);
+	printf("ss_index: %d\n",ss_index);
+	
 	init_ips();
 	same_msg = 0;
 
@@ -374,7 +407,6 @@ UCHAR get_host_cmd_task(int test)
 	LoadParams("config.bin", &ps, password, errmsg);
 	//printf("%s\n",errmsg);
 	//printf("%d %d\n",ps.ds_interval, ps.ds_enable);
-#endif
 
 	assign_client_table();
 
@@ -384,6 +416,7 @@ UCHAR get_host_cmd_task(int test)
 		if(shutdown_all == 1)
 		{
 			//printf("shutting down cmd host\r\n");
+			free(stp);
 			return 0;
 		}
 		uSleep(0,TIME_DELAY/10);
@@ -509,19 +542,50 @@ printf("\n");
 					//printf("trunning_seconds_off: %d\n",trunning_seconds_off);
 					break;
 
-
 				case GET_DIR_INFO:
-					d = opendir( "." );
-					if(d != NULL)
+					//printf("tempx: %d\n",tempx[0]);
+					switch(tempx[0])
 					{
-						while((dir = readdir( d )))
-						{
-							if(dir->d_type == DT_REG && dir != 0 && strcmp(dir->d_name+14,".dat") == 0)
-								printf("%s\n",dir->d_name);
-						}
+						case 0:
+							ss_index = 0;
+							d = opendir( "." );
+
+							if(d != NULL)
+							{
+								while((dir = readdir( d )))
+								{
+									if(dir->d_type == DT_REG && dir != 0 && strcmp(dir->d_name+10,".dat") == 0)
+									{
+										strcpy(stp->name,dir->d_name);
+										stat(dir->d_name,&st);
+										stp->filesize = st.st_size;
+										stp->order = ss_index;
+										printf("%s %d\n",dir->d_name,stp->filesize);
+										ss_index = sllist_add_data(ss_index, &sll, stp);
+										ss_index++;
+									}
+								}
+							}
+							closedir( d );
+							slWriteConfig("sdata.dat", &sll, ss_index, errmsg);
+							break;
+
+						case 1:	
+							stpp = &stp;
+							for(i = 0;i < ss_index;i++)
+							{
+								sllist_find_data(i, stpp, &sll);
+								printf("%s\t\t%d\t\t%d\n",stp->name,stp->order, stp->filesize);
+							}
+							break;
+
+						case 2:
+							stpp = &stp;
+							sllist_reorder(&sll);
+							break;
+						default:
+							break;
 					}
-					closedir( d );
-					printf("dir done\n");
 					break;
 
 				case GET_TEMP4:
@@ -1071,3 +1135,4 @@ void send_status_msg(char *msg)
 //	send_msg(strlen((char*)msg)*2,(UCHAR*)msg, SEND_STATUS,_SERVER);
 	printf("%s\n",msg);
 }
+

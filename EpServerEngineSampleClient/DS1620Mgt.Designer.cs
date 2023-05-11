@@ -41,9 +41,6 @@ namespace EpServerEngineSampleClient
 			this.chkDS1 = new System.Windows.Forms.CheckBox();
 			this.chkDS2 = new System.Windows.Forms.CheckBox();
 			this.chkDS3 = new System.Windows.Forms.CheckBox();
-			this.chkDS6 = new System.Windows.Forms.CheckBox();
-			this.chkDS5 = new System.Windows.Forms.CheckBox();
-			this.chkDS4 = new System.Windows.Forms.CheckBox();
 			this.btnValidDS = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -191,39 +188,6 @@ namespace EpServerEngineSampleClient
 			this.chkDS3.Text = "3";
 			this.chkDS3.UseVisualStyleBackColor = true;
 			this.chkDS3.CheckedChanged += new System.EventHandler(this.chkDS3_CheckedChanged);
-			// 
-			// chkDS6
-			// 
-			this.chkDS6.AutoSize = true;
-			this.chkDS6.Location = new System.Drawing.Point(323, 143);
-			this.chkDS6.Name = "chkDS6";
-			this.chkDS6.Size = new System.Drawing.Size(32, 17);
-			this.chkDS6.TabIndex = 100;
-			this.chkDS6.Text = "6";
-			this.chkDS6.UseVisualStyleBackColor = true;
-			this.chkDS6.CheckedChanged += new System.EventHandler(this.chkDS6_CheckedChanged);
-			// 
-			// chkDS5
-			// 
-			this.chkDS5.AutoSize = true;
-			this.chkDS5.Location = new System.Drawing.Point(323, 120);
-			this.chkDS5.Name = "chkDS5";
-			this.chkDS5.Size = new System.Drawing.Size(32, 17);
-			this.chkDS5.TabIndex = 99;
-			this.chkDS5.Text = "5";
-			this.chkDS5.UseVisualStyleBackColor = true;
-			this.chkDS5.CheckedChanged += new System.EventHandler(this.chkDS5_CheckedChanged);
-			// 
-			// chkDS4
-			// 
-			this.chkDS4.AutoSize = true;
-			this.chkDS4.Location = new System.Drawing.Point(323, 97);
-			this.chkDS4.Name = "chkDS4";
-			this.chkDS4.Size = new System.Drawing.Size(32, 17);
-			this.chkDS4.TabIndex = 98;
-			this.chkDS4.Text = "4";
-			this.chkDS4.UseVisualStyleBackColor = true;
-			this.chkDS4.CheckedChanged += new System.EventHandler(this.chkDS4_CheckedChanged);
 			// 
 			// btnValidDS
 			// 
@@ -417,9 +381,6 @@ namespace EpServerEngineSampleClient
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.btnValidDS);
-			this.Controls.Add(this.chkDS6);
-			this.Controls.Add(this.chkDS5);
-			this.Controls.Add(this.chkDS4);
 			this.Controls.Add(this.chkDS3);
 			this.Controls.Add(this.chkDS2);
 			this.Controls.Add(this.chkDS1);
@@ -455,9 +416,6 @@ namespace EpServerEngineSampleClient
 		private System.Windows.Forms.CheckBox chkDS1;
 		private System.Windows.Forms.CheckBox chkDS2;
 		private System.Windows.Forms.CheckBox chkDS3;
-		private System.Windows.Forms.CheckBox chkDS6;
-		private System.Windows.Forms.CheckBox chkDS5;
-		private System.Windows.Forms.CheckBox chkDS4;
 		private System.Windows.Forms.Button btnValidDS;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.GroupBox groupBox1;

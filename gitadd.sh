@@ -26,12 +26,17 @@ git add cs_client/cconfig_file.c
 git add cs_client/cconfig_file.h
 git add cs_client/dconfig_file.c
 git add cs_client/dconfig_file.h
+git add cs_client/sconfig_file.c
+git add cs_client/sconfig_file.h
+
 git add queue/ollist_threads_rw.h
 git add queue/ollist_threads_rw.c
 git add queue/cllist_threads_rw.h
 git add queue/cllist_threads_rw.c
 git add queue/dllist_threads_rw.h
 git add queue/dllist_threads_rw.c
+git add queue/sllist_threads_rw.h
+git add queue/sllist_threads_rw.c
 git add queue/rdwr.h
 git add queue/rdwr.c
 
@@ -53,5 +58,7 @@ git add nbus/dio2.c
 git add nbus/peekpoke.h
 git add nbus/dio_ds1620.h
 git add nbus/dio_ds1620.c
+git add nbus/dio_mcp3002.c
+git add nbus/dio_mcp3002.h
 
 git status

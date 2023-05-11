@@ -111,6 +111,9 @@ nbus.o: ../nbus/nbus.c ../nbus/nbus.h
 dio_ds1620.o: ../nbus/dio_ds1620.c ../nbus/dio_ds1620.h
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../nbus/dio_ds1620.c
 
+dio_mcp3002.o: ../nbus/dio_mcp3002.c ../nbus/dio_mcp3002.h
+	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c ../nbus/dio_mcp3002.c
+
 sched.o: sched.c ../tasks.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c sched.c
 
@@ -147,11 +150,17 @@ cllist_threads_rw.o: ../queue/cllist_threads_rw.c ../queue/cllist_threads_rw.h
 dllist_threads_rw.o: ../queue/cllist_threads_rw.c ../queue/dllist_threads_rw.h
 	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/dllist_threads_rw.c
 
+sllist_threads_rw.o: ../queue/sllist_threads_rw.c ../queue/sllist_threads_rw.h
+	${CC} ${INCLUDE_PATHS} ${CC_FLAGS} -c ../queue/sllist_threads_rw.c
+
 cconfig_file.o: ../cs_client/cconfig_file.c ../queue/cllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/cconfig_file.c
 
 dconfig_file.o: ../cs_client/cconfig_file.c ../queue/dllist_threads_rw.h
 	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/dconfig_file.c
+
+sconfig_file.o: ../cs_client/sconfig_file.c ../queue/sllist_threads_rw.h
+	${CC} -DMAKE_TARGET ${CC_FLAGS} ${INCLUDE_PATHS} -c ../cs_client/sconfig_file.c
 
 sock_mgt.o : sock_mgt.c 
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_mgt.c
@@ -159,9 +168,9 @@ sock_mgt.o : sock_mgt.c
 sock_sched.o : sock_sched.c 
 	${CC} ${CC_FLAGS} ${INCLUDE_PATHS} -c sock_sched.c
 
-sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o dllist_threads_rw.o cconfig_file.o dconfig_file.o nbus.o dio_ds1620.o
+sched: sched.o ioports.o assign_client_table.o load_cmds.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o cllist_threads_rw.o dllist_threads_rw.o sllist_threads_rw.o cconfig_file.o dconfig_file.o sconfig_file.o nbus.o dio_ds1620.o dio_mcp3002.o
 # if we don't use -static then the target should have: libpthread.so.0 in the /lib directory
-	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o cllist_threads_rw.o dllist_threads_rw.o cconfig_file.o dconfig_file.o nbus.o dio_ds1620.o -o sched -lm
+	${CC} -static -pthread sched.o ioports.o tasks.o ollist_threads_rw.o rdwr.o serial_io.o config_file.o cmd_tasks.o assign_client_table.o load_cmds.o sllist_threads_rw.o cllist_threads_rw.o dllist_threads_rw.o cconfig_file.o dconfig_file.o sconfig_file.o nbus.o dio_ds1620.o dio_mcp3002.o -o sched -lm
 
 sock_mgt: sock_mgt.o sock_sched.o load_cmds.o
 	${CC} -static -pthread sock_sched.o assign_client_table.o sock_mgt.o load_cmds.o -o sock_mgt

@@ -31,6 +31,7 @@ namespace EpServerEngineSampleClient
         private bool valid_cfg = false;
         ServerCmds svrcmd = new ServerCmds();
         INetworkClient m_client = new IocpTcpClient();
+        private List<Ddata> mycdata = null;
 
         //private PlayerDlg playdlg = null;
         private GarageForm garageform = null;
@@ -62,6 +63,7 @@ namespace EpServerEngineSampleClient
         int which_winclient = -1;
         bool client_alert = false;
 
+        private string initial_data_directory = "c:\\Users\\daniel\\DS1620Data\\";
         private string initial_directory = "c:\\Users\\daniel\\ClientProgramData\\";
         private string xml_params_location = "";
         //private string xml_params_location = initial_directory + "ClientParams.xml";
@@ -85,15 +87,14 @@ namespace EpServerEngineSampleClient
         int m_YValuesPerPoint = 10;
         int m_MarkerStep = 10;
         int graph_timer;
-        int prev_y, prev_x;
+        int reduce = 0;
+        int noRecs;
 
         /* remove the min/max/close buttons in the 'frame' */
         /* or you can just set 'Control Box' to false in the properties pane for the form */
         private const int CP_NOCLOSE_BUTTON = 0x200;
         private const int WS_CAPTION = 0x00C00000;
         // Removes the close button in the caption bar
-        string str_quote_of_the_day_file = @"C:\Users\Daniel\Documents\Quote of the Day.txt";
-        string str_factoid_file = @"C:\Users\Daniel\Documents\Factoid_List.txt";
         protected override CreateParams CreateParams
         {
             get
@@ -119,6 +120,7 @@ namespace EpServerEngineSampleClient
             tbReceived.Enabled = true;
             tbPort.Enabled = true;
             timer1.Enabled = true;
+            mycdata = new List<Ddata>();
 
             xml_params_location = initial_directory + "ClientParams.xml";
             xml_clients_avail_location = initial_directory +  "ClientsAvail.xml";
@@ -1330,7 +1332,6 @@ namespace EpServerEngineSampleClient
             NoUpdate = cbNoUpdate.Checked;
             AddMsg("no update: " + NoUpdate.ToString());
 		}
-        int reduce = 0;
         private void timer2_Tick(object sender, EventArgs e)
         {
             Load_Graph();
@@ -1655,14 +1656,18 @@ namespace EpServerEngineSampleClient
 		private void btnExit_Click(object sender, EventArgs e)
 		{
             exitToolStripMenuItem_Click(new object(), new EventArgs());
-
         }
 
 		private void loadTempFileToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             string tfilename;
-            int i;
-            tfilename = ChooseTXTFileName();
+            int i,j,k,l;
+            int res;
+            byte[] id = new byte[1];
+            byte[] bytes = new byte[30];
+            byte[] bytes2 = new byte[28];
+            byte[] ibytes = new byte[4];
+            tfilename = ChooseDATFileName();
             if (tfilename == "")
                 return;
             if (!File.Exists(tfilename))
@@ -1670,47 +1675,73 @@ namespace EpServerEngineSampleClient
                 MessageBox.Show("can't find file: " + tfilename);
                 return;
             }
-            //AddMsg(tfilename);
-            using (StreamReader file = new StreamReader(tfilename))
+            long file_size = new FileInfo(tfilename).Length;
+            int tnoRecs = (int)file_size;
+            tnoRecs--;
+            tnoRecs /= 28;
+            AddMsg(file_size.ToString() + " " + tnoRecs.ToString());
+            noRecs += tnoRecs;
+            tbNoRecs.Text = noRecs.ToString();
+            Ddata item = null;
+            //AddMsg(dt.TableName.ToString());
+            using (BinaryReader binReader = new BinaryReader(File.Open(tfilename, FileMode.Open)))
             {
-                string ln;
-                string[] words;
-                while ((ln = file.ReadLine()) != null)
+                id = binReader.ReadBytes(1);
+                if (id[0] != 170)
                 {
-                    TemperatureClass tc = new TemperatureClass();
-                    words = ln.Split(' ');
-                    i = 0;
-                    foreach (var word in words)
+                    MessageBox.Show("bad file format in " + tfilename);
+                    return;
+                }
+                for (j = 0; j < tnoRecs; j++)
+                {
+                    bytes2 = binReader.ReadBytes(28);
+                    //AddMsg(bytes2.Length.ToString());
+                    k = 2;
+                    item = new Ddata();
+
+                    for (i = 0; i < 7; i++)
                     {
+                        l = i * 4;
+                        for (k = 0; k < 4; k++)
+                            ibytes[k] = bytes2[k + l];
+
+                        res = BitConverter.ToInt32(ibytes, 0);
+
+                        //AddMsg(res.ToString());
+                        k = 0;
                         switch (i)
                         {
                             case 0:
-                                tc.client_id = int.Parse(word);
+                                item.sensor_no = res;
                                 break;
                             case 1:
-                                tc.sensor_no = int.Parse(word);
+                                item.month = res;
                                 break;
                             case 2:
-                                tc.time = word;
+                                item.day = res;
                                 break;
                             case 3:
-                                tc.temp = int.Parse(word);
+                                item.hour = res;
+                                break;
+                            case 4:
+                                item.minute = res;
+                                break;
+                            case 5:
+                                item.second = res;
+                                break;
+                            case 6:
+                                item.value = res;
+                                break;
+                            default:
                                 break;
                         }
-                        i++;
                     }
-                    temp_class.Add(tc);
+                    mycdata.Add(item);
+                    item = null;
                 }
-                file.Close();
-                AddMsg("count: " + temp_class.Count().ToString());
-                chart_noRec = temp_class.Count();
-
-                //foreach (DS1620_conversions d1 in ds1620_list)
-                //AddMsg(d1.raw_value.ToString() + " " + d1.temp.ToString());
-
-                // turn off east light because it is on by default (relay is wired nc)
-                //svrcmd.Change_PortCmd(svrcmd.GetCmdIndexI("EAST_LIGHT"), 8);
             }
+            i = 0;
+
             chart_min = 100;
             chart_max = 0;
             foreach (TemperatureClass tc in temp_class)
@@ -1752,8 +1783,34 @@ namespace EpServerEngineSampleClient
             else return "";
 
         }
+        private string ChooseDATFileName()
+        {
+            OpenFileDialog openFileDialog2 = new OpenFileDialog
+            {
+                InitialDirectory = initial_data_directory,
+                Title = "Browse dat Files",
 
-		private void loadGraphToolStripMenuItem_Click(object sender, EventArgs e)
+                CheckFileExists = true,
+                CheckPathExists = true,
+
+                DefaultExt = "dat",
+                Filter = "dat files (*.dat)|*.DAT",
+                FilterIndex = 2,
+                RestoreDirectory = true,
+
+                ReadOnlyChecked = true,
+                ShowReadOnly = true
+            };
+
+            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                //tbFileName.Text = openFileDialog2.FileName;
+                return openFileDialog2.FileName;
+            }
+            else return "";
+
+        }
+        private void loadGraphToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             Load_Graph();
 		}
@@ -1852,10 +1909,28 @@ namespace EpServerEngineSampleClient
 
 		private void getDirInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            SendClientMsg(svrcmd.GetCmdIndexI("GET_DIR_INFO"), " ", false);
+            //SendClientMsg(svrcmd.GetCmdIndexI("GET_DIR_INFO"), " ", false);
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_DIR_INFO"), 8, 0);
         }
 
-		private void graphTimerToolStripMenuItem_Click(object sender, EventArgs e)
+		private void reduceToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            int i, j;
+            j = temp_class.Count() / 2;
+            for (i = 0; i < j; i++)
+            {
+                if (reduce >= temp_class.Count())
+                    break;
+                temp_class.RemoveAt(reduce);
+                reduce++;
+            }
+            AddMsg(reduce.ToString());
+            reduce = 0;
+            chart_noRec /= 2;
+            Load_Graph();
+        }
+
+        private void graphTimerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             series1.Points.Clear();
             chart_noRec = 1;
@@ -1867,5 +1942,15 @@ namespace EpServerEngineSampleClient
             timer4.Enabled = true;
             graph_timer = 0;
          }
-    }
+
+		private void listDirInfoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_DIR_INFO"), 8, 1);
+        }
+
+		private void sortDirInfoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_DIR_INFO"), 8, 2);
+        }
+	}
 }

@@ -102,9 +102,6 @@ namespace EpServerEngineSampleClient
 			chkDS1.Checked = ((type & 0x01) == 1);
 			chkDS2.Checked = ((type & 0x02) == 2);
 			chkDS3.Checked = ((type & 0x04) == 4);
-			chkDS4.Checked = ((type & 0x08) == 8);
-			chkDS5.Checked = ((type & 0x10) == 0x10);
-			chkDS6.Checked = ((type & 0x20) == 0x20);
 		}
 
 		private void btnOK_Click(object sender, EventArgs e)
@@ -157,33 +154,6 @@ namespace EpServerEngineSampleClient
 		{
 			bool test = chkDS3.Checked;
 			int mask = 4;
-			if (test)
-				types[client_no] |= mask;
-			else types[client_no] &= ~mask;
-		}
-
-		private void chkDS4_CheckedChanged(object sender, EventArgs e)
-		{
-			bool test = chkDS4.Checked;
-			int mask = 8;
-			if (test)
-				types[client_no] |= mask;
-			else types[client_no] &= ~mask;
-		}
-
-		private void chkDS5_CheckedChanged(object sender, EventArgs e)
-		{
-			bool test = chkDS5.Checked;
-			int mask = 0x10;
-			if (test)
-				types[client_no] |= mask;
-			else types[client_no] &= ~mask;
-		}
-
-		private void chkDS6_CheckedChanged(object sender, EventArgs e)
-		{
-			bool test = chkDS6.Checked;
-			int mask = 0x20;
 			if (test)
 				types[client_no] |= mask;
 			else types[client_no] &= ~mask;

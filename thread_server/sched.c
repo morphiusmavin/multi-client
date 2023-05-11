@@ -47,6 +47,7 @@ extern void *work_routine(void *arg);
 char oFileName[20];
 char cFileName[20];
 char dFileName[20];
+char sFileName[20];
 
 pthread_cond_t  threads_ready;
 int threads_ready_count=0;
@@ -127,11 +128,13 @@ int main(int argc, char **argv)
 	{
 		strcpy(oFileName,"odata.dat\0");
 		strcpy(cFileName,"cdata.dat\0");
+		strcpy(sFileName,"sdata.dat\0");
 	}
 	else if(argc == 2)
 	{
 		strcpy(oFileName,argv[1]);
 		strcpy(cFileName,"cdata.dat\0");
+		strcpy(sFileName,"sdata.dat\0");
 	}
 	else if(argc == 3)
 	{
@@ -139,6 +142,7 @@ int main(int argc, char **argv)
 		strcpy(cFileName,argv[2]);
 	}
 	strcpy(dFileName,"ddata.dat");
+	strcpy(sFileName,"sdata.dat");
 
 	id_arg = (int *)malloc(NUM_SCHED_TASKS*sizeof(int));
 
