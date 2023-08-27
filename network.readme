@@ -215,6 +215,7 @@ and scrape the spreadsheet starting with '1' to the left of the first sunrise da
 9) 'Add Moon' will add in the internal moon list to the internal sunrise/sunset list 
 10) Show Cdata again should show both internal lists as the same.
 11) 'Create Final XML' will output the entire list to an XML file of your choice.
+12) move that file to: ClientProgramData\\tdata.xml to be used for MagicMirror
 	
 relay modules:
 middle: common 
@@ -385,3 +386,22 @@ private void tsbtnReduce_Click(object sender, EventArgs e)
 	RedrawGridView();
 	return;
 }
+
+Using STM32CubeMX to generate code for STM32F407:
+
+Under Project Manager->Project set project name and 
+set Toolchain/IDE to STM32CubeIDE 
+Under Project Manager->Code Generator check 
+"generate prepheral initialzation as a pair...
+
+Under Pinout & Configuration goto Middleware and Software Packs 
+and enable FREERTOS and go to Advanced Settings and enable 
+USE_NEWLIB_REENTRANT then goto System Core->Sys and set 
+Timebase Source to TIM1 or something other than Systick 
+
+To get STM32CubeIDE to compile hex file instead of elf:
+goto Project->Properties->C/C++ Build->Settings and then 
+the Build Steps tab and in the Pre-Build Steps Command window:
+
+arm-none-eabi-objcopy -O ihex ${ProjName}.elf ${ProjName}.hex
+

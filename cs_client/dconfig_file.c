@@ -43,6 +43,7 @@ int dlLoadConfig(char *filename, dllist_t *dll, size_t size,char *errmsg)
 	//void *ptr;
 	//UCHAR tempx[60];
 	no_recs = dGetnRecs(filename, errmsg);
+	printf("no_recs: %d\n",no_recs);
 	
 	fp = open((const char *)fptr, O_RDWR);
 	if(fp < 0)

@@ -43,3 +43,13 @@ nbus/test_serial.c
 test_ports.c
 thread_client/cdata.dat
 mc_aux/*
+all_files.txt
+error.txt
+nbus/MCP3002_pin_dir.jpg
+nbus/MPC32002.pdf
+nbus/timing_dia1.JPG
+nbus/timing_dia2.JPG
+sample_line_chart.c
+strcmp_test.c
+thread_client/temp_tar.sh
+

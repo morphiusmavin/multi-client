@@ -241,7 +241,7 @@ int dllist_show(dllist_t *llistp)
 */
 	printf("showing D_DATA\r\n");
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
-	printf("%02x \n",cur);
+	//printf("%02x \n",cur);
 	cur=llistp->first;
 	//printf("%d\n",cur->datap->index);
 

@@ -86,9 +86,11 @@ namespace EpServerEngineSampleClient
         int m_AxisX_Interval = 30;
         int m_YValuesPerPoint = 10;
         int m_MarkerStep = 10;
-        int graph_timer;
+        int graph_timer = 0;
         int reduce = 0;
         int noRecs;
+        List<int> temp_list_int = null;
+        int avg_window = 3;
 
         /* remove the min/max/close buttons in the 'frame' */
         /* or you can just set 'Control Box' to false in the properties pane for the form */
@@ -121,6 +123,7 @@ namespace EpServerEngineSampleClient
             tbPort.Enabled = true;
             timer1.Enabled = true;
             mycdata = new List<Ddata>();
+            temp_list_int = new List<int>();
 
             xml_params_location = initial_directory + "ClientParams.xml";
             xml_clients_avail_location = initial_directory +  "ClientsAvail.xml";
@@ -234,7 +237,7 @@ namespace EpServerEngineSampleClient
             int j = 0;
             chart1 = new Chart();
             chart1.Location = new Point(20, 420);
-            chart1.Width = 1175;
+            chart1.Width = 1400;
             chart1.Height = 310;
             series1 = new Series();
             chart1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Top;
@@ -503,13 +506,16 @@ namespace EpServerEngineSampleClient
             type_msg = chars[0];
             System.Buffer.BlockCopy(bytes, 2, chars2, 0, bytes.Length - 2);
             ret = new string(chars2);
-
-            //            string str = Enum.GetName(typeof(msg_types), type_msg);
             string str = svrcmd.GetName(type_msg);
-            //AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
+            int temp = 0;
+            
 
             switch (str)
             {
+                case "SEND_DIR_LIST":
+                    lbFileNames.Items.Add(ret);
+                    break;
+
                 case "DS1620_MSG":
                     if (updateGraph)
                         break;
@@ -537,17 +543,38 @@ namespace EpServerEngineSampleClient
                         i++;
 					}
                     temp_class.Add(tc);
-                    
+                    if (temp_list_int.Count() > avg_window)
+                    {
+                        // this is just a work-around for when the value
+                        // is 0 - in the winter, the may be a valid value
+                        temp = 0;
+                        for (i = avg_window; i > 0; i--)
+                        {
+                            temp += temp_class[temp_class.Count() - i].temp;
+                        }
+                        temp /= avg_window;
+                        //tc.temp = temp; 
+                        temp_list_int.Add(temp);
+                        AddMsg(temp.ToString());
+                        if (avg_window < 20)
+                            avg_window++;
+                    } else temp_list_int.Add(tc.temp);
+                    if (temp_list_int.Count() > 576)
+                        temp_list_int.RemoveAt(0);
+                    if (temp_class.Count() > 576)
+                        temp_class.RemoveAt(0);
+
                     chart_min = 100;
                     chart_max = 0;
-                    foreach (TemperatureClass tc2 in temp_class)
+                    //foreach (TemperatureClass tc2 in temp_class)
+                    foreach(int tc2 in temp_list_int)
                     {
-                        if (chart_min > tc2.temp)
-                            chart_min = tc2.temp;
-                        if (chart_max < tc2.temp)
-                            chart_max = tc2.temp;
+                        if (chart_min > tc2)
+                            chart_min = tc2;
+                        if (chart_max < tc2)
+                            chart_max = tc2;
                     }
-                    AddMsg("count: " + temp_class.Count().ToString());
+                    AddMsg("..count: " + temp_list_int.Count().ToString());
                     if (chart_min == chart_max)
                     {
                         chart_min = chart_min - 2;
@@ -557,7 +584,7 @@ namespace EpServerEngineSampleClient
                         chart_min--;
                         chart_max++;
 					}
-                    chart_noRec = temp_class.Count();
+                    chart_noRec = temp_list_int.Count();
                     break;
 
                 case "UPTIME_MSG":
@@ -942,7 +969,7 @@ namespace EpServerEngineSampleClient
                 {
                     AddMsg("one minute after midnight");
                 }
-                
+                /*
                 else if (tick > 120 && second == 30 && NoUpdate == false)
                 {
                     if (garageform.Visible == false && testbench.Visible == false && timer_schedule.Visible == false)
@@ -960,7 +987,7 @@ namespace EpServerEngineSampleClient
                     //client_alert = false;
                 }
                 
-                /*
+                
                 else if((tick <= 120 && second % 5 == 0) || (tick > 120 && tick <= 240 && second == 0) || (tick > 240 && minute % 2 == 0 && second == 0))
                 {
                     connected_tick++;
@@ -1354,6 +1381,12 @@ namespace EpServerEngineSampleClient
 
             if (chart_noRec == 150)
                 m_AxisX_Interval += 10;
+            foreach(int it in temp_list_int)
+			{
+                series1.Points.AddXY(x, it);
+                x++;
+            }
+            /*
             foreach (TemperatureClass d in temp_class)
             {
                 if (true)
@@ -1363,6 +1396,7 @@ namespace EpServerEngineSampleClient
                     x++;
                 }
             }
+            */
             foreach (DataPoint item in chart1.Series[0].Points)
             {
                 //item.AxisLabel = "test" + i.ToString();
@@ -1591,6 +1625,38 @@ namespace EpServerEngineSampleClient
                 }
             }
         }
+        private void SendClientMsg(int msg, int param, bool remove)
+        {
+            foreach (ClientsAvail cl in clients_avail)
+            {
+                //AddMsg(cl.label + " " + cl.lbindex.ToString());
+                if (lbAvailClients.SelectedIndex > -1 && cl.lbindex == lbAvailClients.SelectedIndex)
+                {
+                    //AddMsg("send msg: " + cl.label + " " + cl.index);
+                    if (remove)
+                    {
+                        cl.lbindex = -1;
+                        cl.socket = -1;
+                    }
+                    svrcmd.Send_ClCmd(msg, cl.index, param);
+                    //AddMsg(cl.index.ToString());
+                    // if cl.index == server then set disconnected flag
+
+                    //if ((cl.index == 8) && (msg == REBOOT_IOBOX))
+                    if (false)
+                    {
+                        btnConnect.Text = "Connect";
+                        //timer1.Enabled = false;
+                        client_connected = false;
+                    }
+                    RedrawClientListBox();
+                    if (!remove)
+                    {
+                        lbAvailClients.SetSelected(cl.lbindex, true);
+                    }
+                }
+            }
+        }
 
         private void exitToShellToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -1655,7 +1721,11 @@ namespace EpServerEngineSampleClient
 
 		private void btnExit_Click(object sender, EventArgs e)
 		{
-            exitToolStripMenuItem_Click(new object(), new EventArgs());
+            DialogResult ret = MessageBox.Show("Do you want to exit?",
+                "Important Question",
+                MessageBoxButtons.YesNo);
+            if (ret == DialogResult.Yes)
+                exitToolStripMenuItem_Click(new object(), new EventArgs());
         }
 
 		private void loadTempFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1875,7 +1945,9 @@ namespace EpServerEngineSampleClient
             series1.YValuesPerPoint = m_YValuesPerPoint;
 
             chart1.ChartAreas[0].AxisX.Maximum = graph_timer;
-            series1.Points.AddXY(x, temp_class[graph_timer].temp);
+
+            series1.Points.AddXY(x, temp_list_int[graph_timer]);
+            //series1.Points.AddXY(x, temp_class[graph_timer].temp);
             i = 0;
             foreach (DataPoint item in chart1.Series[0].Points)
             {
@@ -1901,12 +1973,6 @@ namespace EpServerEngineSampleClient
             AddMsg(graph_timer.ToString());
          }
 
-		private void getTemp4ToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-            temp_class.Clear();
-            SendClientMsg(svrcmd.GetCmdIndexI("GET_TEMP4"), " ", false);
-        }
-
 		private void getDirInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             //SendClientMsg(svrcmd.GetCmdIndexI("GET_DIR_INFO"), " ", false);
@@ -1915,6 +1981,8 @@ namespace EpServerEngineSampleClient
 
 		private void reduceToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+
+/*
             int i, j;
             j = temp_class.Count() / 2;
             for (i = 0; i < j; i++)
@@ -1928,6 +1996,7 @@ namespace EpServerEngineSampleClient
             reduce = 0;
             chart_noRec /= 2;
             Load_Graph();
+*/
         }
 
         private void graphTimerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1950,7 +2019,46 @@ namespace EpServerEngineSampleClient
 
 		private void sortDirInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+            lbFileNames.Items.Clear();
             svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_DIR_INFO"), 8, 2);
+        }
+
+		private void lbFileNames_SelectedIndexChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void tbNoChartRec_TextChanged(object sender, EventArgs e)
+		{
+
+		}
+
+		private void lbFileNames_GetFile(object sender, MouseEventArgs e)
+		{
+            temp_class.Clear();
+            int sel = lbFileNames.SelectedIndex;
+            string temp = (string)lbFileNames.SelectedItem;
+            int i = temp.IndexOf('.');
+            string temp2 = temp.Substring(0, i + 4);
+            temp2 += '\0';
+            SendClientMsg(svrcmd.GetCmdIndexI("GET_TEMP4"), temp2, false);
+        }
+
+        private void btnDeleteFile_Click(object sender, EventArgs e)
+		{
+            int sel = lbFileNames.SelectedIndex;
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DELETE_FILE"), 8, sel);
+            lbFileNames.Items.RemoveAt(sel);
+        }
+		private void getTemp5ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            temp_class.Clear();
+            SendClientMsg(svrcmd.GetCmdIndexI("GET_TEMP4"), 1, false);
+        }
+        private void getTemp4ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            temp_class.Clear();
+            SendClientMsg(svrcmd.GetCmdIndexI("GET_TEMP4"), "test1234.dat", false);
         }
 	}
 }

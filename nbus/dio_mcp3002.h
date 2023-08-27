@@ -29,3 +29,8 @@ pin 15	MCP_CLK
 #define MCP_DOUT 14
 #define MCP_DIN 13
 
+UCHAR start_seq[10];
+UCHAR mcp_data[13];
+
+
+

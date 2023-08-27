@@ -38,10 +38,6 @@ nbus_poke16(0x26, pin | 0x80);		turn output on
 #define RST_0	7
 #define RST_1	8
 #define RST_2	10
-#define RST_3	11
-#define RST_4	13
-#define RST_5	14
-#define RST_6	15
 #define HIGH	1
 #define LOW		0
 #define HIZ		2

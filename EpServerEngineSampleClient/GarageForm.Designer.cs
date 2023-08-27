@@ -52,8 +52,8 @@
 			this.label8 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
 			this.btnAll = new System.Windows.Forms.Button();
-			this.btnWaterHeater = new System.Windows.Forms.Button();
 			this.btnWaterPump = new System.Windows.Forms.Button();
+			this.btnWaterHeater = new System.Windows.Forms.Button();
 			this.btnWaterValve1 = new System.Windows.Forms.Button();
 			this.btnWaterValve2 = new System.Windows.Forms.Button();
 			this.btnWaterValve3 = new System.Windows.Forms.Button();
@@ -63,6 +63,7 @@
 			this.label13 = new System.Windows.Forms.Label();
 			this.label14 = new System.Windows.Forms.Label();
 			this.tbTimer = new System.Windows.Forms.TextBox();
+			this.timer2 = new System.Windows.Forms.Timer(this.components);
 			this.SuspendLayout();
 			// 
 			// label1
@@ -303,27 +304,27 @@
 			this.btnAll.UseVisualStyleBackColor = true;
 			this.btnAll.Click += new System.EventHandler(this.btnAll_Click_1);
 			// 
-			// btnWaterHeater
-			// 
-			this.btnWaterHeater.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWaterHeater.Location = new System.Drawing.Point(451, 12);
-			this.btnWaterHeater.Name = "btnWaterHeater";
-			this.btnWaterHeater.Size = new System.Drawing.Size(118, 39);
-			this.btnWaterHeater.TabIndex = 8;
-			this.btnWaterHeater.Text = "OFF";
-			this.btnWaterHeater.UseVisualStyleBackColor = true;
-			this.btnWaterHeater.Click += new System.EventHandler(this.btnWaterPump_Click);
-			// 
 			// btnWaterPump
 			// 
 			this.btnWaterPump.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.btnWaterPump.Location = new System.Drawing.Point(451, 220);
+			this.btnWaterPump.Location = new System.Drawing.Point(451, 12);
 			this.btnWaterPump.Name = "btnWaterPump";
 			this.btnWaterPump.Size = new System.Drawing.Size(118, 39);
-			this.btnWaterPump.TabIndex = 12;
+			this.btnWaterPump.TabIndex = 8;
 			this.btnWaterPump.Text = "OFF";
 			this.btnWaterPump.UseVisualStyleBackColor = true;
-			this.btnWaterPump.Click += new System.EventHandler(this.btnWaterHeater_Click);
+			this.btnWaterPump.Click += new System.EventHandler(this.btnWaterPump_Click);
+			// 
+			// btnWaterHeater
+			// 
+			this.btnWaterHeater.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnWaterHeater.Location = new System.Drawing.Point(451, 220);
+			this.btnWaterHeater.Name = "btnWaterHeater";
+			this.btnWaterHeater.Size = new System.Drawing.Size(118, 39);
+			this.btnWaterHeater.TabIndex = 12;
+			this.btnWaterHeater.Text = "OFF";
+			this.btnWaterHeater.UseVisualStyleBackColor = true;
+			this.btnWaterHeater.Click += new System.EventHandler(this.btnWaterHeater_Click);
 			// 
 			// btnWaterValve1
 			// 
@@ -417,6 +418,11 @@
 			this.tbTimer.TabIndex = 31;
 			this.tbTimer.TextChanged += new System.EventHandler(this.tbTimerChanged);
 			// 
+			// timer2
+			// 
+			this.timer2.Interval = 1000;
+			this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
+			// 
 			// GarageForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -432,8 +438,8 @@
 			this.Controls.Add(this.btnWaterValve3);
 			this.Controls.Add(this.btnWaterValve2);
 			this.Controls.Add(this.btnWaterValve1);
-			this.Controls.Add(this.btnWaterPump);
 			this.Controls.Add(this.btnWaterHeater);
+			this.Controls.Add(this.btnWaterPump);
 			this.Controls.Add(this.btnAll);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.label8);
@@ -488,8 +494,8 @@
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Button btnAll;
-		private System.Windows.Forms.Button btnWaterHeater;
 		private System.Windows.Forms.Button btnWaterPump;
+		private System.Windows.Forms.Button btnWaterHeater;
 		private System.Windows.Forms.Button btnWaterValve1;
 		private System.Windows.Forms.Button btnWaterValve2;
 		private System.Windows.Forms.Button btnWaterValve3;
@@ -499,5 +505,6 @@
 		private System.Windows.Forms.Label label13;
 		private System.Windows.Forms.Label label14;
 		private System.Windows.Forms.TextBox tbTimer;
+		private System.Windows.Forms.Timer timer2;
 	}
 }

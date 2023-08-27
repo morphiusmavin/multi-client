@@ -31,6 +31,7 @@
 #include "queue/dllist_threads_rw.h"
 #include "queue/sllist_threads_rw.h"
 #include "tasks.h"
+#include "nbus/nbus.h"
 #include "nbus/dio_ds1620.h"
 #include "nbus/dio_mcp3002.h"
 #include "cs_client/dconfig_file.h"
@@ -54,8 +55,10 @@ int ds_reset;
 extern int cs_index;
 extern CLIENT_TABLE client_table[];
 PARAM_STRUCT ps;
+
 extern UCHAR start_seq[];
 extern UCHAR mcp_data[];
+extern void init_MCP3002();
 
 static UCHAR read_serial_buffer[SERIAL_BUFF_SIZE];
 static UCHAR write_serial_buffer[SERIAL_BUFF_SIZE];
@@ -69,8 +72,11 @@ extern int shutdown_all;
 static int raw_data_array[RAW_DATA_ARRAY_SIZE];
 static int raw_data_ptr;
 static void dsSleep(int interval);
+int convertFi(int raw_data);
 int max_ips;
 IP ip[40];
+extern UCHAR start_seq[];
+extern UCHAR mcp_data[];
 
 static COUNTDOWN count_down[COUNTDOWN_SIZE];
 int curr_countdown_size;
@@ -653,7 +659,7 @@ int change_output(int index, int onoff)
 /*********************************************************************/
 UCHAR poll_ds1620_task(int test)
 {
-	int val, tval;
+	int val;
 	int i,j;
 	time_t T;
 	struct tm tm;
@@ -661,7 +667,7 @@ UCHAR poll_ds1620_task(int test)
 	char errmsg[20];
 	int bad_ds_count = 5;
 	char date_str[20];
-	float fval,C,F;
+	//float fval,C,F;
 	int ival;
 	int temp_shutdown = 0;
 
@@ -718,6 +724,9 @@ UCHAR poll_ds1620_task(int test)
 			//printf("%s\n",lookup_raw_data(val));
 			uSleep(0,TIME_DELAY/2);
 			writeByteTo1620(DS1620_CMD_STOPCONV);
+			
+			ival = convertFi(val);
+/*
 			fval = (float)val;
 			//printf("%.2f\t\t",fval);
 
@@ -736,7 +745,7 @@ UCHAR poll_ds1620_task(int test)
 			F /= 5.0;
 			F += 32.0;
 			ival = (int)F;
-
+*/
 			//printf("polling ds: %d %d\n",i,ds_index);
 			T = time(NULL);
 			tm = *localtime(&T);
@@ -794,6 +803,7 @@ UCHAR poll_ds1620_task(int test)
 					dllist_remove_data(j,dtpp,&dll);
 				*/
 				dllist_init (&dll);
+				/*
 				dtp->sensor_no = i;
 				dtp->month = tm.tm_mon;
 				dtp->day = tm.tm_mday;
@@ -804,6 +814,7 @@ UCHAR poll_ds1620_task(int test)
 				ds_index = 0;
 				ds_index = dllist_add_data(ds_index, &dll, dtp);
 				//printf("reset\n");
+				*/
 				ds_reset = 0;
 				if(shutdown_all)
 				{
@@ -868,48 +879,70 @@ static void dsSleep(int interval)
 UCHAR poll_mcp3002_task(int test)
 {
 	int i;
-
-	uSleep(1,0);
-	printf("starting...\n");
-
-	//init_MCP3002();
-	uSleep(1,0);
+	int ack;
 
 	while(TRUE)
 	{
 		uSleep(1,0);
-#if 0
-		for(i = 0;i < 15;i++)
-		{
+		if(shutdown_all == 1)
+			return 0;
+	}
 
+#if 0
+	uSleep(1,0);
+	printf("starting mcp3002 task...\n");
+	init_MCP3002();
+	uSleep(1,0);
+
+	ack = 0;
+	while(TRUE)
+	{
+		printf("ack: %d\n",ack++);
+		uSleep(1,0);
+		memset(mcp_data,0,sizeof(mcp_data));
+		set_pin(MCP_CS, LOW);
+		uSleep(0,TIME_DELAY/32);
+		set_pin(MCP_CLK, LOW);
+		for(i = 0;i < 5;i++)
+		{
+			uSleep(0,TIME_DELAY/32);
+			set_pin(MCP_DIN, start_seq[i]);		// dout here goes to the Din pin
+			uSleep(0,TIME_DELAY/32);
+			set_pin(MCP_CLK, LOW);
+			uSleep(0,TIME_DELAY/32);
 			set_pin(MCP_CLK, HIGH);
-			uSleep(0,TIME_DELAY/16);
-			if(i < 4)
-			{
-				set_pin(MCP_DIN, start_seq[i]);		// dout here goes to the Din pin
-			}
+		}
+		uSleep(0,TIME_DELAY/16);
+		set_pin(MCP_CLK, LOW);
+/*			
 			if(i == 4)		// switch to other channel 
 				if(start_seq[2] == 0)
 					start_seq[2] = 1;
 				else start_seq[2] = 0;
-			set_pin(MCP_CLK, LOW);
-			uSleep(0,TIME_DELAY/16);
-			if(i > 4)
-			{
-				mcp_data[5-i] = get_pin(MCP_DOUT);
-			}
-			uSleep(0,TIME_DELAY/16);
-		}
-		for(i = 0;i < 10;i++)
+*/
+		for(i = 0;i < 12;i++)
 		{
-			printf("%d ",mcp_data[i]);
+			mcp_data[i] = get_pin(MCP_DOUT);
+			set_pin(MCP_CLK, HIGH);
+			uSleep(0,TIME_DELAY/32);
+			set_pin(MCP_CLK, LOW);
+			uSleep(0,TIME_DELAY/32);
+		}
+		uSleep(0,TIME_DELAY/32);
+		set_pin(MCP_CS, HIGH);
+		uSleep(0,TIME_DELAY/32);
+		set_pin(MCP_CLK, HIGH);
+		for(i = 0;i < 13;i++)
+		{
+			printf("%d",mcp_data[i]);
 		}
 		printf("\n");
-#endif
+//#endif
 		//printf("hello...\n");
 		if(shutdown_all == 1)
 			return 0;
 	}
+#endif
 	return 1;
 }
 /*********************************************************************/
@@ -1784,7 +1817,30 @@ float convertF(int raw_data)
 	ret = (int)T_F;
 	return ret;	// returns 257 -> -67
 }
+/*********************************************************************/
+int convertFi(int raw_data)
+{
+	float fval,C,F;
+	int ival;
+	fval = (float)raw_data;
 
+	if(fval >= 0.0 && fval <= 250.0)
+	{
+		C = fval/2.0;
+		//tval = val + 109;
+
+	}
+	else if(fval >= 403 && fval <= 511)
+	{
+		C = (fval - 512.0)/2.0;
+		//tval = val - 403;
+	}
+	F = C*9.0;
+	F /= 5.0;
+	F += 32.0;
+	ival = (int)F;
+	return ival;
+}
 #if 0
 #define AVG_BUF_SIZE 20
 int avg_buf_ptr;

@@ -59,6 +59,7 @@ int shutdown_all;
 extern int curr_countdown_size;
 extern void sort_countdown(void);
 extern void display_sort(void);
+extern int convertFi(int raw_data);
 char *lookup_raw_data(int val);
 //extern int avg_raw_data(int sample_size);
 
@@ -72,14 +73,14 @@ inline int pack4chars(char c1, char c2, char c3, char c4) {
 
 struct msgqbuf msg;		// this has to be shared by send_sock_msg & get_host_cmd_task
 int msgtype = 1;
-
+/*
 char *lookup_raw_data(int val)
 {
 	int i = 0;
 	while(raw_data[i].raw != val && i++ < 360);
 	return raw_data[i].str;
 }
-
+*/
 void print_cmd(UCHAR cmd)
 {
 	char tempx[30];
@@ -367,6 +368,7 @@ UCHAR get_host_cmd_task(int test)
 
 	dllist_init(&dll);
 	//strcpy(dFileName,"temp.dat\0");
+	/*
 	if(access(dFileName,F_OK) != -1)
 	{
 		dlLoadConfig(dFileName,&dll,dsize,errmsg);
@@ -382,6 +384,8 @@ UCHAR get_host_cmd_task(int test)
 		dlWriteConfig(dFileName, &dll,1,errmsg);
 	}
 	ds_index = dllist_get_size(&dll);
+	*/
+	ds_index = 0;
 #endif
 
 	S_DATA *stp = (S_DATA *)malloc(sizeof(S_DATA));
@@ -552,10 +556,12 @@ printf("\n");
 					break;
 
 				case GET_DIR_INFO:
-					printf("tempx: %d\n",tempx[0]);
+					//printf("tempx: %d\n",tempx[0]);
 					switch(tempx[0])
 					{
 						case 0:
+							// get the dat filenames that have date/time in the filename 
+							// and add them to a new llist of type sllist (sdata.dat)
 							ss_index = 0;
 							d = opendir( "." );
 
@@ -580,120 +586,176 @@ printf("\n");
 							break;
 
 						case 1:	
+							// get all the files in the current sllist database and sort 
+							// according to the date/time of the filename - use temp_list 
+							// to sort because there's no easy way to sort the sllist 
 							stpp = &stp;
 							for(i = 0;i < ss_index;i++)
 							{
-								sllist_find_data(i, stpp, &sll);
+								sllist_find_data(i, stpp, &sll);		// add to temp_list array
 								memset(tempx,0,sizeof(tempx));
 								strncpy(tempx,stp->name,10);
 								strncpy(temp_list[i],tempx,10);
 								//printf("%s\t\t%d\t\t%d\n",stp->name,stp->order, stp->filesize);
 							}
-/*
-							for(i = 0;i < ss_index;i++)
-							{
-								printf("%s\n",temp_list[i]);
-							}
-							printf("\n");
-*/
 							for(i = 0;i < ss_index-1;i++)
 							{
-								min_idx = i;
+								min_idx = i;		// sort the temp_list array
 								for(j = i + 1;j < ss_index;j++)
 									if(strcmp(temp_list[j],temp_list[min_idx]) < 0)
 										min_idx = j;
-								//printf("%s\n",temp_list[i]);
 								swap(min_idx,i);
 							}
-//							printf("\n");
 							stpp = &stp;
 							printf("\n");
 							for(k = 0;k < ss_index;k++)
 							{
 								sllist_find_data(k, stpp, &sll);
-								for(i = 0;i < ss_index;i++)
-								{
-									//printf("- %s\n",stp->name);
+								for(i = 0;i < ss_index;i++)		// use temp_list to assign the 'order' field
+								{								// to the sllist 
 									if(strncmp(stp->name,temp_list[i],10) == 0)
 									{
-										//printf("%s %d\n",temp_list[i],i);
 										stp->order = i;
 										break;
 									}
 								}
 								j++;
 							}
-/*
-							for(i = 0;i < ss_index;i++)
-							{
-								sllist_find_data(i, stpp, &sll);
-								printf("%s %d\n",stp->name,stp->order);
-							}
-							printf("\n");
-*/
-							for(k = 0;k < ss_index;k++)
+							for(k = 0;k < ss_index;k++)		// show the sorted sllist 
 								for(i = 0;i < ss_index;i++)
 								{
 									sllist_find_data(i, stpp, &sll);
 									if(stp->order == k)
-										printf("%s %d\n", stp->name, stp->order);
+										printf("%s %d %d\n", stp->name, stp->order, stp->filesize);
 								}
-							j = 0;
 							break;
 
 						case 2:
 							stpp = &stp;
-							sllist_reorder(&sll);
+							cmd = SEND_DIR_LIST;
+							for(k = ss_index;k >= 0;k--)		// show the sorted sllist 
+								for(i = 0;i < ss_index;i++)
+								{
+									sllist_find_data(i, stpp, &sll);
+									if(stp->order == k)
+									{
+										sprintf(tempx,"%s %d", stp->name, stp->filesize);
+										send_sock_msg(tempx, strlen(tempx), cmd, _149);
+										uSleep(0,TIME_DELAY/4);
+									}
+								}
 							break;
+
 						default:
 							break;
 					}
 					break;
 
-				case GET_TEMP4:
-					//cmd = SEND_MESSAGE;
-					cmd = DS1620_MSG;
-					i = (int)tempx[0];
-					printf("ds_index: %d %d\n",ds_index,i);
-					//if(ds_index > 0 && ps.ds_enable > 0)
-					if(1)
+				case SEND_FILE_INFO:
+					printf("tempx: %d\n",tempx[0]);
+					j = (int)tempx[0];
+					j++;
+					for(i = ss_index-1;i >= 0;i--)
 					{
-/*
-						if(i > ds_index)
-							i = ds_index;
-						for(j = ds_index-i;j < ds_index;j++)
-*/
-						for(i = 0;i < ds_index-2;i++)
+						sllist_find_data(i, stpp, &sll);
+						if(j == ss_index - stp->order)
 						{
-							dllist_find_data(i, dtpp, &dll);
-							//printf("%d\n",dtp->value);
-							if(dtp->value >= 0 && dtp->value <= 250)
+							printf("->%s\n",stp->name);
+							dllist_init(&dll);
+							if(access(stp->name,F_OK) != -1)
 							{
-								fval = (float)dtp->value;
-								C = fval/2.0;
-								//tval = val + 109;
-
-							}
-							else if(fval >= 403 && fval <= 511)
+								dlLoadConfig(stp->name,&dll,dsize,errmsg);
+								if(rc > 0)
+								{
+									printf("%s\r\n",errmsg);
+								}
+							}else
 							{
-								C = (fval - 512.0)/2.0;
-								//tval = val - 403;
+								memset(dtp,0,sizeof(D_DATA));
+								printf("can't open %s\n",stp->name);
 							}
-							F = C*9.0;
-							F /= 5.0;
-							F += 32.0;
-							ival = (int)F;
-
-							sprintf(tempx, "%d %0d %02d:%02d %d",this_client_id, dtp->sensor_no, dtp->hour, dtp->minute, ival);
-							//sprintf(tempx,"%d:%d:%d - %sxxx",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
-							send_sock_msg(tempx, strlen(tempx), cmd, _149);
-							//printf("test: %s\n",tempx);
-							//uSleep(0,TIME_DELAY);
-							uSleep(0,TIME_DELAY/4);
+							
+							ds_index = dllist_get_size(&dll);
+							cmd = DS1620_MSG;
+							for(i = 0;i < ds_index-1;i++)
+							{
+								dllist_find_data(i, dtpp, &dll);
+								if(dtp->value > 0)
+								{
+									ival = convertFi(dtp->value);
+									sprintf(tempx, "%d %0d %02d:%02d %d       ",this_client_id, i, dtp->hour, dtp->minute, ival);
+									//printf("%s\n",tempx);
+									send_sock_msg(tempx, strlen(tempx), cmd, _149);
+									uSleep(0,TIME_DELAY/4);
+								}
+							}
+							break;
 						}
-						//printf("%d:%d:%d %d\n",dtp->hour, dtp->minute, dtp->second, dtp->value);
-					}else printf("not enabled\n");
-					//printf("avg: %d\n",avg_raw_data(sample_size));	not working yet
+					}
+					break;
+
+				case DELETE_FILE:
+/*
+					//printf("tempx: %d\n",tempx[0]);
+					j = (int)tempx[0];
+					j++;
+					for(i = ss_index-1;i >= 0;i--)
+					{
+						sllist_find_data(i, stpp, &sll);
+						if(j == ss_index - stp->order)
+						{
+							printf("delete: %s\n",stp->name);
+							if(unlink(stp->name) == 0)
+								printf("file deleted\n");
+							sllist_remove_data(i, stpp, &sll);
+							ss_index--;
+							break;
+						}
+					}
+*/
+					break;
+
+				case GET_TEMP4:
+					cmd = DS1620_MSG;
+//					for(i = 0;i < msg_len;i++)
+//						printf("%c",tempx[i]);
+					
+//					printf("\n");
+					for(i = 0;i < msg_len;i++)
+					{
+						dFileName[i] = tempx[i];
+					}
+					printf("%s\n",dFileName);
+					printf("\n");
+					
+					if(access(dFileName,F_OK) != -1)
+					{
+						dlLoadConfig(dFileName,&dll,dsize,errmsg);
+						if(rc > 0)
+						{
+							printf("%s\r\n",errmsg);
+						}
+						//dllist_show(&dll);
+					}else
+					{
+						memset(dtp,0,sizeof(D_DATA));
+						printf("can't open %s\n",dFileName);
+						break;
+					}
+					ds_index = dllist_get_size(&dll);
+
+					for(i = 0;i < ds_index;i++)
+					{
+						dllist_find_data(i, dtpp, &dll);
+						ival = convertFi(dtp->value);
+
+						sprintf(tempx, "%d %0d %02d:%02d %d",this_client_id, dtp->sensor_no, dtp->hour, dtp->minute, ival);
+						//sprintf(tempx,"%d:%d:%d - %sxxx",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
+						send_sock_msg(tempx, strlen(tempx), cmd, _149);
+						//printf("test: %s\n",tempx);
+						//uSleep(0,TIME_DELAY);
+						uSleep(0,TIME_DELAY/4);
+					}
 					break;
 
 				case SEND_CLIENT_LIST:

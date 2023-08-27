@@ -21,6 +21,9 @@ void winpoke8(unsigned int, unsigned char);
 unsigned char winpeek8(unsigned int);
 void winpoke8a(unsigned int, unsigned char);
 unsigned char winpeek8a(unsigned int);
-
+void mydelay(unsigned long i);
+int get_pin(int pin);
+void set_dir(int pin, int dir);
+void set_pin(int pin, int val);
 //void nbus_pokestream16(unsigned char, unsigned char, unsigned short, unsigned char *, int);
 //void nbus_peekstream16(unsigned char, unsigned char, unsigned short, unsigned char *, int);

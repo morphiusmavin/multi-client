@@ -100,7 +100,10 @@ namespace EpServerEngineSampleClient
 			DLLIST_SAVE,
 			DS1620_MSG,
 			TURN_ALL_LIGHTS_OFF,
-			GET_DIR_INFO
+			GET_DIR_INFO,
+			SEND_DIR_LIST,
+			SEND_FILE_INFO,
+			DELETE_FILE
 		}
 		public ServerCmds()
 		{

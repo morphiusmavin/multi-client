@@ -31,6 +31,7 @@ namespace EpServerEngineSampleClient
 		bool allon = false;
 		int single_select = 0;
 		int timer_tick = 20;
+		int pump_timer_tick = 20;
 		int no_lights = 8;
 
 		List<String> on_label_list = new List<String>();
@@ -56,11 +57,11 @@ namespace EpServerEngineSampleClient
 			on_label_list.Add("WEST_LIGHT");
 			on_label_list.Add("NORTHEAST_LIGHT");
 			on_label_list.Add("SOUTHWEST_LIGHT");
-			on_label_list.Add("WATER_HEATER");
+			on_label_list.Add("WATER_PUMP");
 			on_label_list.Add("WATER_VALVE1");
 			on_label_list.Add("WATER_VALVE2");
 			on_label_list.Add("WATER_VALVE3");
-			on_label_list.Add("WATER_PUMP");
+			on_label_list.Add("WATER_HEATER");
 
 			button_list = new List<ButtonList>();
 			Control sCtl = this.btnDesk;
@@ -347,7 +348,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnWaterHeater_Click(object sender, EventArgs e)
 		{
-			ToggleButton(8, SendCmd(8));
+			ToggleButton(12, SendCmd(8));
 		}
 		private void btnWaterValve1_Click(object sender, EventArgs e)
 		{
@@ -363,7 +364,10 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnWaterPump_Click(object sender, EventArgs e)
 		{
-			ToggleButton(12, SendCmd(12));
+			ToggleButton(8, SendCmd(12));
+			AddMsg("pump on");
+			timer2.Enabled = true;
+			pump_timer_tick = 30;
 		}
 		private void btnAll_Click_1(object sender, EventArgs e)
 		{
@@ -417,6 +421,16 @@ namespace EpServerEngineSampleClient
 			if (timer_tick > 65535)
 				timer_tick = 65535;
 
+		}
+
+		private void timer2_Tick(object sender, EventArgs e)
+		{
+			//AddMsg(pump_timer_tick.ToString());
+			if (pump_timer_tick-- == 0)
+			{
+				ToggleButton(8, SendCmd(12,false));
+				timer2.Enabled = false;
+			}
 		}
 	}
 }

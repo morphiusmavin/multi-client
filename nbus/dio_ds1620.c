@@ -14,47 +14,6 @@
 static int current_ds[3];
 static int current_ds_ptr;
 /*********************************************************************************/
-static void mydelay(unsigned long i)
-{
-	unsigned long j;
-	struct timespec sleepTime;
-	struct timespec rettime;
-	sleepTime.tv_sec = 0;
-	sleepTime.tv_nsec = 948540;
-	for(j = 0;j < i;j++)
-	{
-		nanosleep(&sleepTime, &rettime);
-//		printf(".");
-	}
-}
-/*********************************************************************************/
-int get_pin(int pin)		// see dio.c
-{
-	unsigned short reg;
-	if(pin >= 0 && pin <= 69) 
-	{
-		reg = nbus_peek16(0x8+(6*(pin/16)));
-		return ((reg >> (pin%16)) & 1);
-	}
-	return 0;
-}
-/*********************************************************************************/
-void set_dir(int pin, int dir)
-{
-	if(dir > 0)
-		nbus_poke16(0x28, pin | 0x80);
-	else nbus_poke16(0x28, pin & ~0x80);
-	mydelay(1);
-}
-/*********************************************************************************/
-void set_pin(int pin, int val)
-{
-	if(val > 0)
-		nbus_poke16(0x26, pin | 0x80);
-	else nbus_poke16(0x26, pin & ~0x80);
-	mydelay(1);
-}
-/*********************************************************************************/
 void initDS1620(void)
 {
 	current_ds[0] = RST_0;

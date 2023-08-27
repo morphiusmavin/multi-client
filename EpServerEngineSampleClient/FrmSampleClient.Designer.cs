@@ -58,7 +58,6 @@
 			this.timer3 = new System.Windows.Forms.Timer(this.components);
 			this.AlertLabel = new System.Windows.Forms.Label();
 			this.cbNoUpdate = new System.Windows.Forms.CheckBox();
-			this.tbNoChartRec = new System.Windows.Forms.TextBox();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.clientControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.cabinToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,6 +82,7 @@
 			this.getStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.getDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.listDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.sortDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadTempFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,13 +90,15 @@
 			this.changeGraphParamsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.graphTimerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.getTemp4ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.getTemp5ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.reduceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.btnConnect = new System.Windows.Forms.Button();
 			this.btnExit = new System.Windows.Forms.Button();
 			this.timer4 = new System.Windows.Forms.Timer(this.components);
 			this.tbNoRecs = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
-			this.sortDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.lbFileNames = new System.Windows.Forms.ListBox();
+			this.btnDeleteFile = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -266,7 +268,7 @@
 			this.lbAvailClients.ItemHeight = 15;
 			this.lbAvailClients.Location = new System.Drawing.Point(727, 48);
 			this.lbAvailClients.Name = "lbAvailClients";
-			this.lbAvailClients.Size = new System.Drawing.Size(246, 94);
+			this.lbAvailClients.Size = new System.Drawing.Size(226, 94);
 			this.lbAvailClients.TabIndex = 35;
 			this.lbAvailClients.SelectedIndexChanged += new System.EventHandler(this.AvailClientSelIndexChanged);
 			// 
@@ -389,20 +391,13 @@
 			// cbNoUpdate
 			// 
 			this.cbNoUpdate.AutoSize = true;
-			this.cbNoUpdate.Location = new System.Drawing.Point(809, 178);
+			this.cbNoUpdate.Location = new System.Drawing.Point(345, 61);
 			this.cbNoUpdate.Name = "cbNoUpdate";
 			this.cbNoUpdate.Size = new System.Drawing.Size(78, 17);
 			this.cbNoUpdate.TabIndex = 90;
 			this.cbNoUpdate.Text = "No Update";
 			this.cbNoUpdate.UseVisualStyleBackColor = true;
 			this.cbNoUpdate.CheckedChanged += new System.EventHandler(this.CheckChangedNoUpdate);
-			// 
-			// tbNoChartRec
-			// 
-			this.tbNoChartRec.Location = new System.Drawing.Point(905, 175);
-			this.tbNoChartRec.Name = "tbNoChartRec";
-			this.tbNoChartRec.Size = new System.Drawing.Size(48, 20);
-			this.tbNoChartRec.TabIndex = 91;
 			// 
 			// menuStrip1
 			// 
@@ -413,7 +408,7 @@
             this.testToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(1218, 24);
+			this.menuStrip1.Size = new System.Drawing.Size(1444, 24);
 			this.menuStrip1.TabIndex = 92;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -522,11 +517,11 @@
 			// clientListActionToolStripMenuItem
 			// 
 			this.clientListActionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.exitToShellToolStripMenuItem,
             this.showTimeUpToolStripMenuItem,
             this.getTimeToolStripMenuItem,
             this.setTimeToolStripMenuItem,
             this.rebootToolStripMenuItem,
+            this.exitToShellToolStripMenuItem,
             this.shutdownToolStripMenuItem,
             this.getStatusToolStripMenuItem,
             this.getDirInfoToolStripMenuItem,
@@ -599,6 +594,13 @@
 			this.listDirInfoToolStripMenuItem.Text = "List Dir Info";
 			this.listDirInfoToolStripMenuItem.Click += new System.EventHandler(this.listDirInfoToolStripMenuItem_Click);
 			// 
+			// sortDirInfoToolStripMenuItem
+			// 
+			this.sortDirInfoToolStripMenuItem.Name = "sortDirInfoToolStripMenuItem";
+			this.sortDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.sortDirInfoToolStripMenuItem.Text = "Send Dir Info";
+			this.sortDirInfoToolStripMenuItem.Click += new System.EventHandler(this.sortDirInfoToolStripMenuItem_Click);
+			// 
 			// testToolStripMenuItem
 			// 
 			this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -608,6 +610,7 @@
             this.changeGraphParamsToolStripMenuItem,
             this.graphTimerToolStripMenuItem,
             this.getTemp4ToolStripMenuItem,
+            this.getTemp5ToolStripMenuItem,
             this.reduceToolStripMenuItem});
 			this.testToolStripMenuItem.Name = "testToolStripMenuItem";
 			this.testToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
@@ -654,6 +657,13 @@
 			this.getTemp4ToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
 			this.getTemp4ToolStripMenuItem.Text = "Get Temp 4";
 			this.getTemp4ToolStripMenuItem.Click += new System.EventHandler(this.getTemp4ToolStripMenuItem_Click);
+			// 
+			// getTemp5ToolStripMenuItem
+			// 
+			this.getTemp5ToolStripMenuItem.Name = "getTemp5ToolStripMenuItem";
+			this.getTemp5ToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+			this.getTemp5ToolStripMenuItem.Text = "Get Temp 5";
+			this.getTemp5ToolStripMenuItem.Click += new System.EventHandler(this.getTemp5ToolStripMenuItem_Click);
 			// 
 			// reduceToolStripMenuItem
 			// 
@@ -706,24 +716,38 @@
 			this.label5.TabIndex = 96;
 			this.label5.Text = "No. Recs.";
 			// 
-			// sortDirInfoToolStripMenuItem
+			// lbFileNames
 			// 
-			this.sortDirInfoToolStripMenuItem.Name = "sortDirInfoToolStripMenuItem";
-			this.sortDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.sortDirInfoToolStripMenuItem.Text = "Sort Dir Info";
-			this.sortDirInfoToolStripMenuItem.Click += new System.EventHandler(this.sortDirInfoToolStripMenuItem_Click);
+			this.lbFileNames.FormattingEnabled = true;
+			this.lbFileNames.Location = new System.Drawing.Point(973, 53);
+			this.lbFileNames.Name = "lbFileNames";
+			this.lbFileNames.Size = new System.Drawing.Size(197, 264);
+			this.lbFileNames.TabIndex = 97;
+			this.lbFileNames.SelectedIndexChanged += new System.EventHandler(this.lbFileNames_SelectedIndexChanged);
+			this.lbFileNames.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbFileNames_GetFile);
+			// 
+			// btnDeleteFile
+			// 
+			this.btnDeleteFile.Location = new System.Drawing.Point(973, 329);
+			this.btnDeleteFile.Name = "btnDeleteFile";
+			this.btnDeleteFile.Size = new System.Drawing.Size(75, 23);
+			this.btnDeleteFile.TabIndex = 98;
+			this.btnDeleteFile.Text = "Delete";
+			this.btnDeleteFile.UseVisualStyleBackColor = true;
+			this.btnDeleteFile.Click += new System.EventHandler(this.btnDeleteFile_Click);
 			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-			this.ClientSize = new System.Drawing.Size(1218, 726);
+			this.ClientSize = new System.Drawing.Size(1444, 726);
+			this.Controls.Add(this.btnDeleteFile);
+			this.Controls.Add(this.lbFileNames);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.tbNoRecs);
 			this.Controls.Add(this.btnExit);
 			this.Controls.Add(this.btnConnect);
-			this.Controls.Add(this.tbNoChartRec);
 			this.Controls.Add(this.cbNoUpdate);
 			this.Controls.Add(this.AlertLabel);
 			this.Controls.Add(this.label9);
@@ -789,7 +813,6 @@
 		private System.Windows.Forms.Timer timer3;
 		private System.Windows.Forms.Label AlertLabel;
 		private System.Windows.Forms.CheckBox cbNoUpdate;
-		private System.Windows.Forms.TextBox tbNoChartRec;
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem clientControlsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem cabinToolStripMenuItem;
@@ -828,6 +851,9 @@
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.ToolStripMenuItem listDirInfoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem sortDirInfoToolStripMenuItem;
+		private System.Windows.Forms.ListBox lbFileNames;
+		private System.Windows.Forms.Button btnDeleteFile;
+		private System.Windows.Forms.ToolStripMenuItem getTemp5ToolStripMenuItem;
 	}
 }
 

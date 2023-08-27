@@ -60,5 +60,6 @@ git add nbus/dio_ds1620.h
 git add nbus/dio_ds1620.c
 git add nbus/dio_mcp3002.c
 git add nbus/dio_mcp3002.h
+git add nbus/MPC3002.txt
 
 git status
