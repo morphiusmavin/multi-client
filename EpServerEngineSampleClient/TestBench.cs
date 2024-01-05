@@ -207,7 +207,7 @@ namespace EpServerEngineSampleClient
 			int offset = svrcmd.GetCmdIndexI(cmd);
 			//AddMsg("offset: " + offset.ToString());
 			//AddMsg(svrcmd.GetState(offset).ToString());
-			ret = svrcmd.Change_PortCmd(offset, 3);
+			ret = svrcmd.Change_PortCmd(offset, 3);			// this is bad
 			//AddMsg(ret.ToString());
 			return ret;
 		}

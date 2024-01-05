@@ -238,7 +238,7 @@ namespace EpServerEngineSampleClient
 		{
 			string cmd = on_label_list[which];
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			return svrcmd.Change_PortCmd(offset, 8, onoff);
+			return svrcmd.Change_PortCmd(offset, 8, onoff);		// this is bad
 		}
 		private void ToggleButton(int which, bool state)
 		{

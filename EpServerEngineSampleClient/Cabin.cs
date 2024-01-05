@@ -89,7 +89,7 @@ namespace EpServerEngineSampleClient
 		{
 			string cmd = on_label_list[which];
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			return svrcmd.Change_PortCmd(offset, 2, onoff);
+			return svrcmd.Change_PortCmd(offset, 2, onoff);		// this is bad
 		}
 		private void btn1_Click(object sender, EventArgs e)
 		{

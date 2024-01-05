@@ -23,7 +23,7 @@ void assign_client_table(void)
 	strcpy(client_table[_159].label,"Win7-x64\0");
 	client_table[_159].socket = -1;
 	client_table[_159].type = WINDOWS_CLIENT;
-	client_table[_159].qkey = 1236;
+	client_table[_159].qkey = 1237;
 	client_table[_159].qid = 0;
 	client_table[_159].task_id = 1;
 // 2

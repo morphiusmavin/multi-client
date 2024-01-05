@@ -665,6 +665,7 @@ startover1:
 					break;
 				case 0:		// Second_Windows7
 				case 1:		// Win7-x64
+				case 2:		// WINDOWS-11A
 					if(client_table[dest].socket > 0)
 						send_msgb(client_table[dest].socket, strlen(tempx)*2,tempx,cmd);
 					break;

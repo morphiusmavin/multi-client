@@ -37,8 +37,6 @@
 			this.tbConnected = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.label4 = new System.Windows.Forms.Label();
-			this.cbWhichWinClient = new System.Windows.Forms.ComboBox();
 			this.cbIPAdress = new System.Windows.Forms.ComboBox();
 			this.btnFnc3 = new System.Windows.Forms.Button();
 			this.btnClear = new System.Windows.Forms.Button();
@@ -73,11 +71,11 @@
 			this.assignFunctionKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.clientListActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.exitToShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showTimeUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.getTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.setTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.rebootToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.exitToShellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.shutdownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.getStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.getDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -171,8 +169,6 @@
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add(this.label4);
-			this.groupBox1.Controls.Add(this.cbWhichWinClient);
 			this.groupBox1.Controls.Add(this.cbIPAdress);
 			this.groupBox1.Controls.Add(this.label3);
 			this.groupBox1.Controls.Add(this.tbConnected);
@@ -182,33 +178,10 @@
 			this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.groupBox1.Location = new System.Drawing.Point(479, 172);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(300, 204);
+			this.groupBox1.Size = new System.Drawing.Size(300, 160);
 			this.groupBox1.TabIndex = 34;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "TCP Status";
-			// 
-			// label4
-			// 
-			this.label4.AutoSize = true;
-			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(9, 157);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(93, 20);
-			this.label4.TabIndex = 33;
-			this.label4.Text = "This Client";
-			// 
-			// cbWhichWinClient
-			// 
-			this.cbWhichWinClient.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.cbWhichWinClient.FormattingEnabled = true;
-			this.cbWhichWinClient.Items.AddRange(new object[] {
-            "Second_Windows7",
-            "Win7-x64"});
-			this.cbWhichWinClient.Location = new System.Drawing.Point(102, 151);
-			this.cbWhichWinClient.Name = "cbWhichWinClient";
-			this.cbWhichWinClient.Size = new System.Drawing.Size(172, 28);
-			this.cbWhichWinClient.TabIndex = 32;
-			this.cbWhichWinClient.SelectedIndexChanged += new System.EventHandler(this.cbWhichWinClient_SelectedIndexChanged);
 			// 
 			// cbIPAdress
 			// 
@@ -531,73 +504,73 @@
 			this.clientListActionToolStripMenuItem.Size = new System.Drawing.Size(109, 20);
 			this.clientListActionToolStripMenuItem.Text = "Client List Action";
 			// 
-			// exitToShellToolStripMenuItem
-			// 
-			this.exitToShellToolStripMenuItem.Name = "exitToShellToolStripMenuItem";
-			this.exitToShellToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.exitToShellToolStripMenuItem.Text = "Exit to Shell";
-			this.exitToShellToolStripMenuItem.Click += new System.EventHandler(this.exitToShellToolStripMenuItem_Click);
-			// 
 			// showTimeUpToolStripMenuItem
 			// 
 			this.showTimeUpToolStripMenuItem.Name = "showTimeUpToolStripMenuItem";
-			this.showTimeUpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.showTimeUpToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.showTimeUpToolStripMenuItem.Text = "Show Time Up";
 			this.showTimeUpToolStripMenuItem.Click += new System.EventHandler(this.showTimeUpToolStripMenuItem_Click);
 			// 
 			// getTimeToolStripMenuItem
 			// 
 			this.getTimeToolStripMenuItem.Name = "getTimeToolStripMenuItem";
-			this.getTimeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.getTimeToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.getTimeToolStripMenuItem.Text = "Get Time";
 			this.getTimeToolStripMenuItem.Click += new System.EventHandler(this.getTimeToolStripMenuItem_Click);
 			// 
 			// setTimeToolStripMenuItem
 			// 
 			this.setTimeToolStripMenuItem.Name = "setTimeToolStripMenuItem";
-			this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.setTimeToolStripMenuItem.Text = "Set Time";
 			this.setTimeToolStripMenuItem.Click += new System.EventHandler(this.setTimeToolStripMenuItem_Click);
 			// 
 			// rebootToolStripMenuItem
 			// 
 			this.rebootToolStripMenuItem.Name = "rebootToolStripMenuItem";
-			this.rebootToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.rebootToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.rebootToolStripMenuItem.Text = "Reboot";
 			this.rebootToolStripMenuItem.Click += new System.EventHandler(this.rebootToolStripMenuItem_Click);
+			// 
+			// exitToShellToolStripMenuItem
+			// 
+			this.exitToShellToolStripMenuItem.Name = "exitToShellToolStripMenuItem";
+			this.exitToShellToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
+			this.exitToShellToolStripMenuItem.Text = "Exit to Shell";
+			this.exitToShellToolStripMenuItem.Click += new System.EventHandler(this.exitToShellToolStripMenuItem_Click);
 			// 
 			// shutdownToolStripMenuItem
 			// 
 			this.shutdownToolStripMenuItem.Name = "shutdownToolStripMenuItem";
-			this.shutdownToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.shutdownToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.shutdownToolStripMenuItem.Text = "Shutdown";
 			this.shutdownToolStripMenuItem.Click += new System.EventHandler(this.shutdownToolStripMenuItem_Click);
 			// 
 			// getStatusToolStripMenuItem
 			// 
 			this.getStatusToolStripMenuItem.Name = "getStatusToolStripMenuItem";
-			this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.getStatusToolStripMenuItem.Text = "Get Status";
 			this.getStatusToolStripMenuItem.Click += new System.EventHandler(this.getStatusToolStripMenuItem_Click);
 			// 
 			// getDirInfoToolStripMenuItem
 			// 
 			this.getDirInfoToolStripMenuItem.Name = "getDirInfoToolStripMenuItem";
-			this.getDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.getDirInfoToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.getDirInfoToolStripMenuItem.Text = "Get Dir Info";
 			this.getDirInfoToolStripMenuItem.Click += new System.EventHandler(this.getDirInfoToolStripMenuItem_Click);
 			// 
 			// listDirInfoToolStripMenuItem
 			// 
 			this.listDirInfoToolStripMenuItem.Name = "listDirInfoToolStripMenuItem";
-			this.listDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.listDirInfoToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.listDirInfoToolStripMenuItem.Text = "List Dir Info";
 			this.listDirInfoToolStripMenuItem.Click += new System.EventHandler(this.listDirInfoToolStripMenuItem_Click);
 			// 
 			// sortDirInfoToolStripMenuItem
 			// 
 			this.sortDirInfoToolStripMenuItem.Name = "sortDirInfoToolStripMenuItem";
-			this.sortDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.sortDirInfoToolStripMenuItem.Size = new System.Drawing.Size(151, 22);
 			this.sortDirInfoToolStripMenuItem.Text = "Send Dir Info";
 			this.sortDirInfoToolStripMenuItem.Click += new System.EventHandler(this.sortDirInfoToolStripMenuItem_Click);
 			// 
@@ -798,8 +771,6 @@
 		private System.Windows.Forms.Timer timer1;
 		private System.Windows.Forms.ComboBox cbIPAdress;
 		private System.Windows.Forms.ListBox lbAvailClients;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.ComboBox cbWhichWinClient;
 		private System.Windows.Forms.TextBox tbTodaysDate;
 		private System.Windows.Forms.Label label10;
 		private System.Windows.Forms.TextBox tbTime;

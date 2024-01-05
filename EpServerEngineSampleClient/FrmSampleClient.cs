@@ -44,7 +44,6 @@ namespace EpServerEngineSampleClient
         //private ClientDest clientdest = null;
         //private SetNextClient setnextclient = null;
         private int AvailClientCurrentSection = 0;
-        private bool clients_inited = false;
         private bool[] status = new bool[8];
         private List<ClientParams> client_params;
         private List<ClientsAvail> clients_avail;
@@ -60,7 +59,6 @@ namespace EpServerEngineSampleClient
         //private string sendmsgtext;
         int tick = 0;
         //int connected_tick = 0;
-        int which_winclient = -1;
         bool client_alert = false;
 
         private string initial_data_directory = "c:\\Users\\daniel\\DS1620Data\\";
@@ -89,6 +87,7 @@ namespace EpServerEngineSampleClient
         int graph_timer = 0;
         int reduce = 0;
         int noRecs;
+        string this_ip_address = "";
         List<int> temp_list_int = null;
         int avg_window = 3;
 
@@ -127,13 +126,22 @@ namespace EpServerEngineSampleClient
 
             xml_params_location = initial_directory + "ClientParams.xml";
             xml_clients_avail_location = initial_directory +  "ClientsAvail.xml";
-
+            try
+			{
+                StreamReader sr = new StreamReader(initial_directory + "this_ip_address.txt");
+                this_ip_address = sr.ReadLine();
+                sr.Close();
+			}
+            catch(Exception e)
+			{
+                MessageBox.Show("Exception: " + e.Message);
+			}
             for (int i = 0; i < 8; i++)
             {
                 status[i] = false;
             }
             tbReceived.Clear();
-            cbWhichWinClient.SelectedIndex = 0;
+            AddMsg("this ip add: " + this_ip_address);
 
             client_params = new List<ClientParams>();
             ClientParams item = null;
@@ -350,16 +358,8 @@ namespace EpServerEngineSampleClient
   
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            if (which_winclient > -1)
+            if (true)
             {
-                /*
-                if (which_winclient == 0)
-                    playdlg = new PlayerDlg("g:\\rock\\wavefiles", m_client);
-                else if (which_winclient == 1)
-                    playdlg = new PlayerDlg("c:\\Users\\daniel\\Music\\WavFiles", m_client);
-                */
-                if (which_winclient > 0)    // only Second_Windows does the set time in the timer callback
-                    clients_inited = true;
                 if (!client_connected)      // let's connect here! (see timer callback at end of file)
                 {
                     m_hostname = cbIPAdress.Items[selected_address].ToString();
@@ -1007,7 +1007,7 @@ namespace EpServerEngineSampleClient
                 }
 
             }
-            if (clients_inited == false && tick == 3)
+            if (tick == 3)
             {
                 //AddMsg("set time");
                 if (m_client.IsConnectionAlive)
@@ -1015,6 +1015,7 @@ namespace EpServerEngineSampleClient
                     foreach (ClientsAvail cl in clients_avail)
                     {
                         if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
+                            // type 1 is TS_CLIENT type 2 is TS_SERVER
                         {
                             //AddMsg(cl.label);
                             SetTime(cl.index);
@@ -1126,11 +1127,6 @@ namespace EpServerEngineSampleClient
                     cl.flag++;
                 }
             }
-        }
-        private void cbWhichWinClient_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            which_winclient = cbWhichWinClient.SelectedIndex;
-            AddMsg(which_winclient.ToString());
         }
         private void btnWinClMsg_Click(object sender, EventArgs e)
         {

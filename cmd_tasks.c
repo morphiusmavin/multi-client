@@ -44,7 +44,7 @@ extern CMD_STRUCT cmd_array[];
 extern ollist_t oll;
 extern cllist_t cll;
 extern dllist_t dll;
-extern sllist_t sll;
+//extern sllist_t sll;
 extern int ds_index;
 extern int ds_reset;
 int ss_index;
@@ -388,6 +388,7 @@ UCHAR get_host_cmd_task(int test)
 	ds_index = 0;
 #endif
 
+/*
 	S_DATA *stp = (S_DATA *)malloc(sizeof(S_DATA));
 	S_DATA **stpp = &stp;
 
@@ -407,9 +408,9 @@ UCHAR get_host_cmd_task(int test)
 		printf("can't open %s\n",sFileName);
 		slWriteConfig(sFileName, &sll,1,errmsg);
 	}
-	ss_index = sllist_get_size(&sll);
-	printf("ss_index: %d\n",ss_index);
-	
+	//ss_index = sllist_get_size(&sll);
+	//printf("ss_index: %d\n",ss_index);
+*/
 	init_ips();
 	same_msg = 0;
 
@@ -429,7 +430,7 @@ UCHAR get_host_cmd_task(int test)
 		if(shutdown_all == 1)
 		{
 			//printf("shutting down cmd host\r\n");
-			free(stp);
+			//free(stp);
 			return 0;
 		}
 		uSleep(0,TIME_DELAY/10);
@@ -553,166 +554,6 @@ printf("\n");
 					//printf("%02x %02x\n",tempx[0], tempx[1]);
 					trunning_seconds_off = (tempx[0] << 8) | tempx[1];
 					//printf("trunning_seconds_off: %d\n",trunning_seconds_off);
-					break;
-
-				case GET_DIR_INFO:
-					//printf("tempx: %d\n",tempx[0]);
-					switch(tempx[0])
-					{
-						case 0:
-							// get the dat filenames that have date/time in the filename 
-							// and add them to a new llist of type sllist (sdata.dat)
-							ss_index = 0;
-							d = opendir( "." );
-
-							if(d != NULL)
-							{
-								while((dir = readdir( d )))
-								{
-									if(dir->d_type == DT_REG && dir != 0 && strcmp(dir->d_name+10,".dat") == 0)
-									{
-										strcpy(stp->name,dir->d_name);
-										stat(dir->d_name,&st);
-										stp->filesize = st.st_size;
-										stp->order = ss_index;
-										printf("%s %d\n",dir->d_name,stp->filesize);
-										ss_index = sllist_add_data(ss_index, &sll, stp);
-										ss_index++;
-									}
-								}
-							}
-							closedir( d );
-							slWriteConfig("sdata.dat", &sll, ss_index, errmsg);
-							break;
-
-						case 1:	
-							// get all the files in the current sllist database and sort 
-							// according to the date/time of the filename - use temp_list 
-							// to sort because there's no easy way to sort the sllist 
-							stpp = &stp;
-							for(i = 0;i < ss_index;i++)
-							{
-								sllist_find_data(i, stpp, &sll);		// add to temp_list array
-								memset(tempx,0,sizeof(tempx));
-								strncpy(tempx,stp->name,10);
-								strncpy(temp_list[i],tempx,10);
-								//printf("%s\t\t%d\t\t%d\n",stp->name,stp->order, stp->filesize);
-							}
-							for(i = 0;i < ss_index-1;i++)
-							{
-								min_idx = i;		// sort the temp_list array
-								for(j = i + 1;j < ss_index;j++)
-									if(strcmp(temp_list[j],temp_list[min_idx]) < 0)
-										min_idx = j;
-								swap(min_idx,i);
-							}
-							stpp = &stp;
-							printf("\n");
-							for(k = 0;k < ss_index;k++)
-							{
-								sllist_find_data(k, stpp, &sll);
-								for(i = 0;i < ss_index;i++)		// use temp_list to assign the 'order' field
-								{								// to the sllist 
-									if(strncmp(stp->name,temp_list[i],10) == 0)
-									{
-										stp->order = i;
-										break;
-									}
-								}
-								j++;
-							}
-							for(k = 0;k < ss_index;k++)		// show the sorted sllist 
-								for(i = 0;i < ss_index;i++)
-								{
-									sllist_find_data(i, stpp, &sll);
-									if(stp->order == k)
-										printf("%s %d %d\n", stp->name, stp->order, stp->filesize);
-								}
-							break;
-
-						case 2:
-							stpp = &stp;
-							cmd = SEND_DIR_LIST;
-							for(k = ss_index;k >= 0;k--)		// show the sorted sllist 
-								for(i = 0;i < ss_index;i++)
-								{
-									sllist_find_data(i, stpp, &sll);
-									if(stp->order == k)
-									{
-										sprintf(tempx,"%s %d", stp->name, stp->filesize);
-										send_sock_msg(tempx, strlen(tempx), cmd, _149);
-										uSleep(0,TIME_DELAY/4);
-									}
-								}
-							break;
-
-						default:
-							break;
-					}
-					break;
-
-				case SEND_FILE_INFO:
-					printf("tempx: %d\n",tempx[0]);
-					j = (int)tempx[0];
-					j++;
-					for(i = ss_index-1;i >= 0;i--)
-					{
-						sllist_find_data(i, stpp, &sll);
-						if(j == ss_index - stp->order)
-						{
-							printf("->%s\n",stp->name);
-							dllist_init(&dll);
-							if(access(stp->name,F_OK) != -1)
-							{
-								dlLoadConfig(stp->name,&dll,dsize,errmsg);
-								if(rc > 0)
-								{
-									printf("%s\r\n",errmsg);
-								}
-							}else
-							{
-								memset(dtp,0,sizeof(D_DATA));
-								printf("can't open %s\n",stp->name);
-							}
-							
-							ds_index = dllist_get_size(&dll);
-							cmd = DS1620_MSG;
-							for(i = 0;i < ds_index-1;i++)
-							{
-								dllist_find_data(i, dtpp, &dll);
-								if(dtp->value > 0)
-								{
-									ival = convertFi(dtp->value);
-									sprintf(tempx, "%d %0d %02d:%02d %d       ",this_client_id, i, dtp->hour, dtp->minute, ival);
-									//printf("%s\n",tempx);
-									send_sock_msg(tempx, strlen(tempx), cmd, _149);
-									uSleep(0,TIME_DELAY/4);
-								}
-							}
-							break;
-						}
-					}
-					break;
-
-				case DELETE_FILE:
-/*
-					//printf("tempx: %d\n",tempx[0]);
-					j = (int)tempx[0];
-					j++;
-					for(i = ss_index-1;i >= 0;i--)
-					{
-						sllist_find_data(i, stpp, &sll);
-						if(j == ss_index - stp->order)
-						{
-							printf("delete: %s\n",stp->name);
-							if(unlink(stp->name) == 0)
-								printf("file deleted\n");
-							sllist_remove_data(i, stpp, &sll);
-							ss_index--;
-							break;
-						}
-					}
-*/
 					break;
 
 				case GET_TEMP4:
