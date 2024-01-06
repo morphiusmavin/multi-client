@@ -1,4 +1,4 @@
-#if 1
+  #if 1
 #ifdef SERVER
 #warning "server defined"
 #endif
@@ -254,7 +254,10 @@ UCHAR get_host_cmd_task(int test)
 				break;
 
 			case REPLY_CLLIST:
-				send_msgb(client_table[0].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
+				if(client_table[0].socket > -1)
+					send_msgb(client_table[0].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
+				if(client_table[1].socket > -1)
+					send_msgb(client_table[1].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
 				break;
 
 			case SET_TIME:
@@ -264,22 +267,21 @@ UCHAR get_host_cmd_task(int test)
 			case SEND_CLIENT_LIST:
 				//printf("SEND_CLIENT_LIST from sock_mgt\n");
 				k = -1;
-				if(client_table[0].socket > 0)
+				for(i = 0;i < MAX_CLIENTS;i++)
 				{
-					for(i = 0;i < MAX_CLIENTS;i++)
+					//printf("...%d %s %d %d\n", i, client_table[i].ip, client_table[i].socket, client_table[i].type);
+					if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
 					{
-						//printf("...%d %s %d %d\n", i, client_table[i].ip, client_table[i].socket, client_table[i].type);
-						if(client_table[i].socket > 0 && client_table[i].type != WINDOWS_CLIENT)
-						{
-							memset(write_serial_buff,0,sizeof(write_serial_buff));
-							sprintf(write_serial_buff,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
-							//printf("%s\n",write_serial_buff);
-							//printf("%d\n",strlen(write_serial_buff));
-
+						memset(write_serial_buff,0,sizeof(write_serial_buff));
+						sprintf(write_serial_buff,"%d %s %d", i, client_table[i].ip, client_table[i].socket);
+						//printf("%s\n",write_serial_buff);
+						//printf("%d\n",strlen(write_serial_buff));
+						if(client_table[0].socket > -1)
 							send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
-							uSleep(0,TIME_DELAY/2);
-							//printf("client sock: %d\n",client_table[i].socket);
-						}
+						if(client_table[1].socket > -1)
+							send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
+						uSleep(0,TIME_DELAY/2);
+						//printf("client sock: %d\n",client_table[i].socket);
 					}
 				}
 				break;
@@ -289,9 +291,9 @@ UCHAR get_host_cmd_task(int test)
 				//printf("%ld %ld\n",ttrunning_minutes, ttrunning_seconds);
 				
 				if(client_table[0].socket > 0)
-				{
 					send_msgb(client_table[0].socket,strlen(write_serial_buff)*2,(UCHAR *)&write_serial_buff[0],UPTIME_MSG);
-				}
+				if(client_table[1].socket > 0)
+					send_msgb(client_table[1].socket,strlen(write_serial_buff)*2,(UCHAR *)&write_serial_buff[0],UPTIME_MSG);
 				
 				//if(client_table[1].socket > 0)
 					//send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
@@ -528,10 +530,20 @@ if(cmd == DB_LOOKUP)
 				printf("\n");
 */
 				// this sends a msg to the appropriate client's ReadTask
-				if(client_table[win_client_to_client_sock].socket > 0)
+				if(win_client_to_client_sock > 1)
 				{
-					send_msg(client_table[win_client_to_client_sock].socket, msg_len, (UCHAR*)tempx,cmd);
-				}else printf("bad socket %d\n",win_client_to_client_sock);
+					if(client_table[win_client_to_client_sock].socket > 0)
+					{
+						send_msg(client_table[win_client_to_client_sock].socket, msg_len, (UCHAR*)tempx,cmd);
+					}else printf("bad socket %d\n",win_client_to_client_sock);
+				}
+				if(win_client_to_client_sock < 2 && win_client_to_client_sock > -1)
+				{
+					if(client_table[win_client_to_client_sock].socket > 0)
+					{
+						send_msgb(client_table[win_client_to_client_sock].socket, msg_len, (UCHAR*)tempx,cmd);
+					}else printf("bad socket %d\n",win_client_to_client_sock);
+				}
 				//printf("sent: %s\n", msg.mtext);
 				//printf("\n");
 			}
@@ -942,8 +954,8 @@ UCHAR tcp_monitor_task(int test)
 					// send msg to 1st win client (149)
 					if(client_table[0].socket > 0)
 						send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-					//if(client_table[1].socket > 0)
-						//send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+					if(client_table[1].socket > 0)
+						send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 
 					if(client_table[i].qid == 0)
 					{

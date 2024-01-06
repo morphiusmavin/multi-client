@@ -88,6 +88,7 @@ namespace EpServerEngineSampleClient
         int reduce = 0;
         int noRecs;
         string this_ip_address = "";
+        string this_machine_name = "";
         List<int> temp_list_int = null;
         int avg_window = 3;
 
@@ -130,6 +131,7 @@ namespace EpServerEngineSampleClient
 			{
                 StreamReader sr = new StreamReader(initial_directory + "this_ip_address.txt");
                 this_ip_address = sr.ReadLine();
+                this_machine_name = sr.ReadLine();
                 sr.Close();
 			}
             catch(Exception e)
@@ -142,6 +144,7 @@ namespace EpServerEngineSampleClient
             }
             tbReceived.Clear();
             AddMsg("this ip add: " + this_ip_address);
+            AddMsg("this machine name: " + this_machine_name);
 
             client_params = new List<ClientParams>();
             ClientParams item = null;
@@ -508,14 +511,9 @@ namespace EpServerEngineSampleClient
             ret = new string(chars2);
             string str = svrcmd.GetName(type_msg);
             int temp = 0;
-            
 
             switch (str)
             {
-                case "SEND_DIR_LIST":
-                    lbFileNames.Items.Add(ret);
-                    break;
-
                 case "DS1620_MSG":
                     if (updateGraph)
                         break;
@@ -649,11 +647,18 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "SEND_MESSAGE":
+/*
                     i = ret.IndexOf('x');
-                    substr = ret.Remove(i);
+                    AddMsg(ret + " " + i.ToString());
+                    if (i > -1)
+                        substr = ret.Remove(i);
+                    else substr = ret;
+*/
                     //AddMsg("str: " + str + " " + str.Length.ToString());
                     //AddMsg(ret + " " + str + " " + type_msg.ToString() + bytes.Length.ToString());
-                    AddMsg(substr);
+                    AddMsg(ret);
+                    AddMsg(" len: " + bytes.Length.ToString());
+                    AddMsg(" len: " + ret.Length.ToString());
                     //ListMsg(ret, false);
                     break;
 
@@ -2055,6 +2060,16 @@ namespace EpServerEngineSampleClient
         {
             temp_class.Clear();
             SendClientMsg(svrcmd.GetCmdIndexI("GET_TEMP4"), "test1234.dat", false);
+        }
+
+		private void sendMsg2OtherWinclToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            int index = 1;
+            string msg = "SEND_MESSAGE";
+            int icmd = svrcmd.GetCmdIndexI(msg);
+            svrcmd.Send_ClCmd(icmd, index, "hellomsgx         ");
+            // only 1/2 gets sent
+            //svrcmd.Send_ClCmd(icmd, index, 12);
         }
 	}
 }

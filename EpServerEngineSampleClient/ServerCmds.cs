@@ -99,11 +99,7 @@ namespace EpServerEngineSampleClient
 			DLLIST_SHOW,
 			DLLIST_SAVE,
 			DS1620_MSG,
-			TURN_ALL_LIGHTS_OFF,
-			GET_DIR_INFO,
-			SEND_DIR_LIST,
-			SEND_FILE_INFO,
-			DELETE_FILE
+			TURN_ALL_LIGHTS_OFF
 		}
 		public ServerCmds()
 		{
@@ -354,7 +350,7 @@ namespace EpServerEngineSampleClient
 				case "BENCH_24V_1":
 					Properties.Settings.Default["BENCH_24V_1"] = current_state;
 					break;
-				case "BENCH_24V_2":
+				case "BENCH_24V_2":		
 					Properties.Settings.Default["BENCH_24V_2"] = current_state;
 					break;
 				case "BENCH_12V_1":
@@ -380,9 +376,6 @@ namespace EpServerEngineSampleClient
 					break;
 				case "BENCH_LIGHT2":
 					Properties.Settings.Default["BENCH_LIGHT2"] = current_state;
-					break;
-				case "CHICK_WATER":
-					Properties.Settings.Default["CHICK_WATER"] = current_state;
 					break;
 				case "CABIN1":
 					Properties.Settings.Default["CABIN1"] = current_state;

@@ -97,6 +97,7 @@
 			this.label5 = new System.Windows.Forms.Label();
 			this.lbFileNames = new System.Windows.Forms.ListBox();
 			this.btnDeleteFile = new System.Windows.Forms.Button();
+			this.sendMsg2OtherWinclToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -433,7 +434,8 @@
             this.clearScreenToolStripMenuItem,
             this.clearAlertToolStripMenuItem,
             this.assignFunctionKeyToolStripMenuItem,
-            this.exitToolStripMenuItem});
+            this.exitToolStripMenuItem,
+            this.sendMsg2OtherWinclToolStripMenuItem});
 			this.utilsToolStripMenuItem.Name = "utilsToolStripMenuItem";
 			this.utilsToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
 			this.utilsToolStripMenuItem.Text = "Utils";
@@ -441,49 +443,49 @@
 			// dS1620ToolStripMenuItem
 			// 
 			this.dS1620ToolStripMenuItem.Name = "dS1620ToolStripMenuItem";
-			this.dS1620ToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.dS1620ToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
 			this.dS1620ToolStripMenuItem.Text = "DS1620";
 			this.dS1620ToolStripMenuItem.Click += new System.EventHandler(this.dS1620ToolStripMenuItem_Click);
 			// 
 			// timersToolStripMenuItem
 			// 
 			this.timersToolStripMenuItem.Name = "timersToolStripMenuItem";
-			this.timersToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.timersToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
 			this.timersToolStripMenuItem.Text = "Timers";
 			this.timersToolStripMenuItem.Click += new System.EventHandler(this.timersToolStripMenuItem_Click);
 			// 
 			// minimizeToolStripMenuItem
 			// 
 			this.minimizeToolStripMenuItem.Name = "minimizeToolStripMenuItem";
-			this.minimizeToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.minimizeToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
 			this.minimizeToolStripMenuItem.Text = "Minimize";
 			this.minimizeToolStripMenuItem.Click += new System.EventHandler(this.minimizeToolStripMenuItem_Click);
 			// 
 			// clearScreenToolStripMenuItem
 			// 
 			this.clearScreenToolStripMenuItem.Name = "clearScreenToolStripMenuItem";
-			this.clearScreenToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.clearScreenToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
 			this.clearScreenToolStripMenuItem.Text = "Clear Screen";
 			this.clearScreenToolStripMenuItem.Click += new System.EventHandler(this.clearScreenToolStripMenuItem_Click);
 			// 
 			// clearAlertToolStripMenuItem
 			// 
 			this.clearAlertToolStripMenuItem.Name = "clearAlertToolStripMenuItem";
-			this.clearAlertToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.clearAlertToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
 			this.clearAlertToolStripMenuItem.Text = "Clear Alert";
 			this.clearAlertToolStripMenuItem.Click += new System.EventHandler(this.clearAlertToolStripMenuItem_Click);
 			// 
 			// assignFunctionKeyToolStripMenuItem
 			// 
 			this.assignFunctionKeyToolStripMenuItem.Name = "assignFunctionKeyToolStripMenuItem";
-			this.assignFunctionKeyToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.assignFunctionKeyToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
 			this.assignFunctionKeyToolStripMenuItem.Text = "Assign Function Key";
 			this.assignFunctionKeyToolStripMenuItem.Click += new System.EventHandler(this.assignFunctionKeyToolStripMenuItem_Click);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -709,6 +711,13 @@
 			this.btnDeleteFile.UseVisualStyleBackColor = true;
 			this.btnDeleteFile.Click += new System.EventHandler(this.btnDeleteFile_Click);
 			// 
+			// sendMsg2OtherWinclToolStripMenuItem
+			// 
+			this.sendMsg2OtherWinclToolStripMenuItem.Name = "sendMsg2OtherWinclToolStripMenuItem";
+			this.sendMsg2OtherWinclToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.sendMsg2OtherWinclToolStripMenuItem.Text = "Send Msg 2 other wincl";
+			this.sendMsg2OtherWinclToolStripMenuItem.Click += new System.EventHandler(this.sendMsg2OtherWinclToolStripMenuItem_Click);
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -825,6 +834,7 @@
 		private System.Windows.Forms.ListBox lbFileNames;
 		private System.Windows.Forms.Button btnDeleteFile;
 		private System.Windows.Forms.ToolStripMenuItem getTemp5ToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem sendMsg2OtherWinclToolStripMenuItem;
 	}
 }
 
