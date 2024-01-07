@@ -238,6 +238,8 @@ UCHAR get_host_cmd_task(int test)
 				//printf("%s\n",write_serial_buff);
 				if(client_table[0].socket > -1)
 					send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
+				if(client_table[1].socket > -1)
+					send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
 				break;
 
 			case SORT_CLLIST:
@@ -705,6 +707,7 @@ startover1:
 /*********************************************************************/
 // match up the ip address (146,145, etc) to the entry in the table 
 // and return the socket id if it's logged on, else return -1
+// this is not being used anywhere
 int get_client_sock(char *recip)
 {
 	int i;
@@ -933,8 +936,8 @@ UCHAR tcp_monitor_task(int test)
 			strncpy(tempx,&address_string[j],3);
 			//printf("tempx: %s\n",tempx);
 
-			if(winclipaddr < 0)
-			winclipaddr = get_client_index(tempx);
+//			if(winclipaddr < 0)
+//			winclipaddr = get_client_index(tempx);
 
 			// later on we want to have more than 1 windows client be able
 			// to log in

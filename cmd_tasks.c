@@ -165,7 +165,6 @@ UCHAR get_host_cmd_task(int test)
 	char *pch, *pch2;
 	time_t curtime2;
 	time_t *pcurtime2 = &curtime2;
-	int fp;
 	off_t fsize;
 	struct timeval mtv;
 	struct tm t;

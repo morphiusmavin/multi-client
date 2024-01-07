@@ -328,11 +328,7 @@ UCHAR tcp_monitor_task(int test)
 	s = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
 	int i;
 	assign_client_table();
-/*
-	for(i = 0;i < MAX_CLIENTS;i++)
-	{
-		printf("%s %d\n",client_table[i].label,client_table[i].socket);
-*/
+
 	//printf("starting tcp_monitor...\n");
 
 	while (TRUE)

@@ -87,10 +87,12 @@ namespace EpServerEngineSampleClient
         int graph_timer = 0;
         int reduce = 0;
         int noRecs;
+        /*
         string this_ip_address = "";
         string this_machine_name = "";
         string other_ip_address = "";
         string other_machine_name = "";
+        */
         List<int> temp_list_int = null;
         int avg_window = 3;
 
@@ -129,6 +131,7 @@ namespace EpServerEngineSampleClient
 
             xml_params_location = initial_directory + "ClientParams.xml";
             xml_clients_avail_location = initial_directory +  "ClientsAvail.xml";
+            /*
             try
 			{
                 StreamReader sr = new StreamReader(initial_directory + "this_ip_address.txt");
@@ -147,7 +150,7 @@ namespace EpServerEngineSampleClient
             tbReceived.Clear();
             AddMsg("this ip add: " + this_ip_address);
             AddMsg("this machine name: " + this_machine_name);
-
+            */
             client_params = new List<ClientParams>();
             ClientParams item = null;
             if (!File.Exists(xml_params_location))
@@ -524,15 +527,15 @@ namespace EpServerEngineSampleClient
                         switch (i)
                         {
                             case 0:
-                                other_ip_address = word;
+//                                other_ip_address = word;
                                 break;
                             case 1:
-                                other_machine_name = word;
+                                //other_machine_name = word;
                                 break;
                         }
                         i++;
                     }
-                    AddMsg(other_ip_address + " " + other_machine_name);
+                    //AddMsg(other_ip_address + " " + other_machine_name);
                     break;
 
                 case "EXTRA_WINCL_SYNC":

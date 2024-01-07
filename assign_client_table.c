@@ -2,6 +2,7 @@
 #include <string.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <unistd.h>
 #include <semaphore.h>
 #include "mytypes.h"
 
@@ -9,6 +10,11 @@ CLIENT_TABLE client_table[MAX_CLIENTS];
 void assign_client_table(void)
 {
 	int i;
+	FILE *fp;
+	char s1[20], s2[20];
+	char fname[] = "address_list.txt";
+	if(client_table[_149].qkey != 0)
+		return;
 	memset(client_table,0,sizeof(CLIENT_TABLE)*MAX_CLIENTS);
 // 0
 	strcpy(client_table[_149].ip,"149\0");
@@ -82,4 +88,27 @@ void assign_client_table(void)
 	client_table[_SERVER].qkey = 1245;
 	client_table[_SERVER].qid = 0;
 	client_table[_SERVER].task_id = 8;
+
+	if(access(fname, F_OK) == 0)
+	{
+		fp = fopen(fname, "r");
+		if(fp < 0)
+		{
+			printf("can't open %s\n",fname);
+			return;
+		}
+		i = 0;
+		while(fscanf(fp, "%s %s", s1, s2) != EOF)
+		{
+			strcpy(client_table[i].ip,s1);
+			strcpy(client_table[i].label,s2);
+			i++;
+		}
+		fclose(fp);
+	}else printf("no %s found\n",fname);
+	
+	for(i = 0;i < MAX_CLIENTS;i++)
+	{
+		printf("%s %s\n",client_table[i].ip, client_table[i].label);
+	}
 }

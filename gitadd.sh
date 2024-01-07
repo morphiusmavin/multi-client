@@ -18,7 +18,6 @@ git add thread_server/sched.c
 git add thread_server/Makefile
 git add thread_server/sock_mgt.c
 git add thread_server/sock_sched.c
-git add thread_server/do1.sh
 
 git add cs_client/config_file.c
 git add cs_client/config_file.h
@@ -54,12 +53,10 @@ git add EpServerEngineSampleClient/*
 
 git add nbus/nbus.c
 git add nbus/nbus.h
-git add nbus/dio2.c
 git add nbus/peekpoke.h
 git add nbus/dio_ds1620.h
 git add nbus/dio_ds1620.c
 git add nbus/dio_mcp3002.c
 git add nbus/dio_mcp3002.h
-git add nbus/MPC3002.txt
 
 git status

@@ -37,6 +37,13 @@ todo:
 	Each machine that has a win cl must have a c:\users\daniel\ClientProgramData subdirectory that has 
 	a text file called: this_ip_address.txt which has the ip address and machine name. 
 	
+	the server (146) when starting up reads a file called: address_list.txt (in assign_client_table.c) 
+	this specifies the 1st and 2nd windows clients along with all the rest of the TS-4600 clients.
+	Then each 2nd windows client (todate there are only 2: Win7-x64 and WINDOWS-11A) must be in the 2nd line.
+	On top of that, the C:\Users\Daniel\ClientProgramData\ClientsAvail.xml must have the local machine and 
+	ip address on top and the other windows machine in the next xml entry.
+	
+	
 to add new commands:
 
 1) add to the enum in cmd_types.h 
