@@ -89,6 +89,8 @@ namespace EpServerEngineSampleClient
         int noRecs;
         string this_ip_address = "";
         string this_machine_name = "";
+        string other_ip_address = "";
+        string other_machine_name = "";
         List<int> temp_list_int = null;
         int avg_window = 3;
 
@@ -514,6 +516,28 @@ namespace EpServerEngineSampleClient
 
             switch (str)
             {
+                case "EXTRA_WINCL_UP":
+                    words = ret.Split(' ');
+                    i = 0;
+                    foreach (var word in words)
+                    {
+                        switch (i)
+                        {
+                            case 0:
+                                other_ip_address = word;
+                                break;
+                            case 1:
+                                other_machine_name = word;
+                                break;
+                        }
+                        i++;
+                    }
+                    AddMsg(other_ip_address + " " + other_machine_name);
+                    break;
+
+                case "EXTRA_WINCL_SYNC":
+                    break;
+
                 case "DS1620_MSG":
                     if (updateGraph)
                         break;
@@ -2067,9 +2091,7 @@ namespace EpServerEngineSampleClient
             int index = 1;
             string msg = "SEND_MESSAGE";
             int icmd = svrcmd.GetCmdIndexI(msg);
-            svrcmd.Send_ClCmd(icmd, index, "hellomsgx         ");
-            // only 1/2 gets sent
-            //svrcmd.Send_ClCmd(icmd, index, 12);
+            svrcmd.Send_ClCmd(icmd, index, "hello test");
         }
 	}
 }
