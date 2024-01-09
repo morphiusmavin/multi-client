@@ -108,11 +108,29 @@ namespace EpServerEngineSampleClient
 
 		}
 		private INetworkClient m_client;
+		private bool primary_wincl;
+		private int dest_index = 3;
 		public void SetClient(INetworkClient client)
 		{
 			m_client = client;
 		}
 		//Queue<int> qt = new Queue<int>();
+		public void SetPrimaryWinCl(bool set)
+		{
+			primary_wincl = set;
+			if (primary_wincl)
+				dest_index = 1;
+			else
+				dest_index = 0;
+		}
+		public bool GetPrimaryWinCl()
+		{
+			return primary_wincl;
+		}
+		public int GetDestIndex()
+		{
+			return dest_index;
+		}
 		byte[] BytesFromString(String str)
 		{
 			byte[] bytes = new byte[str.Length * sizeof(char)];
@@ -160,9 +178,9 @@ namespace EpServerEngineSampleClient
 			} while (i != cmd);
 			return cmd2;
 		}
-		bool SetProperties(bool iparam, string which)
-		{ 
-			switch(which)
+		public bool SetProperties(bool iparam, string which, bool dont_send_extra)
+		{
+			switch (which)
 			{ 
 				case "DESK_LIGHT":
 				Properties.Settings.Default["DESK_LIGHT"] = iparam;
@@ -178,153 +196,166 @@ namespace EpServerEngineSampleClient
 				break;
 				case "MIDDLE_LIGHT":
 					Properties.Settings.Default["MIDDLE_LIGHT"] = iparam;
-			break;
-				case "WEST_LIGHT":
-					Properties.Settings.Default["WEST_LIGHT"] = iparam;
-			break;
-				case "NORTHEAST_LIGHT":
-					Properties.Settings.Default["NORTHEAST_LIGHT"] = iparam;
-			break;
-				case "SOUTHWEST_LIGHT":
-					Properties.Settings.Default["SOUTHWEST_LIGHT"] = iparam;
-			break;
-				case "BENCH_24V_1":
-					Properties.Settings.Default["BENCH_24V_1"] = iparam;
-			break;
-				case "BENCH_24V_2":
-					Properties.Settings.Default["BENCH_24V_2"] = iparam;
-			break;
-				case "BENCH_12V_1":
-					Properties.Settings.Default["BENCH_12V_1"] = iparam;
-			break;
-				case "BENCH_12V_2":
-					Properties.Settings.Default["BENCH_12V_2"] = iparam;
-			break;
-				case "BENCH_5V_1":
-					Properties.Settings.Default["BENCH_5V_1"] = iparam;
-			break;
-				case "BENCH_5V_2":
-					Properties.Settings.Default["BENCH_5V_2"] = iparam;
-			break;
-				case "BENCH_3V3_1":
-					Properties.Settings.Default["BENCH_3V3_1"] = iparam;
-			break;
-				case "BENCH_3V3_2":
-					Properties.Settings.Default["BENCH_3V3_2"] = iparam;
-			break;
-				case "BENCH_LIGHT1":
-					Properties.Settings.Default["BENCH_LIGHT1"] = iparam;
-			break;
-				case "BENCH_LIGHT2":
-					Properties.Settings.Default["BENCH_LIGHT2"] = iparam;
-			break;
-				case "CABIN1":
-					Properties.Settings.Default["CABIN1"] = iparam;
-			break;
-				case "CABIN2":
-					Properties.Settings.Default["CABIN2"] = iparam;
-			break;
-				case "CABIN3":
-					Properties.Settings.Default["CABIN3"] = iparam;
-			break;
-				case "CABIN4":
-					Properties.Settings.Default["CABIN4"] = iparam;
-			break;
-				case "CABIN5":
-					Properties.Settings.Default["CABIN5"] = iparam;
-			break;
-				case "CABIN6":
-					Properties.Settings.Default["CABIN6"] = iparam;
-			break;
-				case "CABIN7":
-					Properties.Settings.Default["CABIN7"] = iparam;
-			break;
-				case "CABIN8":
-					Properties.Settings.Default["CABIN8"] = iparam;
-			break;
-				case "COOP1_LIGHT":
-					Properties.Settings.Default["COOP1_LIGHT"] = iparam;
-			break;
-				case "COOP1_HEATER":
-					Properties.Settings.Default["COOP1_HEATER"] = iparam;
-			break;
-				case "COOP2_LIGHT":
-					Properties.Settings.Default["COOP2_LIGHT"] = iparam;
-			break;
-				case "COOP2_HEATER":
-					Properties.Settings.Default["COOP2_HEATER"] = iparam;
-			break;
-				case "WATER_HEATER":
-					Properties.Settings.Default["WATER_HEATER"] = iparam;
-			break;
-				case "BATTERY_HEATER":
-					Properties.Settings.Default["BATTERY_HEATER"] = iparam;
-			break;
-				case "WATER_PUMP":
-					Properties.Settings.Default["WATER_PUMP"] = iparam;
-			break;
-				case "WATER_VALVE1":
-					Properties.Settings.Default["WATER_VALVE1"] = iparam;
-			break;
-				case "WATER_VALVE2":
-					Properties.Settings.Default["WATER_VALVE2"] = iparam;
-			break;
-				case "WATER_VALVE3":
-					Properties.Settings.Default["WATER_VALVE3"] = iparam;
-			break;
-				case "OUTDOOR_LIGHT1":
-					Properties.Settings.Default["OUTDOOR_LIGHT1"] = iparam;
-			break;
-				case "OUTDOOR_LIGHT2":
-					Properties.Settings.Default["OUTDOOR_LIGHT2"] = iparam;
-			break;
-				case "UNUSED150_1":
-					Properties.Settings.Default["UNUSED150_1"] = iparam;
-			break;
-				case "UNUSED150_2":
-					Properties.Settings.Default["UNUSED150_2"] = iparam;
-			break;
-				case "UNUSED150_3":
-					Properties.Settings.Default["UNUSED150_3"] = iparam;
-			break;
-				case "UNUSED150_4":
-					Properties.Settings.Default["UNUSED150_4"] = iparam;
-			break;
-				case "UNUSED150_5":
-					Properties.Settings.Default["UNUSED150_5"] = iparam;
-			break;
-				case "UNUSED150_6":
-					Properties.Settings.Default["UNUSED150_6"] = iparam;
-			break;
-				case "UNUSED150_7":
-					Properties.Settings.Default["UNUSED150_7"] = iparam;
-			break;
-				case "UNUSED150_8":
-					Properties.Settings.Default["UNUSED150_8"] = iparam;
-			break;
-				case "UNUSED150_9":
-					Properties.Settings.Default["UNUSED150_9"] = iparam;
-			break;
-				case "UNUSED150_10":
-					Properties.Settings.Default["UNUSED150_10"] = iparam;
-			break;
-			default:
-					break;
+				break;
+					case "WEST_LIGHT":
+						Properties.Settings.Default["WEST_LIGHT"] = iparam;
+				break;
+					case "NORTHEAST_LIGHT":
+						Properties.Settings.Default["NORTHEAST_LIGHT"] = iparam;
+				break;
+					case "SOUTHWEST_LIGHT":
+						Properties.Settings.Default["SOUTHWEST_LIGHT"] = iparam;
+				break;
+					case "BENCH_24V_1":
+						Properties.Settings.Default["BENCH_24V_1"] = iparam;
+				break;
+					case "BENCH_24V_2":
+						Properties.Settings.Default["BENCH_24V_2"] = iparam;
+				break;
+					case "BENCH_12V_1":
+						Properties.Settings.Default["BENCH_12V_1"] = iparam;
+				break;
+					case "BENCH_12V_2":
+						Properties.Settings.Default["BENCH_12V_2"] = iparam;
+				break;
+					case "BENCH_5V_1":
+						Properties.Settings.Default["BENCH_5V_1"] = iparam;
+				break;
+					case "BENCH_5V_2":
+						Properties.Settings.Default["BENCH_5V_2"] = iparam;
+				break;
+					case "BENCH_3V3_1":
+						Properties.Settings.Default["BENCH_3V3_1"] = iparam;
+				break;
+					case "BENCH_3V3_2":
+						Properties.Settings.Default["BENCH_3V3_2"] = iparam;
+				break;
+					case "BENCH_LIGHT1":
+						Properties.Settings.Default["BENCH_LIGHT1"] = iparam;
+				break;
+					case "BENCH_LIGHT2":
+						Properties.Settings.Default["BENCH_LIGHT2"] = iparam;
+				break;
+					case "CABIN1":
+						Properties.Settings.Default["CABIN1"] = iparam;
+				break;
+					case "CABIN2":
+						Properties.Settings.Default["CABIN2"] = iparam;
+				break;
+					case "CABIN3":
+						Properties.Settings.Default["CABIN3"] = iparam;
+				break;
+					case "CABIN4":
+						Properties.Settings.Default["CABIN4"] = iparam;
+				break;
+					case "CABIN5":
+						Properties.Settings.Default["CABIN5"] = iparam;
+				break;
+					case "CABIN6":
+						Properties.Settings.Default["CABIN6"] = iparam;
+				break;
+					case "CABIN7":
+						Properties.Settings.Default["CABIN7"] = iparam;
+				break;
+					case "CABIN8":
+						Properties.Settings.Default["CABIN8"] = iparam;
+				break;
+					case "COOP1_LIGHT":
+						Properties.Settings.Default["COOP1_LIGHT"] = iparam;
+				break;
+					case "COOP1_HEATER":
+						Properties.Settings.Default["COOP1_HEATER"] = iparam;
+				break;
+					case "COOP2_LIGHT":
+						Properties.Settings.Default["COOP2_LIGHT"] = iparam;
+				break;
+					case "COOP2_HEATER":
+						Properties.Settings.Default["COOP2_HEATER"] = iparam;
+				break;
+					case "WATER_HEATER":
+						Properties.Settings.Default["WATER_HEATER"] = iparam;
+				break;
+					case "BATTERY_HEATER":
+						Properties.Settings.Default["BATTERY_HEATER"] = iparam;
+				break;
+					case "WATER_PUMP":
+						Properties.Settings.Default["WATER_PUMP"] = iparam;
+				break;
+					case "WATER_VALVE1":
+						Properties.Settings.Default["WATER_VALVE1"] = iparam;
+				break;
+					case "WATER_VALVE2":
+						Properties.Settings.Default["WATER_VALVE2"] = iparam;
+				break;
+					case "WATER_VALVE3":
+						Properties.Settings.Default["WATER_VALVE3"] = iparam;
+				break;
+					case "OUTDOOR_LIGHT1":
+						Properties.Settings.Default["OUTDOOR_LIGHT1"] = iparam;
+				break;
+					case "OUTDOOR_LIGHT2":
+						Properties.Settings.Default["OUTDOOR_LIGHT2"] = iparam;
+				break;
+					case "UNUSED150_1":
+						Properties.Settings.Default["UNUSED150_1"] = iparam;
+				break;
+					case "UNUSED150_2":
+						Properties.Settings.Default["UNUSED150_2"] = iparam;
+				break;
+					case "UNUSED150_3":
+						Properties.Settings.Default["UNUSED150_3"] = iparam;
+				break;
+					case "UNUSED150_4":
+						Properties.Settings.Default["UNUSED150_4"] = iparam;
+				break;
+					case "UNUSED150_5":
+						Properties.Settings.Default["UNUSED150_5"] = iparam;
+				break;
+					case "UNUSED150_6":
+						Properties.Settings.Default["UNUSED150_6"] = iparam;
+				break;
+					case "UNUSED150_7":
+						Properties.Settings.Default["UNUSED150_7"] = iparam;
+				break;
+					case "UNUSED150_8":
+						Properties.Settings.Default["UNUSED150_8"] = iparam;
+				break;
+					case "UNUSED150_9":
+						Properties.Settings.Default["UNUSED150_9"] = iparam;
+				break;
+					case "UNUSED150_10":
+						Properties.Settings.Default["UNUSED150_10"] = iparam;
+				break;
+				default:
+						break;
+			}
+			Properties.Settings.Default.Save();
+			if (dont_send_extra)
+				return iparam;
+
+			string iparam_str = "";
+			if (iparam)
+				iparam_str = "1 ";
+			else iparam_str = "0 ";
+			string send_cmd = iparam_str + which;
+			string msg = "EXTRA_WINCL_SYNC";
+			int icmd = GetCmdIndexI(msg);
+
+			Send_ClCmd(icmd, dest_index, send_cmd);
+			//Send_ClCmd(icmd, 0, send_cmd);
+			return iparam;
 		}
-		Properties.Settings.Default.Save();
-		return iparam;
-	}
 		public bool Change_PortCmd(int msg, int index, bool iparam)
 		{
 			Send_ClCmd(msg, index, iparam);
-			return SetProperties(iparam, GetName(msg));
+			return SetProperties(iparam, GetName(msg),false);
 		}
 		public bool Change_PortCmd(int msg, int index)
 		{
 			bool current_state = GetState(msg);
 			current_state = !current_state;
 			Send_ClCmd(msg, index, current_state);
-			return SetProperties(current_state, GetName(msg));
+			return SetProperties(current_state, GetName(msg),false);
 		}
 		public bool GetState(int msg)
 		{

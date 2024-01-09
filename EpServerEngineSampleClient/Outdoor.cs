@@ -28,11 +28,12 @@ namespace EpServerEngineSampleClient
 		List<String> on_label_list = new List<String>();
 		//List<String> off_label_list = new List<String>();
 		public System.Collections.Generic.List<ButtonList> button_list;
-		public Outdoor(INetworkClient client)
+		public Outdoor(INetworkClient client, bool primary_wincl)
 		{
 			InitializeComponent();
 			m_client = client;
 			svrcmd.SetClient(m_client);
+			svrcmd.SetPrimaryWinCl(primary_wincl);
 			on_label_list.Add("COOP1_LIGHT");
 			on_label_list.Add("COOP1_HEATER");
 			on_label_list.Add("COOP2_LIGHT");

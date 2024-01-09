@@ -70,6 +70,7 @@
 			this.clearAlertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.assignFunctionKeyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.sendMsg2OtherWinclToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.clientListActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.showTimeUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.getTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -97,7 +98,7 @@
 			this.label5 = new System.Windows.Forms.Label();
 			this.lbFileNames = new System.Windows.Forms.ListBox();
 			this.btnDeleteFile = new System.Windows.Forms.Button();
-			this.sendMsg2OtherWinclToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.send2ndMsgToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -435,7 +436,8 @@
             this.clearAlertToolStripMenuItem,
             this.assignFunctionKeyToolStripMenuItem,
             this.exitToolStripMenuItem,
-            this.sendMsg2OtherWinclToolStripMenuItem});
+            this.sendMsg2OtherWinclToolStripMenuItem,
+            this.send2ndMsgToolStripMenuItem});
 			this.utilsToolStripMenuItem.Name = "utilsToolStripMenuItem";
 			this.utilsToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
 			this.utilsToolStripMenuItem.Text = "Utils";
@@ -488,6 +490,13 @@
 			this.exitToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
 			this.exitToolStripMenuItem.Text = "Exit";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+			// 
+			// sendMsg2OtherWinclToolStripMenuItem
+			// 
+			this.sendMsg2OtherWinclToolStripMenuItem.Name = "sendMsg2OtherWinclToolStripMenuItem";
+			this.sendMsg2OtherWinclToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.sendMsg2OtherWinclToolStripMenuItem.Text = "Send Msg 2 other wincl";
+			this.sendMsg2OtherWinclToolStripMenuItem.Click += new System.EventHandler(this.sendMsg2OtherWinclToolStripMenuItem_Click);
 			// 
 			// clientListActionToolStripMenuItem
 			// 
@@ -711,12 +720,12 @@
 			this.btnDeleteFile.UseVisualStyleBackColor = true;
 			this.btnDeleteFile.Click += new System.EventHandler(this.btnDeleteFile_Click);
 			// 
-			// sendMsg2OtherWinclToolStripMenuItem
+			// send2ndMsgToolStripMenuItem
 			// 
-			this.sendMsg2OtherWinclToolStripMenuItem.Name = "sendMsg2OtherWinclToolStripMenuItem";
-			this.sendMsg2OtherWinclToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-			this.sendMsg2OtherWinclToolStripMenuItem.Text = "Send Msg 2 other wincl";
-			this.sendMsg2OtherWinclToolStripMenuItem.Click += new System.EventHandler(this.sendMsg2OtherWinclToolStripMenuItem_Click);
+			this.send2ndMsgToolStripMenuItem.Name = "send2ndMsgToolStripMenuItem";
+			this.send2ndMsgToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+			this.send2ndMsgToolStripMenuItem.Text = "send 2nd msg";
+			this.send2ndMsgToolStripMenuItem.Click += new System.EventHandler(this.send2ndMsgToolStripMenuItem_Click);
 			// 
 			// FrmSampleClient
 			// 
@@ -835,6 +844,7 @@
 		private System.Windows.Forms.Button btnDeleteFile;
 		private System.Windows.Forms.ToolStripMenuItem getTemp5ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem sendMsg2OtherWinclToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem send2ndMsgToolStripMenuItem;
 	}
 }
 

@@ -87,15 +87,9 @@ namespace EpServerEngineSampleClient
         int graph_timer = 0;
         int reduce = 0;
         int noRecs;
-        /*
-        string this_ip_address = "";
-        string this_machine_name = "";
-        string other_ip_address = "";
-        string other_machine_name = "";
-        */
         List<int> temp_list_int = null;
         int avg_window = 3;
-
+        bool primary_wincl;
         /* remove the min/max/close buttons in the 'frame' */
         /* or you can just set 'Control Box' to false in the properties pane for the form */
         private const int CP_NOCLOSE_BUTTON = 0x200;
@@ -173,7 +167,7 @@ namespace EpServerEngineSampleClient
                 client_params.Add(item);
                 item = null;
             }
-
+            
             clients_avail = new List<ClientsAvail>();
             ClientsAvail item3 = null;
             //AddMsg("adding clients avail...");
@@ -186,15 +180,6 @@ namespace EpServerEngineSampleClient
             xmlFile = XmlReader.Create(xml_clients_avail_location);
             ds2.ReadXml(xmlFile);
             int lb_index = 0;
-            garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
-            testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client);
-            cabin = new Cabin(m_client);
-            outdoor = new Outdoor(m_client);
-            timer_schedule = new TimerSchedule("c:\\users\\daniel\\dev\\cdata.xml", m_client);
-            ds1620 = new DS1620Mgt(m_client);
-            btnFnc1.Enabled = false;
-            btnFnc2.Enabled = false;
-            btnFnc3.Enabled = false;
 
             foreach (DataRow dr in ds2.Tables[0].Rows)
             {
@@ -216,11 +201,30 @@ namespace EpServerEngineSampleClient
                 item3.time_string = "";
                 item3.flag = 0;
                 clients_avail.Add(item3);
+                //AddMsg(item3.ip_addr + " " + item3.label);
+
                 item3 = null;
                 lb_index++;
             }
+            //AddMsg(svrcmd.GetPrimaryWinCl().ToString());
+            //AddMsg(clients_avail[0].ip_addr + " " + clients_avail[1].ip_addr);
 
             bool found = false;
+            if (clients_avail[0].ip_addr != "149")
+                primary_wincl = false;
+            else primary_wincl = true;
+            svrcmd.SetPrimaryWinCl(primary_wincl);
+            //AddMsg("dest: " + svrcmd.GetDestIndex().ToString());
+
+            garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client, primary_wincl);
+            testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client, primary_wincl);
+            cabin = new Cabin(m_client, primary_wincl);
+            outdoor = new Outdoor(m_client, primary_wincl);
+            timer_schedule = new TimerSchedule("c:\\users\\daniel\\dev\\cdata.xml", m_client);
+            ds1620 = new DS1620Mgt(m_client);
+            btnFnc1.Enabled = false;
+            btnFnc2.Enabled = false;
+            btnFnc3.Enabled = false;
 
             for (int i = 0; i < client_params.Count(); i++)
             {
@@ -515,6 +519,7 @@ namespace EpServerEngineSampleClient
             System.Buffer.BlockCopy(bytes, 2, chars2, 0, bytes.Length - 2);
             ret = new string(chars2);
             string str = svrcmd.GetName(type_msg);
+            bool iparam;
             int temp = 0;
 
             switch (str)
@@ -539,6 +544,34 @@ namespace EpServerEngineSampleClient
                     break;
 
                 case "EXTRA_WINCL_SYNC":
+                    words = ret.Split(' ');
+                    i = 0;
+                    substr = "";
+                    iparam = false;
+                    //AddMsg(words[0] + " " + words[1]);
+                    foreach(var word in words)
+					{
+                        switch(i)
+						{
+                            case 0:
+                                if (word == "1")
+                                    iparam = true;
+                                else iparam = false;
+                                //AddMsg(iparam.ToString());
+                                //AddMsg("1: " + word);
+                                break;
+                            case 1:
+                                substr = word;
+                                //AddMsg("2: " + word);
+                                break;
+                            default:
+                                //AddMsg(word);
+                                break;
+						}
+                        i++;
+					}
+                    svrcmd.SetProperties(iparam, substr,true);
+                    //AddMsg("set prop: " + substr + " " + iparam.ToString());
                     break;
 
                 case "DS1620_MSG":
@@ -2091,10 +2124,18 @@ namespace EpServerEngineSampleClient
 
 		private void sendMsg2OtherWinclToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            int index = 1;
+            int index = 0;
             string msg = "SEND_MESSAGE";
             int icmd = svrcmd.GetCmdIndexI(msg);
             svrcmd.Send_ClCmd(icmd, index, "hello test");
+        }
+
+		private void send2ndMsgToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            int index = 1;
+            string msg = "SEND_MESSAGE";
+            int icmd = svrcmd.GetCmdIndexI(msg);
+            svrcmd.Send_ClCmd(icmd, index, "test 1234");
         }
 	}
 }

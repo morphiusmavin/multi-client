@@ -31,11 +31,12 @@ namespace EpServerEngineSampleClient
 		private bool m_pause = false;
 		List<String> on_label_list = new List<String>();
 		public System.Collections.Generic.List<ButtonList> button_list;
-		public TestBench(string xml_file_location, INetworkClient client)
+		public TestBench(string xml_file_location, INetworkClient client, bool primary_wincl)
 		{
 			InitializeComponent();
 			m_client = client;
 			svrcmd.SetClient(m_client);
+			svrcmd.SetPrimaryWinCl(primary_wincl);
 			
 			XmlReader xmlfile = null;
 			DataSet ds = new DataSet();

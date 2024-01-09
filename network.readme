@@ -31,11 +31,7 @@ todo:
 	the dialog 
 19) client_table[] is not updated in sched as far as who's logged in (client_table[].socket)
 20) if 2 win clients up (see #2) then there should be a way the buttons can be toggled to reflect what's 
-	been changed on the other win client - one cmd is sent from 2nd win cl to SECOND_WINDOWS7 and tells 
-	it what the ip address and machine name is - then a response is sent back telling the 2nd win cl its 
-	ok to start up. Another cmd tells the other win cl which property was changed if a button was pressed 
-	Each machine that has a win cl must have a c:\users\daniel\ClientProgramData subdirectory that has 
-	a text file called: this_ip_address.txt which has the ip address and machine name. 
+	been changed on the other win client
 	
 	the server (146) when starting up reads a file called: address_list.txt (in assign_client_table.c) 
 	this specifies the 1st and 2nd windows clients along with all the rest of the TS-4600 clients.
