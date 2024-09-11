@@ -207,15 +207,15 @@ namespace EpServerEngineSampleClient
                 lb_index++;
             }
             //AddMsg(svrcmd.GetPrimaryWinCl().ToString());
-            AddMsg(clients_avail[0].ip_addr + " " + clients_avail[1].ip_addr);
+            //AddMsg(clients_avail[0].ip_addr + " " + clients_avail[1].ip_addr);
 
             bool found = false;
             if (clients_avail[0].ip_addr != "158")
                 primary_wincl = false;
             else primary_wincl = true;
-            AddMsg("primary_wincl: " + primary_wincl);
+            //AddMsg("primary_wincl: " + primary_wincl);
             svrcmd.SetPrimaryWinCl(primary_wincl);
-            AddMsg("dest: " + svrcmd.GetDestIndex().ToString());
+            //AddMsg("dest: " + svrcmd.GetDestIndex().ToString());
 
             garageform = new GarageForm("c:\\users\\daniel\\dev\\adc_list.xml", m_client, primary_wincl);
             testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client, primary_wincl);
@@ -235,7 +235,7 @@ namespace EpServerEngineSampleClient
                     m_hostname = cbIPAdress.Text = client_params[i].IPAdress;
                     selected_address = i;
                     m_portno = tbPort.Text = client_params[i].PortNo.ToString();
-                    AddMsg("primary: " + m_hostname + " " + m_portno.ToLower());
+                    //AddMsg("primary: " + m_hostname + " " + m_portno.ToLower());
                     found = true;
                 }
                 cbIPAdress.Items.Add(client_params[i].IPAdress);
@@ -414,7 +414,7 @@ namespace EpServerEngineSampleClient
             {
                 if (m_client.IsConnectionAlive)
                 {
-                    //tbConnected.Text = "connected";     // comment all these out in debug
+                    tbConnected.Text = "connected";     // comment all these out in debug
                                                         //            cblistCommon.Enabled = true;      this one stays commneted out
                     //btnConnect.Text = "Disconnect";
                     cbIPAdress.Enabled = false;     /// from here to MPH should be commented out when in debugger
@@ -578,7 +578,7 @@ namespace EpServerEngineSampleClient
                 case "DS1620_MSG":
                     if (updateGraph)
                         break;
-                    AddMsg(ret);
+                    //AddMsg(ret);
                     TemperatureClass tc = new TemperatureClass();
                     words = ret.Split(' ');
                     i = 0;
@@ -614,7 +614,7 @@ namespace EpServerEngineSampleClient
                         temp /= avg_window;
                         //tc.temp = temp; 
                         temp_list_int.Add(temp);
-                        AddMsg(temp.ToString());
+                        //AddMsg(temp.ToString());
                         if (avg_window < 20)
                             avg_window++;
                     } else temp_list_int.Add(tc.temp);
@@ -633,7 +633,7 @@ namespace EpServerEngineSampleClient
                         if (chart_max < tc2)
                             chart_max = tc2;
                     }
-                    AddMsg("..count: " + temp_list_int.Count().ToString());
+                    //AddMsg("..count: " + temp_list_int.Count().ToString());
                     if (chart_min == chart_max)
                     {
                         chart_min = chart_min - 2;
@@ -735,7 +735,7 @@ namespace EpServerEngineSampleClient
                     //AddMsg(ret);
                     string clmsg = " ";
                     bool avail = false;
-                    AddMsg("SEND_CLIENT_LIST ");
+                    //AddMsg("SEND_CLIENT_LIST ");
                     foreach (var word in words)
                     {
                         switch (i)
@@ -753,7 +753,7 @@ namespace EpServerEngineSampleClient
                                         //if(clients_avail[i].socket < 0)
                                         //avail = true;
                                 sock = clients_avail[j].socket = int.Parse(word);
-                                AddMsg(clients_avail[j].socket.ToString());
+                                //AddMsg(clients_avail[j].socket.ToString());
                                 clmsg += word + " " + sock.ToString();
                                 //if(avail)
                                 RedrawClientListBox();
