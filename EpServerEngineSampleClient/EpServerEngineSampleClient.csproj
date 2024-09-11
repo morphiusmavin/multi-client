@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EpServerEngineSampleClient</RootNamespace>
     <AssemblyName>EpServerEngineSampleClient</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -30,37 +31,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EpLibrary.cs, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\EpLibrary.cs\EpLibrary.cs\bin\Debug\EpLibrary.cs.dll</HintPath>
+    <Reference Include="EpLibrary.cs">
+      <HintPath>..\..\..\..\..\Daniel\dev\EpServerClient\EpLibrary.cs\EpLibrary.cs\bin\Release\EpLibrary.cs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
@@ -76,29 +52,21 @@
     <Compile Include="AddRecord.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddRecord.Designer.cs">
-      <DependentUpon>AddRecord.cs</DependentUpon>
-    </Compile>
+    <Compile Include="AddRecord.Designer.cs" />
     <Compile Include="ButtonList.cs" />
     <Compile Include="Cabin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Cabin.Designer.cs">
-      <DependentUpon>Cabin.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Cabin.Designer.cs" />
     <Compile Include="Cdata.cs" />
     <Compile Include="Child_Scrolling_List.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Child_Scrolling_List.Designer.cs">
-      <DependentUpon>Child_Scrolling_List.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Child_Scrolling_List.Designer.cs" />
     <Compile Include="ClientDest.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ClientDest.Designer.cs">
-      <DependentUpon>ClientDest.cs</DependentUpon>
-    </Compile>
+    <Compile Include="ClientDest.Designer.cs" />
     <Compile Include="ClientParams.cs" />
     <Compile Include="ClientsAvail.cs" />
     <Compile Include="ConfigParams.cs" />
@@ -106,52 +74,51 @@
     <Compile Include="DeleteRec.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DeleteRec.Designer.cs">
-      <DependentUpon>DeleteRec.cs</DependentUpon>
-    </Compile>
+    <Compile Include="DeleteRec.Designer.cs" />
     <Compile Include="DlgSetParams.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DlgSetParams.Designer.cs">
-      <DependentUpon>DlgSetParams.cs</DependentUpon>
-    </Compile>
+    <Compile Include="DlgSetParams.Designer.cs" />
     <Compile Include="DS1620Mgt.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DS1620Mgt.Designer.cs">
-      <DependentUpon>DS1620Mgt.cs</DependentUpon>
-    </Compile>
+    <Compile Include="DS1620Mgt.Designer.cs" />
     <Compile Include="EasyButtonForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EasyButtonForm.Designer.cs">
-      <DependentUpon>EasyButtonForm.cs</DependentUpon>
-    </Compile>
+    <Compile Include="EasyButtonForm.Designer.cs" />
     <Compile Include="FrmSampleClient.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmSampleClient.Designer.cs">
       <DependentUpon>FrmSampleClient.cs</DependentUpon>
     </Compile>
+    <Compile Include="GarageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GarageForm.Designer.cs" />
     <Compile Include="GraphParams.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GraphParams.Designer.cs">
-      <DependentUpon>GraphParams.cs</DependentUpon>
-    </Compile>
+    <Compile Include="GraphParams.Designer.cs" />
+    <Compile Include="Mp3File.cs" />
     <Compile Include="Outdoor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Outdoor.Designer.cs">
-      <DependentUpon>Outdoor.cs</DependentUpon>
+    <Compile Include="Outdoor.Designer.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerCmds.cs" />
+    <Compile Include="SetNextClient.cs">
+      <SubType>Form</SubType>
     </Compile>
+    <Compile Include="SetNextClient.Designer.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Settings.Designer.cs">
-      <DependentUpon>Settings.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Settings.Designer.cs" />
     <Compile Include="SettingsClass.cs" />
+    <Compile Include="SListTypes.cs" />
     <Compile Include="SunriseSunsetHoursMinutes.cs" />
     <Compile Include="Sunrise_lines.cs" />
     <Compile Include="Sunrise_sunset.cs" />
@@ -159,87 +126,34 @@
     <Compile Include="TestBench.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TestBench.designer.cs">
-      <DependentUpon>TestBench.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SetNextClient.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SetNextClient.Designer.cs">
-      <DependentUpon>SetNextClient.cs</DependentUpon>
-    </Compile>
+    <Compile Include="TestBench.designer.cs" />
     <Compile Include="TimerSchedule.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TimerSchedule.Designer.cs">
-      <DependentUpon>TimerSchedule.cs</DependentUpon>
-    </Compile>
+    <Compile Include="TimerSchedule.Designer.cs" />
+    <Compile Include="UIFormat.cs" />
     <Compile Include="WifiIOT.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WifiIOT.Designer.cs">
-      <DependentUpon>WifiIOT.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GarageForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GarageForm.designer.cs">
-      <DependentUpon>GarageForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Mp3File.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServerCmds.cs" />
-    <Compile Include="SListTypes.cs" />
-    <Compile Include="UIFormat.cs" />
+    <Compile Include="WifiIOT.Designer.cs" />
     <Compile Include="WinCLMsg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WinCLMsg.Designer.cs">
-      <DependentUpon>WinCLMsg.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="AddRecord.resx">
-      <DependentUpon>AddRecord.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Cabin.resx">
-      <DependentUpon>Cabin.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Child_Scrolling_List.resx">
-      <DependentUpon>Child_Scrolling_List.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ClientDest.resx">
-      <DependentUpon>ClientDest.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DeleteRec.resx">
-      <DependentUpon>DeleteRec.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DlgSetParams.resx">
-      <DependentUpon>DlgSetParams.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DS1620Mgt.resx">
-      <DependentUpon>DS1620Mgt.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="EasyButtonForm.resx">
-      <DependentUpon>EasyButtonForm.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="WinCLMsg.Designer.cs" />
+    <EmbeddedResource Include="AddRecord.resx" />
+    <EmbeddedResource Include="Cabin.resx" />
+    <EmbeddedResource Include="Child_Scrolling_List.resx" />
+    <EmbeddedResource Include="ClientDest.resx" />
+    <EmbeddedResource Include="DeleteRec.resx" />
+    <EmbeddedResource Include="DlgSetParams.resx" />
+    <EmbeddedResource Include="DS1620Mgt.resx" />
+    <EmbeddedResource Include="EasyButtonForm.resx" />
     <EmbeddedResource Include="FrmSampleClient.resx">
       <DependentUpon>FrmSampleClient.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GraphParams.resx">
-      <DependentUpon>GraphParams.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Outdoor.resx">
-      <DependentUpon>Outdoor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Settings.resx">
-      <DependentUpon>Settings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestBench.resx">
-      <DependentUpon>TestBench.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GarageForm.resx">
-      <DependentUpon>GarageForm.cs</DependentUpon>
-    </EmbeddedResource>
+    <EmbeddedResource Include="GarageForm.resx" />
+    <EmbeddedResource Include="GraphParams.resx" />
+    <EmbeddedResource Include="Outdoor.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -250,22 +164,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SetNextClient.resx">
-      <DependentUpon>SetNextClient.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TimerSchedule.resx">
-      <DependentUpon>TimerSchedule.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WifiIOT.resx">
-      <DependentUpon>WifiIOT.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WinCLMsg.resx">
-      <DependentUpon>WinCLMsg.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
-    <None Include="packages.config" />
+    <EmbeddedResource Include="SetNextClient.resx" />
+    <EmbeddedResource Include="Settings.resx" />
+    <EmbeddedResource Include="TestBench.resx" />
+    <EmbeddedResource Include="TimerSchedule.resx" />
+    <EmbeddedResource Include="WifiIOT.resx" />
+    <EmbeddedResource Include="WinCLMsg.resx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

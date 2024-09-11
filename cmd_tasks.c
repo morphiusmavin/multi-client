@@ -591,7 +591,7 @@ printf("\n");
 
 						sprintf(tempx, "%d %0d %02d:%02d %d",this_client_id, dtp->sensor_no, dtp->hour, dtp->minute, ival);
 						//sprintf(tempx,"%d:%d:%d - %sxxx",dtp->hour, dtp->minute, dtp->second, lookup_raw_data(dtp->value));
-						send_sock_msg(tempx, strlen(tempx), cmd, _149);
+						send_sock_msg(tempx, strlen(tempx), cmd, _158);
 						//printf("test: %s\n",tempx);
 						//uSleep(0,TIME_DELAY);
 						uSleep(0,TIME_DELAY/4);
@@ -739,7 +739,7 @@ printf("\n");
 							//printf("%s\n",tempx);
 							cmd = REPLY_CLLIST;
 							msg_len = strlen(tempx);
-							send_sock_msg(tempx, msg_len, cmd, _149);
+							send_sock_msg(tempx, msg_len, cmd, _158);
 							uSleep(0,TIME_DELAY/2);
 						}
 					}
@@ -797,7 +797,7 @@ printf("\n");
 					cmd = SEND_MESSAGE;
 					sprintf(tempx,"k: %d j: %dxxx",k,j);
 					msg_len = strlen(tempx);
-					send_sock_msg(tempx, msg_len, cmd, _149);
+					send_sock_msg(tempx, msg_len, cmd, _158);
 					printf("%s\n",tempx);
 					break;
 
@@ -806,7 +806,7 @@ printf("\n");
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");
-					send_sock_msg(tempx, msg_len, cmd, _149);
+					send_sock_msg(tempx, msg_len, cmd, _158);
 					break;
 
 				case SET_TIME:
@@ -935,7 +935,7 @@ printf("\n");
 					msg_len = strlen(tempx);
 					//printf("msg_len: %d\n",msg_len);
 					cmd = SEND_MESSAGE;
-					send_sock_msg(tempx, msg_len, cmd, _149);
+					send_sock_msg(tempx, msg_len, cmd, _158);
 					break;
 
 				case BAD_MSG:

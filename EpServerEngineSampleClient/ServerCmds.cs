@@ -118,10 +118,13 @@ namespace EpServerEngineSampleClient
 		public void SetPrimaryWinCl(bool set)
 		{
 			primary_wincl = set;
+
 			if (primary_wincl)
 				dest_index = 1;
 			else
 				dest_index = 0;
+
+			//dest_index = 1;
 		}
 		public bool GetPrimaryWinCl()
 		{

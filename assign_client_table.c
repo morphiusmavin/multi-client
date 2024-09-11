@@ -13,25 +13,25 @@ void assign_client_table(void)
 	FILE *fp;
 	char s1[20], s2[20];
 	char fname[] = "address_list.txt";
-	if(client_table[_149].qkey != 0)
+	if(client_table[_158].qkey != 0)
 		return;
 	memset(client_table,0,sizeof(CLIENT_TABLE)*MAX_CLIENTS);
 // 0
-	strcpy(client_table[_149].ip,"149\0");
-	strcpy(client_table[_149].label,"Second_Windows7\0");
-	client_table[_149].socket = -1;
-	client_table[_149].type = WINDOWS_CLIENT;
-	client_table[_149].qkey = 1235;
-	client_table[_149].qid = 0;
-	client_table[_149].task_id = 0;
+	strcpy(client_table[_158].ip,"158\0");
+	strcpy(client_table[_158].label,"WINDOWS-11A\0");
+	client_table[_158].socket = -1;
+	client_table[_158].type = WINDOWS_CLIENT;
+	client_table[_158].qkey = 1235;
+	client_table[_158].qid = 0;
+	client_table[_158].task_id = 0;
 // 1
-	strcpy(client_table[_159].ip,"159\0");
-	strcpy(client_table[_159].label,"Win7-x64\0");
-	client_table[_159].socket = -1;
-	client_table[_159].type = WINDOWS_CLIENT;
-	client_table[_159].qkey = 1237;				// the qkey and qid are strictly 
-	client_table[_159].qid = 0;					// for linux messaging and the windows clients 
-	client_table[_159].task_id = 1;				// don't use this at all 
+	strcpy(client_table[_248].ip,"248\0");
+	strcpy(client_table[_248].label,"WINDOWS-11B\00");
+	client_table[_248].socket = -1;
+	client_table[_248].type = WINDOWS_CLIENT;
+	client_table[_248].qkey = 1237;				// the qkey and qid are strictly 
+	client_table[_248].qid = 0;					// for linux messaging and the windows clients 
+	client_table[_248].task_id = 1;				// don't use this at all 
 // 2
 	strcpy(client_table[_154].ip,"154\0");				// cabin
 	strcpy(client_table[_154].label,"Client154\0");

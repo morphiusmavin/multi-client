@@ -59,8 +59,8 @@ enum client_types
 
 enum client_list
 {
-	_149,			// Second_Windows7
-	_159,			// Win7-x64
+	_158,			// WINDOWS-11A
+	_248,			// WINDOWS-11B
 	_154,			// Cabin
 	_147,			// Testbench
 	_150,			// Outdoor

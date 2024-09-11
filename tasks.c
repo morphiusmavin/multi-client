@@ -771,7 +771,7 @@ UCHAR poll_ds1620_task(int test)
 			if(1)
 			{
 				printf("%s\n",sock_msg);
-				send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _149);	// to win cl
+				send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _158);	// to win cl
 			}
 			//uSleep(0,TIME_DELAY/16);
 			//send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, 4);
@@ -1148,7 +1148,7 @@ void display_sort()
 			uSleep(0,TIME_DELAY/4);			
 			msg_len = strlen(sock_msg);
 			//printf("%d ",msg_len);
-			send_sock_msg((UCHAR *)&sock_msg[0], msg_len, SEND_MESSAGE, _149);	// to win cl
+			send_sock_msg((UCHAR *)&sock_msg[0], msg_len, SEND_MESSAGE, _158);	// to win cl
 			//printf("%s\n",sock_msg);
 		}
 	}
