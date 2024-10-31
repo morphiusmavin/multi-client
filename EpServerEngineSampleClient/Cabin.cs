@@ -64,7 +64,7 @@ namespace EpServerEngineSampleClient
 			}
 			tbStatus.Text = "300";
 		}
-		private void ToggleButton(int which, bool state)
+		public void ToggleButton(int which, bool state)
 		{
 			if (state)
 			{
@@ -77,6 +77,20 @@ namespace EpServerEngineSampleClient
 				button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
 			}
 		}
+		public void ToggleButton(int which)
+		{
+			if (SendCmd(which))
+			{
+				button_list[which].Ctl.Text = "ON";
+				button_list[which].Ctl.BackColor = Color.Aqua;
+			}
+			else
+			{
+				button_list[which].Ctl.Text = "OFF";
+				button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			}
+		}
+
 		private bool SendCmd(int which)
 		{
 			string cmd = on_label_list[which];
@@ -94,35 +108,35 @@ namespace EpServerEngineSampleClient
 		}
 		private void btn1_Click(object sender, EventArgs e)
 		{
-			ToggleButton(0, SendCmd(0));
+			ToggleButton(0, SendCmd(0)); // south
 		}
 		private void btn2_Click(object sender, EventArgs e)
 		{
-			ToggleButton(1, SendCmd(1));
+			ToggleButton(1, SendCmd(1));  // unused
 		}
 		private void btn3_Click(object sender, EventArgs e)
 		{
-			ToggleButton(2, SendCmd(2));
+			ToggleButton(2, SendCmd(2));  // unused
 		}
 		private void btn4_Click(object sender, EventArgs e)
 		{
-			ToggleButton(3, SendCmd(3));
+			ToggleButton(3, SendCmd(3));  // kitchen
 		}
 		private void btn5_Click(object sender, EventArgs e)
 		{
-			ToggleButton(4, SendCmd(4));
+			ToggleButton(4, SendCmd(4));  // door
 		}
 		private void btn6_Click(object sender, EventArgs e)
 		{
-			ToggleButton(5, SendCmd(5));
+			ToggleButton(5, SendCmd(5));  // east 
 		}
 		private void btn7_Click(object sender, EventArgs e)
 		{
-			ToggleButton(6, SendCmd(6));
+			ToggleButton(6, SendCmd(6));  // unused 
 		}
 		private void btn8_Click(object sender, EventArgs e)
 		{
-			ToggleButton(7, SendCmd(7));
+			ToggleButton(7, SendCmd(7));  // unused
 		}
 		private void LoadEvent(object sender, EventArgs e)
 		{

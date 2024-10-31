@@ -13,8 +13,8 @@ namespace EpServerEngineSampleClient
 	public partial class GraphParams : Form
 	{
 		int chart_noRec = 10;
-		decimal chart_min = 0;		// might want to use these in the future
-		decimal chart_max = 100;
+		//decimal chart_min = 0;		// might want to use these in the future
+		//decimal chart_max = 100;
 		int m_AxisX_Interval = 30;
 		int m_YValuesPerPoint = 10;
 		int m_MarkerStep = 10;

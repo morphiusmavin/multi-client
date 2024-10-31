@@ -1148,6 +1148,7 @@ namespace EpServerEngineSampleClient
 
 		private void btnScrollDown_Click(object sender, EventArgs e)
 		{
+			/*
 			string cmd = "LCD_SCROLL_DOWN";
 			byte[] param = BitConverter.GetBytes(cfg.si_high_rev_limit);
 			byte[] bytes = new byte[param.Count() + 2];
@@ -1155,6 +1156,7 @@ namespace EpServerEngineSampleClient
 			System.Buffer.BlockCopy(param, 0, bytes, 2, param.Count());
 			Packet packet = new Packet(bytes, 0, bytes.Count(), false);
 			m_client.Send(packet);
+			*/
 		}
 
 		private void btnShiftLeft_Click(object sender, EventArgs e)

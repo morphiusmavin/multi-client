@@ -59,7 +59,7 @@ namespace EpServerEngineSampleClient
         {
             int type_msg;
             string ret = null;
-            int i = 0;
+            //int i = 0;
 
             char[] chars = new char[bytes.Length / sizeof(char) + 2];
             char[] chars2 = new char[bytes.Length / sizeof(char)];

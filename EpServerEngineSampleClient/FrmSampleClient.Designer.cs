@@ -97,11 +97,20 @@
 			this.timer4 = new System.Windows.Forms.Timer(this.components);
 			this.tbNoRecs = new System.Windows.Forms.TextBox();
 			this.label5 = new System.Windows.Forms.Label();
-			this.lbFileNames = new System.Windows.Forms.ListBox();
-			this.btnDeleteFile = new System.Windows.Forms.Button();
+			this.chbxGarageEast = new System.Windows.Forms.CheckBox();
+			this.chbxGarageMiddle = new System.Windows.Forms.CheckBox();
+			this.chbxGarageSW = new System.Windows.Forms.CheckBox();
+			this.chbxCabinKitchen = new System.Windows.Forms.CheckBox();
+			this.chbxCabinSouth = new System.Windows.Forms.CheckBox();
+			this.chbxCabinEast = new System.Windows.Forms.CheckBox();
+			this.btnWaterTimeShort = new System.Windows.Forms.Button();
+			this.btnWaterTimeMedium = new System.Windows.Forms.Button();
+			this.btnWaterTimeLong = new System.Windows.Forms.Button();
+			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
+			this.groupBox2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tbReceived
@@ -707,25 +716,122 @@
 			this.label5.TabIndex = 96;
 			this.label5.Text = "No. Recs.";
 			// 
-			// lbFileNames
+			// chbxGarageEast
 			// 
-			this.lbFileNames.FormattingEnabled = true;
-			this.lbFileNames.Location = new System.Drawing.Point(973, 53);
-			this.lbFileNames.Name = "lbFileNames";
-			this.lbFileNames.Size = new System.Drawing.Size(197, 264);
-			this.lbFileNames.TabIndex = 97;
-			this.lbFileNames.SelectedIndexChanged += new System.EventHandler(this.lbFileNames_SelectedIndexChanged);
-			this.lbFileNames.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lbFileNames_GetFile);
+			this.chbxGarageEast.AutoSize = true;
+			this.chbxGarageEast.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chbxGarageEast.Location = new System.Drawing.Point(993, 44);
+			this.chbxGarageEast.Name = "chbxGarageEast";
+			this.chbxGarageEast.Size = new System.Drawing.Size(130, 24);
+			this.chbxGarageEast.TabIndex = 103;
+			this.chbxGarageEast.Text = "Garage East";
+			this.chbxGarageEast.UseVisualStyleBackColor = true;
+			this.chbxGarageEast.CheckedChanged += new System.EventHandler(this.chbxGarageEast_CheckedChanged);
 			// 
-			// btnDeleteFile
+			// chbxGarageMiddle
 			// 
-			this.btnDeleteFile.Location = new System.Drawing.Point(973, 329);
-			this.btnDeleteFile.Name = "btnDeleteFile";
-			this.btnDeleteFile.Size = new System.Drawing.Size(75, 23);
-			this.btnDeleteFile.TabIndex = 98;
-			this.btnDeleteFile.Text = "Delete";
-			this.btnDeleteFile.UseVisualStyleBackColor = true;
-			this.btnDeleteFile.Click += new System.EventHandler(this.btnDeleteFile_Click);
+			this.chbxGarageMiddle.AutoSize = true;
+			this.chbxGarageMiddle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chbxGarageMiddle.Location = new System.Drawing.Point(993, 76);
+			this.chbxGarageMiddle.Name = "chbxGarageMiddle";
+			this.chbxGarageMiddle.Size = new System.Drawing.Size(145, 24);
+			this.chbxGarageMiddle.TabIndex = 104;
+			this.chbxGarageMiddle.Text = "Garage Middle";
+			this.chbxGarageMiddle.UseVisualStyleBackColor = true;
+			this.chbxGarageMiddle.CheckedChanged += new System.EventHandler(this.chbxGarageMiddle_CheckedChanged);
+			// 
+			// chbxGarageSW
+			// 
+			this.chbxGarageSW.AutoSize = true;
+			this.chbxGarageSW.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chbxGarageSW.Location = new System.Drawing.Point(993, 108);
+			this.chbxGarageSW.Name = "chbxGarageSW";
+			this.chbxGarageSW.Size = new System.Drawing.Size(121, 24);
+			this.chbxGarageSW.TabIndex = 105;
+			this.chbxGarageSW.Text = "Garage SW";
+			this.chbxGarageSW.UseVisualStyleBackColor = true;
+			this.chbxGarageSW.CheckedChanged += new System.EventHandler(this.chbxGarageSW_CheckedChanged);
+			// 
+			// chbxCabinKitchen
+			// 
+			this.chbxCabinKitchen.AutoSize = true;
+			this.chbxCabinKitchen.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chbxCabinKitchen.Location = new System.Drawing.Point(993, 140);
+			this.chbxCabinKitchen.Name = "chbxCabinKitchen";
+			this.chbxCabinKitchen.Size = new System.Drawing.Size(139, 24);
+			this.chbxCabinKitchen.TabIndex = 106;
+			this.chbxCabinKitchen.Text = "Cabin Kitchen";
+			this.chbxCabinKitchen.UseVisualStyleBackColor = true;
+			this.chbxCabinKitchen.CheckedChanged += new System.EventHandler(this.chbxCabinKitchen_CheckedChanged);
+			// 
+			// chbxCabinSouth
+			// 
+			this.chbxCabinSouth.AutoSize = true;
+			this.chbxCabinSouth.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chbxCabinSouth.Location = new System.Drawing.Point(993, 172);
+			this.chbxCabinSouth.Name = "chbxCabinSouth";
+			this.chbxCabinSouth.Size = new System.Drawing.Size(127, 24);
+			this.chbxCabinSouth.TabIndex = 107;
+			this.chbxCabinSouth.Text = "Cabin South";
+			this.chbxCabinSouth.UseVisualStyleBackColor = true;
+			this.chbxCabinSouth.CheckedChanged += new System.EventHandler(this.chbxCabinSouth_CheckedChanged);
+			// 
+			// chbxCabinEast
+			// 
+			this.chbxCabinEast.AutoSize = true;
+			this.chbxCabinEast.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.chbxCabinEast.Location = new System.Drawing.Point(993, 204);
+			this.chbxCabinEast.Name = "chbxCabinEast";
+			this.chbxCabinEast.Size = new System.Drawing.Size(116, 24);
+			this.chbxCabinEast.TabIndex = 108;
+			this.chbxCabinEast.Text = "Cabin East";
+			this.chbxCabinEast.UseVisualStyleBackColor = true;
+			this.chbxCabinEast.CheckedChanged += new System.EventHandler(this.chbxCabinEast_CheckedChanged);
+			// 
+			// btnWaterTimeShort
+			// 
+			this.btnWaterTimeShort.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnWaterTimeShort.Location = new System.Drawing.Point(22, 28);
+			this.btnWaterTimeShort.Name = "btnWaterTimeShort";
+			this.btnWaterTimeShort.Size = new System.Drawing.Size(98, 33);
+			this.btnWaterTimeShort.TabIndex = 109;
+			this.btnWaterTimeShort.Text = "Short";
+			this.btnWaterTimeShort.UseVisualStyleBackColor = true;
+			this.btnWaterTimeShort.Click += new System.EventHandler(this.btnWaterTimeShort_Click);
+			// 
+			// btnWaterTimeMedium
+			// 
+			this.btnWaterTimeMedium.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnWaterTimeMedium.Location = new System.Drawing.Point(22, 69);
+			this.btnWaterTimeMedium.Name = "btnWaterTimeMedium";
+			this.btnWaterTimeMedium.Size = new System.Drawing.Size(98, 33);
+			this.btnWaterTimeMedium.TabIndex = 110;
+			this.btnWaterTimeMedium.Text = "Medium";
+			this.btnWaterTimeMedium.UseVisualStyleBackColor = true;
+			this.btnWaterTimeMedium.Click += new System.EventHandler(this.btnWaterTimeMedium_Click);
+			// 
+			// btnWaterTimeLong
+			// 
+			this.btnWaterTimeLong.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnWaterTimeLong.Location = new System.Drawing.Point(22, 110);
+			this.btnWaterTimeLong.Name = "btnWaterTimeLong";
+			this.btnWaterTimeLong.Size = new System.Drawing.Size(98, 33);
+			this.btnWaterTimeLong.TabIndex = 111;
+			this.btnWaterTimeLong.Text = "Long";
+			this.btnWaterTimeLong.UseVisualStyleBackColor = true;
+			this.btnWaterTimeLong.Click += new System.EventHandler(this.btnWaterTimeLong_Click);
+			// 
+			// groupBox2
+			// 
+			this.groupBox2.Controls.Add(this.btnWaterTimeMedium);
+			this.groupBox2.Controls.Add(this.btnWaterTimeLong);
+			this.groupBox2.Controls.Add(this.btnWaterTimeShort);
+			this.groupBox2.Location = new System.Drawing.Point(1171, 49);
+			this.groupBox2.Name = "groupBox2";
+			this.groupBox2.Size = new System.Drawing.Size(249, 174);
+			this.groupBox2.TabIndex = 112;
+			this.groupBox2.TabStop = false;
+			this.groupBox2.Text = "Water Pump";
 			// 
 			// FrmSampleClient
 			// 
@@ -733,8 +839,13 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1444, 726);
-			this.Controls.Add(this.btnDeleteFile);
-			this.Controls.Add(this.lbFileNames);
+			this.Controls.Add(this.groupBox2);
+			this.Controls.Add(this.chbxCabinEast);
+			this.Controls.Add(this.chbxCabinSouth);
+			this.Controls.Add(this.chbxCabinKitchen);
+			this.Controls.Add(this.chbxGarageSW);
+			this.Controls.Add(this.chbxGarageMiddle);
+			this.Controls.Add(this.chbxGarageEast);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.tbNoRecs);
 			this.Controls.Add(this.btnExit);
@@ -768,6 +879,7 @@
 			this.groupBox1.PerformLayout();
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
+			this.groupBox2.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -840,11 +952,19 @@
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.ToolStripMenuItem listDirInfoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem sortDirInfoToolStripMenuItem;
-		private System.Windows.Forms.ListBox lbFileNames;
-		private System.Windows.Forms.Button btnDeleteFile;
 		private System.Windows.Forms.ToolStripMenuItem getTemp5ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem sendMsg2OtherWinclToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem send2ndMsgToolStripMenuItem;
+		private System.Windows.Forms.CheckBox chbxGarageEast;
+		private System.Windows.Forms.CheckBox chbxGarageMiddle;
+		private System.Windows.Forms.CheckBox chbxGarageSW;
+		private System.Windows.Forms.CheckBox chbxCabinKitchen;
+		private System.Windows.Forms.CheckBox chbxCabinSouth;
+		private System.Windows.Forms.CheckBox chbxCabinEast;
+		private System.Windows.Forms.Button btnWaterTimeShort;
+		private System.Windows.Forms.Button btnWaterTimeMedium;
+		private System.Windows.Forms.Button btnWaterTimeLong;
+		private System.Windows.Forms.GroupBox groupBox2;
 	}
 }
 

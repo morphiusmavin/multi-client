@@ -26,7 +26,7 @@ namespace EpServerEngineSampleClient
 		private INetworkClient m_client;
 		private bool m_wait = false;
 		ServerCmds svrcmd = new ServerCmds();
-		private bool m_pause = false;
+		//private bool m_pause = false;
 
 		int cmd = 0;
 		int dest = 1;

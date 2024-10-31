@@ -31,7 +31,7 @@ namespace EpServerEngineSampleClient
 		List<String> outdoor_list;
 		private List<Cdata> mycdata;
 		
-		int type, port;
+		int type;
 		ServerCmds svrcmd;
 		INetworkClient m_client = null;
 		private int iResult = 0;
@@ -106,7 +106,6 @@ namespace EpServerEngineSampleClient
 				//AddMsg(svrcmd.GetCmdIndexI(cabin_list[i]).ToString());
 			btnRefresh.Enabled = false;
 			btnShow.Enabled = false;
-			port = -1;
 			type = -1;
 		}
 		private void add_garage_list()
@@ -289,7 +288,6 @@ namespace EpServerEngineSampleClient
 			}
 			btnRefresh.Enabled = true;
 			btnShow.Enabled = true;
-			port = -1;
 			//AddMsg("type: " + type.ToString());
 		}
 		private void btnOK_Click(object sender, EventArgs e)

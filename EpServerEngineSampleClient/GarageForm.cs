@@ -241,9 +241,22 @@ namespace EpServerEngineSampleClient
 			int offset = svrcmd.GetCmdIndexI(cmd);
 			return svrcmd.Change_PortCmd(offset, 8, onoff);		// this is bad
 		}
-		private void ToggleButton(int which, bool state)
+		public void ToggleButton(int which, bool state)
 		{
 			if (state)
+			{
+				button_list[which].Ctl.Text = "ON";
+				button_list[which].Ctl.BackColor = Color.Aqua;
+			}
+			else
+			{
+				button_list[which].Ctl.Text = "OFF";
+				button_list[which].Ctl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+			}
+		}
+		public void ToggleButton(int which)
+		{
+			if (SendCmd(which))
 			{
 				button_list[which].Ctl.Text = "ON";
 				button_list[which].Ctl.BackColor = Color.Aqua;
@@ -276,7 +289,7 @@ namespace EpServerEngineSampleClient
 		}
 		private void myTimerTick(object sender, EventArgs e)
 		{
-			int i,j;
+			int j;
 			if (--timer_tick == 0)
 			{
 				for (j = 0; j < 8; j++)
@@ -317,35 +330,35 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnDesk_Click(object sender, EventArgs e)
 		{
-			ToggleButton(0, SendCmd(0));
+			ToggleButton(0);
 		}
 		private void btnEast_Click(object sender, EventArgs e)
 		{
-			ToggleButton(1, SendCmd(1));
+			ToggleButton(1);
 		}
 		private void btnNWest_Click(object sender, EventArgs e)
 		{
-			ToggleButton(2, SendCmd(2));
+			ToggleButton(2);
 		}
 		private void btnSeast_Click(object sender, EventArgs e)
 		{
-			ToggleButton(3, SendCmd(3));
+			ToggleButton(3);
 		}
 		private void btnMiddle_Click(object sender, EventArgs e)
 		{
-			ToggleButton(4, SendCmd(4));
+			ToggleButton(4);
 		}
 		private void btnWest_Click(object sender, EventArgs e)
 		{
-			ToggleButton(5, SendCmd(5));
+			ToggleButton(5);
 		}
 		private void btnNeast_Click(object sender, EventArgs e)
 		{
-			ToggleButton(6, SendCmd(6));
+			ToggleButton(6);
 		}
 		private void btnSWest_Click(object sender, EventArgs e)
 		{
-			ToggleButton(7, SendCmd(7));
+			ToggleButton(7);
 		}
 		private void btnWaterHeater_Click(object sender, EventArgs e)
 		{
@@ -353,22 +366,29 @@ namespace EpServerEngineSampleClient
 		}
 		private void btnWaterValve1_Click(object sender, EventArgs e)
 		{
-			ToggleButton(9, SendCmd(9));
+			ToggleButton(9);
 		}
 		private void btnWaterValve2_Click(object sender, EventArgs e)
 		{
-			ToggleButton(10, SendCmd(10));
+			ToggleButton(10);
 		}
 		private void btnWaterValve3_Click(object sender, EventArgs e)
 		{
-			ToggleButton(11, SendCmd(11));
+			ToggleButton(11);
 		}
 		private void btnWaterPump_Click(object sender, EventArgs e)
 		{
 			ToggleButton(8, SendCmd(12));
-			AddMsg("pump on");
+			//AddMsg("pump on");
 			timer2.Enabled = true;
 			pump_timer_tick = 30;
+		}
+		public void RunWaterPump(int seconds)
+		{
+			ToggleButton(8, SendCmd(12));
+			//AddMsg("pump on");
+			timer2.Enabled = true;
+			pump_timer_tick = seconds;
 		}
 		private void btnAll_Click_1(object sender, EventArgs e)
 		{

@@ -28,7 +28,7 @@ namespace EpServerEngineSampleClient
 
         ConfigParams cfg_params = new ConfigParams();
         private DlgSetParams dlgsetparams = null;
-        private bool valid_cfg = false;
+        //private bool valid_cfg = false;
         ServerCmds svrcmd = new ServerCmds();
         INetworkClient m_client = new IocpTcpClient();
         private List<Ddata> mycdata = null;
@@ -59,7 +59,7 @@ namespace EpServerEngineSampleClient
         //private string sendmsgtext;
         int tick = 0;
         //int connected_tick = 0;
-        bool client_alert = false;
+        //bool client_alert = false;
 
         private string initial_data_directory = "c:\\Users\\daniel\\DS1620Data\\";
         private string initial_directory = "c:\\Users\\daniel\\ClientProgramData\\";
@@ -72,7 +72,7 @@ namespace EpServerEngineSampleClient
         private int hour;
         private int minute;
         private int second;
-        bool clk_oneoff = true;
+        //bool clk_oneoff = true;
         bool updateGraph = false;
 
         private DateTime now;
@@ -255,7 +255,6 @@ namespace EpServerEngineSampleClient
             t2date = t2date.Remove(space);
             tbTodaysDate.Text = t2date;
 
-            int j = 0;
             chart1 = new Chart();
             chart1.Location = new Point(20, 420);
             chart1.Width = 1400;
@@ -488,7 +487,6 @@ namespace EpServerEngineSampleClient
         {
             lbAvailClients.Items.Clear();
             int i = 0;
-            int k = 0;
             foreach (ClientsAvail j in clients_avail)
             {
                 if (j.socket > 0 && j.type != 0)
@@ -549,7 +547,7 @@ namespace EpServerEngineSampleClient
                     i = 0;
                     substr = "";
                     iparam = false;
-                    AddMsg(words[0] + " " + words[1]);
+                    //AddMsg(words[0] + " " + words[1]);
                     foreach(var word in words)
 					{
                         switch(i)
@@ -572,7 +570,7 @@ namespace EpServerEngineSampleClient
                         i++;
 					}
                     svrcmd.SetProperties(iparam, substr,true);
-                    AddMsg("set prop: " + substr + " " + iparam.ToString());
+                    //AddMsg("set prop: " + substr + " " + iparam.ToString());
                     break;
 
                 case "DS1620_MSG":
@@ -734,8 +732,6 @@ namespace EpServerEngineSampleClient
                     int sock = -1;
                     //AddMsg(ret);
                     string clmsg = " ";
-                    bool avail = false;
-                    //AddMsg("SEND_CLIENT_LIST ");
                     foreach (var word in words)
                     {
                         switch (i)
@@ -871,7 +867,7 @@ namespace EpServerEngineSampleClient
                         //                        MessageBox.Show(int.Parse(word).ToString());
                         i++;
                     }
-                    valid_cfg = true;
+                    //valid_cfg = true;
                     break;
 
                 case "GET_TIME":
@@ -946,7 +942,6 @@ namespace EpServerEngineSampleClient
         private void UpdateClientInfo()
         {
             string msg = "UPDATE_CLIENT_INFO";
-            int param = 1;
             int icmd = svrcmd.GetCmdIndexI(msg);
             foreach (ClientsAvail cl in clients_avail)
             {
@@ -1188,7 +1183,7 @@ namespace EpServerEngineSampleClient
                         AlertLabel.Visible = true;
                         AlertLabel.Text = "Alert: " + cl.label + " " + (cl.flag - 1).ToString();
                         AlertLabel.ForeColor = Color.Red;
-                        client_alert = true;
+                        //client_alert = true;
                     }
                     cl.flag++;
                 }
@@ -1429,7 +1424,6 @@ namespace EpServerEngineSampleClient
         { 
             int x = 0;
             int i = 0;
-            int j = 0;
 
             updateGraph = true;
             series1.Points.Clear();
@@ -1582,7 +1576,7 @@ namespace EpServerEngineSampleClient
             AlertLabel.Text = "";
             AlertLabel.Visible = false;
             RedrawClientListBox();
-            client_alert = false;
+            //client_alert = false;
         }
 
         private void assignFunctionKeyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1726,7 +1720,7 @@ namespace EpServerEngineSampleClient
 
             AlertLabel.Text = "";
             AlertLabel.Visible = false;
-            client_alert = false;
+            //client_alert = false;
         }
 
 		private void showTimeUpToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2081,8 +2075,10 @@ namespace EpServerEngineSampleClient
 
 		private void sortDirInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+            /*
             lbFileNames.Items.Clear();
             svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_DIR_INFO"), 8, 2);
+            /*
         }
 
 		private void lbFileNames_SelectedIndexChanged(object sender, EventArgs e)
@@ -2097,6 +2093,7 @@ namespace EpServerEngineSampleClient
 
 		private void lbFileNames_GetFile(object sender, MouseEventArgs e)
 		{
+            /*
             temp_class.Clear();
             int sel = lbFileNames.SelectedIndex;
             string temp = (string)lbFileNames.SelectedItem;
@@ -2104,13 +2101,16 @@ namespace EpServerEngineSampleClient
             string temp2 = temp.Substring(0, i + 4);
             temp2 += '\0';
             SendClientMsg(svrcmd.GetCmdIndexI("GET_TEMP4"), temp2, false);
+            /*
         }
 
         private void btnDeleteFile_Click(object sender, EventArgs e)
 		{
+            /*
             int sel = lbFileNames.SelectedIndex;
             svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DELETE_FILE"), 8, sel);
             lbFileNames.Items.RemoveAt(sel);
+            */
         }
 		private void getTemp5ToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -2138,5 +2138,50 @@ namespace EpServerEngineSampleClient
             int icmd = svrcmd.GetCmdIndexI(msg);
             svrcmd.Send_ClCmd(icmd, index, "test 1234");
         }
+
+		private void chbxGarageEast_CheckedChanged(object sender, EventArgs e)
+		{
+			garageform.ToggleButton(1);
+		}
+
+		private void chbxGarageMiddle_CheckedChanged(object sender, EventArgs e)
+		{
+			garageform.ToggleButton(4);
+		}
+
+		private void chbxGarageSW_CheckedChanged(object sender, EventArgs e)
+		{
+            garageform.ToggleButton(7);
+		}
+
+		private void chbxCabinKitchen_CheckedChanged(object sender, EventArgs e)
+		{
+			cabin.ToggleButton(3);
+		}
+
+		private void chbxCabinSouth_CheckedChanged(object sender, EventArgs e)
+		{
+			cabin.ToggleButton(0);
+		}
+
+		private void chbxCabinEast_CheckedChanged(object sender, EventArgs e)
+		{
+			cabin.ToggleButton(5);
+		}
+
+		private void btnWaterTimeShort_Click(object sender, EventArgs e)
+		{
+            garageform.RunWaterPump(10);
+		}
+
+		private void btnWaterTimeMedium_Click(object sender, EventArgs e)
+		{
+			garageform.RunWaterPump(30);
+		}
+
+		private void btnWaterTimeLong_Click(object sender, EventArgs e)
+		{
+			garageform.RunWaterPump(50);
+		}
 	}
 }

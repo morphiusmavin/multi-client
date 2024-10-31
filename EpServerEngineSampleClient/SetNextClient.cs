@@ -25,9 +25,9 @@ namespace EpServerEngineSampleClient
 	public partial class SetNextClient : Form
 	{
 		private INetworkClient m_client;
-		private bool m_wait = false;
+		//private bool m_wait = false;
 		ServerCmds svrcmd = new ServerCmds();
-		private bool m_pause = false;
+		//private bool m_pause = false;
 		private List<ClientsAvail> clients_avail;
 		int sindex, dindex;
 
@@ -45,13 +45,14 @@ namespace EpServerEngineSampleClient
 		private void cbSource_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			sindex = cbSource.SelectedIndex;
-			sindex++;
+			sindex += 2;		// skip over the first 2 in the list
+								// which are the win clients
 		}
 
 		private void cbNextClient_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			dindex = cbNextClient.SelectedIndex;
-			dindex++;
+			dindex += 2;
 		}
 
 		private void btnSetNextClient_Click(object sender, EventArgs e)
