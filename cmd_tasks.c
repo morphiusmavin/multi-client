@@ -103,7 +103,15 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	msg.mtext[1] = dest;
 	msg.mtext[2] = (UCHAR)msg_len;
 	msg.mtext[3] = (UCHAR)(msg_len >> 4);
-	
+
+/*
+	printf("msg_len: %d\n",msg_len);
+
+	printf("\n");
+	for(i = 0;i < 4;i++)
+		printf("%02x ",msg.mtext[i]);
+	printf("\n");
+*/
 	//printf("send_sock_msg :");
 	//print_cmd(cmd);
 	//printf("msg_len: %d\n",msg_len);
@@ -549,6 +557,12 @@ printf("\n");
 
 			switch(cmd)
 			{
+/*
+				case SEND_MESSAGE2:
+					for(i = 0;i < msg_len;i++)
+						printf("%c",tempx[i]);
+					break;
+*/
 				case TURN_ALL_LIGHTS_OFF:
 					//printf("%02x %02x\n",tempx[0], tempx[1]);
 					trunning_seconds_off = (tempx[0] << 8) | tempx[1];
@@ -801,11 +815,13 @@ printf("\n");
 					printf("%s\n",tempx);
 					break;
 
-				case SEND_MESSAGE:
+				case SEND_MESSAGE2:
 					//printf("SEND_MESSAGE\n");
+/*
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");
+*/
 					send_sock_msg(tempx, msg_len, cmd, _158);
 					break;
 

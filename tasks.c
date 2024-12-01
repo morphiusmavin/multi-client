@@ -1029,6 +1029,7 @@ UCHAR timer2_task(int test)
 	}
 	return 1;
 }
+/*********************************************************************/
 static void swap(COUNTDOWN* xp, COUNTDOWN* yp)
 {
 	COUNTDOWN temp = *xp;
@@ -1186,6 +1187,7 @@ UCHAR timer_task(int test)
 	while(TRUE)
 	{
 		uSleep(1,0);
+	
 		if(curr_countdown_size > 0)
 		{
 			for(i = 0;i < curr_countdown_size;i++)

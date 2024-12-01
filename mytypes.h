@@ -20,7 +20,7 @@ typedef unsigned long ULONG;
 #define SERIAL_BUFF_SIZE 255
 #define RAW_DATA_ARRAY_SIZE 15
 #define MAX_CLIENTS	9
-#define NO_CMDS 90
+#define NO_CMDS 91
 #define NO_CLLIST_RECS NUM_DATA_RECS
 #define PASSWORD_SIZE 10
 UCHAR inportstatus[NUM_DATA_RECS];
@@ -54,19 +54,20 @@ enum client_types
 {
 	WINDOWS_CLIENT,
 	TS_CLIENT,
+	TS_AUX,
 	TS_SERVER
 }CLIENT_TYPES;
 
 enum client_list
 {
-	_158,			// WINDOWS-11A
+	_158,			// WINDOWS-11A (runs on Windows machine)
 	_248,			// WINDOWS-11B
 	_154,			// Cabin
 	_147,			// Testbench
 	_150,			// Outdoor
 	_151,			// not used
 	_155,			// "    "
-	_145,			// "    "
+	_148,			// aux_client (runs on a PC linux box)
 	_SERVER			// Garage (146)
 }CLIENT_LIST;
 

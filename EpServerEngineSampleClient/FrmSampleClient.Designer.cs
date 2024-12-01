@@ -83,6 +83,7 @@
 			this.getDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.listDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.sortDirInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.sendMessageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadTempFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadGraphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -107,6 +108,7 @@
 			this.btnWaterTimeMedium = new System.Windows.Forms.Button();
 			this.btnWaterTimeLong = new System.Windows.Forms.Button();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
+			this.SendMessageBox = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
@@ -250,9 +252,9 @@
 			this.lbAvailClients.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lbAvailClients.FormattingEnabled = true;
 			this.lbAvailClients.ItemHeight = 15;
-			this.lbAvailClients.Location = new System.Drawing.Point(727, 48);
+			this.lbAvailClients.Location = new System.Drawing.Point(737, 48);
 			this.lbAvailClients.Name = "lbAvailClients";
-			this.lbAvailClients.Size = new System.Drawing.Size(226, 94);
+			this.lbAvailClients.Size = new System.Drawing.Size(216, 94);
 			this.lbAvailClients.TabIndex = 35;
 			this.lbAvailClients.SelectedIndexChanged += new System.EventHandler(this.AvailClientSelIndexChanged);
 			// 
@@ -261,7 +263,7 @@
 			this.tbTodaysDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tbTodaysDate.Location = new System.Drawing.Point(539, 48);
 			this.tbTodaysDate.Name = "tbTodaysDate";
-			this.tbTodaysDate.Size = new System.Drawing.Size(164, 44);
+			this.tbTodaysDate.Size = new System.Drawing.Size(183, 44);
 			this.tbTodaysDate.TabIndex = 15;
 			// 
 			// label10
@@ -279,7 +281,7 @@
 			this.tbTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tbTime.Location = new System.Drawing.Point(539, 105);
 			this.tbTime.Name = "tbTime";
-			this.tbTime.Size = new System.Drawing.Size(164, 44);
+			this.tbTime.Size = new System.Drawing.Size(183, 44);
 			this.tbTime.TabIndex = 16;
 			// 
 			// btnFnc2
@@ -526,7 +528,8 @@
             this.getStatusToolStripMenuItem,
             this.getDirInfoToolStripMenuItem,
             this.listDirInfoToolStripMenuItem,
-            this.sortDirInfoToolStripMenuItem});
+            this.sortDirInfoToolStripMenuItem,
+            this.sendMessageToolStripMenuItem});
 			this.clientListActionToolStripMenuItem.Name = "clientListActionToolStripMenuItem";
 			this.clientListActionToolStripMenuItem.Size = new System.Drawing.Size(109, 20);
 			this.clientListActionToolStripMenuItem.Text = "Client List Action";
@@ -534,72 +537,79 @@
 			// showTimeUpToolStripMenuItem
 			// 
 			this.showTimeUpToolStripMenuItem.Name = "showTimeUpToolStripMenuItem";
-			this.showTimeUpToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.showTimeUpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.showTimeUpToolStripMenuItem.Text = "Show Time Up";
 			this.showTimeUpToolStripMenuItem.Click += new System.EventHandler(this.showTimeUpToolStripMenuItem_Click);
 			// 
 			// getTimeToolStripMenuItem
 			// 
 			this.getTimeToolStripMenuItem.Name = "getTimeToolStripMenuItem";
-			this.getTimeToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.getTimeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.getTimeToolStripMenuItem.Text = "Get Time";
 			this.getTimeToolStripMenuItem.Click += new System.EventHandler(this.getTimeToolStripMenuItem_Click);
 			// 
 			// setTimeToolStripMenuItem
 			// 
 			this.setTimeToolStripMenuItem.Name = "setTimeToolStripMenuItem";
-			this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.setTimeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.setTimeToolStripMenuItem.Text = "Set Time";
 			this.setTimeToolStripMenuItem.Click += new System.EventHandler(this.setTimeToolStripMenuItem_Click);
 			// 
 			// rebootToolStripMenuItem
 			// 
 			this.rebootToolStripMenuItem.Name = "rebootToolStripMenuItem";
-			this.rebootToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.rebootToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.rebootToolStripMenuItem.Text = "Reboot";
 			this.rebootToolStripMenuItem.Click += new System.EventHandler(this.rebootToolStripMenuItem_Click);
 			// 
 			// exitToShellToolStripMenuItem
 			// 
 			this.exitToShellToolStripMenuItem.Name = "exitToShellToolStripMenuItem";
-			this.exitToShellToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.exitToShellToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.exitToShellToolStripMenuItem.Text = "Exit to Shell";
 			this.exitToShellToolStripMenuItem.Click += new System.EventHandler(this.exitToShellToolStripMenuItem_Click);
 			// 
 			// shutdownToolStripMenuItem
 			// 
 			this.shutdownToolStripMenuItem.Name = "shutdownToolStripMenuItem";
-			this.shutdownToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.shutdownToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.shutdownToolStripMenuItem.Text = "Shutdown";
 			this.shutdownToolStripMenuItem.Click += new System.EventHandler(this.shutdownToolStripMenuItem_Click);
 			// 
 			// getStatusToolStripMenuItem
 			// 
 			this.getStatusToolStripMenuItem.Name = "getStatusToolStripMenuItem";
-			this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.getStatusToolStripMenuItem.Text = "Get Status";
 			this.getStatusToolStripMenuItem.Click += new System.EventHandler(this.getStatusToolStripMenuItem_Click);
 			// 
 			// getDirInfoToolStripMenuItem
 			// 
 			this.getDirInfoToolStripMenuItem.Name = "getDirInfoToolStripMenuItem";
-			this.getDirInfoToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.getDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.getDirInfoToolStripMenuItem.Text = "Get Dir Info";
 			this.getDirInfoToolStripMenuItem.Click += new System.EventHandler(this.getDirInfoToolStripMenuItem_Click);
 			// 
 			// listDirInfoToolStripMenuItem
 			// 
 			this.listDirInfoToolStripMenuItem.Name = "listDirInfoToolStripMenuItem";
-			this.listDirInfoToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.listDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.listDirInfoToolStripMenuItem.Text = "List Dir Info";
 			this.listDirInfoToolStripMenuItem.Click += new System.EventHandler(this.listDirInfoToolStripMenuItem_Click);
 			// 
 			// sortDirInfoToolStripMenuItem
 			// 
 			this.sortDirInfoToolStripMenuItem.Name = "sortDirInfoToolStripMenuItem";
-			this.sortDirInfoToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+			this.sortDirInfoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.sortDirInfoToolStripMenuItem.Text = "Send Dir Info";
 			this.sortDirInfoToolStripMenuItem.Click += new System.EventHandler(this.sortDirInfoToolStripMenuItem_Click);
+			// 
+			// sendMessageToolStripMenuItem
+			// 
+			this.sendMessageToolStripMenuItem.Name = "sendMessageToolStripMenuItem";
+			this.sendMessageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.sendMessageToolStripMenuItem.Text = "Send Message";
+			this.sendMessageToolStripMenuItem.Click += new System.EventHandler(this.sendMessageToolStripMenuItem_Click);
 			// 
 			// testToolStripMenuItem
 			// 
@@ -833,12 +843,20 @@
 			this.groupBox2.TabStop = false;
 			this.groupBox2.Text = "Water Pump";
 			// 
+			// SendMessageBox
+			// 
+			this.SendMessageBox.Location = new System.Drawing.Point(833, 288);
+			this.SendMessageBox.Name = "SendMessageBox";
+			this.SendMessageBox.Size = new System.Drawing.Size(188, 20);
+			this.SendMessageBox.TabIndex = 113;
+			// 
 			// FrmSampleClient
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.ClientSize = new System.Drawing.Size(1444, 726);
+			this.Controls.Add(this.SendMessageBox);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.chbxCabinEast);
 			this.Controls.Add(this.chbxCabinSouth);
@@ -965,6 +983,8 @@
 		private System.Windows.Forms.Button btnWaterTimeMedium;
 		private System.Windows.Forms.Button btnWaterTimeLong;
 		private System.Windows.Forms.GroupBox groupBox2;
+		private System.Windows.Forms.ToolStripMenuItem sendMessageToolStripMenuItem;
+		private System.Windows.Forms.TextBox SendMessageBox;
 	}
 }
 

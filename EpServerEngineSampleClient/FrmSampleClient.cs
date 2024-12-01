@@ -1022,7 +1022,7 @@ namespace EpServerEngineSampleClient
                         if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
                         {
                             svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
-                            AddMsg("DLLIST_SAVE: " + cl.label);
+                            //AddMsg("DLLIST_SAVE: " + cl.label);
                         }
                     }
                 }
@@ -2181,7 +2181,12 @@ namespace EpServerEngineSampleClient
 
 		private void btnWaterTimeLong_Click(object sender, EventArgs e)
 		{
-			garageform.RunWaterPump(50);
+			garageform.RunWaterPump(52);
+		}
+
+		private void sendMessageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			SendClientMsg(svrcmd.GetCmdIndexI("SEND_MESSAGE2"), SendMessageBox.Text, false);
 		}
 	}
 }

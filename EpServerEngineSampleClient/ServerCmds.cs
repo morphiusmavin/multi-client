@@ -535,7 +535,8 @@ namespace EpServerEngineSampleClient
 			int temp = index;
 			byte[] atemp = BitConverter.GetBytes(temp);
 			byte[] btemp = BytesFromString(param);
-			byte[] ctemp = new byte[atemp.Count() + btemp.Length*2 + 2];
+			//byte[] ctemp = new byte[atemp.Count() + btemp.Length*2 + 2];
+			byte[] ctemp = new byte[atemp.Count() + btemp.Length + 2];
 			string cmsg = GetName(msg);
 			ctemp[0] = GetCmdIndexB(cmsg);
 			System.Buffer.BlockCopy(atemp, 0, ctemp, 2, atemp.Count());

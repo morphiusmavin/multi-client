@@ -138,6 +138,7 @@ int uSleep(time_t sec, long nanosec)
 
 static int s_tick = 0;
 
+/*********************************************************************/
 UCHAR sock_timer(int test)
 {
 	UCHAR tempx[100];
@@ -152,8 +153,8 @@ UCHAR sock_timer(int test)
 		if(client_table[i].socket > 0 && client_table[i].type == TS_CLIENT)
 		{
 			//printf("%d %s\n",i,client_table[i].label);
-			send_msg(client_table[i].socket, strlen(tempx),&tempx[0],SEND_TIMEUP);
-			uSleep(30,0);
+			//send_msg(client_table[i].socket, strlen(tempx),&tempx[0],SEND_TIMEUP);
+			uSleep(120,0);
 		}
 		if(i++ > MAX_CLIENTS)
 			i = 0;
@@ -289,7 +290,7 @@ UCHAR get_host_cmd_task(int test)
 				break;
 
 			case UPTIME_MSG:	// sent from client
-				//printf("uptime msg (sock): %s\n",write_serial_buff);
+				printf("uptime msg (sock): %s\n",write_serial_buff);
 				//printf("%ld %ld\n",ttrunning_minutes, ttrunning_seconds);
 				
 				if(client_table[0].socket > 0)
@@ -600,7 +601,7 @@ UCHAR ReadTask(int test)
 	int msgtype = 1;
 	msg.mtype = msgtype;
 //	uSleep(1,0);
-//	printf("readtask: %s\n",client_table[index].label);
+	printf("readtask: %s\n",client_table[index].label);
 //	return 0;
 
 /*
@@ -622,23 +623,24 @@ startover1:
 //			printf("read task %d: ",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+2,1);
-			//printf("ret: %d msg_len: %d\n",ret,msg_len);
+			printf("\n\nret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			//printf("dest: %d\n",dest);
-/*
-			for(i = 0;i < msg_len+2;i++)
+			printf("dest: %d\n",dest);
+
+			for(i = 2;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);
 			printf("\n");
 
-			for(i = 0;i < msg_len+2;i++)
+			for(i = 2;i < msg_len+2;i++)
 				printf("%c",tempx[i]);
 			printf("\n");
-*/
+
 			//printf("cmd: %d\n",cmd);
 			//printf("read task: %d\n",index);
-			//print_cmd(cmd);
+			print_cmd(cmd);
 			memmove(tempx,tempx+2,msg_len);
+			printf("\n");
 /*
 			for(i = 0;i < msg_len;i++)
 				printf("%02x ",tempx[i]);
@@ -677,9 +679,8 @@ startover1:
 						exit(EXIT_FAILURE);
 					}
 					break;
-				case 0:		// Second_Windows7
-				case 1:		// Win7-x64
-				case 2:		// WINDOWS-11A
+				case 0:		// WINDOWS-11A
+				case 1:		// WINDOWS-11B
 					if(client_table[dest].socket > 0)
 						send_msgb(client_table[dest].socket, strlen(tempx)*2,tempx,cmd);
 					break;
@@ -1081,7 +1082,10 @@ int get_msg(int sd)
 	}
 	if(memcmp(preamble,pre_preamble,8) != 0)
 	{
-		//printf("bad preamble\n");
+		printf("bad preamble\n");
+		for(i = 0;i < 10;i++)
+			printf("%02x ",preamble[i]);
+		printf("\n");
 		return -1;
 	}
 	ret = recv_tcp(sd, &low,1,1);

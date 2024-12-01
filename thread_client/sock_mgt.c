@@ -127,6 +127,7 @@ UCHAR recv_msg_task(int test)
 		for(i = 0;i < 4;i++)
 			printf("%02x ",msg.mtext[i]);
 		printf("\n");
+		5a 00 12 01
 */
 		cmd = msg.mtext[0];							// first byte is cmd
 		//printf("cmd in recv msg task: ");
@@ -142,9 +143,7 @@ UCHAR recv_msg_task(int test)
 /*
 		for(i = 0;i < msg_len;i++)
 			printf("%02x ",msg_buf[i]);
-		printf("\n");
 */
-
 		// dest is used in ReadTask to know where to send msg 
 		send_msg(msg_len, msg_buf, cmd, dest);
 
@@ -191,8 +190,8 @@ UCHAR get_host_cmd_task(int test)
 		memset(msg_buf,0,sizeof(msg_buf));
 		//printf("wait for msg_len\n");
 		msg_len = get_msg();
-		//printf("sock_mgt\n");
-		//printf("msg_len: %d\n",msg_len);
+		printf("sock_mgt\n");
+		printf("msg_len: %d\n",msg_len);
 
 		if(msg_len < 0)
 		{
@@ -203,17 +202,17 @@ UCHAR get_host_cmd_task(int test)
 		}else
 		{
 			rc = recv_tcp(&msg_buf[0],msg_len+1,1);
-			//printf("rc: %d\n",rc);
+			printf("rc: %d\n",rc);
 			cmd = msg_buf[0];
-			//print_cmd(cmd);
+			print_cmd(cmd);
 			memset(tempx,0,sizeof(tempx));
 			memcpy(tempx,msg_buf+1,msg_len);
-/*
+
 			for(i = 0;i < msg_len;i++)
 				printf("%02x ",tempx[i]);
 
 			printf("\n");
-*/
+
 			memset(msg.mtext,0,sizeof(msg.mtext));
 			msg.mtext[0] = cmd;
 			msg.mtext[1] = (UCHAR)msg_len;

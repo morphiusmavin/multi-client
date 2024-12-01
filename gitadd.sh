@@ -13,6 +13,7 @@ git add tasks.h
 git add serial_io.c
 git add serial_io.h
 git add cmd_tasks.c
+git add aux_client.c
 
 git add thread_server/sched.c
 git add thread_server/Makefile

@@ -40,7 +40,7 @@ void assign_client_table(void)
 	client_table[_154].qkey = 1238;
 	client_table[_154].qid = 0;
 	client_table[_154].task_id = 2;
-// 4
+// 3
 	strcpy(client_table[_147].ip,"147\0");				// testbench
 	strcpy(client_table[_147].label,"Client147\0");
 	client_table[_147].socket = -1;
@@ -48,7 +48,7 @@ void assign_client_table(void)
 	client_table[_147].qkey = 1239;
 	client_table[_147].qid = 0;
 	client_table[_147].task_id = 3;
-// 5
+// 4
 	strcpy(client_table[_150].ip,"150\0");				// outdoor
 	strcpy(client_table[_150].label,"Client150\0");
 	client_table[_150].socket = -1;
@@ -56,7 +56,7 @@ void assign_client_table(void)
 	client_table[_150].qkey = 1240;
 	client_table[_150].qid = 0;
 	client_table[_150].task_id = 4;
-// 6
+// 5
 	strcpy(client_table[_151].ip,"151\0");
 	strcpy(client_table[_151].label,"Client151\0");
 	client_table[_151].socket = -1;
@@ -64,7 +64,7 @@ void assign_client_table(void)
 	client_table[_151].qkey = 1241;
 	client_table[_151].qid = 0;
 	client_table[_151].task_id = 5;
-// 7
+// 6
 	strcpy(client_table[_155].ip,"155\0");
 	strcpy(client_table[_155].label,"Client155\0");
 	client_table[_155].socket = -1;
@@ -72,15 +72,15 @@ void assign_client_table(void)
 	client_table[_155].qkey = 1242;
 	client_table[_155].qid = 0;
 	client_table[_155].task_id = 6;
+// 7
+	strcpy(client_table[_148].ip,"148\0");
+	strcpy(client_table[_148].label,"Aux Client\0");
+	client_table[_148].socket = -1;
+	client_table[_148].type = TS_AUX;
+	client_table[_148].qkey = 1244;
+	client_table[_148].qid = 0;
+	client_table[_148].task_id = 7;
 // 8
-	strcpy(client_table[_145].ip,"145\0");
-	strcpy(client_table[_145].label,"Client145\0");
-	client_table[_145].socket = -1;
-	client_table[_145].type = TS_CLIENT;
-	client_table[_145].qkey = 1244;
-	client_table[_145].qid = 0;
-	client_table[_145].task_id = 7;
-// 9
 	strcpy(client_table[_SERVER].ip,"146\0");				// garage
 	strcpy(client_table[_SERVER].label,"Server146\0");
 	client_table[_SERVER].socket = -1;
@@ -106,9 +106,10 @@ void assign_client_table(void)
 		}
 		fclose(fp);
 	}else printf("no %s found\n",fname);
-	
+/*	
 	for(i = 0;i < MAX_CLIENTS;i++)
 	{
 		printf("%s %s\n",client_table[i].ip, client_table[i].label);
 	}
+*/
 }
