@@ -101,7 +101,8 @@ namespace EpServerEngineSampleClient
 			DS1620_MSG,
 			TURN_ALL_LIGHTS_OFF,
 			EXTRA_WINCL_UP,
-			EXTRA_WINCL_SYNC
+			EXTRA_WINCL_SYNC,
+			SEND_MESSAGE2
 		}
 		public ServerCmds()
 		{

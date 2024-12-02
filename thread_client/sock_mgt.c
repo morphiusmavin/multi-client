@@ -184,6 +184,7 @@ UCHAR get_host_cmd_task(int test)
 
 	uSleep(2,0);
 	//printf("starting sock_mtg\n");
+	
 	while(TRUE)
 	{
 		cmd = 0;

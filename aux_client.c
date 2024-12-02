@@ -145,45 +145,45 @@ int main()
 	//while((c = getchar()) != '\n' && c != EOF)
 	while((c = getchar()) != 'q')
 	{
-		printf("%c", c);
+		bzero(buff, sizeof(buff));
 		switch(c)
 		{
 		case 'a':
-			printf("sending cmd (SEND_STATUS)\n");
-			bzero(buff, sizeof(buff));
-
 			strcpy(buff,"ABCDE\0");
-			//printf("strlen: %d\n",strlen(buff));
 			send_msg(sockfd, strlen(buff), &buff[0], SEND_STATUS, 8);		// SEND_STATUS
 		break;
 		case 'b':
-			printf("sending cmd (SEND_TIMEUP)\n");
-			bzero(buff, sizeof(buff));
-
 			strcpy(buff,"FGHIJ\0");
-			//printf("strlen: %d\n",strlen(buff));
 			send_msg(sockfd, strlen(buff), &buff[0], SEND_TIMEUP, 8);		// SEND_TIMEUP
 		break;
 		case 'c':
-			printf("sending cmd (SEND_STATUS) with no params\n");
 			buff[0] = 0;
-			send_msg(sockfd, 0, &buff[0], SEND_STATUS, 2);
+			send_msg(sockfd, 0, &buff[0], SEND_STATUS, 2);					// cabin
 		break;
 		case 'd':
-			printf("sending cmd (SET_TIME dest = 2)  \n");
 			buff[0] = 0;
 			send_msg(sockfd, 0, &buff[0], SET_TIME, 2);
 		break;
 		case 'e':
-			printf("sending cmd (SET_TIME dest = 3) \n");
 			buff[0] = 0;
-			send_msg(sockfd, 0, &buff[0], SET_TIME, 3);
+			send_msg(sockfd, 0, &buff[0], SET_TIME, 3);						// testbench
 		break;
 		case 'f':
-			printf("sending cmd (BENCH_LIGHT1 dest = 8) \n");
 			buff[0] = 0;
-			send_msg(sockfd, 0, &buff[0], BENCH_LIGHT1, 8);
+			send_msg(sockfd, 1, &buff[0], BENCH_LIGHT1, 3);
 		break;
+		case 'g':
+			buff[0] = 1;
+			send_msg(sockfd, 1, &buff[0], BENCH_LIGHT1, 3);
+		break;
+		case 'h':
+			buff[0] = 0;
+			send_msg(sockfd, 1, &buff[0], EAST_LIGHT, 8);
+			break;
+		case 'i':
+			buff[0] = 1;
+			send_msg(sockfd, 1, &buff[0], EAST_LIGHT, 8);
+			break;
 		case 'q':
 		close(sockfd);
 		return 0;
@@ -191,6 +191,7 @@ int main()
 		default:
 		break;
 		}
+		printf("%c", c);
 	}
 	if(c == 'q' || c == 'Q')
 		close(sockfd);

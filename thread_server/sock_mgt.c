@@ -632,6 +632,12 @@ startover1:
 				printf("%02x ",tempx[i]);
 			printf("\n");
 
+			tempx[msg_len-1] = 'x';
+
+			for(i = 2;i < msg_len+2;i++)
+				printf("%02x ",tempx[i]);
+			printf("\n");
+
 			for(i = 2;i < msg_len+2;i++)
 				printf("%c",tempx[i]);
 			printf("\n");
@@ -683,6 +689,13 @@ startover1:
 				case 1:		// WINDOWS-11B
 					if(client_table[dest].socket > 0)
 						send_msgb(client_table[dest].socket, strlen(tempx)*2,tempx,cmd);
+					break;
+				case 2:
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+					send_msg(client_table[dest].socket, strlen(tempx),tempx,cmd);
 					break;
 				default:
 					printf("read task sending to tcp\n");
