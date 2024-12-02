@@ -13,13 +13,11 @@
 #include <sys/types.h>
 #include <pthread.h>
 #define closesocket close
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <errno.h>
-#include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <dirent.h> 

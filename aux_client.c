@@ -1,23 +1,45 @@
+#if 1
 #include <arpa/inet.h> // inet_addr()
-#include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h> // bzero()
 #include <sys/socket.h>
 #include <unistd.h> // read(), write(), close()
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <assert.h>
+#include <time.h>
+#include <sys/time.h>
+#include <ctype.h>
+#include <sys/stat.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <errno.h>
+#include <sys/types.h>
+
 #include "cmd_types.h"
 #define MAX 80
 #define PORT 5193
 #define SA struct sockaddr
+#define SEND_CMD_HOST_QKEY	1235
 
 typedef unsigned char UCHAR;
 typedef unsigned int UINT;
 typedef UCHAR* PUCHAR;
 typedef unsigned long ULONG;
-
+UCHAR tempx[1000];
 static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
+struct msgqbuf 
+{
+	long mtype;
+	UCHAR mtext[1000];
+};
+#endif
 /*********************************************************************/
 int put_sock(int sd, UCHAR *buf,int buflen, int block, char *errmsg)
 {
@@ -114,6 +136,20 @@ int main()
     struct sockaddr_in servaddr, cli;
 	char buff[20];
 	int c;
+	int i;
+	UCHAR dest;
+	int sock_qid;
+	key_t sock_key;
+	UCHAR cmd;
+	struct msgqbuf msg;
+	int msg_len;
+	UCHAR onoff;
+
+	int msgtype = 1;
+	msg.mtype = msgtype;
+
+	sock_key = SEND_CMD_HOST_QKEY;
+	sock_qid = msgget(sock_key, IPC_CREAT | 0666);
 
     // socket create and verification
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -139,61 +175,31 @@ int main()
     else
         printf("connected to the server..\n");
 
-    // function for chat
-    // func(sockfd);
-
-	//while((c = getchar()) != '\n' && c != EOF)
-	while((c = getchar()) != 'q')
+	while(1)
 	{
-		bzero(buff, sizeof(buff));
-		switch(c)
+		if (msgrcv(sock_qid, (void *) &msg, sizeof(msg.mtext), msgtype, MSG_NOERROR) == -1) 
 		{
-		case 'a':
-			strcpy(buff,"ABCDE\0");
-			send_msg(sockfd, strlen(buff), &buff[0], SEND_STATUS, 8);		// SEND_STATUS
-		break;
-		case 'b':
-			strcpy(buff,"FGHIJ\0");
-			send_msg(sockfd, strlen(buff), &buff[0], SEND_TIMEUP, 8);		// SEND_TIMEUP
-		break;
-		case 'c':
-			buff[0] = 0;
-			send_msg(sockfd, 0, &buff[0], SEND_STATUS, 2);					// cabin
-		break;
-		case 'd':
-			buff[0] = 0;
-			send_msg(sockfd, 0, &buff[0], SET_TIME, 2);
-		break;
-		case 'e':
-			buff[0] = 0;
-			send_msg(sockfd, 0, &buff[0], SET_TIME, 3);						// testbench
-		break;
-		case 'f':
-			buff[0] = 0;
-			send_msg(sockfd, 1, &buff[0], BENCH_LIGHT1, 3);
-		break;
-		case 'g':
-			buff[0] = 1;
-			send_msg(sockfd, 1, &buff[0], BENCH_LIGHT1, 3);
-		break;
-		case 'h':
-			buff[0] = 0;
-			send_msg(sockfd, 1, &buff[0], EAST_LIGHT, 8);
-			break;
-		case 'i':
-			buff[0] = 1;
-			send_msg(sockfd, 1, &buff[0], EAST_LIGHT, 8);
-			break;
-		case 'q':
-		close(sockfd);
-		return 0;
-		break;
-		default:
-		break;
+			if (errno != ENOMSG) 
+			{
+				perror("msgrcv");
+				printf("msgrcv error\n");
+				exit(EXIT_FAILURE);
+			}
 		}
-		printf("%c", c);
+		printf("\n");
+		for(i = 0;i < 4;i++)
+		{
+			printf("%02x ",msg.mtext[i]);
+		}
+		printf("\n");
+		cmd = msg.mtext[0];
+		dest = msg.mtext[1];
+		onoff = msg.mtext[2];
+
+		printf("cmd: %d dest: %d onoff: %d\n", cmd, dest, onoff);
+		memset(tempx,0,sizeof(tempx));
+		
+		send_msg(sockfd, 1, &onoff, cmd, dest);
 	}
-	if(c == 'q' || c == 'Q')
-		close(sockfd);
     return 0;
 }

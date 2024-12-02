@@ -163,6 +163,9 @@ ReadTask (1 for each client)
 
 need to know the destination because it's used by ReadTask in server 
 	
+12/2/2024 - added aux_client (148) to use as auxillary client to send cmds to clients
+
+	
 idea for detecting if client is still up:
 	use START_TIMER/STOP_TIMER msg's to send AREYOUTHERE msg to 
 	individual clients for specified period (1 sec, 2 sec, 5 sec) 
@@ -413,4 +416,10 @@ goto Project->Properties->C/C++ Build->Settings and then
 the Build Steps tab and in the Pre-Build Steps Command window:
 
 arm-none-eabi-objcopy -O ihex ${ProjName}.elf ${ProjName}.hex
+
+CABIN1		SOUTH
+CABIN4		KITCHEN
+CABIN5		DOOR
+CABIN6		EAST
+
 

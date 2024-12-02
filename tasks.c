@@ -10,7 +10,6 @@
 #include <stdio.h> 
 #include <string.h>
 #include <sched.h>
-#include <sys/types.h>
 #include <pthread.h>
 #define closesocket close
 #include <sys/types.h>
