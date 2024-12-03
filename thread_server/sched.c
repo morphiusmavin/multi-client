@@ -127,13 +127,13 @@ int main(int argc, char **argv)
 	if(argc < 2)
 	{
 		strcpy(oFileName,"odata.dat\0");
-		strcpy(cFileName,"cdata.dat\0");
+//		strcpy(cFileName,"cdata.dat\0");
 		strcpy(sFileName,"sdata.dat\0");
 	}
 	else if(argc == 2)
 	{
 		strcpy(oFileName,argv[1]);
-		strcpy(cFileName,"cdata.dat\0");
+//		strcpy(cFileName,"cdata.dat\0");
 		strcpy(sFileName,"sdata.dat\0");
 	}
 	else if(argc == 3)

@@ -30,7 +30,7 @@
 #include "../mytypes.h"
 #include "../serial_io.h"
 #include "../queue/ollist_threads_rw.h"
-#include "../queue/cllist_threads_rw.h"
+//#include "../queue/cllist_threads_rw.h"
 #include "../tasks.h"
 //#include "cs_client/config_file.h"
 
@@ -242,7 +242,7 @@ UCHAR get_host_cmd_task(int test)
 				if(client_table[1].socket > -1)
 					send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
 				break;
-
+/*
 			case SORT_CLLIST:
 				msg_len = 0;
 				// 2 is start of clients (skipping win cl) and 8 is server 
@@ -262,7 +262,7 @@ UCHAR get_host_cmd_task(int test)
 				if(client_table[1].socket > -1)
 					send_msgb(client_table[1].socket, msg_len*2, (UCHAR*)&write_serial_buff[0],cmd);
 				break;
-
+*/
 			case SET_TIME:
 				//printf("set time\n");
 				break;
@@ -623,11 +623,11 @@ startover1:
 //			printf("read task %d: ",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+2,1);
-			printf("\n\nret: %d msg_len: %d\n",ret,msg_len);
+			//printf("\n\nret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			printf("dest: %d\n",dest);
-
+			//printf("dest: %d\n",dest);
+/*
 			for(i = 2;i < msg_len+2;i++)
 				printf("%02x ",tempx[i]);
 			printf("\n");
@@ -641,12 +641,12 @@ startover1:
 			for(i = 2;i < msg_len+2;i++)
 				printf("%c",tempx[i]);
 			printf("\n");
-
+*/
 			//printf("cmd: %d\n",cmd);
 			//printf("read task: %d\n",index);
-			print_cmd(cmd);
+			//print_cmd(cmd);
 			memmove(tempx,tempx+2,msg_len);
-			printf("\n");
+			//printf("\n");
 /*
 			for(i = 0;i < msg_len;i++)
 				printf("%02x ",tempx[i]);

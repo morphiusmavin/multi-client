@@ -64,7 +64,6 @@
 			this.outdoorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.utilsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.dS1620ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.timersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.minimizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.clearScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.clearAlertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -441,7 +440,6 @@
 			// 
 			this.utilsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.dS1620ToolStripMenuItem,
-            this.timersToolStripMenuItem,
             this.minimizeToolStripMenuItem,
             this.clearScreenToolStripMenuItem,
             this.clearAlertToolStripMenuItem,
@@ -459,13 +457,6 @@
 			this.dS1620ToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
 			this.dS1620ToolStripMenuItem.Text = "DS1620";
 			this.dS1620ToolStripMenuItem.Click += new System.EventHandler(this.dS1620ToolStripMenuItem_Click);
-			// 
-			// timersToolStripMenuItem
-			// 
-			this.timersToolStripMenuItem.Name = "timersToolStripMenuItem";
-			this.timersToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
-			this.timersToolStripMenuItem.Text = "Timers";
-			this.timersToolStripMenuItem.Click += new System.EventHandler(this.timersToolStripMenuItem_Click);
 			// 
 			// minimizeToolStripMenuItem
 			// 
@@ -940,7 +931,6 @@
 		private System.Windows.Forms.ToolStripMenuItem outdoorToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem utilsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem dS1620ToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem timersToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem minimizeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem clearScreenToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem clearAlertToolStripMenuItem;

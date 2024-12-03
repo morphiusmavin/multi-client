@@ -119,18 +119,11 @@
     <Compile Include="Settings.Designer.cs" />
     <Compile Include="SettingsClass.cs" />
     <Compile Include="SListTypes.cs" />
-    <Compile Include="SunriseSunsetHoursMinutes.cs" />
-    <Compile Include="Sunrise_lines.cs" />
-    <Compile Include="Sunrise_sunset.cs" />
     <Compile Include="TemperatureClass.cs" />
     <Compile Include="TestBench.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TestBench.designer.cs" />
-    <Compile Include="TimerSchedule.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TimerSchedule.Designer.cs" />
     <Compile Include="UIFormat.cs" />
     <Compile Include="WifiIOT.cs">
       <SubType>Form</SubType>
@@ -167,7 +160,6 @@
     <EmbeddedResource Include="SetNextClient.resx" />
     <EmbeddedResource Include="Settings.resx" />
     <EmbeddedResource Include="TestBench.resx" />
-    <EmbeddedResource Include="TimerSchedule.resx" />
     <EmbeddedResource Include="WifiIOT.resx" />
     <EmbeddedResource Include="WinCLMsg.resx" />
     <None Include="Properties\Settings.settings">

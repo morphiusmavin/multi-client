@@ -26,7 +26,7 @@
 #include "ioports.h"
 #include "serial_io.h"
 #include "queue/ollist_threads_rw.h"
-#include "queue/cllist_threads_rw.h"
+//#include "queue/cllist_threads_rw.h"
 #include "queue/dllist_threads_rw.h"
 #include "queue/sllist_threads_rw.h"
 #include "tasks.h"
@@ -40,7 +40,7 @@ extern CMD_STRUCT cmd_array[];
 
 //extern illist_t ill;
 extern ollist_t oll;
-extern cllist_t cll;
+//extern cllist_t cll;
 extern dllist_t dll;
 //extern sllist_t sll;
 extern int ds_index;
@@ -148,11 +148,11 @@ UCHAR get_host_cmd_task(int test)
 {
 	O_DATA *otp;
 	O_DATA **otpp = &otp;
-	C_DATA *ctp;
-	C_DATA **ctpp = &ctp;
+//	C_DATA *ctp;
+//	C_DATA **ctpp = &ctp;
 	D_DATA *dtp;
 	D_DATA **dtpp = &dtp;
-	C_DATA *cttp;
+//	C_DATA *cttp;
 	int rc = 0; 
 	UCHAR cmd = 0x21;
 	UCHAR onoff;
@@ -336,7 +336,7 @@ UCHAR get_host_cmd_task(int test)
 	//printf("osize: %d\r\n",osize);
 	i = NO_CLLIST_RECS;
 	//printf("no. port bits: %d\r\n",i);
-	csize = sizeof(C_DATA);
+//	csize = sizeof(C_DATA);
 	csize *= i;
 
 	trunning_days = trunning_hours = trunning_minutes = trunning_seconds = 0;
@@ -357,7 +357,7 @@ UCHAR get_host_cmd_task(int test)
 			printf("%s\r\n",errmsg);
 		}
 	}
-
+/*
 	cllist_init(&cll);
 	if(access(cFileName,F_OK) != -1)
 	{
@@ -370,7 +370,7 @@ UCHAR get_host_cmd_task(int test)
 		//printf("%d no recs in cllist\n",cs_index);
 		//cllist_show(&cll);
 	}else printf("can't find %s\n",cFileName);
-
+*/
 	dllist_init(&dll);
 	//strcpy(dFileName,"temp.dat\0");
 	/*
@@ -644,7 +644,7 @@ printf("\n");
 						mask <<= 1;
 					}
 					break;
-
+#if 0
 				case RELOAD_CLLIST:
 					cllist_init(&cll);
 					if(access(cFileName,F_OK) != -1)
@@ -755,7 +755,8 @@ printf("\n");
 							uSleep(0,TIME_DELAY/2);
 						}
 					}
-					break;
+					break
+#endif
 #if 1
 
 				case SET_NEXT_CLIENT:

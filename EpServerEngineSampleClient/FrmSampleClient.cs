@@ -38,7 +38,6 @@ namespace EpServerEngineSampleClient
         private TestBench testbench = null;
         private Cabin cabin = null;
         private Outdoor outdoor = null;
-        private TimerSchedule timer_schedule = null;
         private DS1620Mgt ds1620 = null;
         private WinCLMsg winclmsg = null;
         //private ClientDest clientdest = null;
@@ -221,7 +220,6 @@ namespace EpServerEngineSampleClient
             testbench = new TestBench("c:\\users\\daniel\\dev\\adc_list.xml", m_client, primary_wincl);
             cabin = new Cabin(m_client, primary_wincl);
             outdoor = new Outdoor(m_client, primary_wincl);
-            timer_schedule = new TimerSchedule("c:\\users\\daniel\\dev\\cdata.xml", m_client);
             ds1620 = new DS1620Mgt(m_client);
             btnFnc1.Enabled = false;
             btnFnc2.Enabled = false;
@@ -475,10 +473,6 @@ namespace EpServerEngineSampleClient
             else if (testbench.Visible == true)
             {
                 testbench.Process_Msg(receivedPacket.PacketRaw);
-            }
-            else if (timer_schedule.Visible == true)
-            {
-                timer_schedule.Process_Msg(receivedPacket.PacketRaw);
             }
             else
                 Process_Msg(receivedPacket.PacketRaw);
@@ -1030,33 +1024,6 @@ namespace EpServerEngineSampleClient
                 {
                     AddMsg("one minute after midnight");
                 }
-                /*
-                else if (tick > 120 && second == 30 && NoUpdate == false)
-                {
-                    if (garageform.Visible == false && testbench.Visible == false && timer_schedule.Visible == false)
-                        ReportAllTimeUp(0);
-                }
-                
-                else if(client_alert && second % 10 == 0 && NoUpdate == false)
-				{
-                    System.Media.SoundPlayer player;
-                    string song = "c:\\users\\Daniel\\Music\\alert.wav";
-                    player = new System.Media.SoundPlayer();
-                    player.SoundLocation = song;
-                    player.Play();
-                    player.Dispose();
-                    //client_alert = false;
-                }
-                
-                
-                else if((tick <= 120 && second % 5 == 0) || (tick > 120 && tick <= 240 && second == 0) || (tick > 240 && minute % 2 == 0 && second == 0))
-                {
-                    connected_tick++;
-                    if (connected_tick >= lbAvailClients.Items.Count)
-                        connected_tick = 0;
-                    ReportAllTimeUp(connected_tick);
-                }
-                */
             }
             if (tick == 2)
             {
@@ -1548,19 +1515,6 @@ namespace EpServerEngineSampleClient
             {
             }
         }
-
-		private void timersToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-            timer_schedule.StartPosition = FormStartPosition.Manual;
-            timer_schedule.Location = new Point(100, 10);
-            if (timer_schedule.ShowDialog(this) == DialogResult.OK)
-            {
-            }
-            else
-            {
-            }
-        }
-
 		private void minimizeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             this.WindowState = FormWindowState.Minimized;
@@ -1646,7 +1600,6 @@ namespace EpServerEngineSampleClient
             }
             garageform.Dispose();
             testbench.Dispose();
-            timer_schedule.Dispose();
             this.Close();
         }
         private void SendClientMsg(int msg, string param, bool remove)

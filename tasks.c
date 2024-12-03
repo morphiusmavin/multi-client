@@ -964,16 +964,16 @@ UCHAR timer2_task(int test)
 				switch(this_client_id)
 				{
 					case _154:
-						port = CABIN1;
+						port = CABIN1;			// south
 						add_msg_queue(port, 0);
 						uSleep(0,TIME_DELAY/4);
-						port = CABIN4;
+						port = CABIN4;			// kitchen
 						add_msg_queue(port, 0);
 						uSleep(0,TIME_DELAY/4);
-						port = CABIN5;
+						port = CABIN5;			// door
 						add_msg_queue(port, 0);
 						uSleep(0,TIME_DELAY/4);
-						port = CABIN6;
+						port = CABIN6;			// east
 						add_msg_queue(port, 0);
 					break;
 
@@ -1029,6 +1029,7 @@ UCHAR timer2_task(int test)
 	return 1;
 }
 /*********************************************************************/
+#if 0
 static void swap(COUNTDOWN* xp, COUNTDOWN* yp)
 {
 	COUNTDOWN temp = *xp;
@@ -1153,6 +1154,7 @@ void display_sort()
 		}
 	}
 }
+#endif
 /*********************************************************************/
 // this happens once a second
 UCHAR timer_task(int test)
@@ -1181,12 +1183,12 @@ UCHAR timer_task(int test)
 	uSleep(2,0);
 	//printf("starting timer task\n");
 
-	sort_countdown();
+	//sort_countdown();
 
 	while(TRUE)
 	{
 		uSleep(1,0);
-	
+/*
 		if(curr_countdown_size > 0)
 		{
 			for(i = 0;i < curr_countdown_size;i++)
@@ -1207,7 +1209,7 @@ UCHAR timer_task(int test)
 				}
 			}
 		}
-
+*/
 		if(shutdown_all)
 		{
 			//printf("done timer_task\r\n");
