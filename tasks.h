@@ -153,7 +153,7 @@ static int same_msg;
 #ifdef SERVER_146
 #warning "SERVER_146 defined"
 
-#define NUM_SOCK_TASKS			11
+#define NUM_SOCK_TASKS			7
 #define NUM_SCHED_TASKS			7
 
 // params for usleep()
@@ -168,13 +168,9 @@ int global_socket;
 enum sock_task_types
 {
 	WINCL_READ_TASK1,
-	WINCL_READ_TASK2,
 	READ_TASK1,
 	READ_TASK2,
 	READ_TASK3,
-	READ_TASK4,
-	READ_TASK5,
-	READ_TASK6,
 	GET_HOST_CMD1,
 	TCP_MONITOR,
 	SOCK_TIMER

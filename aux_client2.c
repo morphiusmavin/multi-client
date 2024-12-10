@@ -1,3 +1,4 @@
+// aux_client2.c - calls aux_client.c via ipc 
 #if 1
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
 	msg.mtext[1] = dest;
 	msg.mtext[2] = onoff;
 
-	printf("cmd: %d dest: %d onoff: %d\n",cmd,dest,onoff);
+	//printf("cmd: %d dest: %d onoff: %d\n",cmd,dest,onoff);
 	
 	if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 	{

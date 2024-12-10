@@ -19,7 +19,7 @@ typedef unsigned long ULONG;
 #define NUM_ADC_CHANNELS 11
 #define SERIAL_BUFF_SIZE 255
 #define RAW_DATA_ARRAY_SIZE 15
-#define MAX_CLIENTS	9
+#define MAX_CLIENTS	5
 #define NO_CMDS 80
 #define NO_CLLIST_RECS NUM_DATA_RECS
 #define PASSWORD_SIZE 10
@@ -61,12 +61,8 @@ enum client_types
 enum client_list
 {
 	_158,			// WINDOWS-11A (runs on Windows machine)
-	_248,			// WINDOWS-11B
 	_154,			// Cabin
 	_147,			// Testbench
-	_150,			// Outdoor
-	_151,			// not used
-	_155,			// "    "
 	_148,			// aux_client (runs on a PC linux box)
 	_SERVER			// Garage (146)
 }CLIENT_LIST;

@@ -1,3 +1,4 @@
+// aux_client.c - runs on 148 as a client of _SERVER 
 #if 1
 #include <arpa/inet.h> // inet_addr()
 #include <stdio.h>
@@ -108,28 +109,6 @@ void send_msg(int sd, int msg_len, UCHAR *msg, UCHAR msg_type, UCHAR dest)
 }
 
 /*********************************************************************/
-void func(int sockfd)
-{
-    char buff[MAX];
-    int n;
-    for (;;) {
-        bzero(buff, sizeof(buff));
-        printf("Enter the string : ");
-        n = 0;
-        while ((buff[n++] = getchar()) != '\n')
-            ;
-        write(sockfd, buff, sizeof(buff));
-        bzero(buff, sizeof(buff));
-        read(sockfd, buff, sizeof(buff));
-        printf("From Server : %s", buff);
-        if ((strncmp(buff, "exit", 4)) == 0) {
-            printf("Client Exit...\n");
-            break;
-        }
-    }
-}
-
-/*********************************************************************/
 int main()
 {
     int sockfd, connfd;
@@ -186,6 +165,7 @@ int main()
 				exit(EXIT_FAILURE);
 			}
 		}
+
 		printf("\n");
 		for(i = 0;i < 4;i++)
 		{

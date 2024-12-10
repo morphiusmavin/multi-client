@@ -33,7 +33,7 @@
 //#include "../queue/cllist_threads_rw.h"
 #include "../tasks.h"
 //#include "cs_client/config_file.h"
-
+// test abc2
 #define handle_error_en(en, msg) \
 	   do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
 
@@ -49,10 +49,6 @@ pthread_mutex_t     tcp_read_lock=PTHREAD_MUTEX_INITIALIZER;
 UCHAR (*fptr[NUM_SOCK_TASKS])(int) = 
 { 
 	WinClReadTask, 
-	WinClReadTask, 
-	ReadTask, 
-	ReadTask, 
-	ReadTask,
 	ReadTask,
 	ReadTask,
 	ReadTask,
@@ -222,7 +218,7 @@ UCHAR get_host_cmd_task(int test)
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte
 		write_serial_buff[0] = cmd;
-		//printf("msg_len: %d\n",msg_len);
+		//printf("sock: msg_len: %d\n",msg_len);
 		memcpy(write_serial_buff,msg.mtext+4,msg_len);
 /*
 		for(i = 0;i < msg_len;i++)
@@ -239,8 +235,8 @@ UCHAR get_host_cmd_task(int test)
 				//printf("%s\n",write_serial_buff);
 				if(client_table[0].socket > -1)
 					send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
-				if(client_table[1].socket > -1)
-					send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
+//				if(client_table[1].socket > -1)
+//					send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
 				break;
 /*
 			case SORT_CLLIST:
@@ -281,8 +277,8 @@ UCHAR get_host_cmd_task(int test)
 						//printf("%d\n",strlen(write_serial_buff));
 						if(client_table[0].socket > -1)
 							send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
-						if(client_table[1].socket > -1)
-							send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
+//						if(client_table[1].socket > -1)
+//							send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,write_serial_buff,SEND_CLIENT_LIST);
 						uSleep(0,TIME_DELAY/2);
 						//printf("client sock: %d\n",client_table[i].socket);
 					}
@@ -295,8 +291,8 @@ UCHAR get_host_cmd_task(int test)
 				
 				if(client_table[0].socket > 0)
 					send_msgb(client_table[0].socket,strlen(write_serial_buff)*2,(UCHAR *)&write_serial_buff[0],UPTIME_MSG);
-				if(client_table[1].socket > 0)
-					send_msgb(client_table[1].socket,strlen(write_serial_buff)*2,(UCHAR *)&write_serial_buff[0],UPTIME_MSG);
+//				if(client_table[1].socket > 0)
+//					send_msgb(client_table[1].socket,strlen(write_serial_buff)*2,(UCHAR *)&write_serial_buff[0],UPTIME_MSG);
 				
 				//if(client_table[1].socket > 0)
 					//send_msgb(client_table[1].socket, strlen(write_serial_buff)*2,(UCHAR *)write_serial_buff,UPTIME_MSG);
@@ -422,6 +418,10 @@ startover:
 			int rc = recv_tcp(client_table[index].socket, &msg_buf[0], msg_len, 1);
 			cmd = msg_buf[0];
 //print_cmd(cmd);
+			if(cmd > NO_CMDS)	// don't know why another msg comes into the WinClReadTask the 2nd time 
+								// with a win_client_to_client_sock of 1 which was sent to the cabin client
+								// as a 'bad command'
+				goto startover;
 //printf("win cl read task\n");
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table (destination)
@@ -430,6 +430,10 @@ startover:
 
 			for(i = 2;i < rc;i+=2)
 				printf("%02x ",msg_buf[i]);
+			printf("\n");
+
+			for(i = 2;i < rc;i+=2)
+				printf("%c",msg_buf[i]);
 			printf("\n");
 */
 			memset(tempx,0,sizeof(tempx));
@@ -447,18 +451,6 @@ printf("\n");
 */
 //			printf("msg_len: %d\n",msg_len);
 
-//if(cmd == SET_CHICK_WATER_ON || cmd == SET_CHICK_WATER_OFF)
-
-/*
-if(cmd == DB_LOOKUP)
-{
-			printf("msg_len from win client: %d\n",msg_len);
-
-			for(j = 0;j < msg_len;j++)
-				printf("%02x ",tempx[j]);
-			printf("\n");
-}
-*/
 			if(cmd == DISCONNECT)
 			{
 				close(client_table[index].socket);
@@ -477,19 +469,6 @@ if(cmd == DB_LOOKUP)
 			msg.mtext[2] = (UCHAR)(msg_len >> 4);
 			memcpy(msg.mtext + 3,tempx,msg_len);
 			// send msg's to sched 
-/*
-			if(win_client_to_client_sock == 0 && client_table[0].socket > 0)	why would this ever happen?
-			{
-				send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,cmd);
-				//printf("%s\n",tempx);
-			}
-
-			else if(win_client_to_client_sock == 1 && client_table[1].socket > 0)
-			{
-				send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,cmd);
-				//printf("%s\n",tempx);
-			}
-*/
 			if(win_client_to_client_sock == _SERVER)
 			{
 				//printf("msg to cmd_host on server: %s %d\n",msg.mtext + 3,cmd);
@@ -533,19 +512,27 @@ if(cmd == DB_LOOKUP)
 				printf("\n");
 */
 				// this sends a msg to the appropriate client's ReadTask
-				if(win_client_to_client_sock > 1)
-				{
-					if(client_table[win_client_to_client_sock].socket > 0)
-					{
-						send_msg(client_table[win_client_to_client_sock].socket, msg_len, (UCHAR*)tempx,cmd);
-					}else printf("bad socket %d\n",win_client_to_client_sock);
-				}
-				if(win_client_to_client_sock < 2 && win_client_to_client_sock > -1)
+				if(win_client_to_client_sock < 1)	// back to Windows machine 
 				{
 					if(client_table[win_client_to_client_sock].socket > 0)
 					{
 						send_msgb(client_table[win_client_to_client_sock].socket, msg_len, (UCHAR*)tempx,cmd);
-					}else printf("bad socket %d\n",win_client_to_client_sock);
+					}else 
+					{
+						printf("bad socket %d\n",win_client_to_client_sock);
+						//uSleep(2,0);
+					}
+				}
+				else if(win_client_to_client_sock > 0 && win_client_to_client_sock < _SERVER)
+				{
+					if(client_table[win_client_to_client_sock].socket > 0)
+					{
+						send_msg(client_table[win_client_to_client_sock].socket, msg_len, (UCHAR*)tempx,cmd);
+					}else 
+					{
+						printf("bad socket %d\n",win_client_to_client_sock);
+						//uSleep(2,0);
+					}
 				}
 				//printf("sent: %s\n", msg.mtext);
 				//printf("\n");
@@ -601,7 +588,7 @@ UCHAR ReadTask(int test)
 	int msgtype = 1;
 	msg.mtype = msgtype;
 //	uSleep(1,0);
-	printf("readtask: %s\n",client_table[index].label);
+	//printf("readtask: %s\n",client_table[index].label);
 //	return 0;
 
 /*
@@ -620,7 +607,7 @@ UCHAR ReadTask(int test)
 startover1:
 		if(client_table[index].socket > 0)
 		{
-//			printf("read task %d: ",index);
+			//printf("read task %d: ",index);
 			msg_len = get_msg(client_table[index].socket);
 			ret = recv_tcp(client_table[index].socket, &tempx[0],msg_len+2,1);
 			//printf("\n\nret: %d msg_len: %d\n",ret,msg_len);
@@ -644,7 +631,7 @@ startover1:
 */
 			//printf("cmd: %d\n",cmd);
 			//printf("read task: %d\n",index);
-			//print_cmd(cmd);
+			print_cmd(cmd);
 			memmove(tempx,tempx+2,msg_len);
 			//printf("\n");
 /*
@@ -686,19 +673,15 @@ startover1:
 					}
 					break;
 				case 0:		// WINDOWS-11A
-				case 1:		// WINDOWS-11B
 					if(client_table[dest].socket > 0)
 						send_msgb(client_table[dest].socket, strlen(tempx)*2,tempx,cmd);
 					break;
+				case 1:
 				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
 					send_msg(client_table[dest].socket, strlen(tempx),tempx,cmd);
 					break;
 				default:
-					printf("read task sending to tcp\n");
+					printf("read task ? %d\n",dest);
 					uSleep(1,0);
 //					if(client_table[dest].socket > 0)
 //						send_msg(client_table[dest].socket, strlen(tempx), (UCHAR*)tempx,cmd);
@@ -971,8 +954,8 @@ UCHAR tcp_monitor_task(int test)
 					// send msg to 1st win client (149)
 					if(client_table[0].socket > 0)
 						send_msgb(client_table[0].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
-					if(client_table[1].socket > 0)
-						send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
+//					if(client_table[1].socket > 0)
+//						send_msgb(client_table[1].socket, strlen(tempx)*2,tempx,SEND_CLIENT_LIST);
 
 					if(client_table[i].qid == 0)
 					{
@@ -1099,6 +1082,7 @@ int get_msg(int sd)
 		for(i = 0;i < 10;i++)
 			printf("%02x ",preamble[i]);
 		printf("\n");
+		uSleep(1,0);
 		return -1;
 	}
 	ret = recv_tcp(sd, &low,1,1);

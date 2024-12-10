@@ -1,0 +1,21 @@
+WnCl sends a message (e.g MIDDLE_LIGHT on or off) to WinClReadTask in thread_server/sock_mgt.c
+then it goes to the get_host_cmd_task in cmd_tasks.c via ipc, then to the basic_controls_task in tasks.cmd_tasks
+
+WnCl sends a message (e.g. BENCH_LIGHT on of off) to WinClReadTask then to the client's get_host_cmd_task 
+int thread_client/sock_mgt.c which passes it to the cmd_tasks.c (get_host_cmd_task) for that client which 
+passes it to basic_controls_task.
+
+NORTHWEST_LIGHT
+win_client_to_client_sock: 4
+04 01 00 00
+
+msg to cmd_host on server:  3
+
+getting 2nd message coming into WinClReadTask with an unknown cmd? (wtf)
+unknown cmd: 89
+
+win_client_to_client_sock: 1	<= its being sent to the cabin client?
+01 31 20 4e 4f 52 54 48 57 45 53 54 5f 4c 49 47 48 54 00
+1 NORTHWEST_LIGHT
+
+

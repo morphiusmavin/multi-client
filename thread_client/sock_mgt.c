@@ -203,6 +203,7 @@ UCHAR get_host_cmd_task(int test)
 			rc = recv_tcp(&msg_buf[0],msg_len+1,1);
 			//printf("rc: %d\n",rc);
 			cmd = msg_buf[0];
+			//printf("client get_host_cmd_task\n");
 			print_cmd(cmd);
 			memset(tempx,0,sizeof(tempx));
 			memcpy(tempx,msg_buf+1,msg_len);
