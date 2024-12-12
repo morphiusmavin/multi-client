@@ -168,17 +168,17 @@ namespace EpServerEngineSampleClient
 			{
 				case 0:
 					add_garage_list();
-					type = 8;   // server
+					type = 4;   // server
 					break;
 
 				case 1:
 					add_cabin_list();
-					type = 2;   // cabin
+					type = 1;   // cabin
 					break;
 
 				case 2:
 					add_testbench_list();
-					type = 3;   // testbench
+					type = 2;   // testbench
 					break;
 				case 3:
 					add_outdoor_list();

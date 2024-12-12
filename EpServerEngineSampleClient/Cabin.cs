@@ -98,13 +98,13 @@ namespace EpServerEngineSampleClient
 			int offset = svrcmd.GetCmdIndexI(cmd);
 			//AddMsg("offset: " + offset.ToString());
 			//AddMsg(svrcmd.GetState(offset).ToString());
-			return svrcmd.Change_PortCmd(offset, 2);
+			return svrcmd.Change_PortCmd(offset, 1);
 		}
 		private bool SendCmd(int which, bool onoff)
 		{
 			string cmd = on_label_list[which];
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			return svrcmd.Change_PortCmd(offset, 2, onoff);		// this is bad
+			return svrcmd.Change_PortCmd(offset, 1, onoff);		// this is bad
 		}
 		private void btn1_Click(object sender, EventArgs e)
 		{

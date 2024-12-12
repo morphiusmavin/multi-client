@@ -233,13 +233,13 @@ namespace EpServerEngineSampleClient
 		{
 			string cmd = on_label_list[which];
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			return svrcmd.Change_PortCmd(offset, 8);
+			return svrcmd.Change_PortCmd(offset, 4);
 		}
 		private bool SendCmd(int which, bool onoff)
 		{
 			string cmd = on_label_list[which];
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			return svrcmd.Change_PortCmd(offset, 8, onoff);		// this is bad
+			return svrcmd.Change_PortCmd(offset, 4, onoff);		// this is bad
 		}
 		public void ToggleButton(int which, bool state)
 		{

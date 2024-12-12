@@ -232,7 +232,7 @@ UCHAR get_host_cmd_task(int test)
 		switch(cmd)
 		{
 			case DS1620_MSG:
-				//printf("%s\n",write_serial_buff);
+				printf("msg: %s\n",write_serial_buff);
 				if(client_table[0].socket > -1)
 					send_msgb(client_table[0].socket, strlen(write_serial_buff)*2,write_serial_buff,DS1620_MSG);
 //				if(client_table[1].socket > -1)
@@ -421,21 +421,24 @@ startover:
 			if(cmd > NO_CMDS)	// don't know why another msg comes into the WinClReadTask the 2nd time 
 								// with a win_client_to_client_sock of 1 which was sent to the cabin client
 								// as a 'bad command'
+								// 12/12/24 - it was because the wincl was sending a EXTRA_WINCL_SYNC from 
+								// ServerCmds.cs back to the WinClReadTask in the server's sock_mgt.c 
+								// the orig purpose was for the other win cl to know which lights were on or off 
 				goto startover;
 //printf("win cl read task\n");
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table (destination)
-/*
+
 			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 
-			for(i = 2;i < rc;i+=2)
+			for(i = 0;i < rc+2;i+=2)
 				printf("%02x ",msg_buf[i]);
 			printf("\n");
 
 			for(i = 2;i < rc;i+=2)
 				printf("%c",msg_buf[i]);
 			printf("\n");
-*/
+
 			memset(tempx,0,sizeof(tempx));
 			k = 0;
 			for(j = 4;j < msg_len+4;j+=2)
@@ -613,12 +616,13 @@ startover1:
 			//printf("\n\nret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-			//printf("dest: %d\n",dest);
-/*
-			for(i = 2;i < msg_len+2;i++)
+
+			printf("dest: %d\n",dest);
+
+			for(i = 0;i < msg_len+4;i++)
 				printf("%02x ",tempx[i]);
 			printf("\n");
-
+/*
 			tempx[msg_len-1] = 'x';
 
 			for(i = 2;i < msg_len+2;i++)
@@ -660,12 +664,12 @@ startover1:
 					msg.mtext[1] = (UCHAR)msg_len;
 					msg.mtext[2] = (UCHAR)(msg_len >> 4);
 					memcpy(msg.mtext + 3,tempx,msg_len);
-					//printf("msg to cmd_host from client %d\n",dest);
-	/*
+					printf("msg to cmd_host from client %d\n",dest);
+	
 					for(i = 0;i < msg_len+3;i++)
 						printf("%02x ",msg.mtext[i]);
 					printf("\n");
-	*/
+	
 					if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 					{
 						perror("msgsnd error");

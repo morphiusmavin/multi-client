@@ -26,18 +26,16 @@ typedef unsigned char UCHAR;
 typedef unsigned int UINT;
 typedef UCHAR* PUCHAR;
 typedef unsigned long ULONG;
-UCHAR tempx[1000];
 
 struct msgqbuf 
 {
 	long mtype;
-	UCHAR mtext[1000];
+	UCHAR mtext[10];
 };
 #endif
 /*********************************************************************/
 int main(int argc, char **argv)
 {
-	char buff[20];
 	int i;
 	UCHAR dest;
 	int sock_qid;
@@ -75,7 +73,7 @@ int main(int argc, char **argv)
 	msg.mtext[1] = dest;
 	msg.mtext[2] = onoff;
 
-	//printf("cmd: %d dest: %d onoff: %d\n",cmd,dest,onoff);
+	printf("cmd: %d dest: %d onoff: %d\n",cmd,dest,onoff);
 	
 	if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 	{

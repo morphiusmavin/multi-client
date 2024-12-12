@@ -15,9 +15,7 @@ todo:
 10) need a config file for each client/server which stores:
 	a) params for DS1620: enabled, which ones are valid, frequency of samples 
 	b) 
-11) instead of having a timer to turn lights off in Garage/Cabin dialog, make it a function of 
-	the client/server that sets it's own timer to turn off the lights using the timer schedule 
-	sort/timer_task method (done except the state on the properties are not changed)
+11) *
 12) Need an all-off button for cabin (F5?)
 13) Use push buttons hooked up to inputs on 146 to turn on/off lights in garage 
 14) Use config.bin to store variable that tells how often to rename ddata.dat. (the dat file 
@@ -422,4 +420,5 @@ CABIN4		KITCHEN
 CABIN5		DOOR
 CABIN6		EAST
 
-
+12/3/2024 - got rid of all the C_LIST stuff and implemented aux_client.c & aux_client2.c where aux_client runs on 148 linux box and logs in as a client and waits for ipc queue msg's from another
+session on 148 (see aux_client_scripts directory in /home/dan). These scripts can be run from crontab. This eliminates all the timer schedule stuff.

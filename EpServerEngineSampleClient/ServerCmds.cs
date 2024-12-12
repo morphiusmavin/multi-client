@@ -82,17 +82,6 @@ namespace EpServerEngineSampleClient
 			SEND_MESSAGE,
 			SET_NEXT_CLIENT,
 			SEND_NEXT_CLIENT,
-			GET_CLLIST,
-			GET_ALL_CLLIST,
-			REPLY_CLLIST,
-			SET_CLLIST,
-			SAVE_CLLIST,
-			NO_CLLIST_REC,
-			SHOW_CLLIST,
-			CLEAR_CLLIST,
-			SORT_CLLIST,
-			DISPLAY_CLLIST_SORT,
-			RELOAD_CLLIST,
 			SET_VALID_DS,
 			SET_DS_INTERVAL,
 			RENAME_D_DATA,
@@ -345,7 +334,7 @@ namespace EpServerEngineSampleClient
 			string msg = "EXTRA_WINCL_SYNC";
 			int icmd = GetCmdIndexI(msg);
 
-			Send_ClCmd(icmd, dest_index, send_cmd);
+			//Send_ClCmd(icmd, dest_index, send_cmd);		12/12/24 - this is sending the same msg again to the server's WinClReadTask
 			//Send_ClCmd(icmd, 0, send_cmd);
 			return iparam;
 		}

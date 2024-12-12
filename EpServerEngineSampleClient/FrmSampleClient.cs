@@ -419,7 +419,7 @@ namespace EpServerEngineSampleClient
                     //tbServerTime.Text = "";
                     //AddMsg("server_up_seconds: " + server_up_seconds.ToString());
                     //btnShowParams.Enabled = valid_cfg;
-                    clients_avail[8].socket = 1;        // 8 is _SERVER (this is bad!)
+                    clients_avail[4].socket = 1;        // 8 is _SERVER (this is bad!)
                     //timer1.Enabled = true;
                     AddMsg("connected");
                     connect_buttons(true);
@@ -511,6 +511,7 @@ namespace EpServerEngineSampleClient
             type_msg = chars[0];
             System.Buffer.BlockCopy(bytes, 2, chars2, 0, bytes.Length - 2);
             ret = new string(chars2);
+            //AddMsg("test: " + ret);
             string str = svrcmd.GetName(type_msg);
             bool iparam;
             int temp = 0;
@@ -1029,7 +1030,7 @@ namespace EpServerEngineSampleClient
             {
                 if (m_client.IsConnectionAlive)
                 {
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 8, "test");
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 4, "test");
                     //AddMsg("send client list");
                     RedrawClientListBox();
                 }
@@ -1590,7 +1591,7 @@ namespace EpServerEngineSampleClient
 		{
             if (client_connected)
             {
-                svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
+                svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 4, " ");
                 disconnect_attempts = 0;
                 AddMsg("disconnecting");
                 btnConnect.Text = "Connect";
