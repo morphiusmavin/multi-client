@@ -168,7 +168,7 @@ namespace EpServerEngineSampleClient
 			{
 				case 0:
 					add_garage_list();
-					type = 4;   // server
+					type = 5;   // server
 					break;
 
 				case 1:

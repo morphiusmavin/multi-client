@@ -419,7 +419,7 @@ namespace EpServerEngineSampleClient
                     //tbServerTime.Text = "";
                     //AddMsg("server_up_seconds: " + server_up_seconds.ToString());
                     //btnShowParams.Enabled = valid_cfg;
-                    clients_avail[4].socket = 1;        // 8 is _SERVER (this is bad!)
+                    clients_avail[5].socket = 1;        // 5 is _SERVER (this is bad!)
                     //timer1.Enabled = true;
                     AddMsg("connected");
                     connect_buttons(true);
@@ -748,7 +748,7 @@ namespace EpServerEngineSampleClient
                                 clmsg += word + " " + sock.ToString();
                                 //if(avail)
                                 RedrawClientListBox();
-                                //AddMsg(clmsg);
+                                AddMsg(clmsg);
                                 break;
                             default:
                                 AddMsg("?");
@@ -1016,7 +1016,7 @@ namespace EpServerEngineSampleClient
                     {
                         if ((cl.type == 1 || cl.type == 2) && cl.socket > 0)  // set the time on any server/clients in the active list
                         {
-                            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test");
+                            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DLLIST_SAVE"), cl.index, "test asdf");
                             //AddMsg("DLLIST_SAVE: " + cl.label);
                         }
                     }
@@ -1026,17 +1026,17 @@ namespace EpServerEngineSampleClient
                     AddMsg("one minute after midnight");
                 }
             }
-            if (tick == 2)
+            if (tick == 4)
             {
                 if (m_client.IsConnectionAlive)
                 {
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 4, "test");
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("SEND_CLIENT_LIST"), 5, "test abcd");
                     //AddMsg("send client list");
                     RedrawClientListBox();
                 }
 
             }
-            if (tick == 3)
+            if (tick == 60)
             {
                 //AddMsg("set time");
                 if (m_client.IsConnectionAlive)
