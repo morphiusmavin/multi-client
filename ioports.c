@@ -40,10 +40,12 @@ void OutPortA(int onoff, int bit)
 	UINT val2 = 0x10300;
 	nbuslock();
 	val = winpeek8(val2);
+
 	if(onoff == 1)
 		winpoke8(val2, val | (1 << bit));
 	else
 		winpoke8(val2, val & ~(1 << bit));
+
 	nbusunlock();
 }
 /**********************************************************************************************************/

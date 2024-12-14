@@ -18,4 +18,18 @@ win_client_to_client_sock: 1	<= its being sent to the cabin client?
 01 31 20 4e 4f 52 54 48 57 45 53 54 5f 4c 49 47 48 54 00
 1 NORTHWEST_LIGHT
 
+0 win client
+1 cabin 
+2 testbench
+3 aux 
+4 aux2 
+5 server 
 
+aux_client.c - waits for ipc msg from aux_client2 and sends tcp msg to server 
+aux_client3.c - waits for tcp from server and puts msg up on screen 
+
+aux2_client.c - uses 2 threads for 2 way trips of server and linux PC 
+	runs on 150 as a client of _SERVER - uses send_thread to relay cmds from 
+	either aux_client for single port cmd or aux_client2a for strings to server
+	uses listen to show what is received by this client 
+aux_client2.c - used by bash scripts to send msg's to aux_client 

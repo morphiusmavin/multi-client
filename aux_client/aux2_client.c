@@ -1,0 +1,412 @@
+// aux2_client.c - runs on 150 as a client of _SERVER - uses send_thread to relay cmds from either aux_client for single port cmd or aux_client2a for strings to server - uses listen to show what is received by this client 
+#if 1
+#include <unistd.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <assert.h>
+#include <time.h>
+#include <sys/time.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <stdio.h> 
+#include <string.h>
+#include <sched.h>
+#include <sys/types.h>
+#include <pthread.h>
+#define closesocket close
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <errno.h>
+#include <sys/types.h>
+/* #include <sys/ipc.h> */
+#include <sys/msg.h>
+#include <semaphore.h>
+#include <pthread.h>
+#include "../mytypes.h"
+#include "../cmd_types.h"
+#define MAX 80
+#define PORT 5193
+#define SA struct sockaddr
+#define SEND_CMD_HOST_QKEY	1235
+
+typedef unsigned char UCHAR;
+typedef unsigned int UINT;
+typedef UCHAR* PUCHAR;
+typedef unsigned long ULONG;
+UCHAR tempx[1000];
+static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
+
+static int sock_qid;
+static key_t sock_key;
+static int sockfd;
+
+void *listen_thread(void *test);
+void *send_thread(void *test);
+
+int put_sock(UCHAR *buf,int buflen, int block, char *errmsg);
+int get_sock(UCHAR *buf, int buflen, int block, char *errmsg);
+void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type, int dest);
+int get_msgb(void);
+void send_msgb(int msg_len, UCHAR *msg, UCHAR msg_type);
+int recv_tcp(UCHAR *str, int strlen,int block);
+int send_tcp(UCHAR *str,int len);
+int get_msg(void);
+
+extern CMD_STRUCT cmd_array[];
+
+void print_cmd(UCHAR cmd)
+{
+	char tempx[30];
+	
+	if(cmd > NO_CMDS)
+		printf("unknown cmd: %d\n",cmd);
+
+	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
+	printf("%s\r\n",cmd_array[cmd].cmd_str);
+}
+
+/*********************************************************************/
+int get_msg(void)
+{
+	int len;
+	UCHAR low, high;
+	int ret;
+	int i;
+
+	UCHAR preamble[10];
+	ret = recv_tcp(preamble,8,1);
+	/* printf("ret: %d\n",ret); */
+	if(ret < 0)
+	{
+		printf("%02x ",ret);
+	}
+	if(memcmp(preamble,pre_preamble,8) != 0)
+	{
+		printf("bad preamble\n");
+		for(i = 0;i < 10;i++)
+			printf("%02x ",preamble[i]);
+		printf("\n");
+		sleep(1);
+		return -1;
+	}
+	ret = recv_tcp(&low,1,1);
+	ret = recv_tcp(&high,1,1);
+	/* printf("%02x %02x\n",low,high); */
+	len = 0;
+	len = (int)(high);
+	len <<= 4;
+	len |= (int)low;
+
+	return len;
+}
+/*********************************************************************/
+void send_msg(int msg_len, UCHAR *msg, UCHAR msg_type, int dest)
+{
+	int ret;
+	int i;
+	UCHAR temp[2];
+
+	ret = send_tcp(&pre_preamble[0],8);
+	temp[0] = (UCHAR)(msg_len & 0x0F);
+	temp[1] = (UCHAR)((msg_len & 0xF0) >> 4);
+	/* printf("%02x %02x\n",temp[0],temp[1]);	*/
+	send_tcp((UCHAR *)&temp[0],1);
+	send_tcp((UCHAR *)&temp[1],1);
+	send_tcp((UCHAR *)&msg_type,1);
+	send_tcp((UCHAR *)&dest,1);
+
+	for(i = 0;i < msg_len;i++)
+		send_tcp((UCHAR *)&msg[i],1);
+}
+/*********************************************************************/
+int get_msgb(void)
+{
+	int len;
+	UCHAR low, high;
+	int ret;
+	int i;
+
+	UCHAR preamble[20];
+	ret = recv_tcp(preamble,16,1);
+	if(ret < 0)
+	{
+		printf("%02x ",ret);
+	}
+	if(memcmp(preamble,pre_preamble,8) != 0)
+		return -1;
+
+	low = preamble[8];
+	high = preamble[9];
+	len = (int)(high);
+	len <<= 8;
+	len |= (int)low;
+
+	return len;
+}
+
+/*********************************************************************/
+void send_msgb(int msg_len, UCHAR *msg, UCHAR msg_type)
+{
+	int len;
+	int ret;
+	int i;
+
+	ret = send_tcp(&pre_preamble[0],8);
+	msg_len++;
+	send_tcp((UCHAR *)&msg_len,1);
+	ret = 0;
+	send_tcp((UCHAR *)&ret,1);
+
+	for(i = 0;i < 6;i++)
+		send_tcp((UCHAR *)&ret,1);
+
+	send_tcp((UCHAR *)&msg_type,1);
+
+	ret = 0;
+	send_tcp((UCHAR *)&ret,1);
+
+	for(i = 0;i < msg_len;i++)
+	{
+		send_tcp((UCHAR *)&msg[i],1);
+		send_tcp((UCHAR *)&ret,1);
+	}
+}
+
+/*********************************************************************/
+int recv_tcp(UCHAR *str, int strlen,int block)
+{
+	int ret = -1;
+	char errmsg[20];
+	memset(errmsg,0,20);
+	ret = get_sock(str,strlen,block,&errmsg[0]);
+	if(ret < 0 && (strcmp(errmsg,"Success") != 0))
+	{
+		printf(errmsg);
+	}
+	return ret;
+}
+
+/*********************************************************************/
+int send_tcp(UCHAR *str,int len)
+{
+	int ret = 0;
+	char errmsg[60];
+	memset(errmsg,0,60);
+	ret = put_sock(str,len,1,&errmsg[0]);
+	if(ret < 0 && (strcmp(errmsg,"Success") != 0))
+	{
+		printf(errmsg);
+	}
+	return ret;
+}
+
+/*********************************************************************/
+int put_sock( UCHAR *buf,int buflen, int block, char *errmsg)
+{
+	int rc = 0;
+	char extra_msg[10];
+	if(block)
+
+		rc = send(sockfd, buf,buflen,MSG_WAITALL);
+	else
+
+		rc = send(sockfd, buf,buflen,MSG_DONTWAIT);
+
+	if(rc < 0)
+	{
+
+		strcpy(errmsg,strerror(errno));
+		sprintf(extra_msg," %d\n",errno);
+		strcat(errmsg,extra_msg);
+		strcat(errmsg,"\nput_sock\n");
+
+	}else strcpy(errmsg,"Success\0");
+	return rc;
+}
+
+/*********************************************************************/
+int get_sock(UCHAR *buf, int buflen, int block, char *errmsg)
+{
+	int rc;
+	char extra_msg[10];
+	if(block)
+		rc = recv(sockfd, buf,buflen,MSG_WAITALL);
+	else
+		rc = recv(sockfd, buf,buflen,MSG_DONTWAIT);
+	if(rc < 0 && errno != 11)
+	{
+		strcpy(errmsg,strerror(errno));
+		sprintf(extra_msg," %d",errno);
+		strcat(errmsg,extra_msg);
+		strcat(errmsg," get_sock");
+	}else strcpy(errmsg,"Success\0");
+	return rc;
+}
+#endif
+/*********************************************************************/
+int main(void)
+{
+    struct sockaddr_in servaddr, cli;
+	char buff[20];
+	int c;
+	int i;
+	pthread_t thread1, thread2;
+
+	sockfd = -1;
+	int r1 = 1;
+
+	sock_key = SEND_CMD_HOST_QKEY;
+	sock_qid = msgget(sock_key, IPC_CREAT | 0666);
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd == -1) {
+        printf("socket creation failed...\n");
+        exit(0);
+    }
+    else
+        printf("Socket successfully created..\n");
+    bzero(&servaddr, sizeof(servaddr));
+
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = inet_addr("192.168.88.146");
+    servaddr.sin_port = htons(PORT);
+
+
+    if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr))
+        != 0) {
+        printf("connection with the server failed...\n");
+        exit(0);
+    }
+    else
+        printf("connected to the server..\n");
+
+
+	if (pthread_create(&thread1, NULL, listen_thread, (void *) &r1) != 0) 
+		perror("pthread_create"), exit(1); 
+
+	if (pthread_create(&thread2, NULL, send_thread, (void *) &r1) != 0)
+		perror("pthread_create"), exit(1); 
+  
+	if (pthread_join(thread1, NULL) != 0)
+		perror("pthread_join"),exit(1);
+
+	if (pthread_join(thread2, NULL) != 0)
+		perror("pthread_join"),exit(1);
+
+	return 0;
+}
+
+/*********************************************************************/
+void *send_thread(void *test)
+{
+	UCHAR dest;
+	UCHAR cmd;
+	int msg_len;
+	UCHAR onoff;
+	struct msgqbuf msg;
+	int i;
+	UCHAR msg_buf[200];
+
+	int msgtype = 1;
+	msg.mtype = msgtype;
+
+	printf("send thread started\n");
+	while(1)
+	{
+		if (msgrcv(sock_qid, (void *) &msg, sizeof(msg.mtext), msgtype, MSG_NOERROR) == -1) 
+		{
+			if (errno != ENOMSG) 
+			{
+				perror("msgrcv");
+				printf("msgrcv error\n");
+				exit(EXIT_FAILURE);
+			}
+		}
+
+		printf("\n");
+		for(i = 0;i < 4;i++)
+		{
+			printf("%02x ",msg.mtext[i]);
+		}
+		printf("\n");
+
+		cmd = msg.mtext[0];							// first byte is cmd
+		print_cmd(cmd);
+		dest = (int)msg.mtext[1];					// 2nd byte is dest
+		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
+		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
+		msg_buf[0] = cmd;
+		printf("msg_len: %d dest: %d\n",msg_len,dest);
+
+		memcpy(msg_buf,msg.mtext+4,msg_len);
+		//msg_len = msg_len>255?255:msg_len;
+
+		for(i = 0;i < msg_len;i++)
+			printf("%02x ",msg_buf[i]);
+
+		// dest is used in ReadTask to know where to send msg 
+		send_msg(msg_len, msg_buf, cmd, dest);
+	}
+
+}
+/*********************************************************************/
+void *listen_thread(void *test)
+{
+	UCHAR cmd;
+	int msg_len;
+	UCHAR tempx[200];
+	int i;
+	int ret;
+//	struct msgqbuf msg;
+//	int msgtype = 1;
+
+	printf("listen thread started\n");
+
+	while(1)
+	{
+		memset(tempx,0,sizeof(tempx));
+		msg_len = get_msg();
+		ret = recv_tcp(&tempx[0],msg_len+1,1);
+
+		for(i = 0;i < msg_len+1;i++)
+			printf("%02x ",tempx[i]);
+		printf("\n");
+
+		printf("ret: %d\n",ret);
+		cmd = tempx[0];
+
+		print_cmd(cmd);
+		memcpy(tempx,tempx+1,msg_len);
+
+		for(i = 0;i < msg_len;i++)
+			printf("%02x ",tempx[i]);
+
+		printf("\n");
+/*
+		memset(msg.mtext,0,sizeof(msg.mtext));
+		msg.mtext[0] = cmd;
+		msg.mtext[1] = (UCHAR)msg_len;
+		msg.mtext[2] = (UCHAR)(msg_len >> 4);
+		memcpy(msg.mtext + 3,tempx,msg_len);
+
+		if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
+		{
+			perror("msgsnd error");
+			exit(EXIT_FAILURE);
+		}
+*/
+		if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
+		{
+			printf("shut down\n");
+			close(sockfd);
+			return 0;
+		}
+		for(i = 0;i < msg_len;i++)
+			printf("%c",tempx[i]);
+		printf("\n");
+	}
+}

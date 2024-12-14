@@ -52,6 +52,7 @@ UCHAR (*fptr[NUM_SOCK_TASKS])(int) =
 	ReadTask,
 	ReadTask,
 	ReadTask,
+	ReadTask,
 	get_host_cmd_task, 
 	tcp_monitor_task,
 	sock_timer
@@ -505,9 +506,9 @@ printf("\n");
 				// the client_table[] array 
 				uSleep(0,TIME_DELAY/16);
 
-				//printf("msg to client: sock: %d %s %d\n",client_table[win_client_to_client_sock].socket, 
-					//client_table[win_client_to_client_sock].label, client_table[win_client_to_client_sock].qid);
-				//print_cmd(cmd);	
+				printf("msg to client: %d %s %d\n",client_table[win_client_to_client_sock].socket, 
+					client_table[win_client_to_client_sock].label, client_table[win_client_to_client_sock].qid);
+				print_cmd(cmd);	
 /*
 				printf("msg.mtext: ");
 				for(i = 0;i < msg_len+4;i++)
@@ -643,33 +644,37 @@ startover1:
 				printf("%02x ",tempx[i]);
 			printf("\n");
 */
-			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
+			if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX)
 			{
-				//printf("shutdown or reboot %d\n",index);
-				close(client_table[index].socket);
-				client_table[index].socket = -1;
-				// the break statement only goes back up to 
-				// "read task 2"
-				// tell the sched which client was shutdown 
-				// (deleted)
-				goto startover1;
-//				break;
+				printf("closing program\n");
+				exit(1);
 			}
 			switch(dest)
 			{
 				case _SERVER:		// from one of the clients to the server
-					//printf("dest: server\n");
+					if(cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
+					{
+						//printf("shutdown or reboot %d\n",index);
+						close(client_table[index].socket);
+						client_table[index].socket = -1;
+						// the break statement only goes back up to 
+						// "read task 2"
+						// tell the sched which client was shutdown 
+						// (deleted)
+						goto startover1;
+					}
+					printf("dest: server\n");
 					memset(msg.mtext,0,sizeof(msg.mtext));
 					msg.mtext[0] = cmd;
 					msg.mtext[1] = (UCHAR)msg_len;
 					msg.mtext[2] = (UCHAR)(msg_len >> 4);
 					memcpy(msg.mtext + 3,tempx,msg_len);
 					printf("msg to cmd_host from client %d\n",dest);
-	
+
 					for(i = 0;i < msg_len+3;i++)
 						printf("%02x ",msg.mtext[i]);
 					printf("\n");
-	
+
 					if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 					{
 						perror("msgsnd error");
@@ -680,8 +685,10 @@ startover1:
 					if(client_table[dest].socket > 0)
 						send_msgb(client_table[dest].socket, strlen(tempx)*2,tempx,cmd);
 					break;
-				case 1:
-				case 2:
+				case 1:		// cabin 
+				case 2:		// testbench
+				case 3:		// aux_client
+				case 4:		// aux_client3
 					send_msg(client_table[dest].socket, strlen(tempx),tempx,cmd);
 					break;
 				default:

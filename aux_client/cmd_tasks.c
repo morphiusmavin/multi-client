@@ -102,10 +102,11 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	msg.mtext[2] = (UCHAR)msg_len;
 	msg.mtext[3] = (UCHAR)(msg_len >> 4);
 
+
 	printf("msg_len: %d\n",msg_len);
 
 	printf("\n");
-	for(i = 0;i < msg_len;i++)
+	for(i = 0;i < 4;i++)
 		printf("%02x ",msg.mtext[i]);
 	printf("\n");
 
@@ -463,6 +464,7 @@ UCHAR get_host_cmd_task(int test)
 for(i = 0;i < msg_len;i++)
 	printf("%02x ",tempx[i]);
 
+printf("\n");
 printf("\n");
 
 		if(cmd > 0)
