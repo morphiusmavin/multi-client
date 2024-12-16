@@ -37,11 +37,13 @@ LDFLAGS_T = ${GNULDFLAGS_T}
 SFLAGS = ${GNUSFLAGS}
 NOANSI = ${GNUNOANSI}
 
-all : aux2_client aux_client aux_client2 aux_client3
-#all : aux_client aux_client2 aux_client3
+all : aux2_client aux_client aux_client2 aux_client3 aux_client2a aux3_client
 
 aux2_client: aux2_client.o load_cmds.o
 	${CC} ${CFLAGS} ${LDFLAGS_T} aux2_client.o load_cmds.o -o aux2_client
+
+aux3_client: aux3_client.o load_cmds.o
+	${CC} aux3_client.o load_cmds.o -o aux3_client
 
 aux_client: aux_client.o load_cmds.o
 	${CC} aux_client.o load_cmds.o -o aux_client
@@ -49,13 +51,16 @@ aux_client: aux_client.o load_cmds.o
 aux_client2: aux_client2.o load_cmds.o
 	${CC} aux_client2.o load_cmds.o -o aux_client2
 
+aux_client2a: aux_client2a.o load_cmds.o
+	${CC} aux_client2a.o load_cmds.o -o aux_client2a
+
 aux_client3: aux_client3.o load_cmds.o
 	${CC} aux_client3.o load_cmds.o -o aux_client3
 	
 clean :
 	mv load_cmds.o temp
 	rm -f *.o *~ *# core  a.out\
-	aux2_client aux_client aux_client2 aux_client3
+	aux2_client aux_client aux_client2 aux_client3 aux_client2a aux3_client
 	mv temp load_cmds.o
 
 

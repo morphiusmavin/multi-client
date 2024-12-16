@@ -13,7 +13,6 @@ git add tasks.h
 git add serial_io.c
 git add serial_io.h
 git add cmd_tasks.c
-git add aux_client/*
 git add 'messaging logic.txt'
 
 git add thread_server/sched.c
@@ -62,3 +61,12 @@ git add nbus/dio_mcp3002.c
 git add nbus/dio_mcp3002.h
 
 git status
+
+git add aux_client/aux_client.c
+git add aux_client/aux3_client.c
+git add aux_client/aux_client2.c
+git add aux_client/aux_client2a.c
+git add aux_client/aux_client3.c
+git add aux_client/aux2_client.c
+git add aux_client/load_cmds.o
+git add aux_client/makefile

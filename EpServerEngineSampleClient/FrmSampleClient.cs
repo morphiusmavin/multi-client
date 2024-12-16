@@ -391,7 +391,7 @@ namespace EpServerEngineSampleClient
                 else
                 {
                     //playdlg.Dispose();
-                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 8, " ");
+                    svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("DISCONNECT"), 5, " ");
                     disconnect_attempts = 0;
                     AddMsg("disconnecting");
                     btnConnect.Text = "Connect";
@@ -999,7 +999,7 @@ namespace EpServerEngineSampleClient
                 second = now.Second;
                 //AddMsg(hour.ToString() + " " + minute.ToString() + " " + second.ToString());
                 string tTime = now.TimeOfDay.ToString();
-                tTime = tTime.Substring(0, 8);
+                tTime = tTime.Substring(0, 5);
                 tbTime.Text = tTime;
 
                 if (hour == 0 && minute == 0 && second == 0)
@@ -1026,7 +1026,7 @@ namespace EpServerEngineSampleClient
                     AddMsg("one minute after midnight");
                 }
             }
-            if (tick == 4)
+            if (tick == 3)
             {
                 if (m_client.IsConnectionAlive)
                 {
@@ -1036,7 +1036,7 @@ namespace EpServerEngineSampleClient
                 }
 
             }
-            if (tick == 60)
+            if (tick == 5)
             {
                 //AddMsg("set time");
                 if (m_client.IsConnectionAlive)
@@ -1047,7 +1047,7 @@ namespace EpServerEngineSampleClient
                             // type 1 is TS_CLIENT type 2 is TS_SERVER
                         {
                             //AddMsg(cl.label);
-                            SetTime(cl.index);
+                            //SetTime(cl.index);
                         }
                     }
                 }
@@ -1620,7 +1620,7 @@ namespace EpServerEngineSampleClient
                     //AddMsg(cl.index.ToString());
                     // if cl.index == server then set disconnected flag
 
-                    //if ((cl.index == 8) && (msg == REBOOT_IOBOX))
+                    //if ((cl.index == 5) && (msg == REBOOT_IOBOX))
                     if (false)
                     {
                         btnConnect.Text = "Connect";
@@ -1986,7 +1986,7 @@ namespace EpServerEngineSampleClient
 		private void getDirInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
             //SendClientMsg(svrcmd.GetCmdIndexI("GET_DIR_INFO"), " ", false);
-            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_DIR_INFO"), 8, 0);
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_DIR_INFO"), 5, 0);
         }
 
 		private void reduceToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2024,7 +2024,7 @@ namespace EpServerEngineSampleClient
 
 		private void listDirInfoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_DIR_INFO"), 8, 1);
+            svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("GET_DIR_INFO"), 5, 1);
         }
 
 		private void sortDirInfoToolStripMenuItem_Click(object sender, EventArgs e)

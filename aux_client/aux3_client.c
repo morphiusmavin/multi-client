@@ -1,4 +1,4 @@
-// aux2_client.c - runs on 150 as a client of _SERVER - uses send_thread to relay cmds from either aux_client for single port cmd or aux_client2a for strings to server - uses listen to show what is received by this client 
+// aux3_client.c 
 #if 1
 #include <unistd.h>
 #include <sys/mman.h>
@@ -24,14 +24,11 @@
 #include <sys/types.h>
 /* #include <sys/ipc.h> */
 #include <sys/msg.h>
-#include <semaphore.h>
-#include <pthread.h>
 #include "../mytypes.h"
 #include "../cmd_types.h"
 #define MAX 80
 #define PORT 5193
 #define SA struct sockaddr
-#define SEND_CMD_HOST_QKEY	1235
 
 typedef unsigned char UCHAR;
 typedef unsigned int UINT;
@@ -40,12 +37,11 @@ typedef unsigned long ULONG;
 UCHAR tempx[1000];
 static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 
+#define SEND_CMD_HOST_QKEY	1235
+
 static int sock_qid;
 static key_t sock_key;
 static int sockfd;
-
-void *listen_thread(void *test);
-void *send_thread(void *test);
 
 int put_sock(UCHAR *buf,int buflen, int block, char *errmsg);
 int get_sock(UCHAR *buf, int buflen, int block, char *errmsg);
@@ -68,7 +64,6 @@ void print_cmd(UCHAR cmd)
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
 	printf("%s\r\n",cmd_array[cmd].cmd_str);
 }
-
 /*********************************************************************/
 int get_msg(void)
 {
@@ -250,11 +245,19 @@ int get_sock(UCHAR *buf, int buflen, int block, char *errmsg)
 /*********************************************************************/
 int main(void)
 {
-    struct sockaddr_in servaddr, cli;
-	char buff[20];
 	int c;
 	int i;
-	pthread_t thread1, thread2;
+	UCHAR dest;
+	UCHAR cmd;
+	int msg_len;
+	UCHAR onoff;
+	struct msgqbuf msg;
+	UCHAR msg_buf[200];
+
+	int msgtype = 1;
+	msg.mtype = msgtype;
+/*
+    struct sockaddr_in servaddr, cli;
 
 	sockfd = -1;
 	int r1 = 1;
@@ -283,37 +286,8 @@ int main(void)
     }
     else
         printf("connected to the server..\n");
-
-
-	if (pthread_create(&thread1, NULL, listen_thread, (void *) &r1) != 0) 
-		perror("pthread_create"), exit(1); 
-
-	if (pthread_create(&thread2, NULL, send_thread, (void *) &r1) != 0)
-		perror("pthread_create"), exit(1); 
-  
-	if (pthread_join(thread1, NULL) != 0)
-		perror("pthread_join"),exit(1);
-
-	if (pthread_join(thread2, NULL) != 0)
-		perror("pthread_join"),exit(1);
-
-	return 0;
-}
-
-/*********************************************************************/
-void *send_thread(void *test)
-{
-	UCHAR dest;
-	UCHAR cmd;
-	int msg_len;
-	struct msgqbuf msg;
-	int i;
-	UCHAR msg_buf[20];
-
-	int msgtype = 1;
-	msg.mtype = msgtype;
-
-	printf("send thread started\n");
+*/
+	printf("running w/o TCP\n");
 	while(1)
 	{
 		memset(msg.mtext,0,sizeof(msg.mtext));
@@ -359,64 +333,7 @@ void *send_thread(void *test)
 		printf("\n");
 		// dest is used in ReadTask to know where to send msg 
 		send_msg(msg_len, msg_buf, cmd, dest);
-
 	}
-
+	return 0;
 }
-/*********************************************************************/
-void *listen_thread(void *test)
-{
-	UCHAR cmd;
-	int msg_len;
-	UCHAR tempx[200];
-	int i;
-	int ret;
-//	struct msgqbuf msg;
-//	int msgtype = 1;
 
-	printf("listen thread started\n");
-
-	while(1)
-	{
-		memset(tempx,0,sizeof(tempx));
-		msg_len = get_msg();
-		ret = recv_tcp(&tempx[0],msg_len+1,1);
-
-		for(i = 0;i < msg_len+1;i++)
-			printf("%02x ",tempx[i]);
-		printf("\n");
-
-		printf("ret: %d\n",ret);
-		cmd = tempx[0];
-
-		print_cmd(cmd);
-		memcpy(tempx,tempx+1,msg_len);
-
-		for(i = 0;i < msg_len;i++)
-			printf("%02x ",tempx[i]);
-
-		printf("\n");
-/*
-		memset(msg.mtext,0,sizeof(msg.mtext));
-		msg.mtext[0] = cmd;
-		msg.mtext[1] = (UCHAR)msg_len;
-		msg.mtext[2] = (UCHAR)(msg_len >> 4);
-		memcpy(msg.mtext + 3,tempx,msg_len);
-
-		if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
-		{
-			perror("msgsnd error");
-			exit(EXIT_FAILURE);
-		}
-*/
-		if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
-		{
-			printf("shut down\n");
-			close(sockfd);
-			return 0;
-		}
-		for(i = 0;i < msg_len;i++)
-			printf("%c",tempx[i]);
-		printf("\n");
-	}
-}

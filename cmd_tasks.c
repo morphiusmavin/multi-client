@@ -101,14 +101,14 @@ void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest)
 	msg.mtext[1] = dest;
 	msg.mtext[2] = (UCHAR)msg_len;
 	msg.mtext[3] = (UCHAR)(msg_len >> 4);
-
+/*
 	printf("msg_len: %d\n",msg_len);
 
 	printf("\n");
 	for(i = 0;i < msg_len;i++)
 		printf("%02x ",msg.mtext[i]);
 	printf("\n");
-
+*/
 	printf("send_sock_msg :");
 	print_cmd(cmd);
 	//printf("msg_len: %d\n",msg_len);
@@ -456,14 +456,8 @@ UCHAR get_host_cmd_task(int test)
 
 		//printf("msg_len: %d\n",msg_len);
 		memset(tempx,0,sizeof(tempx));
-		memcpy(tempx,msg.mtext+3,msg_len);
-		onoff = tempx[0];
-
-
-for(i = 0;i < msg_len;i++)
-	printf("%02x ",tempx[i]);
-
-printf("\n");
+		memcpy(tempx,&msg.mtext[3],msg_len);
+		tempx[msg_len + 1] = 0;
 
 		if(cmd > 0)
 		{
@@ -534,10 +528,16 @@ printf("\n");
 				case REBOOT_IOBOX:
 				case SHELL_AND_RENAME:
 				case EXIT_TO_SHELL:
-					//printf("sending que: %02x\r\n",cmd);
-					memset(tempx,0,sizeof(tempx));
-					//send_serialother(cmd,(UCHAR *)tempx);
-					add_msg_queue(cmd, onoff);
+
+					if(strncmp("ON",tempx,2) == 0)
+						onoff = 1;
+					else if(strncmp("OFF",tempx,3) == 0)
+						onoff = 0;
+					else onoff = 255;
+
+					if(onoff == 1 || onoff == 0)
+						add_msg_queue(cmd, onoff);
+					else printf("onoff = -1 %0c\n",onoff);
 					break;
 				default:
 					break;

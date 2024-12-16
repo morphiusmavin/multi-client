@@ -23,14 +23,14 @@
 
 extern void *memcpy(void *dest, const void *src, size_t n);
 
-#define SEND_CMD_HOST_QKEY	1235
-
 typedef unsigned char UCHAR;
 typedef unsigned int UINT;
 typedef UCHAR* PUCHAR;
 typedef unsigned long ULONG;
 
 extern CMD_STRUCT cmd_array[];
+
+#define SEND_CMD_HOST_QKEY	1235
 
 void print_cmd(UCHAR cmd)
 {
@@ -42,8 +42,6 @@ void print_cmd(UCHAR cmd)
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
 	printf("%s\r\n",cmd_array[cmd].cmd_str);
 }
-
-
 #endif
 /*********************************************************************/
 int main(int argc, char **argv)
@@ -55,7 +53,7 @@ int main(int argc, char **argv)
 	UCHAR cmd;
 	struct msgqbuf msg;
 	int msg_len;
-	UCHAR str[200];
+	UCHAR str[20];
 
 	int msgtype = 1;
 	msg.mtype = msgtype;
@@ -73,23 +71,27 @@ int main(int argc, char **argv)
 	cmd = atoi(argv[1]);
 	print_cmd(cmd);
 	dest = atoi(argv[2]);
+	memset(str,0,sizeof(str));
 	strcpy(str,argv[3]);
 	msg_len = strlen(str);
-	printf("%d %s\n",msg_len,str);
+	printf("dest: %d len: %d string: %s\n",dest, msg_len, str);
 	msg.mtype = msgtype;
 	memset(msg.mtext,0,sizeof(msg.mtext));
 	msg.mtext[0] = cmd;
 	msg.mtext[1] = dest;
-	msg.mtext[2] = (UCHAR)(msg_len & 0x0F);
-	msg.mtext[3] = (UCHAR)((msg_len & 0xF0) >> 4);
-	printf("%02x %02x\n",msg.mtext[2],msg.mtext[3]);
+//	msg.mtext[2] = (UCHAR)(msg_len & 0x0F);
+//	msg.mtext[3] = (UCHAR)((msg_len & 0xF0) >> 4);
+	msg.mtext[2] = (UCHAR)msg_len;
+	msg.mtext[3] = (UCHAR)(msg_len >> 4);
+
 	memcpy(&msg.mtext[4],str,msg_len);
+	printf("str_len: %d\n",strlen(str));
 
-	printf("dest: %d msg_len: %d\n",dest,strlen(str));
-	msg_len = strlen(str);
-	printf("dest: %d msg_len: %d\n",dest,msg_len);
+	for(i = 0;i < msg_len;i++)
+		printf("%c",msg.mtext[i+4]);
+	printf("\n");
 
-	if (msgsnd(sock_qid, (void *) &msg, msg_len, MSG_NOERROR) == -1) 
+	if (msgsnd(sock_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 	{
 		printf("queue failed\n");
 		perror("msgsnd error");

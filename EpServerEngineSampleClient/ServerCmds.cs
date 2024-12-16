@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -343,11 +345,29 @@ namespace EpServerEngineSampleClient
 			Send_ClCmd(msg, index, iparam);
 			return SetProperties(iparam, GetName(msg),false);
 		}
+		public bool Change_PortCmd(int msg, int index, string str)
+		{
+			bool iparam = false;
+			if (str == "ON")
+				iparam = true;
+			else if (str == "OFF")
+				iparam = false;
+			else return false;
+			Send_ClCmd(msg, index, str);
+			return SetProperties(iparam, GetName(msg), false);
+		}
 		public bool Change_PortCmd(int msg, int index)
 		{
 			bool current_state = GetState(msg);
 			current_state = !current_state;
-			Send_ClCmd(msg, index, current_state);
+			string str = "";
+			if (current_state)
+				str = "ON";
+            else
+            {
+				str = "OFF";
+            }
+            Send_ClCmd(msg, index, str);
 			return SetProperties(current_state, GetName(msg),false);
 		}
 		public bool GetState(int msg)

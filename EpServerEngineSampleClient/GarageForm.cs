@@ -229,6 +229,12 @@ namespace EpServerEngineSampleClient
 			//AddMsg("done");
 */
 		}
+		private bool SendCmd(int which, string str)
+		{
+			string cmd = on_label_list[which];
+			int offset = svrcmd.GetCmdIndexI(cmd);
+			return svrcmd.Change_PortCmd(offset, 5,str);
+		}
 		private bool SendCmd(int which)
 		{
 			string cmd = on_label_list[which];
@@ -276,10 +282,10 @@ namespace EpServerEngineSampleClient
 			//AddMsg("on: " + single_select.ToString() + " off: " + prev.ToString());
 			string cmd = on_label_list[single_select];
 			int offset = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Send_ClCmd(offset, 8, true);
+			svrcmd.Send_ClCmd(offset, 5, true);
 			cmd = on_label_list[prev];
 			offset = svrcmd.GetCmdIndexI(cmd);
-			svrcmd.Send_ClCmd(offset, 8, false);
+			svrcmd.Send_ClCmd(offset, 5, false);
 			if (++single_select > 7)
 				single_select = 0;
 		}
@@ -324,7 +330,7 @@ namespace EpServerEngineSampleClient
 			x = (uint)seconds;
 			//AddMsg(x.ToString());
 			data[1] = (byte)x;
-			int ret = svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("TURN_ALL_LIGHTS_OFF"), 8, data);
+			int ret = svrcmd.Send_ClCmd(svrcmd.GetCmdIndexI("TURN_ALL_LIGHTS_OFF"), 5, data);
 			if (this.Visible)
 				this.Close();
 		}

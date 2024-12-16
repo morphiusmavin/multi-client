@@ -430,6 +430,7 @@ startover:
 
 			win_client_to_client_sock = msg_buf[2];		// offset into client table (destination)
 
+/*
 			printf("win_client_to_client_sock: %d\n",win_client_to_client_sock);
 
 			for(i = 0;i < rc+2;i+=2)
@@ -439,7 +440,7 @@ startover:
 			for(i = 2;i < rc;i+=2)
 				printf("%c",msg_buf[i]);
 			printf("\n");
-
+*/
 			memset(tempx,0,sizeof(tempx));
 			k = 0;
 			for(j = 4;j < msg_len+4;j+=2)
@@ -506,8 +507,8 @@ printf("\n");
 				// the client_table[] array 
 				uSleep(0,TIME_DELAY/16);
 
-				printf("msg to client: %d %s %d\n",client_table[win_client_to_client_sock].socket, 
-					client_table[win_client_to_client_sock].label, client_table[win_client_to_client_sock].qid);
+//				printf("msg to client: %d %s %d\n",client_table[win_client_to_client_sock].socket, 
+//					client_table[win_client_to_client_sock].label, client_table[win_client_to_client_sock].qid);
 				print_cmd(cmd);	
 /*
 				printf("msg.mtext: ");
@@ -617,13 +618,13 @@ startover1:
 			//printf("\n\nret: %d msg_len: %d\n",ret,msg_len);
 			cmd = tempx[0];
 			dest = tempx[1];
-
+/*
 			printf("dest: %d\n",dest);
 
-			for(i = 0;i < msg_len+4;i++)
+			for(i = 0;i < msg_len;i++)
 				printf("%02x ",tempx[i]);
 			printf("\n");
-/*
+
 			tempx[msg_len-1] = 'x';
 
 			for(i = 2;i < msg_len+2;i++)
@@ -663,18 +664,19 @@ startover1:
 						// (deleted)
 						goto startover1;
 					}
-					printf("dest: server\n");
+					//printf("dest: server\n");
 					memset(msg.mtext,0,sizeof(msg.mtext));
 					msg.mtext[0] = cmd;
 					msg.mtext[1] = (UCHAR)msg_len;
 					msg.mtext[2] = (UCHAR)(msg_len >> 4);
 					memcpy(msg.mtext + 3,tempx,msg_len);
+/*
 					printf("msg to cmd_host from client %d\n",dest);
 
 					for(i = 0;i < msg_len+3;i++)
 						printf("%02x ",msg.mtext[i]);
 					printf("\n");
-
+*/
 					if (msgsnd(sched_qid, (void *) &msg, sizeof(msg.mtext), MSG_NOERROR) == -1) 
 					{
 						perror("msgsnd error");
@@ -689,7 +691,7 @@ startover1:
 				case 2:		// testbench
 				case 3:		// aux_client
 				case 4:		// aux_client3
-					send_msg(client_table[dest].socket, strlen(tempx),tempx,cmd);
+					send_msg(client_table[dest].socket, msg_len,tempx,cmd);
 					break;
 				default:
 					printf("read task ? %d\n",dest);
