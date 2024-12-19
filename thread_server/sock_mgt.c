@@ -704,7 +704,7 @@ startover1:
 
 		if(shutdown_all)
 		{
-			//printf("leaving read task\n");
+			printf("leaving read task\n");
 			uSleep(0,TIME_DELAY/16);
 			return 0;
 		}

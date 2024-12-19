@@ -666,6 +666,7 @@ UCHAR poll_ds1620_task(int test)
 	char errmsg[20];
 	int bad_ds_count = 5;
 	char date_str[20];
+	char time_rec[30];
 	//float fval,C,F;
 	int ival;
 	int temp_shutdown = 0;
@@ -702,12 +703,14 @@ UCHAR poll_ds1620_task(int test)
 			if(shutdown_all)
 			{
 				free(dtp);
+				printf("free dtp\n");
 				return 0;
 			}
 		}
 		if(shutdown_all)
 		{
 			ds_reset = 1;
+			printf("shutdown ds_reset\n");
 		}
 		if(ps.valid_ds[i] > 0 && ds_reset == 0)
 		{
@@ -748,8 +751,8 @@ UCHAR poll_ds1620_task(int test)
 			//printf("polling ds: %d %d\n",i,ds_index);
 			T = time(NULL);
 			tm = *localtime(&T);
-			//sprintf(time_rec,"%02d:%02d:%02d - %02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
-			//printf("%s\n",time_rec);
+			sprintf(time_rec,"%02d:%02d:%02d - %02d",tm.tm_hour, tm.tm_min, tm.tm_sec,val);
+			printf("%s\n",time_rec);
 
 			dtp->sensor_no = i;
 			dtp->month = tm.tm_mon;
@@ -769,7 +772,7 @@ UCHAR poll_ds1620_task(int test)
 			//if(client_table[_149].socket > 0)	// this not updated by sock 
 			if(1)
 			{
-				printf("%s\n",sock_msg);
+				//printf("%s\n",sock_msg);
 				send_sock_msg((UCHAR *)&sock_msg[0], strlen(sock_msg), DS1620_MSG, _158);	// to win cl
 			}
 			//uSleep(0,TIME_DELAY/16);
@@ -1028,133 +1031,6 @@ UCHAR timer2_task(int test)
 	}
 	return 1;
 }
-/*********************************************************************/
-#if 0
-static void swap(COUNTDOWN* xp, COUNTDOWN* yp)
-{
-	COUNTDOWN temp = *xp;
-	*xp = *yp;
-	*yp = temp;
-
-}
-/*********************************************************************/
-void remove_top_countdown()
-{
-	int i;
-	
-	for(i = 0;i < curr_countdown_size;i++)
-	{
-		memcpy(&count_down[i],&count_down[i+i],sizeof(COUNTDOWN));
-	}
-	curr_countdown_size--;
-}
-/*********************************************************************/
-void sort_countdown(void)
-{
-	C_DATA *ctp;
-	C_DATA **ctpp = &ctp;
-
-	int i,j,k,n,min_idx;
-
-	int hour, minute, second;
-	time_t T = time(NULL);
-	struct tm tm = *localtime(&T);
-	COUNTDOWN *ct;
-	COUNTDOWN tct;
-	int current_seconds = tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec;
-	//printf("curr sec: %d\n",current_seconds);
-	k = 0;
-	for(i = 0;i < cs_index;i++)
-	{
-		j = cllist_find_data(i, ctpp, &cll);
-		//printf("%d %d\n",ctp->port, ctp->state);
-		if(ctp->port > -1 && ctp->state > 0)
-		{
-			count_down[k].port = ctp->port;
-			count_down[k].hour = ctp->on_hour;
-			count_down[k].minute = ctp->on_minute;
-			count_down[k].second = ctp->on_second;
-			count_down[k].onoff = 1;
-			count_down[k].index = i;
-			k++;
-			count_down[k].port = ctp->port;
-			count_down[k].hour = ctp->off_hour;
-			count_down[k].minute = ctp->off_minute;
-			count_down[k].second = ctp->off_second;
-			count_down[k].onoff = 0;
-			count_down[k].index = i;
-			k++;
-		}
-		
-	}
-	curr_countdown_size = k;
-	for(i = 0;i < curr_countdown_size;i++)
-	{
-		count_down[i].seconds_away = count_down[i].hour * 3600 + count_down[i].minute * 60 + count_down[i].second;
-	}
-/*
-	printf("\n");
-	for(i = 0;i < curr_countdown_size;i++)
-	{
-		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
-	}
-	printf("\n");
-*/
-	for (i = 0; i < curr_countdown_size - 1; i++) 		// do the sort
-	{
-		// Find the minimum element in unsorted array
-		min_idx = i;
-		for (j = i + 1; j < curr_countdown_size; j++)
-			if (count_down[j].seconds_away < count_down[min_idx].seconds_away)
-				min_idx = j;
-
-		// Swap the found minimum element
-		// with the first element
-		swap(&count_down[min_idx], &count_down[i]);
-	}
-	for(i = 0;i < curr_countdown_size;i++)
-	{
-		// seconds_away > current_seconds then seconds_away is in the future
-		if(count_down[i].seconds_away > current_seconds)	
-			count_down[i].seconds_away -= current_seconds;
-
-		else 
-		{
-			count_down[i].seconds_away = -1;
-		}
-	}
-/*
-	printf("\n");
-	for(i = 0;i < curr_countdown_size;i++)
-	{
-		printf("%d: %d %d %d %d %d %d\n",count_down[i].index, count_down[i].seconds_away, count_down[i].port, count_down[i].onoff,count_down[i].hour,count_down[i].minute,count_down[i].second);
-	}
-*/
-}
-/*********************************************************************/
-void display_sort()
-{
-	int i;
-	char sock_msg[100];
-	int msg_len = 0;
-	//printf("index\tsec away\tport\tonoff\thour\tmin\tsec\n");
-	for(i = 0;i < curr_countdown_size;i++)
-	{
-		if(count_down[i].seconds_away > -1)
-		{
-			memset(sock_msg,0,sizeof(sock_msg));
-			sprintf(sock_msg,"%d %d %d %d %d %dx\0", count_down[i].seconds_away, 
-				count_down[i].port, count_down[i].onoff,
-						count_down[i].hour,count_down[i].minute,count_down[i].second);
-			uSleep(0,TIME_DELAY/4);			
-			msg_len = strlen(sock_msg);
-			//printf("%d ",msg_len);
-			send_sock_msg((UCHAR *)&sock_msg[0], msg_len, SEND_MESSAGE, _158);	// to win cl
-			//printf("%s\n",sock_msg);
-		}
-	}
-}
-#endif
 /*********************************************************************/
 // this happens once a second
 UCHAR timer_task(int test)

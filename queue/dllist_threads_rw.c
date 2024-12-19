@@ -239,7 +239,7 @@ int dllist_show(dllist_t *llistp)
 	int duration_seconds;		// use these if type 0
 	int duration_minutes;
 */
-	printf("showing D_DATA\r\n");
+	//printf("showing D_DATA\r\n");
 	pthread_rdwr_rlock_np(&(llistp->rwlock));
 	//printf("%02x \n",cur);
 	cur=llistp->first;

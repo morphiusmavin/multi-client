@@ -362,7 +362,7 @@ UCHAR get_host_cmd_task(int test)
 	{
 		clLoadConfig(cFileName,&cll,csize,errmsg);
 		if(rc > 0)
-		{
+		{cd 
 			printf("%s\r\n",errmsg);
 		}
 		cs_index = cllist_get_size(&cll);
@@ -372,7 +372,7 @@ UCHAR get_host_cmd_task(int test)
 */
 	dllist_init(&dll);
 	//strcpy(dFileName,"temp.dat\0");
-	/*
+	
 	if(access(dFileName,F_OK) != -1)
 	{
 		dlLoadConfig(dFileName,&dll,dsize,errmsg);
@@ -380,7 +380,7 @@ UCHAR get_host_cmd_task(int test)
 		{
 			printf("%s\r\n",errmsg);
 		}
-		dllist_show(&dll);
+		//dllist_show(&dll);
 	}else
 	{
 		memset(dtp,0,sizeof(D_DATA));
@@ -388,7 +388,8 @@ UCHAR get_host_cmd_task(int test)
 		dlWriteConfig(dFileName, &dll,1,errmsg);
 	}
 	ds_index = dllist_get_size(&dll);
-	*/
+	dlAppendConfig("tempdat.dat","tempdata.dat", &dll, 1, errmsg);
+	
 	ds_index = 0;
 #endif
 
@@ -433,7 +434,7 @@ UCHAR get_host_cmd_task(int test)
 		cmd = 0;
 		if(shutdown_all == 1)
 		{
-			//printf("shutting down cmd host\r\n");
+			printf("shutting down cmd host\r\n");
 			//free(stp);
 			return 0;
 		}
@@ -545,8 +546,8 @@ UCHAR get_host_cmd_task(int test)
 
 			if(cmd == SHELL_AND_RENAME || cmd == REBOOT_IOBOX || cmd == SHUTDOWN_IOBOX || cmd == EXIT_TO_SHELL)
 			{
-				//printf("sending shutdown send sock msg: ");
-				//print_cmd(cmd);
+				printf("sending shutdown send sock msg: ");
+				print_cmd(cmd);
 				send_sock_msg(tempx, 1, cmd, _SERVER);
 				WriteParams("config.bin", &ps, password, errmsg);
 				return 1;
@@ -560,6 +561,14 @@ UCHAR get_host_cmd_task(int test)
 						printf("%c",tempx[i]);
 					break;
 */
+				case SET_PROPERTIES:
+					sprintf(label,"%s %s",tempx, cmd_array[cmd].cmd_str);
+					printf("label: %s\n",label);
+					msg_len = strlen(label);
+					printf("len: %d\n",msg_len);
+					send_sock_msg(label, msg_len, SET_PROPERTIES, _158);
+					break;
+
 				case TURN_ALL_LIGHTS_OFF:
 					//printf("%02x %02x\n",tempx[0], tempx[1]);
 					trunning_seconds_off = (tempx[0] << 8) | tempx[1];
@@ -586,7 +595,7 @@ UCHAR get_host_cmd_task(int test)
 						{
 							printf("%s\r\n",errmsg);
 						}
-						//dllist_show(&dll);
+						dllist_show(&dll);
 					}else
 					{
 						memset(dtp,0,sizeof(D_DATA));
@@ -615,11 +624,12 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case DLLIST_SAVE:
-					//dlWriteConfig("ddata.dat", &dll, index, errmsg);
+					dlWriteConfig("ddata.dat", &dll, index, errmsg);
 					ds_reset = 1;
 					break;
 
 				case DLLIST_SHOW:
+					printf("dllist show\n");
 					dllist_show(&dll);
 					break;
 
@@ -632,7 +642,7 @@ UCHAR get_host_cmd_task(int test)
 					break;
 
 				case SET_VALID_DS:
-					//printf("set valid ds: %d\n",tempx[0]);
+					printf("set valid ds: %d\n",tempx[0]);
 					mask = 1;
 					for(i = 0;i < 7;i++)
 						ps.valid_ds[i] = 0;
@@ -643,121 +653,7 @@ UCHAR get_host_cmd_task(int test)
 						mask <<= 1;
 					}
 					break;
-#if 0
-				case RELOAD_CLLIST:
-					cllist_init(&cll);
-					if(access(cFileName,F_OK) != -1)
-					{
-						csize = cs_index * sizeof(C_DATA);
-						clLoadConfig(cFileName,&cll,csize,errmsg);
-						if(rc > 0)
-						{
-							printf("%s\r\n",errmsg);
-						}
-						cllist_show(&cll);
-					}
-					cs_index = 0;
-					break;
-
-				case CLEAR_CLLIST:
-					cllist_init(&cll);
-					cs_index = 0;
-					/*
-					for(i = 0;i < cs_index;i++)
-					{
-						j = cllist_find_data(i, ctpp, &cll);
-						if(j == -1)
-						{
-							printf("bad find: %d\n",index);
-							break;
-						}
-						ctp->port = -1;
-						ctp->state = 0;
-						ctp->on_hour = 0;
-						ctp->on_minute = 0;
-						ctp->on_second = 0;
-						ctp->off_hour = 0;
-						ctp->off_minute = 0;
-						ctp->off_second = 0;
-						strcpy(ctp->label,"test");
-						cllist_change_data(i,ctp,&cll);
-					}
-					*/
-					curr_countdown_size = 0;
-					break;
-
-				case SHOW_CLLIST:
-					//printf("show cllist\n");
-					j = cllist_show(&cll);
-					if(j == -1)
-					{
-						printf("bad find: %d\n",index);
-						break;
-					}
-					break;
-
-				case SORT_CLLIST:
-					sort_countdown();
-					break;
-
-				case DISPLAY_CLLIST_SORT:
-					display_sort();
-					break;
-
-				case SET_CLLIST:
-					cttp = (C_DATA *)malloc(sizeof(C_DATA));
-					cttp->index = (int)tempx[0];
-					cttp->port = (int)tempx[1];
-					cttp->state = (int)tempx[2];
-					cttp->on_hour = (int)tempx[3];
-					cttp->on_minute = (int)tempx[4];
-					cttp->on_second = (int)tempx[5];
-					cttp->off_hour = (int)tempx[6];
-					cttp->off_minute = (int)tempx[7];
-					cttp->off_second = (int)tempx[8];
-					memset(label,0,sizeof(label));
-					memcpy(label,&tempx[10],CLABELSIZE);
-					strcpy(cttp->label,label);
-//					if(cttp->on_hour == 0 && cttp->on_minute == 0 && cttp->on_second == 0 && cttp->off_hour == 0 
-	//						&& cttp->off_minute == 0 && cttp->off_second == 0)
-					
-					//cllist_change_data(index,ctp,&cll);
-					cllist_add_data(cttp->index, &cll, cttp);
-					memset(tempx,0,sizeof(tempx));
-					cs_index++;
-					free(cttp);
-					printf("done\n");
-				break;
-
-				case SAVE_CLLIST:
-					csize = cs_index * sizeof(C_DATA);
-					printf("cs_index: %d\n",cs_index);
-					clWriteConfig(cFileName,&cll,csize,errmsg);
-					break;
-
-				case GET_ALL_CLLIST:
-					printf("%d no recs in cllist\n",cs_index);
-					for(i = 0;i < cs_index;i++)
-					{
-						j = cllist_find_data(i, ctpp, &cll);
-						if(j == -1)
-							break;
-						//if(ctp->port > -1)
-						if(1)
-						{
-							sprintf(tempx,"%02d %02d %02d %02d %02d %02d %02d %02d %02d %s",ctp->index, ctp->port, ctp->state, ctp->on_hour, ctp->on_minute, ctp->on_second, 
-									ctp->off_hour, ctp->off_minute, ctp->off_second, ctp->label);
-							//printf("%s\n",tempx);
-							cmd = REPLY_CLLIST;
-							msg_len = strlen(tempx);
-							send_sock_msg(tempx, msg_len, cmd, _158);
-							uSleep(0,TIME_DELAY/2);
-						}
-					}
-					break
-#endif
 #if 1
-
 				case SET_NEXT_CLIENT:
 					next_client = tempx[0];
 					if(next_client == 8)
@@ -815,11 +711,11 @@ UCHAR get_host_cmd_task(int test)
 
 				case SEND_MESSAGE2:
 					//printf("SEND_MESSAGE\n");
-/*
+
 					for(i = 0;i < msg_len;i++)
 						printf("%c",tempx[i]);
 					printf("\n");
-*/
+
 					send_sock_msg(tempx, msg_len, cmd, _158);
 					break;
 
@@ -965,104 +861,6 @@ UCHAR get_host_cmd_task(int test)
 					}
 */
 					break;
-#endif
-				case UPDATE_CONFIG:
-#if 0
-					utemp = (UINT)msg_buf[3];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[2];
-					ps.rpm_mph_update_rate = utemp;
-
-					utemp = (UINT)msg_buf[5];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[4];
-					ps.fpga_xmit_rate = utemp;
-
-					utemp = (UINT)msg_buf[7];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[6];
-					ps.high_rev_limit = utemp;
-
-					utemp = (UINT)msg_buf[9];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[8];
-					ps.low_rev_limit = utemp;
-
-					utemp = (UINT)msg_buf[11];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[10];
-					ps.cooling_fan_on = utemp;
-					// start loading serial buffer to send to STM32
-					// as a SEND_CONFIG2 msg
-					// only need to send temp data - low byte 1st
-
-					utemp = (UINT)msg_buf[13];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[12];
-					ps.cooling_fan_off = utemp;
-
-					utemp = (UINT)msg_buf[15];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[14];
-					ps.lights_on_value = utemp;
-
-					utemp = (UINT)msg_buf[17];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[16];
-					ps.lights_off_value = utemp;
-
-					utemp = (UINT)msg_buf[19];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[18];
-					ps.adc_rate = utemp;
-
-					utemp = (UINT)msg_buf[21];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[20];
-					ps.rt_value_select = utemp;
-
-					utemp = (UINT)msg_buf[23];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[22];
-					ps.lights_on_delay = utemp;
-
-					utemp = (UINT)msg_buf[25];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[24];
-					ps.engine_temp_limit = utemp;
-
-					utemp = (UINT)msg_buf[27];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[26];
-					ps.batt_box_temp = utemp;
-
-					utemp = (UINT)msg_buf[29];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[28];
-					ps.test_bank = utemp;
-
-					utemp = (UINT)msg_buf[31];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[30];
-					ps.password_timeout = utemp;
-
-					utemp = (UINT)msg_buf[33];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[32];
-					ps.password_retries = utemp;
-
-					utemp = (UINT)msg_buf[35];
-					utemp <<= 8;
-					utemp |= (UINT)msg_buf[34];
-					ps.baudrate3 = utemp;
-
-					j = 0;
-
-					memset(password,0,PASSWORD_SIZE);
-					usleep(500);
-					i = WriteParams("param.conf", &ps, &password[0], errmsg);
-#endif
-					break;
 
 				case GET_CONFIG2:
 					printf("ds_interval: %d\n",ps.ds_interval);
@@ -1071,7 +869,7 @@ UCHAR get_host_cmd_task(int test)
 						printf("%d ",ps.valid_ds[i]);
 					printf("\nenabled: %d\n",ps.ds_enable);
 					break;
-
+#endif
 				default:
 					//printf("default in main loop\n");
 					break;
@@ -1080,37 +878,3 @@ UCHAR get_host_cmd_task(int test)
 	}
 	return test + 1;
 }
-
-void send_param_msg(void)
-{
-	char tempx[40];
-/*
-	sprintf(tempx, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %s\0",
-														ps.rpm_mph_update_rate,
-														ps.fpga_xmit_rate,
-														ps.high_rev_limit,
-														ps.low_rev_limit,
-														ps.cooling_fan_on,
-														ps.cooling_fan_off,
-														ps.lights_on_value,
-														ps.lights_off_value,
-														ps.adc_rate,
-														ps.rt_value_select,
-														ps.lights_on_delay,
-														ps.engine_temp_limit,
-														ps.batt_box_temp,
-														ps.test_bank,
-														ps.password_timeout,
-														ps.password_retries,
-														ps.baudrate3,
-														password);
-*/
-//	send_msg(strlen((char*)tempx)*2,(UCHAR*)tempx, SEND_CONFIG);
-}
-/*********************************************************************/
-void send_status_msg(char *msg)
-{
-//	send_msg(strlen((char*)msg)*2,(UCHAR*)msg, SEND_STATUS,_SERVER);
-	printf("%s\n",msg);
-}
-

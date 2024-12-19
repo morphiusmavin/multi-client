@@ -19,6 +19,7 @@ typedef struct
 	int index;
 	int port;
 	int onoff;
+	
 	int hour;
 	int minute;
 	int second;
@@ -58,15 +59,14 @@ int change_input(int index, int onoff);
 void basic_controls(UCHAR code);
 void send_serialother(UCHAR cmd, UCHAR *buf);
 void add_msg_queue(UCHAR cmd, UCHAR onoff);
-void send_param_msg(void);
 UCHAR get_msg_queue(void);
 void send_sock_msg(UCHAR *send_msg, int msg_len, UCHAR cmd, int dest);
-int tcp_connect(void);
+
+ tcp_connect(void);
 int uSleep(time_t sec, long nanosec);
 UCHAR tcp_monitor_task(int test);
 void close_tcp(void);
 void init_ips(void);
-void send_status_msg(char *msg);
 void print_cmd(UCHAR cmd);
 void assign_client_table(void);
 void display_sort(void);

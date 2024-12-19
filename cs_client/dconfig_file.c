@@ -1,3 +1,4 @@
+#if 1
 #include <sys/types.h>
 #include <stdio.h>
 #include <string.h>
@@ -23,7 +24,7 @@ static char first_line[] = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=
 static char table[6] = "Table\0";
 static char tick = '\'';
 static char space = 0x21;
-
+#endif
 /////////////////////////////////////////////////////////////////////////////
 // CONFIG_FILE is the define used for compiling the list_db and init_db programs
 // so (i/ol)(Load/Write)Config is used by sched/tasks etc
@@ -94,7 +95,7 @@ int dlWriteConfig(char *filename,  dllist_t *dll, int no_recs, char *errmsg)
 	D_DATA io;
 	D_DATA *pio = &io;
 	UCHAR id = 0xAA;
-
+printf("dlWriteConfig\n");
 //#ifdef NOTARGET
 	fp = open((const char *)fptr, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 //#else
@@ -109,8 +110,78 @@ int dlWriteConfig(char *filename,  dllist_t *dll, int no_recs, char *errmsg)
 	}
 
 	j = 0;
-//	printf("fp = %d\n",fp);
-//	printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
+	printf("fp = %d\n",fp);
+	printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
+	i = lseek(fp,0,SEEK_SET);
+	write(fp,&id,1);
+//	printf("nrecs: %d\n",size/sizeof(D_DATA));
+//	for(i = 0;i < size/sizeof(D_DATA);i++)
+	for(i = 0;i < no_recs;i++)
+	{
+		dllist_find_data(i,&pio,dll);
+		j += write(fp,(const void*)pio,sizeof(D_DATA));
+	}
+
+	close(fp);
+	strcpy(errmsg,"Success\0");
+	return 0;
+}
+/////////////////////////////////////////////////////////////////////////////
+int dlAppendConfig(char *filename, char *append2file,  dllist_t *dll, int no_recs, char *errmsg)
+{
+	char *fptr;
+	char *fptr2;
+	int fp = -1;
+	int fp2 = -1;
+	int i,j,k;
+	fptr = (char *)filename;
+	fptr2 = (char *)append2file;
+	D_DATA io;
+	D_DATA *pio = &io;
+	UCHAR id = 0xAA;
+	long cur_no_recs;
+printf("dlAppendConfig\n");
+	
+	fp2 = open((const char *)fptr2, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+	if(fp2 < 0)
+	{
+		strcpy(errmsg,strerror(errno));
+		close(fp2);
+		return -2;
+	}
+	cur_no_recs = lseek(fp,0,SEEK_END);
+	printf("n: %d\n",cur_no_recs);
+	lseek(fp,1,SEEK_SET);
+	cur_no_recs = cur_no_recs / sizeof(D_DATA);
+	printf("%d\n",cur_no_recs);
+	close(fp2);
+	
+	fp = open((const char *)fptr, O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+	if(fp < 0)
+	{
+		strcpy(errmsg,strerror(errno));
+		close(fp);
+		return -2;
+	}
+	cur_no_recs = lseek(fp,0,SEEK_END);
+	printf("n: %d\n",cur_no_recs);
+	lseek(fp,1,SEEK_SET);
+	cur_no_recs /= sizeof(D_DATA);
+	printf("%d\n",cur_no_recs);
+	close(fp);
+	return;
+	
+
+	if(fp < 0)
+	{
+		strcpy(errmsg,strerror(errno));
+		close(fp);
+		return -2;
+	}
+
+	j = 0;
+	printf("fp = %d\n",fp);
+	printf("seek=%lu\n",lseek(fp,0,SEEK_SET));
 	i = lseek(fp,0,SEEK_SET);
 	write(fp,&id,1);
 //	printf("nrecs: %d\n",size/sizeof(D_DATA));

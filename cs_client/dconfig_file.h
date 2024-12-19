@@ -3,6 +3,7 @@
 extern dllist_t dll;
 int dlLoadConfig(char *filename, dllist_t *dll, size_t size,char *errmsg);
 int dlWriteConfig(char *filename,  dllist_t *dll, int no_recs, char *errmsg);
+int dlAppendConfig(char *filename, char *append2file,  dllist_t *dll, int no_recs, char *errmsg);
 #else
 #warning "CONFIG_FILE defined"
 #endif
