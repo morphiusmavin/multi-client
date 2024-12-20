@@ -43,9 +43,11 @@ static UCHAR pre_preamble[] = {0xF8,0xF0,0xF0,0xF0,0xF0,0xF0,0xF0,0x00};
 static int sock_qid;
 static key_t sock_key;
 static int sockfd;
+static int silent;
 
 void *listen_thread(void *test);
 void *send_thread(void *test);
+static pthread_t thread1, thread2;
 
 int put_sock(UCHAR *buf,int buflen, int block, char *errmsg);
 int get_sock(UCHAR *buf, int buflen, int block, char *errmsg);
@@ -66,7 +68,7 @@ void print_cmd(UCHAR cmd)
 		printf("unknown cmd: %d\n",cmd);
 
 	sprintf(tempx, "cmd: %d %s\0",cmd,cmd_array[cmd].cmd_str);
-	printf("%s\r\n",cmd_array[cmd].cmd_str);
+	printf("%s ",cmd_array[cmd].cmd_str);
 }
 
 /*********************************************************************/
@@ -248,16 +250,22 @@ int get_sock(UCHAR *buf, int buflen, int block, char *errmsg)
 }
 #endif
 /*********************************************************************/
-int main(void)
+int main(int argc, char **argv)
 {
     struct sockaddr_in servaddr, cli;
 	char buff[20];
 	int c;
 	int i;
-	pthread_t thread1, thread2;
 
 	sockfd = -1;
 	int r1 = 1;
+	silent = 0;
+
+	if(argc > 1)
+	{
+		silent = 1;
+		printf("running in silent mode\n");
+	}
 
 	sock_key = SEND_CMD_HOST_QKEY;
 	sock_qid = msgget(sock_key, IPC_CREAT | 0666);
@@ -309,11 +317,12 @@ void *send_thread(void *test)
 	struct msgqbuf msg;
 	int i;
 	UCHAR msg_buf[20];
+	UCHAR cmd_str[20];
 
 	int msgtype = 1;
 	msg.mtype = msgtype;
 
-	printf("send thread started\n");
+	printf("send thread started (next time starting this you can enter any number parameter other than 0 to run in silent mode\n");
 	while(1)
 	{
 		memset(msg.mtext,0,sizeof(msg.mtext));
@@ -327,39 +336,53 @@ void *send_thread(void *test)
 				exit(EXIT_FAILURE);
 			}
 		}
+/*
 		for(i = 0;i < 20;i++);
 		{
 			printf("%02x ",msg.mtext[i]);
 		}
 		printf("\n");
-
+*/
 		cmd = msg.mtext[0];							// first byte is cmd
-		print_cmd(cmd);
+		if(silent == 0)
+			print_cmd(cmd);
 		dest = (int)msg.mtext[1];					// 2nd byte is dest
 		msg_len = (int)msg.mtext[2];				// 3rd is low byte of msg_len
 		msg_len |= (int)(msg.mtext[3] << 4);		// 4th is high byte of msg_len
 /*
 		for(i = 0;i < msg_len+4;i++)
 			printf("%02x ",msg.mtext[i]);
-*/
-		printf("\nmsg_len: %d dest: %d\n",msg_len,dest);
 
+		printf("\nmsg_len: %d dest: %d\n",msg_len,dest);
+*/
 		memset(msg_buf,0,sizeof(msg_buf));
 		memcpy(msg_buf,&msg.mtext[4],msg_len);
 		msg_len = msg_len>255?255:msg_len;
 /*
 		for(i = 0;i < msg_len;i++)
 			printf("%02x ",msg_buf[i]);
-*/
+
 		for(i = 0;i < msg_len;i++)
 			printf("%02x ",msg.mtext[i+4]);
 		printf("\n");
+*/		
+		memset(cmd_str,0,sizeof(cmd_str));
 		for(i = 0;i < msg_len;i++)
-			printf("%c",msg.mtext[i+4]);
-		printf("\n");
+		{
+			if(silent == 0)
+				printf("%c",msg.mtext[i+4]);
+			cmd_str[i] = msg.mtext[i+4];
+		}
+		if(silent == 0)
+			printf("\n");
+
 		// dest is used in ReadTask to know where to send msg 
 		send_msg(msg_len, msg_buf, cmd, dest);
-
+		//sleep(1);
+		// SET_PROPERTIES is supposed to check the appropriate button on the winclient
+		//send_msg(strlen(cmd_str), cmd_str, SET_PROPERTIES, 5);
+		//printf("%d %s\n",strlen(cmd_str),cmd_str);
+		//send_msgb(msg_len, UCHAR *msg, SET_PROPERTIES)
 	}
 
 }
@@ -378,23 +401,26 @@ void *listen_thread(void *test)
 
 	while(1)
 	{
+		
 		memset(tempx,0,sizeof(tempx));
 		msg_len = get_msg();
 		ret = recv_tcp(&tempx[0],msg_len+1,1);
-
+/*
 		for(i = 0;i < msg_len+1;i++)
 			printf("%02x ",tempx[i]);
 		printf("\n");
 
 		printf("ret: %d\n",ret);
+*/
 		cmd = tempx[0];
 
 		print_cmd(cmd);
 		memcpy(tempx,tempx+1,msg_len);
 
+		printf("msg: ");
 		for(i = 0;i < msg_len;i++)
 			printf("%02x ",tempx[i]);
-
+		
 		printf("\n");
 /*
 		memset(msg.mtext,0,sizeof(msg.mtext));
@@ -409,14 +435,16 @@ void *listen_thread(void *test)
 			exit(EXIT_FAILURE);
 		}
 */
+		for(i = 0;i < msg_len;i++)
+			printf("%c",tempx[i]);
+		printf("\n");
+
 		if(cmd == SHUTDOWN_IOBOX || cmd == REBOOT_IOBOX || cmd == SHELL_AND_RENAME || cmd == EXIT_TO_SHELL)
 		{
 			printf("shut down\n");
 			close(sockfd);
+			pthread_kill(thread2);
 			return 0;
 		}
-		for(i = 0;i < msg_len;i++)
-			printf("%c",tempx[i]);
-		printf("\n");
 	}
 }
